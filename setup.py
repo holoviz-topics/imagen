@@ -39,7 +39,7 @@ for package_list in packages_to_state:
 
 setup_args.update(dict(
     name='imagen',
-    version='0.01',
+    version='0.05',
     description='Generic Python library for 0D, 1D, and 2D pattern distributions.',
     long_description=open('README.txt').read(),
     author= "IOAM",

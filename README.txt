@@ -1,28 +1,20 @@
-`ImaGen`_ is a generic Python library for 0D, 1D, and 2D pattern distributions.
+ImaGen is a generic Python library for 0D, 1D, and 2D pattern
+distributions.
 
-Please see http://ioam.github.com/imagen/ for more information.
+Please see http://ioam.github.com/imagen/ for documentation and
+examples.
 
 
 Installation
 ============
 
-ImaGen requires `NumPy_` and `Param_`. 
+ImaGen requires NumPy (http://numpy.scipy.org/) and Param
+(http://ioam.github.com/param/).
 
-ImaGen and its dependencies can be installed via ``easy_install
-imagen`` or ``pip install imagen``.
+Official releases of ImaGen are available at
+http://pypi.python.org/pypi/imagen, and can be installed along with
+dependencies via ``pip install imagen`` or ``easy_install imagen``.
 
-Alternatively, after separately installing the depedencies, you can
-download and unpack the source tar.gz, and then install with a command
-like ``python setup.py install`` (e.g. ``sudo python setup.py
-install`` for a site-wide installation, or ``python setup.py install
---user`` to install into ``~/.local``). Windows users can instead
-download and run the exe.
-
-.. _ImaGen:
-   http://ioam.github.com/imagen/
-
-.. _NumPy:
-   http://numpy.scipy.org/
-
-.. _Param:
-   http://ioam.github.com/param/
+Alternatively, after seperately installing the dependencies, ImaGen
+can be installed via ``python setup.py install`` (or Windows users can
+download and run the exe from the preceeding link).
