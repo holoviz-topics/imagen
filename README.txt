@@ -16,5 +16,4 @@ http://pypi.python.org/pypi/imagen, and can be installed along with
 dependencies via ``pip install imagen`` or ``easy_install imagen``.
 
 Alternatively, after seperately installing the dependencies, ImaGen
-can be installed via ``python setup.py install`` (or Windows users can
-download and run the exe from the preceeding link).
+can be installed via ``python setup.py install``.
