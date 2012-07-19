@@ -39,7 +39,7 @@ for package_list in packages_to_state:
 
 setup_args.update(dict(
     name='imagen',
-    version='0.05',
+    version='1.0',
     description='Generic Python library for 0D, 1D, and 2D pattern distributions.',
     long_description=open('README.txt').read(),
     author= "IOAM",
@@ -52,8 +52,7 @@ setup_args.update(dict(
     packages = ["imagen","numbergen"],
     classifiers = [
         "License :: OSI Approved :: BSD License",
-# (until packaging tested)
-        "Development Status :: 4 - Beta",
+        "Development Status :: 5 - Production/Stable",
         "Programming Language :: Python :: 2.5",
         "Programming Language :: Python :: 2.6",
         "Programming Language :: Python :: 2.7",
