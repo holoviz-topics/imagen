@@ -12,7 +12,7 @@ examples.
 ImaGen requires [NumPy](http://numpy.scipy.org/) and [Param](http://ioam.github.com/param/).
 
 Official releases of ImaGen are available at [PyPI](http://pypi.python.org/pypi/imagen), and can be installed along with
-dependencies via ``pip install imagen`` or ``easy_install imagen``.
+dependencies via ``pip install imagen``.
 
-Alternatively, after seperately installing the dependencies, ImaGen
+Alternatively, after separately installing the dependencies, ImaGen
 can be installed via ``python setup.py install``.
