@@ -505,7 +505,6 @@ class LyonsCochlearModel(PowerSpectrum):
             
         
         
-        
 class LyonsCochleogram(LyonsCochlearModel):
     """
     Employs Lyons Cochlear Model to return a Cochleoogram, 
