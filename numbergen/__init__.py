@@ -1,7 +1,5 @@
 """
 Callable objects that generate numbers according to different distributions.
-
-$Id$
 """
 __version__='$Revision: 8943 $'
 

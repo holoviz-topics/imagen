@@ -4,9 +4,6 @@ In order to grab frames, you need to install Opencv, and python-opencv
 (Python bindings for the computer vision library).
 
 This class was tested with Opencv 2.0.0 and Ubuntu 10.04 LTS.
-
-
-$Id$
 """
 __version__ = "$Revision$"
 

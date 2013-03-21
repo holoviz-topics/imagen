@@ -4,8 +4,6 @@ Family of two-dimensional functions indexed by x and y.
 All functions are written to be valid both for scalar x and y, and for
 numpy arrays of x and y (in which case the result is also an array);
 the functions therefore have the same mathematical behaviour as numpy.
-
-$Id$
 """
 
 from __future__ import with_statement

@@ -1,7 +1,5 @@
 """
 Two-dimensional pattern generators drawing from various random distributions.
-
-$Id$
 """
 __version__='$Revision$'
 

@@ -2,8 +2,6 @@
 PatternGenerators based on bitmap images stored in files.
 
 Requires the Python Imaging Library (PIL).
-
-$Id$
 """
 
 import Image

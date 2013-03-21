@@ -1,7 +1,5 @@
 """
 Pattern generators for audio signals.
-
-$Id$
 """
 __version__='$Revision$'
 

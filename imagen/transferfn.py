@@ -1,7 +1,5 @@
 """
 TransferFns: accept and modify a 2d array
-
-$Id$
 """
 __version__='$Revision$'
 

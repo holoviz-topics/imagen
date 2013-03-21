@@ -1,7 +1,5 @@
 """
 Bounding regions and bounding boxes.
-
-$Id$
 """
 
 __version__='$Revision$'

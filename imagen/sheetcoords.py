@@ -72,8 +72,6 @@ value 6.
 Of course, it would be an error to try to pass matrix coordinates like
 [0,2] to the sheet2matrix calls; the result would be a value far
 outside of the actual matrix.
-
-$Id$
 """
 
 __version__ = '$Revision$'

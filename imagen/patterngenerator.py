@@ -1,7 +1,5 @@
 """
 PatternGenerator abstract class and basic example concrete class.
-
-$Id$
 """
 __version__='$Revision$'
 
