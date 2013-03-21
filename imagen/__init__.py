@@ -6,8 +6,6 @@ network, or compuatational neuroscience algorithms, or for any other
 purpose where a two-dimensional pattern may be needed.  Any new
 PatternGenerator classes can be derived from these, and can then be
 combined with the existing classes easily.
-
-$Id$
 """
 
 from __future__ import with_statement
