@@ -6,9 +6,7 @@ def display_pil_image(im):
     """Generate PNG data for IPython display"""
     b = BytesIO()
     im.save(b, format='png')
-    data = b.getvalue()
-    ip_img = display.Image(data=data, format='png', embed=True)
-    return ip_img._repr_png_()
+    return b.getvalue()
 
 def load_ipython_extension(ip):
     from IPython.core import display
