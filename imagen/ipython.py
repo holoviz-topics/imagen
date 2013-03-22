@@ -1,5 +1,4 @@
 from PIL import Image
-from IPython.core import display
 from io import BytesIO
 _loaded = False
 
@@ -12,6 +11,7 @@ def display_pil_image(im):
     return ip_img._repr_png_()
 
 def load_ipython_extension(ip):
+    from IPython.core import display
     global _loaded
 
     if not _loaded:
