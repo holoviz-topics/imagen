@@ -26,7 +26,7 @@ class CameraImage(GenericImage):
         super(CameraImage,self).__init__(**params)
         self._image=None
         self._camera = highgui.cvCreateCameraCapture(0)
-        
+
 
     def _get_image(self,params):
         #while 1:

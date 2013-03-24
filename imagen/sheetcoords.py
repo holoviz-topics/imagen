@@ -31,8 +31,8 @@ For the purposes of this example, assume the goal is a Sheet with
 density=3 that has a 1 at (-1/2,-1/2), a 5 at (0.0,0.0), and a 9 at
 (1/2,1/2).  More precisely, for this Sheet,
 
-the continuous area from -1/2,-1/2 to -1/6,-1/6 has value 1, 
-the continuous area from -1/6,-1/6 to  1/6,1/6  has value 5, and 
+the continuous area from -1/2,-1/2 to -1/6,-1/6 has value 1,
+the continuous area from -1/6,-1/6 to  1/6,1/6  has value 5, and
 the continuous area from  1/6,1/6  to  1/2,1/2  has value 9.
 
 With the rest of the elements filled in, the Sheet would look like::
@@ -124,7 +124,7 @@ from boundingregion import BoundingBox
 class SheetCoordinateSystem(object):
     """
     Provides methods to allow conversion between sheet and matrix
-    coordinates.    
+    coordinates.
     """
     def __get_xdensity(self):
         return self.__xdensity
@@ -150,12 +150,12 @@ class SheetCoordinateSystem(object):
         """
         Store the bounds (as l,b,r,t in an array), xdensity, and
         ydensity.
-    
+
         If ydensity is not specified, it is assumed that the specified
         xdensity is nominal and that the true xdensity should be
         calculated. The top and bottom bounds are adjusted so that
-        the ydensity is equal to the xdensity. 
-        
+        the ydensity is equal to the xdensity.
+
         If both xdensity and ydensity are specified, these and the bounds
         are taken to be exact and are not adjusted.
         """
@@ -165,7 +165,7 @@ class SheetCoordinateSystem(object):
         self.bounds = bounds
         self.__set_xdensity(xdensity)
         self.__set_ydensity(ydensity or xdensity)
-        
+
         self.lbrt = array(bounds.lbrt())
 
         r1,r2,c1,c2 = Slice._boundsspec2slicespec(self.lbrt,self)
@@ -178,7 +178,7 @@ class SheetCoordinateSystem(object):
     def __set_xdensity(self,density):
         self.__xdensity=density
         self.__xstep = 1.0/density
-        
+
     def __set_ydensity(self,density):
         self.__ydensity=density
         self.__ystep = 1.0/density
@@ -202,11 +202,11 @@ class SheetCoordinateSystem(object):
         adjusted_half_height = n_cells/true_density/2.0
         # (The above might be clearer as (step*n_units)/2.0, where
         # step=1.0/density.)
-        
+
         return (BoundingBox(points=((left,  center_y-adjusted_half_height),
                                     (right, center_y+adjusted_half_height))),
                 true_density)
-    
+
 
     def sheet2matrix(self,x,y):
         """
@@ -327,7 +327,7 @@ class SheetCoordinateSystem(object):
 # since it's different from a Python slice.  It's our special slice
 # that's an array specifying row_start,row_stop,col_start,col_stop for
 # a Sheet (2d array).
-# 
+#
 # In python, a[slice(0,2)] (where a is a list/array/similar) is
 # equivalent to a[0:2].
 #
@@ -359,12 +359,12 @@ class Slice(ndarray):
         return BoundingBox(points=spec)
 
     __slots__ = []
-    
+
     def __new__(cls, bounds, sheet_coordinate_system, force_odd=False,
                 min_matrix_radius=1): # CEBALERT: min_matrix_radius only used for odd slice.
         """
         Create a slice of the given sheet_coordinate_system from the
-        specified bounds. 
+        specified bounds.
         """
         # I couldn't find documentation on subclassing array; I used
         # the following as reference:
@@ -422,7 +422,7 @@ class Slice(ndarray):
         # get slice for the submatrix
         center_row,center_col = sheet_coord_system.sheet2matrixidx(x,y)
 
-        c1 = -min(0, center_col-n_cols/2)  # assume odd weight matrix so can use n_cols/2 
+        c1 = -min(0, center_col-n_cols/2)  # assume odd weight matrix so can use n_cols/2
         r1 = -min(0, center_row-n_rows/2)  # for top and bottom
         c2 = -max(-n_cols, center_col-sheet_cols-n_cols/2)
         r2 = -max(-n_rows, center_row-sheet_rows-n_rows/2)
@@ -443,15 +443,15 @@ class Slice(ndarray):
 
         # should result in same no. of comps of right bounds as before during init,
         # since i removed one calc from init
-        
+
         bounds_x,bounds_y=self.compute_bounds(sheet_coord_system).centroid()
-        
+
         b_row,b_col=sheet_coord_system.sheet2matrixidx(bounds_x,bounds_y)
 
         row_offset = cf_row-b_row
         col_offset = cf_col-b_col
         self.translate(row_offset,col_offset)
-        
+
     ###############
 
 
@@ -470,10 +470,10 @@ class Slice(ndarray):
         """Return the shape of the array that this Slice would give on its sheet."""
         return self[1]-self[0],self[3]-self[2]
 
-    def crop_to_sheet(self,sheet_coord_system): 
+    def crop_to_sheet(self,sheet_coord_system):
         """Crop the slice to the SheetCoordinateSystem's bounds."""
         maxrow,maxcol = sheet_coord_system.shape
-                        
+
         self[0] = max(0,self[0])
         self[1] = min(maxrow,self[1])
         self[2] = max(0,self[2])
@@ -489,7 +489,7 @@ class Slice(ndarray):
         """
         Create the 'odd' Slice that best approximates the specifed
         sheet-coordinate bounds.
-        
+
         The supplied bounds are translated to have a center at the
         center of one of the sheet's units (we arbitrarily use the
         center unit), and then these bounds are converted to a slice
@@ -507,7 +507,7 @@ class Slice(ndarray):
         bounds_xcenter,bounds_ycenter=bounds.centroid()
         sheet_rows,sheet_cols = scs.shape
 
-        # arbitrary (e.g. could use 0,0) 
+        # arbitrary (e.g. could use 0,0)
         center_row,center_col = sheet_rows/2,sheet_cols/2
         unit_xcenter,unit_ycenter=scs.matrixidx2sheet(center_row,
                                                       center_col)
@@ -526,7 +526,7 @@ class Slice(ndarray):
         c2=center_col+xrad+1
         r1=center_row-yrad
         c1=center_col-xrad
-        ########## 
+        ##########
 
         # weights matrix must be odd (otherwise this method has an error)
         # CEBALERT: this test should move to a test file.
@@ -536,15 +536,15 @@ class Slice(ndarray):
         return (r1,r2,c1,c2)
 
 
-##         # CEBALERT: with min_matrix_radius, this test is unnecessary? (check) 
+##         # CEBALERT: with min_matrix_radius, this test is unnecessary? (check)
 ##         # user-supplied bounds must lead to a weights matrix of at least 1x1
 ##         rows,cols = weights_slice.shape_on_sheet()
 ##         if rows==0 or cols==0:
 ##             raise ValueError("nominal_bounds_template results in a zero-sized weights matrix (%s,%s) - you may need to supply a larger nominal_bounds_template or increase the density of the sheet."%(rows,cols))
 
 
-    
-    
+
+
     @staticmethod
     def _boundsspec2slicespec(boundsspec,scs):
         """
@@ -564,7 +564,7 @@ class Slice(ndarray):
         l_idx = int(ceil(l_m-0.5))
         t_idx = int(ceil(t_m-0.5))
         # CBENHANCEMENT: Python 2.6's math.trunc()?
-        r_idx = int(floor(r_m+0.5)) 
+        r_idx = int(floor(r_m+0.5))
         b_idx = int(floor(b_m+0.5))
 
         return t_idx,b_idx,l_idx,r_idx
@@ -575,8 +575,8 @@ class Slice(ndarray):
         """
         Convert an iterable slicespec (supplying r1,r2,c1,c2 of a
         Slice) into a BoundingRegion specification.
-        
-        Exact inverse of _boundsspec2slicespec().        
+
+        Exact inverse of _boundsspec2slicespec().
         """
         r1,r2,c1,c2 = slicespec
 

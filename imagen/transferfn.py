@@ -14,12 +14,12 @@ class TransferFn(param.Parameterized):
 
     Used for transforming an array of intermediate results into a
     final version, by cropping it, normalizing it, squaring it, etc.
-    
+
     Objects in this class must support being called as a function with
     one matrix argument, and are expected to change that matrix in place.
     """
     __abstract = True
-    
+
     # CEBALERT: can we have this here - is there a more appropriate
     # term for it, general to output functions?  JAB: Please do rename it!
     norm_value = param.Parameter(default=None)
@@ -27,7 +27,7 @@ class TransferFn(param.Parameterized):
 
     def __call__(self,x):
         raise NotImplementedError
-    
+
 # Trivial example of a TransferFn, provided for when a default
 # is needed.  The other concrete OutputFunction classes are stored
 # in transferfn/, to be imported as needed.
@@ -104,7 +104,7 @@ class DivisiveNormalizeL2(TransferFn):
     Euclidean length of the vector at a specified norm_value.
     """
     norm_value = param.Number(default=1.0)
-    
+
     def __call__(self,x):
         xr = x.ravel()
         tot = 1.0*numpy.sqrt(numpy.dot(xr,xr))
@@ -127,7 +127,7 @@ class DivisiveNormalizeLinf(TransferFn):
     and Chebyshev norm.
     """
     norm_value = param.Number(default=1.0)
-    
+
     def __call__(self,x):
         tot = 1.0*(numpy.abs(x)).max()
         if tot != 0:
@@ -135,7 +135,7 @@ class DivisiveNormalizeLinf(TransferFn):
             x *= factor
 
 
-    
+
 def norm(v,p=2):
     """
     Returns the Lp norm of v, where p is an arbitrary number defaulting to 2.
@@ -156,12 +156,9 @@ class DivisiveNormalizeLp(TransferFn):
     """
     p = param.Number(default=2)
     norm_value = param.Number(default=1.0)
-    
+
     def __call__(self,x):
         tot = 1.0*norm(x.ravel(),self.p)
         if tot != 0:
             factor = (self.norm_value/tot)
-            x *=factor 
-
-
-
+            x *=factor

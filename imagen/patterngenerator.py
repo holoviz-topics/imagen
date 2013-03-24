@@ -40,7 +40,7 @@ class PatternGenerator(param.Parameterized):
     Once initialized, PatternGenerators can be called to generate a
     value or a matrix of values from a 2D function, typically
     accepting at least x and y.
-    
+
     A PatternGenerator's Parameters can make use of Parameter's
     precedence attribute to specify the order in which they should
     appear, e.g. in a GUI. The precedence attribute has a nominal
@@ -59,11 +59,11 @@ class PatternGenerator(param.Parameterized):
     translated, etc. uniformly.
     """
     __abstract = True
-    
+
     bounds  = BoundingRegionParameter(
         default=BoundingBox(points=((-0.5,-0.5), (0.5,0.5))),precedence=-1,
         doc="BoundingBox of the area in which the pattern is generated.")
-    
+
     xdensity = param.Number(default=10,bounds=(0,None),precedence=-1,doc="""
         Density (number of samples per 1.0 length) in the x direction.""")
 
@@ -83,17 +83,17 @@ class PatternGenerator(param.Parameterized):
         Provides a convenient way to set the x and y parameters together
         as a tuple (x,y), but shares the same actual storage as x and y
         (and thus only position OR x and y need to be specified).""")
-    
+
     orientation = param.Number(default=0.0,softbounds=(0.0,2*pi),precedence=0.40,doc="""
         Polar angle of pattern, i.e., the orientation in the Cartesian coordinate
         system, with zero at 3 o'clock and increasing counterclockwise.""")
-    
+
     size = param.Number(default=1.0,bounds=(0.0,None),softbounds=(0.0,6.0),
         precedence=0.30,doc="""Determines the overall size of the pattern.""")
 
     scale = param.Number(default=1.0,softbounds=(0.0,2.0),precedence=0.10,doc="""
         Multiplicative strength of input pattern, defaulting to 1.0""")
-    
+
     offset = param.Number(default=0.0,softbounds=(-1.0,1.0),precedence=0.11,doc="""
         Additive offset to input pattern, defaulting to 0.0""")
 
@@ -106,16 +106,16 @@ class PatternGenerator(param.Parameterized):
     mask_shape = param.ClassSelector(param.Parameterized,default=None,precedence=0.06,doc="""
         Optional PatternGenerator used to construct a mask to be applied to
         the pattern.""")
-    
+
     output_fns = param.HookList(default=[],class_=TransferFn,precedence=0.08,doc="""
         Optional function(s) to apply to the pattern array after it has been created.
         Can be used for normalization, thresholding, etc.""")
 
 
     def __init__(self,**params):
-        super(PatternGenerator, self).__init__(**params) 
+        super(PatternGenerator, self).__init__(**params)
         self.set_matrix_dimensions(self.bounds, self.xdensity, self.ydensity)
-        
+
 
     def __call__(self,**params_to_override):
         """
@@ -139,12 +139,12 @@ class PatternGenerator(param.Parameterized):
         fn_result = self.function(p)
         self._apply_mask(p,fn_result)
         result = p.scale*fn_result+p.offset
-            
+
         for of in p.output_fns:
             of(result)
-                               
+
         return result
-                               
+
 
     def _setup_xy(self,bounds,xdensity,ydensity,x,y,orientation):
         """
@@ -158,7 +158,7 @@ class PatternGenerator(param.Parameterized):
 
         # CB: note to myself - use slice_._scs if supplied?
         x_points,y_points = SheetCoordinateSystem(bounds,xdensity,ydensity).sheetcoordinates_of_matrixidx()
-            
+
         # Generate matrices of x and y sheet coordinates at which to
         # sample pattern, at the correct orientation
         self.pattern_x, self.pattern_y = self._create_and_rotate_coordinate_arrays(x_points-x,y_points-y,orientation)
@@ -178,7 +178,7 @@ class PatternGenerator(param.Parameterized):
         """
         raise NotImplementedError
 
-        
+
     def _create_and_rotate_coordinate_arrays(self, x, y, orientation):
         """
         Create pattern matrices from x and y vectors, and rotate
@@ -204,8 +204,8 @@ class PatternGenerator(param.Parameterized):
                       bounds=p.bounds,ydensity=p.ydensity,xdensity=p.xdensity)
         if mask is not None:
             mat*=mask
-    
-    
+
+
     def set_matrix_dimensions(self, bounds, xdensity, ydensity):
         """
         Change the dimensions of the matrix into which the pattern will be drawn.
@@ -217,8 +217,8 @@ class PatternGenerator(param.Parameterized):
         self.bounds = bounds
         self.xdensity = xdensity
         self.ydensity = ydensity
-        
-        
+
+
 
 # Override class type; must be set here rather than when mask_shape is declared,
 # to avoid referring to class not yet constructed
@@ -226,7 +226,7 @@ PatternGenerator.params('mask_shape').class_=PatternGenerator
 
 
 # Trivial example of a PatternGenerator, provided for when a default is
-# needed.  The other concrete PatternGenerator classes are stored 
+# needed.  The other concrete PatternGenerator classes are stored
 # elsewhere, to be imported as needed.
 from numpy.oldnumeric import ones, Float
 
@@ -241,7 +241,7 @@ class Constant(PatternGenerator):
     # coordinate transformations (which would have no effect anyway)
     def __call__(self,**params_to_override):
         p = ParamOverrides(self,params_to_override)
-        
+
         shape = SheetCoordinateSystem(p.bounds,p.xdensity,p.ydensity).shape
 
         result = p.scale*ones(shape, Float)+p.offset
@@ -251,4 +251,3 @@ class Constant(PatternGenerator):
             of(result)
 
         return result
-

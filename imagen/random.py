@@ -5,7 +5,7 @@ __version__='$Revision$'
 
 import numpy
 
-from numpy.oldnumeric import zeros,floor,where,choose,less,greater,Int,random_array 
+from numpy.oldnumeric import zeros,floor,where,choose,less,greater,Int,random_array
 
 import param
 from param.parameterized import ParamOverrides
@@ -23,7 +23,7 @@ def seed(seed=None):
     Convenience function: shortcut to RandomGenerator.random_generator.seed().
     """
     RandomGenerator.random_generator.seed(seed)
-    
+
 
 class RandomGenerator(PatternGenerator):
     """2D random noise pattern generator abstract class."""
@@ -45,11 +45,11 @@ class RandomGenerator(PatternGenerator):
         own state, set this parameter to a new RandomState instance.
         """)
 
-        
+
     def _distrib(self,shape,p):
         """Method for subclasses to override with a particular random distribution."""
         raise NotImplementedError
-    
+
     # Optimization: We use a simpler __call__ method here to skip the
     # coordinate transformations (which would have no effect anyway)
     def __call__(self,**params_to_override):
@@ -62,7 +62,7 @@ class RandomGenerator(PatternGenerator):
 
         for of in p.output_fns:
             of(result)
-                
+
         return result
 
 
@@ -124,7 +124,7 @@ class GaussianCloud(Composite):
     """Uniform random noise masked by a circular Gaussian."""
 
     operator = param.Parameter(numpy.multiply)
-    
+
     gaussian_size = param.Number(default=1.0,doc="Size of the Gaussian pattern.")
 
     aspect_ratio  = param.Number(default=1.0,bounds=(0.0,None),softbounds=(0.0,2.0),
@@ -171,10 +171,10 @@ class RandomDotStereogram(PatternGenerator):
     #set them to different values for each pattern to get disparity
     xdisparity = param.Number(default=0.0,bounds=(-1.0,1.0),softbounds=(-0.5,0.5),
                         precedence=0.50,doc="Disparity in the horizontal direction.")
-    
+
     ydisparity = param.Number(default=0.0,bounds=(-1.0,1.0),softbounds=(-0.5,0.5),
                         precedence=0.51,doc="Disparity in the vertical direction.")
-    
+
     dotdensity = param.Number(default=0.5,bounds=(0.0,None),softbounds=(0.1,0.9),
                         precedence=0.52,doc="Number of dots per unit area; 0.5=50% coverage.")
 
@@ -190,17 +190,17 @@ class RandomDotStereogram(PatternGenerator):
 
         xsize,ysize = SheetCoordinateSystem(p.bounds,p.xdensity,p.ydensity).shape
         xsize,ysize = int(round(xsize)),int(round(ysize))
-        
-        xdisparity  = int(round(xsize*p.xdisparity))  
-        ydisparity  = int(round(xsize*p.ydisparity))   
+
+        xdisparity  = int(round(xsize*p.xdisparity))
+        ydisparity  = int(round(xsize*p.ydisparity))
         dotsize     = int(round(xsize*p.dotsize))
-        
+
         bigxsize = 2*xsize
         bigysize = 2*ysize
         ndots=int(round(p.dotdensity * (bigxsize+2*dotsize) * (bigysize+2*dotsize) /
                         min(dotsize,xsize) / min(dotsize,ysize)))
         halfdot = floor(dotsize/2)
-    
+
         # Choose random colors and locations of square dots
         random_seed = p.random_seed
 
@@ -209,10 +209,10 @@ class RandomDotStereogram(PatternGenerator):
 
         random_array.seed(random_seed*122,random_seed*799)
         xpos=floor(random_array.random((ndots))*(bigxsize+2*dotsize)) - halfdot
-    
+
         random_array.seed(random_seed*1243,random_seed*9349)
         ypos=floor(random_array.random((ndots))*(bigysize+2*dotsize)) - halfdot
-      
+
         # Construct arrays of points specifying the boundaries of each
         # dot, cropping them by the big image size (0,0) to (bigxsize,bigysize)
         x1=xpos.astype(Int) ; x1=choose(less(x1,0),(x1,0))
@@ -224,7 +224,7 @@ class RandomDotStereogram(PatternGenerator):
         bigimage = zeros((bigysize,bigxsize))
         for i in range(ndots):
             bigimage[y1[i]:y2[i]+1,x1[i]:x2[i]+1] = col[i]
-            
+
         result = p.offset + p.scale*bigimage[ (ysize/2)+ydisparity:(3*ysize/2)+ydisparity ,
                                               (xsize/2)+xdisparity:(3*xsize/2)+xdisparity ]
 

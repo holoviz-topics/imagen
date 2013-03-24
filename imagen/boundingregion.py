@@ -22,7 +22,7 @@ class BoundingRegion(object):
     __abstract = True
 
     __slots__ = ['_aarect']
-    
+
     def contains(self,x,y):
         raise NotImplementedError
     def scale(self,xs,ys):
@@ -37,7 +37,7 @@ class BoundingRegion(object):
     def centroid(self):
         """
         Return the coordinates of the center of this BoundingBox
-        """        
+        """
         return self.aarect().centroid()
 
     def set(self,points):
@@ -104,14 +104,14 @@ class BoundingBox(BoundingRegion):
             del args['radius']
 
             self._aarect=AARectangle((-r,-r),(r,r))
-                
+
         elif 'points' in args:
             self._aarect = AARectangle(*args['points'])
             del args['points']
         else:
             self._aarect = AARectangle((-0.5,-0.5),(0.5,0.5))
 
-        super(BoundingBox,self).__init__(**args)        
+        super(BoundingBox,self).__init__(**args)
 
 
     def contains(self,x,y):
@@ -181,7 +181,7 @@ class Cartesian2DPoint(param.Parameter):
     ### JABALERT: Should accept and respect a BoundingBox bounds.
     def __set__(self,obj,val):
         try: ## Test that it is a 2-tuple
-            (x,y) = val 
+            (x,y) = val
             super(Cartesian2DPoint,self).__set__(obj,val)
         except:
             raise ValueError("Parameter must be a 2D point (an x,y tuple).")
@@ -222,7 +222,7 @@ class BoundingCircle(BoundingRegion):
     Takes parameters center (a single 2D point (x,y)) and radius (a
     scalar radius).
     """
-    
+
     __slots__ = ['radius','center']
 
     #radius = param.Number(0.5,bounds=(0.0,None))
@@ -272,7 +272,7 @@ class Unbounded(BoundingRegion):
 ### ends up with a simple BoundingBox after construction.
 class BoundingBoxIntersection(BoundingBox):
     """A BoundingBox initialized as the intersection of the supplied list of BoundingBoxes."""
-    
+
     def __init__(self,*boxes,**params):
         """
         Given a list of BoundingBoxes, computes a new BoundingBox that is
@@ -354,7 +354,7 @@ class AARectangle(object):
         """
         left,bottom,right,top = self.lbrt()
         return (right+left)/2.0,(top+bottom)/2.0
-    
+
 
     def intersect(self,other):
         l1,b1,r1,t1 = self.lbrt()
@@ -400,7 +400,7 @@ class BoundingRegionParameter(param.Parameter):
         self.set_hook = identity_hook
         super(BoundingRegionParameter,self).__init__(default=default,instantiate=True,**params)
 
-        
+
 
     def __set__(self,obj,val):
         """
@@ -411,10 +411,8 @@ class BoundingRegionParameter(param.Parameter):
         coords = [self.set_hook(obj,point) for point in val.lbrt()]
         if coords != val.lbrt():
             val = BoundingBox(points=[(coords[0],coords[1]),(coords[2],coords[3])])
-        
+
         if not isinstance(val,BoundingRegion):
             raise ValueError("Parameter must be a BoundingRegion.")
         else:
             super(BoundingRegionParameter,self).__set__(obj,val)
-
-            

@@ -58,11 +58,11 @@ def gaussian(x, y, xsigma, ysigma):
         y_h = divide(y,ysigma)
         return exp(-0.5*x_w*x_w + -0.5*y_h*y_h)
 
-    
+
 def log_gaussian(x, y, x_sigma, y_sigma, mu):
     """
     Two-dimensional oriented Log Gaussian pattern (i.e., 2D version of a
-    bell curve with an independent, movable peak). Much like a normal 
+    bell curve with an independent, movable peak). Much like a normal
     distribution, but not necessarily placing the peak above the center,
     and not necessarily summing to 1.0).
     """
@@ -72,28 +72,28 @@ def log_gaussian(x, y, x_sigma, y_sigma, mu):
     with float_error_ignore():
         x_w = divide(log(x)-mu, x_sigma*x_sigma)
         y_h = divide(log(y)-mu, y_sigma*y_sigma)
-		
+
         return exp(-0.5*x_w*x_w + -0.5*y_h*y_h)
 
 
-def sigmoid(axis, slope):     
+def sigmoid(axis, slope):
     """
-    Sigmoid dividing axis into a positive and negative half, 
+    Sigmoid dividing axis into a positive and negative half,
     with a smoothly sloping transition between them (controlled by the slope).
-    
+
     At default rotation, axis refers to the vertical (y) axis.
     """
     with float_error_ignore():
-        return (2.0 / (1.0 + exp(-2.0*slope*axis))) - 1.0   
-        
-                  
+        return (2.0 / (1.0 + exp(-2.0*slope*axis))) - 1.0
+
+
 def exponential(x, y, xscale, yscale):
     """
     Two-dimensional oriented exponential decay pattern.
     """
     if xscale==0.0 or yscale==0.0:
         return x*0.0
-    
+
     with float_error_ignore():
         x_w = divide(x,xscale)
         y_h = divide(y,yscale)
@@ -106,7 +106,7 @@ def gabor(x, y, xsigma, ysigma, frequency, phase):
     """
     if xsigma==0.0 or ysigma==0.0:
         return x*0.0
-    
+
     with float_error_ignore():
         x_w = divide(x,xsigma)
         y_h = divide(y,ysigma)
@@ -189,7 +189,7 @@ def smooth_rectangle(x, y, rec_w, rec_h, gaussian_width_x, gaussian_width_y):
 
     gaussian_x_coord = abs(x)-rec_w/2.0
     gaussian_y_coord = abs(y)-rec_h/2.0
-        
+
     box_x=less(gaussian_x_coord,0.0)
     box_y=less(gaussian_y_coord,0.0)
     sigmasq_x=gaussian_width_x*gaussian_width_x
@@ -231,7 +231,7 @@ def arc_by_radian(x, y, height, radian_range, thickness, gaussian_width):
         with float_error_ignore():
             inner_falloff = exp(divide(-distance_inside_inner_disk*distance_inside_inner_disk, 2.0*sigmasq))
             outer_falloff = exp(divide(-distance_outside_outer_disk*distance_outside_outer_disk, 2.0*sigmasq))
-            
+
     output_ring = maximum(inner_falloff,maximum(outer_falloff,ring))
 
     # Calculate radians (in 4 phases) and cut according to the set range)
@@ -298,6 +298,3 @@ def arc_by_center(x, y, arc_box, constant_length, thickness, gaussian_width):
             angles=(pi/2.0-angle, pi/2.0+angle)
 
     return arc_by_radian(x, y, radius*2.0, angles, thickness, gaussian_width)
-
-
-

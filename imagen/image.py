@@ -41,9 +41,9 @@ class ImageSampler(param.Parameterized):
     # As noted by JP in FastImageSampler, this isn't easy to figure out.
     def __call__(self,image,x,y,sheet_xdensity,sheet_ydensity,width=1.0,height=1.0):
         raise NotImplementedError
-    
+
     image = overridable_property(_get_image,_set_image,_del_image)
-    
+
 
 
 # CEBALERT: ArraySampler?
@@ -51,7 +51,7 @@ class PatternSampler(ImageSampler):
     """
     When called, resamples - according to the size_normalization
     parameter - an image at the supplied (x,y) sheet coordinates.
-    
+
     (x,y) coordinates outside the image are returned as the background
     value.
     """
@@ -67,23 +67,23 @@ class PatternSampler(ImageSampler):
         doc="""
         Determines how the pattern is scaled initially, relative to the
         default retinal dimension of 1.0 in sheet coordinates:
-            
+
         'stretch_to_fit': scale both dimensions of the pattern so they
         would fill a Sheet with bounds=BoundingBox(radius=0.5) (disregards
         the original's aspect ratio).
-    
+
         'fit_shortest': scale the pattern so that its shortest dimension
         is made to fill the corresponding dimension on a Sheet with
         bounds=BoundingBox(radius=0.5) (maintains the original's aspect
         ratio, filling the entire bounding box).
-    
+
         'fit_longest': scale the pattern so that its longest dimension is
         made to fill the corresponding dimension on a Sheet with
         bounds=BoundingBox(radius=0.5) (maintains the original's
         aspect ratio, fitting the image into the bounding box but not
         necessarily filling it).
-    
-        'original': no scaling is applied; each pixel of the pattern 
+
+        'original': no scaling is applied; each pixel of the pattern
         corresponds to one matrix unit of the Sheet on which the
         pattern being displayed.""")
 
@@ -101,10 +101,10 @@ class PatternSampler(ImageSampler):
                                          bounds=BoundingBox(points=((-cols/2.0,-rows/2.0),
                                                                     ( cols/2.0, rows/2.0))))
         self.scs.activity=image
-        
+
     def _del_image(self):
         self.scs = None
-        
+
 
     def __call__(self, image, x, y, sheet_xdensity, sheet_ydensity, width=1.0, height=1.0):
         """
@@ -142,7 +142,7 @@ class PatternSampler(ImageSampler):
         # scale the supplied coordinates to match the pattern being at density=1
         x=x*sheet_xdensity # deliberately don't operate in place (so as not to change supplied x & y)
         y=y*sheet_ydensity
-      
+
         # scale according to initial pattern size_normalization selected (size_normalization)
         self.__apply_size_normalization(x,y,sheet_xdensity,sheet_ydensity,self.size_normalization)
 
@@ -156,10 +156,10 @@ class PatternSampler(ImageSampler):
         r.clip(0,pattern_rows-1,out=r)
         c.clip(0,pattern_cols-1,out=c)
         left,bottom,right,top = self.scs.bounds.lbrt()
-        return numpy.where((x>=left) & (x<right) & (y>bottom) & (y<=top),  
+        return numpy.where((x>=left) & (x<right) & (y>bottom) & (y<=top),
                            self.image[r,c],
                            self.background_value)
-    
+
 
     def __apply_size_normalization(self,x,y,sheet_xdensity,sheet_ydensity,size_normalization):
         pattern_rows,pattern_cols = self.image.shape
@@ -168,7 +168,7 @@ class PatternSampler(ImageSampler):
         # function (c.f. OutputFunctions, etc)...
         if size_normalization=='original':
             return
-        
+
         elif size_normalization=='stretch_to_fit':
             x_sf,y_sf = pattern_cols/sheet_xdensity, pattern_rows/sheet_ydensity
             x*=x_sf; y*=y_sf
@@ -179,7 +179,7 @@ class PatternSampler(ImageSampler):
             else:
                 sf = pattern_cols/sheet_xdensity
             x*=sf;y*=sf
-            
+
         elif size_normalization=='fit_longest':
             if pattern_rows<pattern_cols:
                 sf = pattern_cols/sheet_xdensity
@@ -192,7 +192,7 @@ class PatternSampler(ImageSampler):
 
 def edge_average(a):
     "Return the mean value around the edge of an array."
-    
+
     if len(ravel(a)) < 2:
         return float(a[0])
     else:
@@ -216,7 +216,7 @@ class FastImageSampler(ImageSampler):
     the image to fit the given matrix size without distorting the
     aspect ratio of the original picture.
     """
-    
+
     sampling_method = param.Integer(default=Image.NEAREST,doc="""
        Python Imaging Library sampling method for resampling an image.
        Defaults to Image.NEAREST.""")
@@ -227,14 +227,14 @@ class FastImageSampler(ImageSampler):
             self._image.putdata(image.ravel())
         else:
             self._image = image
-        
+
     def __call__(self, image, x, y, sheet_xdensity, sheet_ydensity, width=1.0, height=1.0):
         self.image=image
 
         # JPALERT: Right now this ignores all options and just fits the image into given array.
         # It needs to be fleshed out to properly size and crop the
         # image given the options. (maybe this class needs to be
-        # redesigned?  The interface to this function is pretty inscrutable.)            
+        # redesigned?  The interface to this function is pretty inscrutable.)
         im = ImageOps.fit(self.image,x.shape,self.sampling_method)
         return array(im,dtype=Float)
 
@@ -260,7 +260,7 @@ class GenericImage(PatternGenerator):
     """
 
     __abstract = True
-    
+
     aspect_ratio  = param.Number(default=1.0,bounds=(0.0,None),
         softbounds=(0.0,2.0),precedence=0.31,doc="""
         Ratio of width to height; size*aspect_ratio gives the width.""")
@@ -286,17 +286,17 @@ class GenericImage(PatternGenerator):
 
     # CEB: not currently possible, because _get_image needs access to p
     #image = property(_get_image,_set_image,_del_image,doc=" ")
-        
+
     def function(self,p):
         height   = p.size
         width    = p.aspect_ratio*height
-                    
+
         result = p.pattern_sampler(self._get_image(p),p.pattern_x,p.pattern_y,float(p.xdensity),float(p.ydensity),
                                    float(width),float(height))
 
         if p.cache_image is False:
             self._image = None
-            del self.pattern_sampler.image 
+            del self.pattern_sampler.image
 
         return result
 
@@ -306,7 +306,7 @@ class GenericImage(PatternGenerator):
     # Can we instead patch PIL? (Note that we can't use copy_reg as we do for
     # e.g. numpy ufuncs because Image's Image is not a new-style class. So patching
     # PIL is probably the only option to handle this problem in one place.)
-    
+
     # CEB: by converting to string and back, we probably incur some speed
     # penalty on copy()ing GenericImages (since __getstate__ and __setstate__ are
     # used for copying, unless __copy__ and __deepcopy__ are defined instead).
@@ -345,7 +345,7 @@ class GenericImage(PatternGenerator):
 class FileImage(GenericImage):
     """
     2D Image generator that reads the image from a file.
-    
+
     The image at the supplied filename is converted to grayscale if it
     is not already a grayscale image. See Image's Image class for
     details of supported image file formats.
@@ -377,7 +377,3 @@ class FileImage(GenericImage):
             self.last_filename=p.filename
             self._image = ImageOps.grayscale(Image.open(p.filename))
         return self._image
-
-
-
-
