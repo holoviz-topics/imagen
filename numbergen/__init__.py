@@ -248,7 +248,21 @@ def constanttime():
 
 
 
-class ExponentialDecay(NumberGenerator):
+class TimeDependentValue(NumberGenerator):
+    """
+    Classes of function objects computing a value given a time function.
+    """
+    __abstract = True
+
+    time_fn = param.Callable(default=constanttime,doc="""
+        Function to generate the time used for calculating values.""")
+
+    def __call__(self):
+        raise NotImplementedError
+
+
+
+class ExponentialDecay(TimeDependentValue):
     """
     Function object that provides a value that decays according to an
     exponential function, based on a given time function.
@@ -267,9 +281,6 @@ class ExponentialDecay(NumberGenerator):
         Base of the exponent; the default yields starting_value*exp(-t/time_constant).
         Another popular choice of base is 2, which allows the
         time_constant to be interpreted as a half-life.""")
-
-    time_fn = param.Callable(default=constanttime,doc="""
-        Function to generate the time used for the decay.""")
 
     def __call__(self):
         Vi = self.starting_value
