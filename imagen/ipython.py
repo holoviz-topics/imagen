@@ -14,7 +14,6 @@ def load_ipython_extension(ip):
 
     if not _loaded:
         _loaded = True
-        ip = get_ipython()
 
         # register display func with PNG formatter:
         pil_formatter = ip.display_formatter.formatters['image/png']
