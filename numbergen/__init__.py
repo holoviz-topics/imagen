@@ -252,14 +252,12 @@ class TimeDependentValue(NumberGenerator):
     """
     Classes of function objects computing a value given a time function.
     """
-    __abstract = True
 
     time_fn = param.Callable(default=constanttime,doc="""
         Function to generate the time used for calculating values.""")
 
     def __call__(self):
-        raise NotImplementedError
-
+        return self.time_fn()
 
 
 class ExponentialDecay(TimeDependentValue):
