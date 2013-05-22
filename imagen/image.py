@@ -377,3 +377,36 @@ class FileImage(GenericImage):
             self.last_filename=p.filename
             self._image = ImageOps.grayscale(Image.open(p.filename))
         return self._image
+
+class NumpyFile(GenericImage):
+    """
+    Read array from a Numpy file.
+    """
+
+    filename = param.Filename(default='images/numpy_array_feret_photo.npy',precedence=0.9,doc="""
+        File path (can be relative to Param's base path) to numpy file.
+        """)
+
+    def __init__(self, **params):
+        """
+        Create the last_filename attribute, used to hold the last
+        filename. This allows reloading an existing image to be
+        avoided.
+        """
+        super(NumpyFile,self).__init__(**params)
+        self.last_filename = None
+        # Redefine Image Sampling so image originals are used withut scalling
+        self.pattern_sampler = PatternSampler(background_value_fn=edge_average,
+                                              size_normalization='original',
+                                              whole_pattern_output_fns= [])
+
+    def _get_image(self,p):
+        """
+        If necessary as indicated by the parameters, get array,
+        assign it to self._image and return True.  If no new array is
+        needed, return False.
+        """
+        if p.filename!=self.last_filename or self._image is None:
+            self.last_filename=p.filename
+            self._image = numpy.load((p.filename))
+        return self._image

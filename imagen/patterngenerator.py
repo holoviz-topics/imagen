@@ -138,7 +138,12 @@ class PatternGenerator(param.Parameterized):
         self._setup_xy(p.bounds,p.xdensity,p.ydensity,p.x,p.y,p.orientation)
         fn_result = self.function(p)
         self._apply_mask(p,fn_result)
-        result = p.scale*fn_result+p.offset
+        if p.scale != 1.0:
+            result = p.scale * fn_result
+        else:
+            result = fn_result
+        if p.offset != 0.0:
+            result += p.offset
 
         for of in p.output_fns:
             of(result)
