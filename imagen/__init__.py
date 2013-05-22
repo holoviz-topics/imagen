@@ -257,7 +257,8 @@ class OrientationContrast(SineGrating):
     """
 
     orientationcenter   = param.Number(default=0.0,bounds=(0.0,2*pi), doc="Orientation of the center grating.")
-    orientationsurround = param.Number(default=0.0,bounds=(-pi/2,pi/2), doc="Orientation of the surround grating relative to the central grating.")
+    orientationsurround = param.Number(default=0.0,bounds=(-pi*2,pi*2), doc="Orientation of the surround grating, either absolute or relative to the central grating.")
+    surround_orientation_relative = param.Boolean(default=False, doc="Determines whether the surround grating is relative to the central grating.")
     sizecenter     = param.Number(default=0.5,bounds=(0.0,None),softbounds=(0.0,10.0), doc="Size of the center grating.")
     sizesurround   = param.Number(default=1.0,bounds=(0.0,None),softbounds=(0.0,10.0), doc="Size of the surround grating.")
     scalecenter    = param.Number(default=1.0,bounds=(0.0,None),softbounds=(0.0,10.0), doc="Scale of the center grating.")
@@ -275,7 +276,10 @@ class OrientationContrast(SineGrating):
                             orientation=p.orientationcenter,
                             scale=p.scalecenter, offset=p.offsetcenter,
                             x=p.x, y=p.y,size=p.sizecenter)
-        surround_or = p.orientationcenter + p.orientationsurround
+        if p.surround_orientation_relative:
+            surround_or = p.orientationcenter + p.orientationsurround
+        else:
+            surround_or = p.orientationsurround
         input_2=SineGrating(mask_shape=Ring(thickness=p.thickness,smoothing=0,size=1.0),phase=p.phase, frequency=p.frequency,
                             orientation=surround_or, scale=p.scalesurround, offset=p.offsetsurround,
                             x=p.x, y=p.y, size=p.sizesurround)
