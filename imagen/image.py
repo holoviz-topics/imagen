@@ -282,6 +282,11 @@ class GenericImage(PatternGenerator):
 
 
     def _get_image(self,p):
+        """
+        If necessary as indicated by the parameters, get a new image,
+        assign it to self._image and return True.  If no new image is
+        needed, return False.
+        """
         raise NotImplementedError
 
     # CEB: not currently possible, because _get_image needs access to p
@@ -358,54 +363,41 @@ class FileImage(GenericImage):
 
 
     def __init__(self, **params):
-        """
-        Create the last_filename attribute, used to hold the last
-        filename. This allows reloading an existing image to be
-        avoided.
-        """
         super(FileImage,self).__init__(**params)
+        # Saves the last filename loaded, to avoid unnecessary reloading
         self.last_filename = None
 
 
     def _get_image(self,p):
-        """
-        If necessary as indicated by the parameters, get a new image,
-        assign it to self._image and return True.  If no new image is
-        needed, return False.
-        """
         if p.filename!=self.last_filename or self._image is None:
             self.last_filename=p.filename
             self._image = ImageOps.grayscale(Image.open(p.filename))
         return self._image
 
+
+
 class NumpyFile(GenericImage):
     """
-    Read array from a Numpy file.
+    Read an array from a Numpy-format file.
     """
 
     filename = param.Filename(default='images/numpy_array_feret_photo.npy',precedence=0.9,doc="""
-        File path (can be relative to Param's base path) to numpy file.
-        """)
+        File path (can be relative to Param's base path) to the Numpy file.""")
+
+    # Inherits from GenericImage, overriding defaults to disable rescaling
+    pattern_sampler = param.ClassSelector(class_=ImageSampler,
+        default=PatternSampler(background_value_fn=edge_average,
+                               size_normalization='original',
+                               whole_pattern_output_fns=[]))
+
 
     def __init__(self, **params):
-        """
-        Create the last_filename attribute, used to hold the last
-        filename. This allows reloading an existing image to be
-        avoided.
-        """
         super(NumpyFile,self).__init__(**params)
+        # Saves the last filename loaded, to avoid unnecessary reloading
         self.last_filename = None
-        # Redefine Image Sampling so image originals are used withut scalling
-        self.pattern_sampler = PatternSampler(background_value_fn=edge_average,
-                                              size_normalization='original',
-                                              whole_pattern_output_fns= [])
+
 
     def _get_image(self,p):
-        """
-        If necessary as indicated by the parameters, get array,
-        assign it to self._image and return True.  If no new array is
-        needed, return False.
-        """
         if p.filename!=self.last_filename or self._image is None:
             self.last_filename=p.filename
             self._image = numpy.load((p.filename))
