@@ -65,6 +65,10 @@ class SheetView(SheetIndexing):
     direct access to the data, via the .data attribute.
     """
 
+    cyclic_range = param.Number(default=None, bounds=(0, None), doc="""
+        Range of the cyclic quantity (e.g. pi for the orientation of
+        a symmetric stimulus). Allows normalization of the data.""")
+
     def __init__(self, data, bounds, **kwargs):
         super(SheetView, self).__init__(bounds=bounds, **kwargs)
         if 'roi' not in kwargs:
