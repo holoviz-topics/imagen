@@ -98,29 +98,29 @@ class NdIndexableMapping(param.Parameterized):
             return None
 
 
-    def _add_item(self, feature_values, data, sort=True):
+    def _add_item(self, dim_vals, data, sort=True):
         """
         Records data indexing it in the specified feature dimensions.
         """
-        if not isinstance(feature_values, tuple):
-            feature_values = (feature_values,)
-        if len(feature_values) == self.ndim:
-            self._update_item(feature_values, data)
+        if not isinstance(dim_vals, tuple):
+            dim_vals = (dim_vals,)
+        if len(dim_vals) == self.ndim:
+            self._update_item(dim_vals, data)
         else:
             KeyError('Key has to match number of dimensions.')
         if sort and self.sorted:
             self._data = map_type(sorted(self._data.items()))
 
 
-    def _update_item(self, coords, data):
+    def _update_item(self, dim_vals, data):
         """
         Subclasses default method to allow updating of nested data structures
         rather than simply overriding them.
         """
-        if coords in self._data and hasattr(self._data[coords], 'update'):
-            self._data[coords].update(data)
+        if dim_vals in self._data and hasattr(self._data[dim_vals], 'update'):
+            self._data[dim_vals].update(data)
         else:
-            self._data[coords] = data
+            self._data[dim_vals] = data
 
 
     def update(self, other):
@@ -165,6 +165,13 @@ class NdIndexableMapping(param.Parameterized):
         Returns the item highest data item along the map dimensions.
         """
         return self._data.values()[-1] if len(self.keys()) > 0 else None
+
+
+    def dim_index(self, dimension_label):
+        """
+        Returns the tuple index of the requested dimension.
+        """
+        return self.dimension_labels.index(dimension_label)
 
 
     def keys(self):
