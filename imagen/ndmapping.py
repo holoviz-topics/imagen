@@ -1,3 +1,9 @@
+"""
+NdIndexableMapping and NdMapping objects.
+"""
+
+__version__='$Revision$'
+
 import param
 
 try:
@@ -26,15 +32,27 @@ class AttrDict(dict):
 
 class NdIndexableMapping(param.Parameterized):
     """
-    An NdIndexableMapping extends mapping indexing semantics by supporting named
-    indices (labelled dimensions) and by allowing indexing directly into the
-    contained items (data dimensions). Indexing is multi-dimensional,
-    accepting as many key values as there are labelled and data dimensions.
+    An NdIndexableMapping is a type of mapping (like a dictionary or array)
+    that uses fixed-length multidimensional keys. The effect is like an
+    N-dimensional array, without requiring that the entire multidimensional
+    space be populated.
 
-    Direct indexing is achieved by passing any indices, in excess of the map
-    dimensions down to the data elements.
+    If the underlying type of data for each (key,value) pair also supports
+    indexing (such as a dictionary, array, or list), fully qualified indexing
+    can be used from the top level, with the first N dimensions of the index
+    selecting a particular piece of data stored in the NdIndexableMapping
+    object, and the remaining dimensions used to index into the underlying data.
 
-    Add example
+    For instance, for an NdIndexableMapping x with dimensions "Year" and
+    "Month" and an underlying data type that is a 2D floating-point array
+    indexed by (r,c), a 2D array can be indexed with x[2000,3] and a single
+    floating-point number may be indexed as x[2000,3,1,9].
+
+    In practice, this class is typically only used as an abstract base class,
+    because the NdMapping subclass extends it with a range of useful slicing
+    methods for selecting subsets of the data. Even so, keeping the slicing
+    support separate from the indexing and data storage methods helps make both
+    classes easier to understand.
     """
 
     dimension_labels = param.List(default=[None], constant=True, doc="""
@@ -45,19 +63,10 @@ class NdIndexableMapping(param.Parameterized):
         Additional labels to be associated with the Dataview.""")
 
     sorted = param.Boolean(default=True, doc="""
-        Determines whether to keep internal data structure sorted. May be
-        important for data, where the order of keys matters.""")
-
-    __abstract = True
-
-
-    def __call__(self, *args, **kwargs):
-        """
-        Supports slicing with keyword arguments corresponding to the
-        dimension labels.
-        """
-        pass
-
+        Determines whether to keep internal data structure sorted, using
+        all dimensions indices to sort on. Important if data is not added in
+        a consistently increasing order but the order matters for plotting
+        or other purposes.""")
 
     def __init__(self, initial_items=None, **kwargs):
         self._data = map_type()
@@ -89,6 +98,11 @@ class NdIndexableMapping(param.Parameterized):
 
     @property
     def timestamp(self):
+        """
+        Looks for the latest timestamp along the indexed dimensions, if 'Time'
+        is one of the dimension labels, otherwise looks in the metadata or
+        returns None, if none is defined.
+        """
         if 'Time' in self.dimension_labels:
             return max([k[self.dimension_labels.index('Time')] if type(k) is tuple
                         else k for k in self.keys()])
@@ -123,10 +137,11 @@ class NdIndexableMapping(param.Parameterized):
             self._data[dim_vals] = data
 
 
+
     def update(self, other):
         """
-        Updates the IndexMap with another IndexMap, checking that they
-        are indexed along the same map dimensions.
+        Updates the NdMapping with another NdMapping, checking that they
+        are indexed along the same dimensions.
         """
         for key, data in other[...].items():
             self._add_item(key, data, sort=False)
@@ -134,7 +149,7 @@ class NdIndexableMapping(param.Parameterized):
             self._data = map_type(sorted(self._data.items()))
 
 
-    def _split_slice(self, key):
+    def _split_index(self, key):
         """
         Splits key into map and data indices. If only map indices are supplied
         the data is passed an index of None.
@@ -148,10 +163,10 @@ class NdIndexableMapping(param.Parameterized):
 
     def __getitem__(self, key):
         """
-        Allows indexing in the map dimensions and slicing along the data
-        dimension.
+        Allows indexing in the indexed dimensions, passing any additional
+        indices to the data elements.
         """
-        map_slice, data_slice = self._split_slice(key)
+        map_slice, data_slice = self._split_index(key)
         return self._data[map_slice][data_slice]
 
 
@@ -219,7 +234,7 @@ class NdMapping(NdIndexableMapping):
         elif indexslice is ():
             return self
 
-        map_slice, data_slice = self._split_slice(indexslice)
+        map_slice, data_slice = self._split_index(indexslice)
         map_slice = self._transform_indices(map_slice)
         conditions = self._generate_conditions(map_slice)
 
@@ -232,9 +247,8 @@ class NdMapping(NdIndexableMapping):
 
     def _transform_indices(self, indices):
         """
-        Hook to map indices from a continuous space to a discrete set of keys.
-        Identity function here but subclasses can implement mapping from one
-        coordinate system to another.
+        Identity function here but subclasses can implement transforms of the
+        dimension indices from one coordinate system to another.
         """
         return indices
 

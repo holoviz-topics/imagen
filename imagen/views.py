@@ -1,16 +1,23 @@
+"""
+Views objects used to hold data and provide indexing into different coordinate
+systems.
+"""
+
+__version__='$Revision$'
+
 import param
 from sheetcoords import SheetCoordinateSystem
-from ndmapping import NdMapping, AttrDict
+from ndmapping import NdMapping
 
 
 class SheetIndexing(param.Parameterized):
     """
-    SheetIndexing provides methods to indexes and slices from one coordinate
-    system to another. By default it maps from sheet coordinates to matrix
-    coordinates using the _transform_indices method. However subclasses can
-    change this behavior by subclassing the _transform_values method,
-    which takes an index value along a certain dimension along with the
-    dimension number as input returns the transformed value.
+    SheetIndexing provides methods to transform indices and slices from one
+    coordinate system to another. By default it maps from sheet coordinates
+    to matrix coordinates using the _transform_indices method. However,
+    subclasses can change this behavior by subclassing the _transform_values
+    method, which takes an index value along a certain dimension along with the
+    dimension number as input and returns the transformed value.
     """
 
     bounds = param.Parameter(default=None, doc="""
@@ -65,8 +72,13 @@ class SheetView(SheetIndexing):
     """
 
     cyclic_range = param.Number(default=None, bounds=(0, None), doc="""
-        Range of the cyclic quantity (e.g. pi for the orientation of
-        a symmetric stimulus). Allows normalization of the data.""")
+        For a cyclic quantity, the range over which the values repeat. For
+        instance, the orientation of a mirror-symmetric pattern in a plane is
+        pi-periodic, with orientation x the same as orientation x+pi (and
+        x+2pi, etc.) A cyclic_range of None declares that the data are not
+        cyclic. This parameter is metadata, declaring properties of the data
+        that can be useful for automatic plotting and/or normalization, and is
+        not used within this class itself.""")
 
     def __init__(self, data, bounds, **kwargs):
         super(SheetView, self).__init__(bounds=bounds, **kwargs)
@@ -91,7 +103,7 @@ class SheetView(SheetIndexing):
 
 class ProjectionGrid(SheetIndexing, NdMapping):
     """
-    ProjectionView indexes other RangeMap objects, containing projections
+    ProjectionView indexes other NdMapping objects, containing projections
     onto coordinate systems. The X and Y dimensions are mapped onto the bounds
     object, allowing for bounds checking and grid-snapping.
     """
