@@ -32,8 +32,7 @@ class SheetIndexing(param.Parameterized):
 
 
     def _transform_indices(self, coords):
-        return tuple([self._transform_index(i, coord)
-                      for (i, coord) in enumerate(coords)])
+        return tuple([self._transform_index(i, coord) for (i, coord) in enumerate(coords)][::-1])
 
 
     def _transform_index(self, dim, index):
@@ -49,8 +48,8 @@ class SheetIndexing(param.Parameterized):
 
     def _transform_value(self, val, dim):
         if val is None: return None
-        (ind1, ind2) = self.scs.sheet2matrixidx(*((val, 0) if dim else (0, val)))
-        return ind2 if dim else ind1
+        (ind1, ind2) = self.scs.sheet2matrixidx(*((0, val) if dim else (val, 0)))
+        return ind1 if dim else ind2
 
 
     def matrixidx2coord(self, *args):
@@ -124,6 +123,10 @@ class ProjectionGrid(SheetIndexing, NdMapping):
                          ' data could not be added')
         coords = self._transform_indices(coords)
         super(ProjectionGrid, self)._add_item(coords, data, sort=sort)
+
+
+    def _transform_indices(self, coords):
+        return tuple([self._transform_index(i, coord) for (i, coord) in enumerate(coords)])
 
 
     def _transform_index(self, dim, index):
