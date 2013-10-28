@@ -9,13 +9,7 @@ import param
 try:
     from collections import OrderedDict
 except:
-    try:
-        from ordereddict import OrderedDict
-    except:
-        raise ImportError("OrderedDict could not be imported. For Python "
-                          "versions <2.7, run the command 'pip install "
-                          "ordereddict' or install the package through your"
-                          "repository manager.")
+    from odict import OrderedDict
 
 map_type = OrderedDict
 
