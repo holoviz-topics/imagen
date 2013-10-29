@@ -70,6 +70,7 @@ class NdIndexableMapping(param.Parameterized):
         super(NdIndexableMapping, self).__init__(metadata=metadata, **kwargs)
 
         self.ndim = len(self.dimension_labels)
+        self._next_ind = 0
 
         if isinstance(initial_items, map_type):
             self.update(initial_items)
@@ -200,6 +201,24 @@ class NdIndexableMapping(param.Parameterized):
             return self[key]
         except:
             return default
+
+
+    def __iter__(self):
+        return self
+
+
+    def next(self):
+        """
+        Implements the iterable interface, returning the keys in the
+        same way as a normal Python dictionary.
+        """
+        if self._next_ind < len(self):
+            key = self.keys()[self._next_ind]
+            self._next_ind += 1
+            return key
+        else:
+            self._next_ind = 0
+            raise StopIteration
 
 
     def __contains__(self, key):
