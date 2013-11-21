@@ -41,13 +41,6 @@ from imagen.transferfn import DivisiveNormalizeL1
 # background, or to see how sharp a gradient is needed to get a
 # response.
 
-# CEBALERT: do we need this? If so, please remove this question.
-class Null(Constant):
-    """
-    A constant pattern of zero activity.
-    """
-    scale = param.Number(default=0,constant=True,precedence=-1)
-
 
 class HalfPlane(PatternGenerator):
     """
