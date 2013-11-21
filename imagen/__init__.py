@@ -835,7 +835,7 @@ class Translator(PatternGenerator):
          Pattern to display during the episode_interval, if any.
          The default is a blank pattern.""")
 
-    time_fn = param.Callable(default=numbergen.constanttime,doc="""
+    time_fn = param.Callable(default=param.Dynamic.time_fn,doc="""
         Function to generate the time used as a base for translation.""")
 
     def _advance_params(self):

@@ -238,22 +238,12 @@ class VonMisesRandom(RandomDistribution):
         return self.random_generator.vonmisesvariate(self.mu,self.kappa)
 
 
-
-def constanttime(): 
-    """
-    Dummy time function for use as a default; always returns zero.
-    For actual use, will need to supply a more useful time function.
-    """
-    return 0
-
-
-
 class TimeDependentValue(NumberGenerator):
     """
     Classes of function objects computing a value given a time function.
     """
 
-    time_fn = param.Callable(default=constanttime,doc="""
+    time_fn = param.Callable(default=param.Dynamic.time_fn,doc="""
         Function to generate the time used for calculating values.""")
 
     def __call__(self):
