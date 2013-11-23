@@ -147,6 +147,34 @@ class NdIndexableMapping(param.Parameterized):
         if self.sorted:
             self._data = map_type(sorted(self._data.items()))
 
+    def reindex(self, dimension_labels):
+        """
+        Create a new object with a re-ordered or reduced set of dimension
+        labels. Accepts either a single dimension label or a list of chosen
+        dimension labels.
+
+        Reducing the number of dimension labels will discard information held in
+        the dropped dimensions. All data values are accessible in the newly
+        created object as the new labels must be sufficient to address each
+        value uniquely.
+        """
+        if dimension_labels in self.dimension_labels:
+            indices = [self.dim_index(dimension_labels)]
+            dimension_labels = [dimension_labels]
+        else:
+            indices = [self.dim_index(el) for el in dimension_labels]
+
+        keys = [tuple(k[i] for i in indices) for k in self._data.keys()]
+        initial_items = map_type((k,v) for (k,v) in zip(keys, self._data.values()))
+
+        if len(set(keys)) != len(keys):
+            raise Exception("Given dimension labels not sufficient to address all values uniquely")
+
+        return self.__class__(initial_items = initial_items,
+                              dimension_labels = dimension_labels,
+                              sorted=self.sorted,
+                              **self.metadata)
+
 
     def _split_index(self, key):
         """
