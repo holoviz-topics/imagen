@@ -173,6 +173,10 @@ class NdIndexableMapping(param.Parameterized):
         self._add_item(key, value)
 
 
+    def __str__(self):
+        return repr(self)
+
+
     @property
     def top(self):
         """"
@@ -196,6 +200,9 @@ class NdIndexableMapping(param.Parameterized):
             return [k[0] for k in self._data.keys()]
         else:
             return self._data.keys()
+
+    def values(self):
+        return self._data.values()
 
 
     def get(self, key, default=None):
