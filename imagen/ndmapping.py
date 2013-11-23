@@ -135,10 +135,14 @@ class NdIndexableMapping(param.Parameterized):
 
     def update(self, other):
         """
-        Updates the NdMapping with another NdMapping, checking that they
-        are indexed along the same dimensions.
+        Updates the NdMapping with another NdMapping or map_type
+        instance, checking that they are indexed along the same number
+        of dimensions.
         """
-        for key, data in other[...].items():
+
+        items = other.items() if type(other) is map_type else other[...].items()
+
+        for key, data in items:
             self._add_item(key, data, sort=False)
         if self.sorted:
             self._data = map_type(sorted(self._data.items()))
