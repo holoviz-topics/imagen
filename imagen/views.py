@@ -139,7 +139,7 @@ class SheetStack(SheetView):
 
         if len(ndmap.dimension_labels) != 1:
             raise AssertionError("NDMapping must have only one dimension_label")
-        if not all(sv.bounds == self.sheetviews[0].bounds for sv in self.sheetviews):
+        if not all(sv.bounds.lbrt() == self.sheetviews[0].bounds.lbrt() for sv in self.sheetviews):
             raise AssertionError("All SheetView must have matching bounds.")
 
         self.dimension_label = ndmap.dimension_labels[0]
@@ -187,7 +187,7 @@ class SheetStack(SheetView):
         start_layer = self.layer
         layer = self.layer
         while layer < self.depth:
-            yield self.sheetview(layer)
+            yield self.sheetviews[layer]
             layer += 1
         self.layer = start_layer
 
