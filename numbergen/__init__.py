@@ -19,7 +19,7 @@ class NumberGenerator(param.Parameterized):
     arithmetic expressions, such as abs((x+y)/z), where x,y,z are
     NumberGenerators or numbers.
     """
-    
+
     def __call__(self):
         raise NotImplementedError
 
@@ -50,7 +50,7 @@ class NumberGenerator(param.Parameterized):
 
 class BinaryOperator(NumberGenerator):
     """Applies any binary operator to NumberGenerators or numbers to yield a NumberGenerator."""
-    
+
     def __init__(self,lhs,rhs,operator,reverse=False,**args):
         """
         Accepts two NumberGenerator operands, an operator, and
@@ -70,16 +70,16 @@ class BinaryOperator(NumberGenerator):
             self.rhs=rhs
         self.operator=operator
         self.args=args
-        
+
     def __call__(self):
         return self.operator(self.lhs() if callable(self.lhs) else self.lhs,
                              self.rhs() if callable(self.rhs) else self.rhs, **self.args)
-    
+
 
 
 class UnaryOperator(NumberGenerator):
     """Applies any unary operator to a NumberGenerator to yield another NumberGenerator."""
-    
+
     def __init__(self,operand,operator,**args):
         """
         Accepts a NumberGenerator operand, an operator, and
@@ -90,11 +90,11 @@ class UnaryOperator(NumberGenerator):
         # parameters in the superclass when creating an instance,
         # because **args is used by this class itself.
         super(UnaryOperator,self).__init__()
-        
+
         self.operand=operand
         self.operator=operator
         self.args=args
-    
+
     def __call__(self):
         return self.operator(self.operand(),**self.args)
 
@@ -111,12 +111,12 @@ class RandomDistribution(NumberGenerator):
     hierarchy of classes, each tied to a particular random
     distribution. This allows setting parameters on creation rather
     than passing them each call, and allows pickling to work properly.
-    
+
     The underlying random.Random() instance and all its methods can be
     accessed from the 'random_generator' attribute.
     """
     __abstract = True
-    
+
     def __init__(self,**params):
         """
         Initialize a new Random() instance and store the supplied
@@ -134,8 +134,8 @@ class RandomDistribution(NumberGenerator):
         else:
             self.random_generator.jumpahead(10)
 
-        super(RandomDistribution,self).__init__(**params)        
-        
+        super(RandomDistribution,self).__init__(**params)
+
     def __call__(self):
         raise NotImplementedError
 
@@ -145,11 +145,11 @@ class UniformRandom(RandomDistribution):
     Specified with lbound and ubound; when called, return a random
     number in the range [lbound, ubound).
 
-    See the random module for further details.    
+    See the random module for further details.
     """
     lbound = param.Number(default=0.0,doc="inclusive lower bound")
     ubound = param.Number(default=1.0,doc="exclusive upper bound")
-    
+
     def __call__(self):
         return self.random_generator.uniform(self.lbound,self.ubound)
 
@@ -178,11 +178,11 @@ class UniformRandomInt(RandomDistribution):
     Specified with lbound and ubound; when called, return a random
     number in the inclusive range [lbound, ubound].
 
-    See the randint function in the random module for further details.    
+    See the randint function in the random module for further details.
     """
     lbound = param.Number(default=0,doc="inclusive lower bound")
     ubound = param.Number(default=1000,doc="inclusive upper bound")
-    
+
     def __call__(self):
         x = self.random_generator.randint(self.lbound,self.ubound)
         return x
@@ -197,7 +197,7 @@ class Choice(RandomDistribution):
     """
     choices = param.List(default=[0,1],
         doc="List of items from which to select.")
-    
+
     def __call__(self):
         return self.random_generator.choice(self.choices)
 
@@ -207,11 +207,11 @@ class NormalRandom(RandomDistribution):
     Normally distributed (Gaussian) random number.
 
     Specified with mean mu and standard deviation sigma.
-    See the random module for further details.    
+    See the random module for further details.
     """
     mu = param.Number(default=0.0,doc="Mean value.")
     sigma = param.Number(default=1.0,doc="Standard deviation.")
-    
+
     def __call__(self):
         return self.random_generator.normalvariate(self.mu,self.sigma)
 
@@ -230,7 +230,7 @@ class VonMisesRandom(RandomDistribution):
 
     mu = param.Number(default=0.0,softbounds=(0.0,2*pi),doc="""
         Mean value, in the range 0 to 2*pi.""")
-    
+
     kappa = param.Number(default=1.0,softbounds=(0.0,50.0),doc="""
         Concentration (inverse variance).""")
 
@@ -279,7 +279,7 @@ class ExponentialDecay(TimeDependentValue):
     exponential function, based on a given time function.
 
     Returns starting_value*base^(-time/time_constant).
-    
+
     See http://en.wikipedia.org/wiki/Exponential_decay.
     """
     starting_value = param.Number(1.0, doc="Value used for time zero.")
@@ -309,7 +309,7 @@ class BoundedNumber(NumberGenerator):
 
     bounds = param.Parameter((None,None), doc="""
         Legal range for the value returned, as a pair.
-        
+
         The default bounds are (None,None), meaning there are actually
         no bounds.  One or both bounds can be set by specifying a
         value.  For instance, bounds=(None,10) means there is no lower
@@ -325,4 +325,3 @@ class BoundedNumber(NumberGenerator):
 
 _public = list(set([_k for _k,_v in locals().items() if isinstance(_v,type) and issubclass(_v,NumberGenerator)]))
 __all__ = _public
-
