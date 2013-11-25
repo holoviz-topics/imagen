@@ -9,7 +9,7 @@ def display_pil_image(im):
     return b.getvalue()
 
 def load_ipython_extension(ip):
-    from IPython.core import display
+    from IPython.core import display # pyflakes:ignore (force loading)
     global _loaded
 
     if not _loaded:
