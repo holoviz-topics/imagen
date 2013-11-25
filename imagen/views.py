@@ -299,6 +299,14 @@ class Timeline(param.Parameterized):
     'time' parameter, which is set to param.Dynamic.time_fn by
     default. The returned SheetStack is then a spatiotemporal sampling
     of the pattern, i.e., as a stack of images over time.
+
+    A Timeline is also a context manager that extends the behaviour of
+    Time by surrounding the block with state_push and state_pop for a
+    given parameterized object or list of parameterized objects. The
+    objects to state_push and pop are supplied to the __call__ method
+    which returns the context manager. For an example for how Timeline
+    and Time may be used as a context manager, consult the example
+    given in the docstring of the Time class.
     """
 
     time = param.ClassSelector(default=param.Dynamic.time_fn,
@@ -311,6 +319,34 @@ class Timeline(param.Parameterized):
         if time is None:
             time = param.Dynamic.time_fn
         super(Timeline, self).__init__(time=time, **kwargs)
+
+
+    def __enter__(self):
+        if self._objs is None:
+            raise Exception("Call needs to be supplied with the object(s) that require state push and pop.")
+        for obj in self._objs:
+            obj.state_push()
+        return self.time.__enter__()
+
+
+    def __exit__(self, exc, *args):
+        for obj in self._objs:
+            obj.state_pop()
+        self._objs = None
+        self.time.__exit__(exc, *args)
+
+
+    def __call__(self, objs):
+        """
+        Returns a context manager which acts like the Time context
+        manager but also pushes and pops the state of the specified
+        object or collection of objects.
+        """
+        try:
+            self._objs = list(iter(objs))
+        except TypeError:
+            self._objs = [objs]
+        return self
 
 
     def ndmap(self,obj,until,offset=0,timestep=None,
