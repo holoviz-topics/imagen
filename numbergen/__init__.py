@@ -100,7 +100,19 @@ class UnaryOperator(NumberGenerator):
 
 
 
-class RandomDistribution(NumberGenerator):
+class TimeDependentValue(NumberGenerator):
+    """
+    Classes of function objects computing a value given a time function.
+    """
+
+    time_fn = param.Callable(default=param.Dynamic.time_fn,doc="""
+        Function to generate the time used for calculating values.""")
+
+    def __call__(self):
+        return self.time_fn()
+
+
+class RandomDistribution(TimeDependentValue):
     """
     Python's random module provides the Random class, which can be
     instantiated to give an object that can be asked to generate
@@ -117,6 +129,22 @@ class RandomDistribution(NumberGenerator):
     """
     __abstract = True
 
+    time_locked = param.Boolean(default=False, doc="""
+       If set to False, random sequences are independent of time_fn
+       and cannot be reproduced even if the time supplied by time_fn
+       returns to a previous value.
+
+       If set to True, a hash is generated for seeding the random
+       state on each call, using a triple consisting of the object
+       name, the time returned by time_fn and the value of
+       param.random_seed. As a consequence, for a given name and fixed
+       value of param.random_seed, the random values generated will be
+       a function of time.
+
+       If the object name has not been explicitly set and time_locked
+       is True, a warning is generated as the default object name
+       depends on the order of instantiation.""")
+
     def __init__(self,**params):
         """
         Initialize a new Random() instance and store the supplied
@@ -128,16 +156,32 @@ class RandomDistribution(NumberGenerator):
         """
         self.random_generator = random.Random()
 
-        if 'seed' in params:
-            self.random_generator.seed(params['seed'])
-            del params['seed']
+        seed = params.pop('seed', None)
+        super(RandomDistribution,self).__init__(**params)
+
+        if seed is not None:
+            self.random_generator.seed(seed)
         else:
             self.random_generator.jumpahead(10)
 
-        super(RandomDistribution,self).__init__(**params)
+        self._verify_constrained_hash()
+        if self.time_locked:
+            self._hash_and_seed()
+
+    def _verify_constrained_hash(self):
+        changed_params = dict(self.get_param_values(onlychanged=True))
+        if self.time_locked and ('name' not in changed_params):
+            self.warning("Default object name used to set the seed: "
+                         "random values conditional on object instantiation order.")
+
+    def _hash_and_seed(self):
+        hashval = hash((self.name, self.time_fn(), param.random_seed))
+        self.random_generator.seed(hashval)
 
     def __call__(self):
-        raise NotImplementedError
+        if self.time_locked:
+            self._hash_and_seed()
+
 
 
 class UniformRandom(RandomDistribution):
@@ -151,6 +195,7 @@ class UniformRandom(RandomDistribution):
     ubound = param.Number(default=1.0,doc="exclusive upper bound")
 
     def __call__(self):
+        super(UniformRandom, self).__call__()
         return self.random_generator.uniform(self.lbound,self.ubound)
 
 
@@ -168,6 +213,7 @@ class UniformRandomOffset(RandomDistribution):
         Difference of maximum and minimum value""")
 
     def __call__(self):
+        super(UniformRandomOffset, self).__call__()
         return self.random_generator.uniform(
                 self.mean - self.range / 2.0,
                 self.mean + self.range / 2.0)
@@ -184,6 +230,7 @@ class UniformRandomInt(RandomDistribution):
     ubound = param.Number(default=1000,doc="inclusive upper bound")
 
     def __call__(self):
+        super(UniformRandomInt, self).__call__()
         x = self.random_generator.randint(self.lbound,self.ubound)
         return x
 
@@ -199,6 +246,7 @@ class Choice(RandomDistribution):
         doc="List of items from which to select.")
 
     def __call__(self):
+        super(Choice, self).__call__()
         return self.random_generator.choice(self.choices)
 
 
@@ -213,6 +261,7 @@ class NormalRandom(RandomDistribution):
     sigma = param.Number(default=1.0,doc="Standard deviation.")
 
     def __call__(self):
+        super(NormalRandom, self).__call__()
         return self.random_generator.normalvariate(self.mu,self.sigma)
 
 
@@ -235,19 +284,9 @@ class VonMisesRandom(RandomDistribution):
         Concentration (inverse variance).""")
 
     def __call__(self):
+        super(VonMisesRandom, self).__call__()
         return self.random_generator.vonmisesvariate(self.mu,self.kappa)
 
-
-class TimeDependentValue(NumberGenerator):
-    """
-    Classes of function objects computing a value given a time function.
-    """
-
-    time_fn = param.Callable(default=param.Dynamic.time_fn,doc="""
-        Function to generate the time used for calculating values.""")
-
-    def __call__(self):
-        return self.time_fn()
 
 class BoxCar(TimeDependentValue):
     """
