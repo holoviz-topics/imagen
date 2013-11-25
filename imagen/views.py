@@ -107,7 +107,7 @@ class SheetView(SheetIndexing):
 class SheetStack(SheetView):
     """
     A SheetStack is a stack of SheetViews over some dimension. The
-    dimension may be a spatial dimension (i.e a ZStack), time
+    dimension may be a spatial dimension (i.e., a ZStack), time
     (specifying a frame sequence) or any other single dimension along
     which SheetViews may vary.
 
@@ -298,7 +298,7 @@ class Timeline(param.Parameterized):
     correctly, the time_fn of the objects sampled must match the
     'time' parameter, which is set to param.Dynamic.time_fn by
     default. The returned SheetStack is then a spatiotemporal sampling
-    of the pattern, i.e as a stack of images over time.
+    of the pattern, i.e., as a stack of images over time.
     """
 
     time = param.ClassSelector(default=param.Dynamic.time_fn, 
