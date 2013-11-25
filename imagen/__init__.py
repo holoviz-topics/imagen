@@ -584,6 +584,21 @@ class Composite(PatternGenerator):
         """
         return p.generators
 
+    def state_push(self):
+        """
+        Push the state of all generators
+        """
+        super(Composite,self).state_push()
+        for gen in self.generators:
+            gen.state_push()
+
+    def state_pop(self):
+        """
+        Push the state of all generators
+        """
+        super(Composite,self).state_pop()
+        for gen in self.generators:
+            gen.state_pop()
 
     # JABALERT: To support large numbers of patterns on a large input region,
     # should be changed to evaluate each pattern in a small box, and then
