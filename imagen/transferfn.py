@@ -55,7 +55,7 @@ class Threshold(TransferFn):
         Decision point for determining values to clip.""")
 
     def __call__(self,x):
-        minimum(x,self.threshold,x)
+        numpy.minimum(x,self.threshold,x)
 
 
 

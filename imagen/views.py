@@ -9,9 +9,6 @@ import param
 from sheetcoords import SheetCoordinateSystem
 from ndmapping import NdMapping
 
-import numpy as np
-import copy
-
 class SheetIndexing(param.Parameterized):
     """
     SheetIndexing provides methods to transform indices and slices from one
