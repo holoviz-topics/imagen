@@ -356,16 +356,14 @@ class Timeline(param.Parameterized):
         """
 
         ndmap = NdMapping(dimension_labels=['Time'])
-        with self.time as t:
+        with self(obj) as t:
             t.until = until
             if timestep is not None:
                 t.timestep = timestep
-            obj.state_push()
             t(offset)
-            for time in self.time:
+            for time in t:
                 val = value_fn(obj)
                 ndmap[time] = val
-            obj.state_pop()
         return ndmap
 
 
