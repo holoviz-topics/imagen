@@ -102,14 +102,18 @@ class UnaryOperator(NumberGenerator):
 
 class TimeAwareValue(param.Parameterized):
     """
-    Class of objects that have access to a time function and have the
-    option using it to generate time dependent values as necessary.
+    Class of objects that have access to a global time function 
+    and have the option of using it to generate time-dependent values
+    as necessary.
 
-    Some objects may have clear semantics in both time dependent and
-    time independent contexts. For instance, objects with random state
-    may return a new random value for every call independent of time.
-    Alternatively, each value may be held constant as long as a fixed
-    time value is returned by time_fn.
+    In the simplest case, an object could act as a strict function of
+    time, returning the current time transformed according to a fixed
+    equation.  Other objects may support locking their results to a
+    timebase, but also work without time.  For instance, objects with
+    random state could return a new random value for every call, with
+    no notion of time, or could always return the same value until the
+    global time changes.  Subclasses should thus provide an ability to
+    return a time-dependent value, but may not always do so.
     """
 
     time_dependent = param.Boolean(default=False,  doc="""
@@ -118,11 +122,13 @@ class TimeAwareValue(param.Parameterized):
 
     time_fn = param.Callable(default=param.Dynamic.time_fn, doc="""
         Callable used to specify the time that determines the state
-        and return value of the object.""")
+        and return value of the object, if time_dependent=True.""")
+
 
     def __init__(self, **params):
         super(TimeAwareValue, self).__init__(**params)
         self._check_time_fn()
+
 
     def _check_time_fn(self, time_instance=False):
         """
@@ -148,16 +154,18 @@ class TimeDependentValue(TimeAwareValue):
     """
     Objects that have access to a time function that determines the
     output value. As a function of time, this type of object should
-    allow time values to be randomly jumped forwards or backwards but
-    for a given time point, the results should remain constant.
+    allow time values to be randomly jumped forwards or backwards, 
+    but for a given time point, the results should remain constant.
 
-    The time_fn must be an instance of param.Time to ensure all the
+    The time_fn must be an instance of param.Time, to ensure all the
     facilities necessary for safely navigating the timeline are
     available.
     """
+
     time_dependent = param.Boolean(default=True, constant=True,
                                    precedence=-1, doc="""
        TimeDependentValue objects always have time_dependent=True.""")
+
 
     def _check_time_fn(self):
         if self.time_dependent is False:
@@ -179,32 +187,42 @@ class RandomDistribution(NumberGenerator, TimeAwareValue):
 
     To make it easier to use these, Numbergen provides here a
     hierarchy of classes, each tied to a particular random
-    distribution. This allows setting parameters on creation rather
-    than passing them each call, and allows pickling to work properly.
+    distribution. RandomDistributions support setting parameters on
+    creation rather than passing them each call, and allow pickling to
+    work properly.  Code that uses these classes will be independent
+    of how many parameters are used by the underlying distribution,
+    and can simply treat them as a generic source of random numbers.
 
     The underlying random.Random() instance and all its methods can be
     accessed from the 'random_generator' attribute.
 
-    RandomDistributions are TimeAwareValues as they can be set to have
-    time dependent or time independent behaviour, toggled by setting
-    time_dependent appropriately. By default, the random values
-    generated are not coupled to the time returned by the
-    time_fn. This can make random values difficult to reproduce as
-    returning to a previous time value will not regenerate the
-    original value.
+    RandomDistributions are TimeAwareValues, and thus can be locked to
+    a global time if desired.  By default, time_dependent=False, and
+    so a new random value will be generated each time these objects
+    are called.  If you have a global time function, you can set
+    time_dependent=True, so that the random values will instead be
+    constant at any given time, changing only when the time changes.
+    Using time_dependent values can help you obtain fully reproducible
+    streams of random numbers, even if you e.g. move time forwards and
+    backwards for testing.
 
     If declared time_dependent, a hash is generated for seeding the
     random state on each call, using a triple consisting of the object
-    name, the time returned by time_fn and the value of
+    name, the time returned by time_fn and the global value of
     param.random_seed. As a consequence, for a given name and fixed
     value of param.random_seed, the random values generated will be a
-    function of time.
+    fixed function of time.
 
-    If the object name has not been explicitly set and time_dependent
-    is True, a message is generated warning that the default object
-    name is dependent on the order of instantiation.
+    If the object name has not been set and time_dependent is True, a
+    message is generated warning that the default object name is
+    dependent on the order of instantiation.  To ensure that the
+    random number stream will remain constant even if other objects
+    are added or reordered in your file, supply a unique name
+    explicitly when you construct the RandomDistribution object.
     """
+
     __abstract = True
+
 
     def __init__(self,**params):
         """
@@ -229,6 +247,7 @@ class RandomDistribution(NumberGenerator, TimeAwareValue):
         if self.time_dependent:
             self._hash_and_seed()
 
+
     def _verify_constrained_hash(self):
         changed_params = dict(self.get_param_values(onlychanged=True))
         if self.time_dependent and ('name' not in changed_params):
@@ -239,9 +258,11 @@ class RandomDistribution(NumberGenerator, TimeAwareValue):
         hashval = hash((self.name, self.time_fn(), param.random_seed))
         self.random_generator.seed(hashval)
 
+
     def __call__(self):
         if self.time_dependent:
             self._hash_and_seed()
+
 
 
 class UniformRandom(RandomDistribution):
@@ -251,12 +272,16 @@ class UniformRandom(RandomDistribution):
 
     See the random module for further details.
     """
+
     lbound = param.Number(default=0.0,doc="inclusive lower bound")
+
     ubound = param.Number(default=1.0,doc="exclusive upper bound")
+
 
     def __call__(self):
         super(UniformRandom, self).__call__()
         return self.random_generator.uniform(self.lbound,self.ubound)
+
 
 
 class UniformRandomOffset(RandomDistribution):
@@ -267,16 +292,19 @@ class UniformRandomOffset(RandomDistribution):
 
     See the random module for further details.
     """
-    mean = param.Number(default=0.0, doc="""
-        Mean value""")
-    range = param.Number(default=1.0, doc="""
+
+    mean = param.Number(default=0.0, doc="""Mean value""")
+
+    range = param.Number(default=1.0, bounds=(0.0,None), doc="""
         Difference of maximum and minimum value""")
+
 
     def __call__(self):
         super(UniformRandomOffset, self).__call__()
         return self.random_generator.uniform(
                 self.mean - self.range / 2.0,
                 self.mean + self.range / 2.0)
+
 
 
 class UniformRandomInt(RandomDistribution):
@@ -286,13 +314,16 @@ class UniformRandomInt(RandomDistribution):
 
     See the randint function in the random module for further details.
     """
+
     lbound = param.Number(default=0,doc="inclusive lower bound")
     ubound = param.Number(default=1000,doc="inclusive upper bound")
+
 
     def __call__(self):
         super(UniformRandomInt, self).__call__()
         x = self.random_generator.randint(self.lbound,self.ubound)
         return x
+
 
 
 class Choice(RandomDistribution):
@@ -302,12 +333,15 @@ class Choice(RandomDistribution):
     Accepts items of any type, though they are typically numbers.
     See the choice() function in the random module for further details.
     """
+
     choices = param.List(default=[0,1],
         doc="List of items from which to select.")
+
 
     def __call__(self):
         super(Choice, self).__call__()
         return self.random_generator.choice(self.choices)
+
 
 
 class NormalRandom(RandomDistribution):
@@ -317,12 +351,16 @@ class NormalRandom(RandomDistribution):
     Specified with mean mu and standard deviation sigma.
     See the random module for further details.
     """
+
     mu = param.Number(default=0.0,doc="Mean value.")
-    sigma = param.Number(default=1.0,doc="Standard deviation.")
+
+    sigma = param.Number(default=1.0,bounds=(0.0,None),doc="Standard deviation.")
+
 
     def __call__(self):
         super(NormalRandom, self).__call__()
         return self.random_generator.normalvariate(self.mu,self.sigma)
+
 
 
 class VonMisesRandom(RandomDistribution):
@@ -338,10 +376,11 @@ class VonMisesRandom(RandomDistribution):
     """
 
     mu = param.Number(default=0.0,softbounds=(0.0,2*pi),doc="""
-        Mean value, in the range 0 to 2*pi.""")
+        Mean value, typically in the range 0 to 2*pi.""")
 
-    kappa = param.Number(default=1.0,softbounds=(0.0,50.0),doc="""
+    kappa = param.Number(default=1.0,bounds=(0.0,None),softbounds=(0.0,50.0),doc="""
         Concentration (inverse variance).""")
+
 
     def __call__(self):
         super(VonMisesRandom, self).__call__()
@@ -356,7 +395,8 @@ class TimeFactor(NumberGenerator, TimeDependentValue):
     """
 
     factor = param.Number(default=1.0, doc="""
-       The factor multiplied with the current time value.""")
+       The factor to be multiplied by the current time value.""")
+
 
     def __call__(self):
         return self.time_fn() * self.factor
@@ -377,7 +417,9 @@ class BoxCar(NumberGenerator, TimeDependentValue):
 
     onset = param.Number(0.0, doc="Time of onset.")
 
-    duration = param.Number(None, allow_None=True,  doc="Duration of step value.")
+    duration = param.Number(None, allow_None=True, bounds=(0.0,None), doc="""
+        Duration of step value.""")
+
 
     def __call__(self):
         if self.time_fn() <= self.onset:
@@ -394,7 +436,8 @@ class SquareWave(NumberGenerator, TimeDependentValue):
     Generate a square wave with 'on' periods returning 1.0 and
     'off'periods returning 0.0 of specified duration(s). By default
     the portion of time spent in the high state matches the time spent
-    in the low state.
+    in the low state (a duty cycle of 50%), but the duty cycle can be
+    controlled if desired.
 
     The 'on' state begins after a time specified by the 'onset'
     parameter.  The onset duration supplied must be less than the off
@@ -405,14 +448,16 @@ class SquareWave(NumberGenerator, TimeDependentValue):
         state relative to time 0. Must be set to a value less than the
         'off_duration' parameter.""")
 
-    duration = param.Number(1.0, allow_None=False, doc="""
+    duration = param.Number(1.0, allow_None=False, bounds=(0.0,None), doc="""
          Duration of the 'on' state during which a value of 1.0 is
          returned.""")
 
-    off_duration = param.Number(default=None, allow_None=True, doc="""
+    off_duration = param.Number(default=None, allow_None=True, 
+                                bounds=(0.0,None), doc="""
         Duration of the 'off' value state during which a value of 0.0
         is returned. By default, this duration matches the value of
         the 'duration' parameter.""")
+
 
     def __init__(self, **params):
         super(SquareWave,self).__init__(**params)
@@ -422,6 +467,7 @@ class SquareWave(NumberGenerator, TimeDependentValue):
 
         if self.onset > self.off_duration:
             raise AssertionError("Onset value needs to be less than %s" % self.onset)
+
 
     def __call__(self):
         phase_offset = (self.time_fn() - self.onset) % (self.duration + self.off_duration)
@@ -441,7 +487,9 @@ class ExponentialDecay(NumberGenerator, TimeDependentValue):
 
     See http://en.wikipedia.org/wiki/Exponential_decay.
     """
+
     starting_value = param.Number(1.0, doc="Value used for time zero.")
+
     ending_value = param.Number(0.0, doc="Value used for time infinity.")
 
     time_constant = param.Number(10000,doc="""
@@ -451,6 +499,7 @@ class ExponentialDecay(NumberGenerator, TimeDependentValue):
         Base of the exponent; the default yields starting_value*exp(-t/time_constant).
         Another popular choice of base is 2, which allows the
         time_constant to be interpreted as a half-life.""")
+
 
     def __call__(self):
         Vi = self.starting_value
@@ -467,15 +516,18 @@ class TimeSampledFn(NumberGenerator, TimeDependentValue):
     held constant within each interval.
     """
 
-    period = param.Number(default=1.0, doc="""
-       The periodicity with which the value of fn are sampled.""")
+    period = param.Number(default=1.0, bounds=(0.0,None), 
+        inclusive_bounds=(False,True), softbounds=(0.0,5.0), doc="""
+        The periodicity with which the values of fn are sampled.""")
 
-    offset = param.Number(default=0.0, doc="""
-        The offset from time 0.0 at which the first sample is drawn.
+    offset = param.Number(default=0.0, bounds=(0.0,None), 
+                          softbounds=(0.0,5.0), doc="""
+        The offset from time 0.0 at which the first sample will be drawn.
         Must be less than the value of period.""")
 
     fn = param.Callable(doc="""
-       The time dependent function used to generate the sampled values.""")
+        The time-dependent function used to generate the sampled values.""")
+
 
     def __init__(self, **params):
         super(TimeSampledFn, self).__init__(**params)
@@ -488,6 +540,7 @@ class TimeSampledFn(NumberGenerator, TimeDependentValue):
 
         if self.offset >= self.period:
             raise Exception("The onset value must be less than the period.")
+
 
     def __call__(self):
         current_time = self.time_fn()
@@ -505,6 +558,7 @@ class BoundedNumber(NumberGenerator):
     Function object that silently enforces numeric bounds on values
     returned by a callable object.
     """
+
     generator = param.Callable(None, doc="Object to call to generate values.")
 
     bounds = param.Parameter((None,None), doc="""
@@ -514,6 +568,7 @@ class BoundedNumber(NumberGenerator):
         no bounds.  One or both bounds can be set by specifying a
         value.  For instance, bounds=(None,10) means there is no lower
         bound, and an upper bound of 10.""")
+
 
     def __call__(self):
         val = self.generator()
