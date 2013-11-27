@@ -188,6 +188,11 @@ class SheetStack(SheetView):
             layer += 1
         self.layer = start_layer
 
+    def view(self):
+        """
+        Return the sheetview corresponding to the active layer.
+        """
+        return self.sheetviews[self.layer]
 
     @property
     def depth(self):
