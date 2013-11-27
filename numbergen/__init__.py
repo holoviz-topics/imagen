@@ -100,19 +100,77 @@ class UnaryOperator(NumberGenerator):
 
 
 
-class TimeDependentValue(NumberGenerator):
+class TimeAwareValue(param.Parameterized):
     """
-    Classes of function objects computing a value given a time function.
+    Class of objects that have access to a time function and have the
+    option using it to generate time dependent values as necessary.
+
+    Some objects may have clear semantics in both time dependent and
+    time independent contexts. For instance, objects with random state
+    may return a new random value for every call independent of time.
+    Alternatively, each value may be held constant as long as a fixed
+    time value is returned by time_fn.
     """
 
-    time_fn = param.Callable(default=param.Dynamic.time_fn,doc="""
-        Function to generate the time used for calculating values.""")
+    time_dependent = param.Boolean(default=False,  doc="""
+       Whether the given time_fn should be used to constrain the
+       results generated.""")
 
-    def __call__(self):
-        return self.time_fn()
+    time_fn = param.Callable(default=param.Dynamic.time_fn, doc="""
+        Callable used to specify the time that determines the state
+        and return value of the object.""")
+
+    def __init__(self, **params):
+        super(TimeAwareValue, self).__init__(**params)
+        self._check_time_fn()
+
+    def _check_time_fn(self, time_instance=False):
+        """
+        If time_fn is the global time function supplied by
+        param.Dynamic.time_fn, make sure Dynamic parameters are using
+        this time function to control their behaviour.
+
+        If time_instance is True, time_fn must be a param.Time instance.
+        """
+        if time_instance and not isinstance(self.time_fn, param.Time):
+            raise AssertionError("%s requires a Time object"
+                                 % self.__class__.__name__)
+
+        if self.time_dependent:
+            global_timefn = self.time_fn is param.Dynamic.time_fn
+            if global_timefn and not param.Dynamic.time_dependent:
+                raise AssertionError("Cannot use Dynamic.time_fn as"
+                                     " parameters are ignoring time.")
 
 
-class RandomDistribution(TimeDependentValue):
+
+class TimeDependentValue(TimeAwareValue):
+    """
+    Objects that have access to a time function that determines the
+    output value. As a function of time, this type of object should
+    allow time values to be randomly jumped forwards or backwards but
+    for a given time point, the results should remain constant.
+
+    The time_fn must be an instance of param.Time to ensure all the
+    facilities necessary for safely navigating the timeline are
+    available.
+    """
+    time_dependent = param.Boolean(default=True, constant=True,
+                                   precedence=-1, doc="""
+       TimeDependentValue objects always have time_dependent=True.""")
+
+    def _check_time_fn(self):
+        if self.time_dependent is False:
+            self.warning("Parameter time_dependent cannot be set to False.")
+            p = self.params('time_dependent')
+            p.constant = False
+            self.time_dependent = True
+            p.constant = True
+        super(TimeDependentValue,self)._check_time_fn(time_instance=True)
+
+
+
+class RandomDistribution(NumberGenerator, TimeAwareValue):
     """
     Python's random module provides the Random class, which can be
     instantiated to give an object that can be asked to generate
@@ -126,24 +184,27 @@ class RandomDistribution(TimeDependentValue):
 
     The underlying random.Random() instance and all its methods can be
     accessed from the 'random_generator' attribute.
+
+    RandomDistributions are TimeAwareValues as they can be set to have
+    time dependent or time independent behaviour, toggled by setting
+    time_dependent appropriately. By default, the random values
+    generated are not coupled to the time returned by the
+    time_fn. This can make random values difficult to reproduce as
+    returning to a previous time value will not regenerate the
+    original value.
+
+    If declared time_dependent, a hash is generated for seeding the
+    random state on each call, using a triple consisting of the object
+    name, the time returned by time_fn and the value of
+    param.random_seed. As a consequence, for a given name and fixed
+    value of param.random_seed, the random values generated will be a
+    function of time.
+
+    If the object name has not been explicitly set and time_dependent
+    is True, a message is generated warning that the default object
+    name is dependent on the order of instantiation.
     """
     __abstract = True
-
-    time_locked = param.Boolean(default=False, doc="""
-       If set to False, random sequences are independent of time_fn
-       and cannot be reproduced even if the time supplied by time_fn
-       returns to a previous value.
-
-       If set to True, a hash is generated for seeding the random
-       state on each call, using a triple consisting of the object
-       name, the time returned by time_fn and the value of
-       param.random_seed. As a consequence, for a given name and fixed
-       value of param.random_seed, the random values generated will be
-       a function of time.
-
-       If the object name has not been explicitly set and time_locked
-       is True, a warning is generated as the default object name
-       depends on the order of instantiation.""")
 
     def __init__(self,**params):
         """
@@ -165,12 +226,12 @@ class RandomDistribution(TimeDependentValue):
             self.random_generator.jumpahead(10)
 
         self._verify_constrained_hash()
-        if self.time_locked:
+        if self.time_dependent:
             self._hash_and_seed()
 
     def _verify_constrained_hash(self):
         changed_params = dict(self.get_param_values(onlychanged=True))
-        if self.time_locked and ('name' not in changed_params):
+        if self.time_dependent and ('name' not in changed_params):
             self.warning("Default object name used to set the seed: "
                          "random values conditional on object instantiation order.")
 
@@ -179,9 +240,8 @@ class RandomDistribution(TimeDependentValue):
         self.random_generator.seed(hashval)
 
     def __call__(self):
-        if self.time_locked:
+        if self.time_dependent:
             self._hash_and_seed()
-
 
 
 class UniformRandom(RandomDistribution):
@@ -288,7 +348,7 @@ class VonMisesRandom(RandomDistribution):
         return self.random_generator.vonmisesvariate(self.mu,self.kappa)
 
 
-class BoxCar(TimeDependentValue):
+class BoxCar(NumberGenerator, TimeDependentValue):
     """
     The boxcar function over the specified time interval. The bounds
     are exclusive: zero is returned at the onset time and at the
@@ -312,7 +372,7 @@ class BoxCar(TimeDependentValue):
         else:
             return 1.0
 
-class ExponentialDecay(TimeDependentValue):
+class ExponentialDecay(NumberGenerator, TimeDependentValue):
     """
     Function object that provides a value that decays according to an
     exponential function, based on a given time function.
