@@ -175,6 +175,14 @@ class NdIndexableMapping(param.Parameterized):
                               sorted=self.sorted,
                               **self.metadata)
 
+    def dframe(self, value_label='data'):
+        try:
+            import pandas
+        except ImportError:
+            raise Exception("Cannot build a DataFrame without the pandas library.")
+        labels = self.dimension_labels + [value_label]
+        return pandas.DataFrame([dict(zip(labels, k+(v,))) for (k,v) in self._data.items()])
+
 
     def _split_index(self, key):
         """
