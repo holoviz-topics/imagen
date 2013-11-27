@@ -459,6 +459,47 @@ class ExponentialDecay(NumberGenerator, TimeDependentValue):
                                                  float(self.time_constant))
 
 
+
+class TimeSampledFn(NumberGenerator, TimeDependentValue):
+    """
+    Samples the values supplied by a time_dependent callable at
+    regular intervals of duration 'period', with the sampled value
+    held constant within each interval.
+    """
+
+    period = param.Number(default=1.0, doc="""
+       The periodicity with which the value of fn are sampled.""")
+
+    offset = param.Number(default=0.0, doc="""
+        The offset from time 0.0 at which the first sample is drawn.
+        Must be less than the value of period.""")
+
+    fn = param.Callable(doc="""
+       The time dependent function used to generate the sampled values.""")
+
+    def __init__(self, **params):
+        super(TimeSampledFn, self).__init__(**params)
+
+        if not getattr(self.fn,'time_dependent', False):
+            raise Exception("The function 'fn' needs to be time dependent.")
+
+        if self.time_fn != self.fn.time_fn:
+            raise Exception("Objects do not share the same time_fn")
+
+        if self.offset >= self.period:
+            raise Exception("The onset value must be less than the period.")
+
+    def __call__(self):
+        current_time = self.time_fn()
+        current_time += self.offset
+        difference = current_time % self.period
+        with self.time_fn as t:
+            t(current_time - difference - self.offset)
+            value = self.fn()
+        return value
+
+
+
 class BoundedNumber(NumberGenerator):
     """
     Function object that silently enforces numeric bounds on values
