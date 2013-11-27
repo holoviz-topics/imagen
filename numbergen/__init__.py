@@ -348,6 +348,21 @@ class VonMisesRandom(RandomDistribution):
         return self.random_generator.vonmisesvariate(self.mu,self.kappa)
 
 
+
+
+class TimeFactor(NumberGenerator, TimeDependentValue):
+    """
+    The current time multiplied by some conversion factor.
+    """
+
+    factor = param.Number(default=1.0, doc="""
+       The factor multiplied with the current time value.""")
+
+    def __call__(self):
+        return self.time_fn() * self.factor
+
+
+
 class BoxCar(NumberGenerator, TimeDependentValue):
     """
     The boxcar function over the specified time interval. The bounds
