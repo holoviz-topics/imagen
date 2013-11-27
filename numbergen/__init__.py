@@ -149,12 +149,11 @@ class TimeAwareValue(param.Parameterized):
                                      " parameters are ignoring time.")
 
 
-
 class TimeDependentValue(TimeAwareValue):
     """
     Objects that have access to a time function that determines the
     output value. As a function of time, this type of object should
-    allow time values to be randomly jumped forwards or backwards, 
+    allow time values to be randomly jumped forwards or backwards,
     but for a given time point, the results should remain constant.
 
     The time_fn must be an instance of param.Time, to ensure all the
@@ -162,18 +161,10 @@ class TimeDependentValue(TimeAwareValue):
     available.
     """
 
-    time_dependent = param.Boolean(default=True, constant=True,
-                                   precedence=-1, doc="""
-       TimeDependentValue objects always have time_dependent=True.""")
-
+    time_dependent = param.Boolean(default=True, readonly=True, doc="""
+       Read-only parameter that is always True.""")
 
     def _check_time_fn(self):
-        if self.time_dependent is False:
-            self.warning("Parameter time_dependent cannot be set to False.")
-            p = self.params('time_dependent')
-            p.constant = False
-            self.time_dependent = True
-            p.constant = True
         super(TimeDependentValue,self)._check_time_fn(time_instance=True)
 
 
