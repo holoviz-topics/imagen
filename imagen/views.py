@@ -29,6 +29,8 @@ class SheetIndexing(param.Parameterized):
 
     __abstract = True
 
+    __deep_indexable = True
+
     def _create_scs(self):
         (l, b, r, t) = self.bounds.lbrt()
         (dim1, dim2) = self.shape

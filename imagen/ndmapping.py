@@ -62,6 +62,8 @@ class NdIndexableMapping(param.Parameterized):
         a consistently increasing order but the order matters for plotting
         or other purposes.""")
 
+    __deep_indexable = True
+
     def __init__(self, initial_items=None, **kwargs):
         self._data = map_type()
 
@@ -175,6 +177,7 @@ class NdIndexableMapping(param.Parameterized):
                               sorted=self.sorted,
                               **self.metadata)
 
+
     def dframe(self, value_label='data'):
         try:
             import pandas
@@ -202,7 +205,12 @@ class NdIndexableMapping(param.Parameterized):
         indices to the data elements.
         """
         map_slice, data_slice = self._split_index(key)
-        return self._data[map_slice][data_slice]
+        if hasattr(self._data[map_slice], '__deep_indexable'):
+            return self._data[map_slice][data_slice]
+        else:
+            if len(data_slice) > 0:
+                self.warning('Cannot index into data element, extra data indices ignored.')
+            return self._data[map_slice]
 
 
     def __setitem__(self, key, value):
@@ -236,6 +244,7 @@ class NdIndexableMapping(param.Parameterized):
             return [k[0] for k in self._data.keys()]
         else:
             return self._data.keys()
+
 
     def values(self):
         return self._data.values()
@@ -299,13 +308,18 @@ class NdMapping(NdIndexableMapping):
         conditions = self._generate_conditions(map_slice)
 
         if all(not isinstance(el, slice) for el in map_slice):
-            if hasattr(self._data[map_slice], '__getitem__'):
+            if hasattr(self._data[map_slice], '__deep_indexable'):
                 return self._data[map_slice][data_slice]
             else:
+                if len(data_slice) > 0:
+                    self.warning('Cannot index into data element, extra data indices ignored.')
                 return self._data[map_slice]
         else:
-            return map_type((k, v[data_slice]) if hasattr(v, '__getitem__') else (k, v)
-                            for k, v in self._data.items() if self._conjunction(k, conditions))
+            ret_val = map_type((k, v[data_slice]) if hasattr(v, '__deep_indexable') else (k, v)
+                               for k, v in self._data.items() if self._conjunction(k, conditions))
+            if self.ndim == 1:
+                return map_type(zip((k[0] for k in ret_val.keys()), ret_val.values()))
+            return ret_val
 
 
     def _transform_indices(self, indices):
