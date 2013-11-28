@@ -75,7 +75,7 @@ class NdIndexableMapping(param.Parameterized):
         if isinstance(initial_items, map_type):
             self.update(initial_items)
         if isinstance(initial_items, tuple):
-            self[initial_items[0]] = initial_items[1]
+            self._data[initial_items[0]] = initial_items[1]
 
 
     def write_metadata(self, kwargs):
