@@ -40,9 +40,6 @@ class SheetIndexing(param.Parameterized):
 
 
     def _transform_indices(self, coords):
-        if type(coords) == int:
-            raise Exception("***** %s" % coords)
-            #coords = [coords]
         return tuple([self._transform_index(i, coord) for (i, coord) in enumerate(coords)][::-1])
 
 
@@ -322,7 +319,7 @@ class Timeline(param.Parameterized):
         that are to be sampled.""")
 
 
-    def __init__(self,time=None,**kwargs):
+    def __init__(self, time=None, **kwargs):
         if time is None:
             time = param.Dynamic.time_fn
         super(Timeline, self).__init__(time=time, **kwargs)
@@ -356,8 +353,8 @@ class Timeline(param.Parameterized):
         return self
 
 
-    def ndmap(self,obj,until,offset=0,timestep=None,
-              value_fn = lambda obj: obj()):
+    def ndmap(self, obj, until, offset=0, timestep=None,
+              value_fn=lambda obj: obj()):
         """
         Builds an NDMapping across time, taking snapshots of some
         time-varying object. The value stored in the NDMapping is
@@ -378,7 +375,7 @@ class Timeline(param.Parameterized):
 
 
     def stack(self, obj, steps, offset=0, timestep=None, bounds=None,
-              array_fn = lambda obj: obj(), **kwargs):
+              array_fn=lambda obj: obj(), **kwargs):
         """
         Builds a SheetStack from some time-varying object with bounds
         and representation as a numpy array. The bounds are used
@@ -390,6 +387,6 @@ class Timeline(param.Parameterized):
         """
         bounds = obj.bounds if (bounds is None) else bounds
         ndmap = self.ndmap(obj, steps, offset=offset, timestep=timestep,
-                           value_fn = lambda obj: SheetView(array_fn(obj),
-                                                            bounds))
+                           value_fn=lambda obj: SheetView(array_fn(obj),
+                                                          bounds))
         return SheetStack(ndmap, metadata=kwargs)
