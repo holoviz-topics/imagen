@@ -3,7 +3,7 @@ Two-dimensional pattern generators drawing from various random distributions.
 """
 __version__='$Revision$'
 
-import numpy
+import numpy as np
 
 from numpy.oldnumeric import zeros,floor,where,choose,less,greater,Int,random_array
 
@@ -35,7 +35,7 @@ class RandomGenerator(PatternGenerator):
     orientation = param.Number(precedence=-1)
 
     random_generator = param.Parameter(
-        default=numpy.random.RandomState(seed=(500,500)),precedence=-1,doc=
+        default=np.random.RandomState(seed=(500,500)),precedence=-1,doc=
         """
         numpy's RandomState provides methods for generating random
         numbers (see RandomState's help for more information).
@@ -72,6 +72,25 @@ class UniformRandom(RandomGenerator):
 
     def _distrib(self,shape,p):
         return p.random_generator.uniform(p.offset, p.offset+p.scale, shape)
+
+
+
+class UniformRandomInts(RandomGenerator):
+    """
+    2D distribution of integer values from low to high in the in the
+    half-open interval [`low`, `high`).
+
+    Matches semantics of numpy.random.randint.
+    """
+
+    low = param.Integer(default=0, doc="""
+        Lowest integer to be drawn from the distribution.""")
+
+    high = param.Integer(default=2, doc="""
+        The highest integer to be drawn from the distribution.""")
+
+    def _distrib(self,shape,p):
+        return np.random.randint(p.low, p.high, shape)
 
 
 
@@ -123,7 +142,7 @@ class GaussianRandom(RandomGenerator):
 class GaussianCloud(Composite):
     """Uniform random noise masked by a circular Gaussian."""
 
-    operator = param.Parameter(numpy.multiply)
+    operator = param.Parameter(np.multiply)
 
     gaussian_size = param.Number(default=1.0,doc="Size of the Gaussian pattern.")
 
