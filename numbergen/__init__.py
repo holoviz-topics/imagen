@@ -11,6 +11,76 @@ from math import e,pi
 import param
 
 
+
+class TimeAware(param.Parameterized):
+    """
+    Class of objects that have access to a global time function
+    and have the option of using it to generate time-dependent values
+    as necessary.
+
+    In the simplest case, an object could act as a strict function of
+    time, returning the current time transformed according to a fixed
+    equation.  Other objects may support locking their results to a
+    timebase, but also work without time.  For instance, objects with
+    random state could return a new random value for every call, with
+    no notion of time, or could always return the same value until the
+    global time changes.  Subclasses should thus provide an ability to
+    return a time-dependent value, but may not always do so.
+    """
+
+    time_dependent = param.Boolean(default=False,  doc="""
+       Whether the given time_fn should be used to constrain the
+       results generated.""")
+
+    time_fn = param.Callable(default=param.Dynamic.time_fn, doc="""
+        Callable used to specify the time that determines the state
+        and return value of the object, if time_dependent=True.""")
+
+
+    def __init__(self, **params):
+        super(TimeAware, self).__init__(**params)
+        self._check_time_fn()
+
+
+    def _check_time_fn(self, time_instance=False):
+        """
+        If time_fn is the global time function supplied by
+        param.Dynamic.time_fn, make sure Dynamic parameters are using
+        this time function to control their behaviour.
+
+        If time_instance is True, time_fn must be a param.Time instance.
+        """
+        if time_instance and not isinstance(self.time_fn, param.Time):
+            raise AssertionError("%s requires a Time object"
+                                 % self.__class__.__name__)
+
+        if self.time_dependent:
+            global_timefn = self.time_fn is param.Dynamic.time_fn
+            if global_timefn and not param.Dynamic.time_dependent:
+                raise AssertionError("Cannot use Dynamic.time_fn as"
+                                     " parameters are ignoring time.")
+
+
+class TimeDependent(TimeAware):
+    """
+    Objects that have access to a time function that determines the
+    output value. As a function of time, this type of object should
+    allow time values to be randomly jumped forwards or backwards,
+    but for a given time point, the results should remain constant.
+
+    The time_fn must be an instance of param.Time, to ensure all the
+    facilities necessary for safely navigating the timeline are
+    available.
+    """
+
+    time_dependent = param.Boolean(default=True, readonly=True, doc="""
+       Read-only parameter that is always True.""")
+
+    def _check_time_fn(self):
+        super(TimeDependent,self)._check_time_fn(time_instance=True)
+
+
+
 class NumberGenerator(param.Parameterized):
     """
     Abstract base class for any object that when called produces a number.
@@ -99,77 +169,7 @@ class UnaryOperator(NumberGenerator):
         return self.operator(self.operand(),**self.args)
 
 
-
-class TimeAwareValue(param.Parameterized):
-    """
-    Class of objects that have access to a global time function 
-    and have the option of using it to generate time-dependent values
-    as necessary.
-
-    In the simplest case, an object could act as a strict function of
-    time, returning the current time transformed according to a fixed
-    equation.  Other objects may support locking their results to a
-    timebase, but also work without time.  For instance, objects with
-    random state could return a new random value for every call, with
-    no notion of time, or could always return the same value until the
-    global time changes.  Subclasses should thus provide an ability to
-    return a time-dependent value, but may not always do so.
-    """
-
-    time_dependent = param.Boolean(default=False,  doc="""
-       Whether the given time_fn should be used to constrain the
-       results generated.""")
-
-    time_fn = param.Callable(default=param.Dynamic.time_fn, doc="""
-        Callable used to specify the time that determines the state
-        and return value of the object, if time_dependent=True.""")
-
-
-    def __init__(self, **params):
-        super(TimeAwareValue, self).__init__(**params)
-        self._check_time_fn()
-
-
-    def _check_time_fn(self, time_instance=False):
-        """
-        If time_fn is the global time function supplied by
-        param.Dynamic.time_fn, make sure Dynamic parameters are using
-        this time function to control their behaviour.
-
-        If time_instance is True, time_fn must be a param.Time instance.
-        """
-        if time_instance and not isinstance(self.time_fn, param.Time):
-            raise AssertionError("%s requires a Time object"
-                                 % self.__class__.__name__)
-
-        if self.time_dependent:
-            global_timefn = self.time_fn is param.Dynamic.time_fn
-            if global_timefn and not param.Dynamic.time_dependent:
-                raise AssertionError("Cannot use Dynamic.time_fn as"
-                                     " parameters are ignoring time.")
-
-
-class TimeDependentValue(TimeAwareValue):
-    """
-    Objects that have access to a time function that determines the
-    output value. As a function of time, this type of object should
-    allow time values to be randomly jumped forwards or backwards,
-    but for a given time point, the results should remain constant.
-
-    The time_fn must be an instance of param.Time, to ensure all the
-    facilities necessary for safely navigating the timeline are
-    available.
-    """
-
-    time_dependent = param.Boolean(default=True, readonly=True, doc="""
-       Read-only parameter that is always True.""")
-
-    def _check_time_fn(self):
-        super(TimeDependentValue,self)._check_time_fn(time_instance=True)
-
-
-
-class RandomDistribution(NumberGenerator, TimeAwareValue):
+class RandomDistribution(NumberGenerator, TimeAware):
     """
     Python's random module provides the Random class, which can be
     instantiated to give an object that can be asked to generate
@@ -187,7 +187,7 @@ class RandomDistribution(NumberGenerator, TimeAwareValue):
     The underlying random.Random() instance and all its methods can be
     accessed from the 'random_generator' attribute.
 
-    RandomDistributions are TimeAwareValues, and thus can be locked to
+    RandomDistributions are TimeAware, and thus can be locked to
     a global time if desired.  By default, time_dependent=False, and
     so a new random value will be generated each time these objects
     are called.  If you have a global time function, you can set
@@ -380,7 +380,7 @@ class VonMisesRandom(RandomDistribution):
 
 
 
-class TimeFactor(NumberGenerator, TimeDependentValue):
+class TimeFactor(NumberGenerator, TimeDependent):
     """
     The current time multiplied by some conversion factor.
     """
@@ -394,7 +394,7 @@ class TimeFactor(NumberGenerator, TimeDependentValue):
 
 
 
-class BoxCar(NumberGenerator, TimeDependentValue):
+class BoxCar(NumberGenerator, TimeDependent):
     """
     The boxcar function over the specified time interval. The bounds
     are exclusive: zero is returned at the onset time and at the
@@ -422,7 +422,7 @@ class BoxCar(NumberGenerator, TimeDependentValue):
 
 
 
-class SquareWave(NumberGenerator, TimeDependentValue):
+class SquareWave(NumberGenerator, TimeDependent):
     """
     Generate a square wave with 'on' periods returning 1.0 and
     'off'periods returning 0.0 of specified duration(s). By default
@@ -469,7 +469,7 @@ class SquareWave(NumberGenerator, TimeDependentValue):
 
 
 
-class ExponentialDecay(NumberGenerator, TimeDependentValue):
+class ExponentialDecay(NumberGenerator, TimeDependent):
     """
     Function object that provides a value that decays according to an
     exponential function, based on a given time function.
@@ -500,7 +500,7 @@ class ExponentialDecay(NumberGenerator, TimeDependentValue):
 
 
 
-class TimeSampledFn(NumberGenerator, TimeDependentValue):
+class TimeSampledFn(NumberGenerator, TimeDependent):
     """
     Samples the values supplied by a time_dependent callable at
     regular intervals of duration 'period', with the sampled value
