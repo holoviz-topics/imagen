@@ -132,7 +132,6 @@ class NdIndexableMapping(param.Parameterized):
             self._data[dim_vals] = data
 
 
-
     def update(self, other):
         """
         Updates the NdMapping with another NdMapping or map_type
@@ -146,6 +145,7 @@ class NdIndexableMapping(param.Parameterized):
             self._add_item(key, data, sort=False)
         if self.sorted:
             self._data = map_type(sorted(self._data.items()))
+
 
     def reindex(self, dimension_labels):
         """
@@ -299,10 +299,13 @@ class NdMapping(NdIndexableMapping):
         conditions = self._generate_conditions(map_slice)
 
         if all(not isinstance(el, slice) for el in map_slice):
-            return self._data[map_slice][data_slice]
+            if hasattr(self._data[map_slice], '__getitem__'):
+                return self._data[map_slice][data_slice]
+            else:
+                return self._data[map_slice]
         else:
-            return map_type((k, v[data_slice]) for k, v in self._data.items()
-                            if self._conjunction(k, conditions))
+            return map_type((k, v[data_slice]) if hasattr(v, '__getitem__') else (k, v)
+                            for k, v in self._data.items() if self._conjunction(k, conditions))
 
 
     def _transform_indices(self, indices):
