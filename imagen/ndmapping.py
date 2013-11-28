@@ -9,7 +9,7 @@ import param
 try:
     from collections import OrderedDict
 except:
-    from odict import OrderedDict
+    from odict import OrderedDict # pyflakes:ignore (try/except import)
 
 map_type = OrderedDict
 
