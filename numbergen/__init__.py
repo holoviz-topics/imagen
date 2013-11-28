@@ -380,7 +380,7 @@ class VonMisesRandom(RandomDistribution):
 
 
 
-class TimeFactor(NumberGenerator, TimeDependent):
+class ScaledTime(NumberGenerator, TimeDependent):
     """
     The current time multiplied by some conversion factor.
     """
