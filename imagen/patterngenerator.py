@@ -224,6 +224,23 @@ class PatternGenerator(param.Parameterized):
         self.ydensity = ydensity
 
 
+    def state_push(self):
+        "Save the state of the output functions, to be restored with state_pop."
+        for of in self.output_fns:
+            if hasattr(of,'state_push'):
+                of.state_push()
+        super(PatternGenerator, self).state_push()
+
+
+    def state_pop(self):
+        "Restore the state of the output functions saved by state_push."
+        for of in self.output_fns:
+            if hasattr(of,'state_pop'):
+                of.state_pop()
+        super(PatternGenerator, self).state_pop()
+
+
+
 
 # Override class type; must be set here rather than when mask_shape is declared,
 # to avoid referring to class not yet constructed
