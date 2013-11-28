@@ -29,7 +29,7 @@ class SheetIndexing(param.Parameterized):
 
     __abstract = True
 
-    __deep_indexable = True
+    _deep_indexable = True
 
     def _create_scs(self):
         (l, b, r, t) = self.bounds.lbrt()
@@ -40,6 +40,9 @@ class SheetIndexing(param.Parameterized):
 
 
     def _transform_indices(self, coords):
+        if type(coords) == int:
+            raise Exception("***** %s" % coords)
+            #coords = [coords]
         return tuple([self._transform_index(i, coord) for (i, coord) in enumerate(coords)][::-1])
 
 
@@ -280,7 +283,7 @@ class ProjectionGrid(SheetIndexing, NdMapping):
         """
         if self.bounds.lbrt() != other.bounds.lbrt():
             raise Exception('Cannot combine %ss with different'
-                            ' bounds.' % self._class__)
+                            ' bounds.' % self.__class__)
         super(ProjectionGrid, self).update(other)
 
 

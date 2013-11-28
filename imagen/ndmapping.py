@@ -62,7 +62,7 @@ class NdIndexableMapping(param.Parameterized):
         a consistently increasing order but the order matters for plotting
         or other purposes.""")
 
-    __deep_indexable = True
+    _deep_indexable = True
 
     def __init__(self, initial_items=None, **kwargs):
         self._data = map_type()
@@ -75,7 +75,7 @@ class NdIndexableMapping(param.Parameterized):
         self._next_ind = 0
 
         if isinstance(initial_items, tuple):
-            self._data[initial_items[0]] = initial_items[1]
+            self._add_item(initial_items[0], initial_items[1])
         elif initial_items is not None:
             self.update(map_type(initial_items))
 
@@ -140,10 +140,7 @@ class NdIndexableMapping(param.Parameterized):
         instance, checking that they are indexed along the same number
         of dimensions.
         """
-
-        items = other.items() if type(other) is map_type else other[...].items()
-
-        for key, data in items:
+        for key, data in other.items():
             self._add_item(key, data, sort=False)
         if self.sorted:
             self._data = map_type(sorted(self._data.items()))
@@ -172,8 +169,8 @@ class NdIndexableMapping(param.Parameterized):
         if len(set(keys)) != len(keys):
             raise Exception("Given dimension labels not sufficient to address all values uniquely")
 
-        return self.__class__(initial_items = initial_items,
-                              dimension_labels = dimension_labels,
+        return self.__class__(initial_items=initial_items,
+                              dimension_labels=dimension_labels,
                               sorted=self.sorted,
                               **self.metadata)
 
@@ -205,12 +202,20 @@ class NdIndexableMapping(param.Parameterized):
         indices to the data elements.
         """
         map_slice, data_slice = self._split_index(key)
-        if hasattr(self._data[map_slice], '__deep_indexable'):
-            return self._data[map_slice][data_slice]
-        else:
-            if len(data_slice) > 0:
-                self.warning('Cannot index into data element, extra data indices ignored.')
-            return self._data[map_slice]
+        return self._dataslice(self._data[map_slice], data_slice)
+
+
+    def _dataslice(self, data, indices):
+        """
+        Returns slice of data element if the item is deep indexable. Warns if
+        attempting to slice an object that has not been declared deep indexable.
+        """
+        if hasattr(data, '_deep_indexable'):
+            return data[indices]
+        elif len(indices) > 0:
+            print data._deep_indexable
+            self.warning('Cannot index into data element, extra data indices ignored.')
+        return data
 
 
     def __setitem__(self, key, value):
@@ -312,15 +317,10 @@ class NdMapping(NdIndexableMapping):
         conditions = self._generate_conditions(map_slice)
 
         if all(not isinstance(el, slice) for el in map_slice):
-            if hasattr(self._data[map_slice], '__deep_indexable'):
-                return self._data[map_slice][data_slice]
-            else:
-                if len(data_slice) > 0:
-                    self.warning('Cannot index into data element, extra data indices ignored.')
-                return self._data[map_slice]
+            return self._dataslice(self._data[map_slice], data_slice)
         else:
-            ret_val = map_type((k, v[data_slice]) if hasattr(v, '__deep_indexable') else (k, v)
-                               for k, v in self._data.items() if self._conjunction(k, conditions))
+            ret_val = map_type((k, self._dataslice(v, data_slice)) for k, v
+                               in self._data.items() if self._conjunction(k, conditions))
             if self.ndim == 1:
                 return map_type(zip((k[0] for k in ret_val.keys()), ret_val.values()))
             return ret_val
