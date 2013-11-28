@@ -250,6 +250,10 @@ class NdIndexableMapping(param.Parameterized):
         return self._data.values()
 
 
+    def items(self):
+        return zip(self.keys(), self.values())
+
+
     def get(self, key, default=None):
         try:
             if key is None:
