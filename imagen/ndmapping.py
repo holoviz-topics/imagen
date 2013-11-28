@@ -74,10 +74,10 @@ class NdIndexableMapping(param.Parameterized):
         self.ndim = len(self.dimension_labels)
         self._next_ind = 0
 
-        if isinstance(initial_items, map_type):
-            self.update(initial_items)
         if isinstance(initial_items, tuple):
             self._data[initial_items[0]] = initial_items[1]
+        elif initial_items is not None:
+            self.update(map_type(initial_items))
 
 
     def write_metadata(self, kwargs):
