@@ -335,11 +335,12 @@ class NdMapping(NdIndexableMapping):
         if all(not isinstance(el, slice) for el in map_slice):
             return self._dataslice(self._data[map_slice], data_slice)
         else:
-            ret_val = map_type((k, self._dataslice(v, data_slice)) for k, v
-                               in self._data.items() if self._conjunction(k, conditions))
+            items = [(k, self._dataslice(v, data_slice)) for k, v
+                               in self._data.items() if self._conjunction(k, conditions)]
             if self.ndim == 1:
-                return map_type(zip((k[0] for k in ret_val.keys()), ret_val.values()))
-            return ret_val
+                items = [(k[0], v) for (k, v) in items]
+            return self.__class__(initial_items=items, metadata=self.metadata,
+                                  dimension_labels=self.dimension_labels, sorted=self.sorted)
 
 
     def _transform_indices(self, indices):
