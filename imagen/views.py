@@ -103,105 +103,21 @@ class SheetView(SheetIndexing):
 
 
 
-class SheetStack(SheetView):
+class SheetStack(NdMapping):
     """
-    A SheetStack is a stack of SheetViews over some dimension. The
+    A SheetStack is a stack of SheetViews over some dimensions. The
     dimension may be a spatial dimension (i.e., a ZStack), time
-    (specifying a frame sequence) or any other single dimension along
+    (specifying a frame sequence) or any other dimensions along
     which SheetViews may vary.
-
-    A SheetStack extends the functionality of SheetView and behaves
-    like a single SheetView at a given layer index. This layer index
-    may be then modified using the set_layer method.
-
-    A single NDMapping over a single dimension is used to constract a
-    SheetStack where all of the maps values must be SheetViews with
-    common bounds.
     """
 
-    metadata = param.Dict(default={}, doc="""
-        Additional labels to be associated with the SheetStack such as
-        hints that control how the SheetStack is displayed.""")
+    enforced_type = param.Parameter(default=SheetView, constant=True)
 
-    ndmap = param.ClassSelector(class_=NdMapping, constant=True, doc="""
-        The underlying NdMapping object that defines the SheetStack.""")
-
-    def __init__(self, ndmap, layer=0, **kwargs):
-
-        self.sheetviews = ndmap.values()
-        if not all(isinstance(v, SheetView) for v in self.sheetviews):
-            raise TypeError("All values supplied must be SheetViews")
-
-        super(SheetStack, self).__init__(self.sheetviews[layer].data,
-                                         self.sheetviews[layer].bounds,
-                                         ndmap=ndmap,**kwargs)
-
-        if len(ndmap.dimension_labels) != 1:
-            raise AssertionError("NDMapping must have only one dimension_label")
-        if not all(sv.bounds.lbrt() == self.sheetviews[0].bounds.lbrt() for sv in self.sheetviews):
-            raise AssertionError("All SheetView must have matching bounds.")
-
-        self.dimension_label = ndmap.dimension_labels[0]
-        self.sheetviews = ndmap.values()
-        self.labels = ndmap.keys()
-
-        self._layer = None
-        self.layer = layer
-
-
-    @property
-    def layer(self):
-        """
-        Returns the active layer index.
-        """
-        return self._layer
-
-
-    @layer.setter
-    def layer(self, ind):
-        """
-        Sets the active layer of the stack by index.
-        """
-        self._layer = ind
-        sview = self.sheetviews[ind]
-        self.data = sview.data
-        self.cyclic_range = sview.cyclic_range
-
-
-    def slice(self, start=0, end=None):
-        """
-        Continuous slice of the stack bases on the supplied NdMapping
-        object. Returns a new SheetStack.
-        """
-        items = self.ndmap[slice(start, end)]
-        return SheetStack(NdMapping(initial_items = items))
-
-
-    def __iter__(self):
-        """
-        Iterates through the stack from the current layer
-        onwards. Returns a SheetView on each iteration and restores
-        the layer index at the end.
-        """
-        start_layer = self.layer
-        layer = self.layer
-        while layer < self.depth:
-            yield self.sheetviews[layer]
-            layer += 1
-        self.layer = start_layer
-
-    def view(self):
-        """
-        Return the sheetview corresponding to the active layer.
-        """
-        return self.sheetviews[self.layer]
-
-    @property
-    def depth(self):
-        """
-        Returns the depth of the stack.
-        """
-        return len(self.sheetviews)
+    def _element_check(self, data):
+        super(SheetStack, self)._element_check(data)
+        if not hasattr(self, 'bounds'): self.bounds = data.bounds
+        if not data.bounds.lbrt() == self.bounds.lbrt():
+            raise AssertionError("All SheetView elements must have matching bounds.")
 
 
 
