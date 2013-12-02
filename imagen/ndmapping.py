@@ -93,7 +93,7 @@ class NdIndexableMapping(param.Parameterized):
         metadata = AttrDict(self.metadata, **dict([(k, v) for k, v in items
                                                    if k not in self.params()]))
         for key in metadata:
-            kwargs.pop(key)
+            kwargs.pop(key, None)
         return kwargs, metadata
 
 
