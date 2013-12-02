@@ -231,7 +231,6 @@ class NdIndexableMapping(param.Parameterized):
         if hasattr(data, '_deep_indexable'):
             return data[indices]
         elif len(indices) > 0:
-            print data._deep_indexable
             self.warning('Cannot index into data element, extra data indices ignored.')
         return data
 
@@ -325,9 +324,7 @@ class NdMapping(NdIndexableMapping):
         return the requested slice of the data.
         """
 
-        if indexslice is Ellipsis:
-            return self._data
-        elif indexslice is ():
+        if indexslice is (Ellipsis or ()):
             return self
 
         map_slice, data_slice = self._split_index(indexslice)
@@ -338,7 +335,7 @@ class NdMapping(NdIndexableMapping):
             return self._dataslice(self._data[map_slice], data_slice)
         else:
             items = [(k, self._dataslice(v, data_slice)) for k, v
-                               in self._data.items() if self._conjunction(k, conditions)]
+                     in self._data.items() if self._conjunction(k, conditions)]
             if self.ndim == 1:
                 items = [(k[0], v) for (k, v) in items]
             return self.__class__(initial_items=items, metadata=self.metadata,
