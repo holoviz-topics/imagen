@@ -290,13 +290,13 @@ class NdIndexableMapping(param.Parameterized):
 
     def next(self):
         """
-        Implements the iterable interface, returning the keys in the
-        same way as a normal Python dictionary.
+        Implements the iterable interface, returning values unlike a standard
+        dictionary.
         """
         if self._next_ind < len(self):
-            key = self.keys()[self._next_ind]
+            val = self.values()[self._next_ind]
             self._next_ind += 1
-            return key
+            return val
         else:
             self._next_ind = 0
             raise StopIteration
