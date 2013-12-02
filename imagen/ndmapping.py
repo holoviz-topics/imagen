@@ -53,6 +53,8 @@ class NdIndexableMapping(param.Parameterized):
         The dimension_labels parameter accepts a list of the features
         along which the data will indexed.""")
 
+    enforced_type = param.Parameter(default=None, constant=True)
+
     metadata = param.Dict(default=AttrDict(), doc="""
         Additional labels to be associated with the Dataview.""")
 
@@ -109,10 +111,24 @@ class NdIndexableMapping(param.Parameterized):
             return None
 
 
+    def _element_check(self, data):
+        """
+        Applies checks to individual data elements before they are inserted
+        ensuring that they are of a certain type. Can be subclassed to implement
+        further element restrictions.
+        """
+        if not isinstance(data, self.enforced_type):
+            raise TypeError('{slf} does not accept {data} type, data elements have '
+                            'to be a {restr}.'.format(slf=type(self).__name__,
+                                                      data=type(data).__name__,
+                                                      restr=self.enforced_type.__name__))
+
+
     def _add_item(self, dim_vals, data, sort=True):
         """
         Records data indexing it in the specified feature dimensions.
         """
+        if self.enforced_type is not None: self._element_check(data)
         if not isinstance(dim_vals, tuple):
             dim_vals = (dim_vals,)
         if len(dim_vals) == self.ndim:
