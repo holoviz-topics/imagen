@@ -87,9 +87,11 @@ class NdIndexableMapping(param.Parameterized):
         Acts as a param override, placing any kwargs, which are not parameters
         into the metadata dictionary.
         """
-        metadata = AttrDict(self.metadata,
-                            **dict([(kw, val) for kw, val in kwargs.items()
-                                    if kw not in self.params()]))
+        items = kwargs.items()
+        if 'metadata' in kwargs:
+            items = kwargs.pop('metadata').items() + items
+        metadata = AttrDict(self.metadata, **dict([(k, v) for k, v in items
+                                                   if k not in self.params()]))
         for key in metadata:
             kwargs.pop(key)
         return kwargs, metadata
