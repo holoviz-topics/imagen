@@ -311,6 +311,7 @@ class NdIndexableMapping(param.Parameterized):
         return len(self._data)
 
 
+
 class NdMapping(NdIndexableMapping):
     """
     NdMapping supports the same indexing semantics as NdIndexableMapping but
@@ -323,8 +324,7 @@ class NdMapping(NdIndexableMapping):
         slice is supplied it will return all data elements, otherwise it will
         return the requested slice of the data.
         """
-
-        if indexslice is (Ellipsis or ()):
+        if indexslice in [Ellipsis, ()]:
             return self
 
         map_slice, data_slice = self._split_index(indexslice)
