@@ -289,6 +289,12 @@ class NdIndexableMapping(param.Parameterized):
             return default
 
 
+    def pop(self, *args):
+        if len(args) > 0 and not isinstance(args[0], tuple):
+            args[0] = (args[0],)
+        return self._data.pop(*args)
+
+
     def __iter__(self):
         return self
 
