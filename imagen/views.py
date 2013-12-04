@@ -153,6 +153,7 @@ class ProjectionGrid(SheetIndexing, NdMapping):
         if not self.bounds.contains(*coords):
             self.warning('Specified coordinate is outside grid bounds,'
                          ' data could not be added')
+        self._element_check(data)
         coords = self._transform_indices(coords)
         super(ProjectionGrid, self)._add_item(coords, data, sort=sort)
 
@@ -177,17 +178,6 @@ class ProjectionGrid(SheetIndexing, NdMapping):
         if val is None: return None
         return self.scs.closest_cell_center(*((0, val) if dim
                                               else (val, 0)))[dim]
-
-
-    def _update_item(self, coords, data):
-        """
-        Subclasses default method to allow updating of nested data structures
-        rather than simply overriding them.
-        """
-        if coords in self._data:
-            self._data[coords].update(data)
-        else:
-            self._data[coords] = data
 
 
     def update(self, other):
