@@ -73,7 +73,6 @@ class NdIndexableMapping(param.Parameterized):
 
         super(NdIndexableMapping, self).__init__(metadata=metadata, **kwargs)
 
-        self.ndim = len(self.dimension_labels)
         self._next_ind = 0
 
         if isinstance(initial_items, tuple):
@@ -111,6 +110,11 @@ class NdIndexableMapping(param.Parameterized):
             return self.metadata.timestamp
         else:
             return None
+
+
+    @property
+    def ndim(self):
+        return len(self.dimension_labels)
 
 
     def _element_check(self, data):
