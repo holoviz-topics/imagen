@@ -123,7 +123,7 @@ class NdIndexableMapping(param.Parameterized):
         ensuring that they are of a certain type. Can be subclassed to implement
         further element restrictions.
         """
-        if not isinstance(data, self.enforced_type):
+        if self.enforced_type is not None and not isinstance(data, self.enforced_type):
             raise TypeError('{slf} does not accept {data} type, data elements have '
                             'to be a {restr}.'.format(slf=type(self).__name__,
                                                       data=type(data).__name__,
@@ -134,7 +134,7 @@ class NdIndexableMapping(param.Parameterized):
         """
         Records data indexing it in the specified feature dimensions.
         """
-        if self.enforced_type is not None: self._element_check(data)
+        self._element_check(data)
         if not isinstance(dim_vals, tuple):
             dim_vals = (dim_vals,)
         if len(dim_vals) == self.ndim:
