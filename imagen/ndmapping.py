@@ -221,6 +221,15 @@ class NdIndexableMapping(param.Parameterized):
         return self.__class__(initial_items=items, **settings)
 
 
+    def empty(self):
+        """
+        Returns an empty duplicate of itself with all parameter values and
+        metadata copied across.
+        """
+        settings = dict(self.get_param_values(), **self.metadata)
+        return self.__class__(**settings)
+
+
     def dframe(self, value_label='data'):
         try:
             import pandas
