@@ -197,6 +197,30 @@ class NdIndexableMapping(param.Parameterized):
                               **self.metadata)
 
 
+    def add_dimension(self, dim_name, dim_pos, dim_val):
+        """
+        Create a new object with an additional dimension along which items are
+        indexed. Requires the dimension name, the desired position in the
+        dimension labels and a dimension value that applies to all existing
+        elements.
+        """
+        if dim_name in self.dimension_labels:
+            raise Exception('{dim} dimension already defined'.format(dim=dim_name))
+
+        dim_labels = self.dimension_labels[:]
+        dim_labels.insert(dim_pos, dim_name)
+
+        items = map_type()
+        for key, val in self._data.items():
+            new_key = list(key)
+            new_key.insert(dim_pos, dim_val)
+            items[tuple(new_key)] = val
+
+        settings = dict(self.get_param_values()+[('dimension_labels', dim_labels)],
+                        **self.metadata)
+        return self.__class__(initial_items=items, **settings)
+
+
     def dframe(self, value_label='data'):
         try:
             import pandas
