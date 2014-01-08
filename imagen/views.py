@@ -6,66 +6,12 @@ systems.
 __version__='$Revision$'
 
 import param
-from sheetcoords import SheetCoordinateSystem
+from sheetcoords import SheetCoordinateSystem, Slice
+from boundingregion import BoundingBox, BoundingRegion
 from ndmapping import NdMapping
 
-class SheetIndexing(param.Parameterized):
-    """
-    SheetIndexing provides methods to transform indices and slices from one
-    coordinate system to another. By default it maps from sheet coordinates
-    to matrix coordinates using the _transform_indices method. However,
-    subclasses can change this behavior by subclassing the _transform_values
-    method, which takes an index value along a certain dimension along with the
-    dimension number as input and returns the transformed value.
-    """
 
-    bounds = param.Parameter(default=None, doc="""
-        The bounds of the two dimensional coordinate system in which the data
-        resides.""")
-
-    roi = param.NumericTuple(default=(0, 0, 0, 0), doc="""
-        The ROI can be specified to select only a sub-region of the bounds to
-        be stored as data. NOT YET IMPLEMENTED.""")
-
-    __abstract = True
-
-    _deep_indexable = True
-
-    def _create_scs(self):
-        (l, b, r, t) = self.bounds.lbrt()
-        (dim1, dim2) = self.shape
-        xdensity = dim1 / (r - l)
-        ydensity = dim2 / (t - b)
-        return SheetCoordinateSystem(self.bounds, xdensity, ydensity)
-
-
-    def _transform_indices(self, coords):
-        return tuple([self._transform_index(i, coord) for (i, coord) in enumerate(coords)][::-1])
-
-
-    def _transform_index(self, dim, index):
-        if isinstance(index, slice):
-            [start, stop] = [self._transform_value(el, dim)
-                             for el in (index.start, index.stop)]
-            if None not in [start, stop]:
-                [start, stop] = [start, stop+1] if start < stop else [stop, start+1]
-            return slice(start, stop, index.step)
-        else:
-            return self._transform_value(index, dim)
-
-
-    def _transform_value(self, val, dim):
-        if val is None: return None
-        (ind1, ind2) = self.scs.sheet2matrixidx(*((0, val) if dim else (val, 0)))
-        return ind1 if dim else ind2
-
-
-    def matrixidx2coord(self, *args):
-        return self.scs.matrixidx2sheet(*args)
-
-
-
-class SheetView(SheetIndexing):
+class SheetView(param.Parameterized, SheetCoordinateSystem):
     """
     SheetView is the atomic unit as which 2D data is stored, along with its
     bounds object. Allows slicing operations of the data in sheet coordinates or
@@ -81,13 +27,25 @@ class SheetView(SheetIndexing):
         that can be useful for automatic plotting and/or normalization, and is
         not used within this class itself.""")
 
+    roi_bounds = param.ClassSelector(class_=BoundingRegion, default=None, doc="""
+        The ROI can be specified to select only a sub-region of the bounds to
+        be stored as data.""")
+
+    _deep_indexable = True
+
     def __init__(self, data, bounds, **kwargs):
-        super(SheetView, self).__init__(bounds=bounds, **kwargs)
-        if 'roi' not in kwargs:
-            self.roi = self.bounds.lbrt()
         self.data = data
-        self.shape = data.shape
-        self.scs = self._create_scs()
+
+        (l, b, r, t) = bounds.lbrt()
+        (dim1, dim2) = data.shape
+        xdensity = dim1 / (r - l)
+        ydensity = dim2 / (t - b)
+
+        param.Parameterized.__init__(self, **kwargs)
+        SheetCoordinateSystem.__init__(self, bounds, xdensity, ydensity)
+
+        if self.roi_bounds is None:
+            self.roi_bounds = self.bounds
 
 
     def __getitem__(self, coords):
@@ -97,9 +55,23 @@ class SheetView(SheetIndexing):
         if coords is ():
             return self
 
-        coord1, coord2 = self._transform_indices(coords)
+        if all([isinstance(c, slice) for c in coords]):
+            l, b, r, t = self.bounds.lbrt()
+            xcoords, ycoords = coords
+            xstart = l if xcoords.start is None else xcoords.start
+            xend = b if xcoords.end is None else xcoords.end
+            ystart = r if ycoords.start is None else ycoords.start
+            yend = t if ycoords.end is None else ycoords.end
+            bounds = BoundingBox(points=((xstart, ystart), (xend, yend)))
+        else:
+            raise IndexError('Indexing requires x- and y-slice ranges.')
 
-        return self.data[coord1, coord2]
+        return Slice(bounds, self).submatrix(self.data)
+
+
+    @property
+    def roi(self):
+        return Slice(self.roi_bounds, self).submatrix(self.data)
 
 
 
@@ -121,29 +93,23 @@ class SheetStack(NdMapping):
 
 
 
-class ProjectionGrid(SheetIndexing, NdMapping):
+class ProjectionGrid(NdMapping, SheetCoordinateSystem):
     """
     ProjectionView indexes other NdMapping objects, containing projections
     onto coordinate systems. The X and Y dimensions are mapped onto the bounds
     object, allowing for bounds checking and grid-snapping.
     """
 
-    bounds = param.Parameter(default=None, constant=True, doc="""
-        The bounds of the coordinate system in which the data items reside.""")
-
     dimension_labels = param.List(default=['X', 'Y'])
 
-    shape = param.NumericTuple(default=(0, 0), doc="""
-        The shape of the grid is required to determine grid spacing and to
-        create a SheetCoordinateSystem.""")
+    def __init__(self, bounds, shape, **kwargs):
+        (l, b, r, t) = bounds.lbrt()
+        (dim1, dim2) = shape
+        xdensity = dim1 / (r - l)
+        ydensity = dim2 / (t - b)
 
-    sorted = param.Boolean(default=False, doc="""
-        No need to keep ProjectionGrid sorted, since order of keys is
-        irrelevant.""")
-
-    def __init__(self, *args, **kwargs):
-        super(ProjectionGrid, self).__init__(*args, **kwargs)
-        self.scs = self._create_scs()
+        SheetCoordinateSystem.__init__(self, bounds, xdensity, ydensity)
+        super(ProjectionGrid, self).__init__(**kwargs)
 
 
     def _add_item(self, coords, data, sort=True):
@@ -176,8 +142,7 @@ class ProjectionGrid(SheetIndexing, NdMapping):
         Subclassed to discretize grid spacing.
         """
         if val is None: return None
-        return self.scs.closest_cell_center(*((0, val) if dim
-                                              else (val, 0)))[dim]
+        return self.closest_cell_center(*((0, val) if dim else (val, 0)))[dim]
 
 
     def update(self, other):
