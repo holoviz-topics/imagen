@@ -71,7 +71,7 @@ class SheetView(param.Parameterized, SheetCoordinateSystem):
 
     @property
     def roi(self):
-        return Slice(self.roi_bounds, self).submatrix(self.data)
+        return SheetView(Slice(self.roi_bounds, self).submatrix(self.data), self.roi_bounds)
 
 
 
