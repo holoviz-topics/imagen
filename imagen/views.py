@@ -102,7 +102,10 @@ class ProjectionGrid(NdMapping, SheetCoordinateSystem):
 
     dimension_labels = param.List(default=['X', 'Y'])
 
-    def __init__(self, bounds, shape, **kwargs):
+    def __init__(self, bounds=None, shape=None, **kwargs):
+        if bounds is None or shape is None:
+            raise Exception("Specify bounds and shape to initialize ProjectionGrid.")
+
         (l, b, r, t) = bounds.lbrt()
         (dim1, dim2) = shape
         xdensity = dim1 / (r - l)
@@ -153,6 +156,15 @@ class ProjectionGrid(NdMapping, SheetCoordinateSystem):
             raise Exception('Cannot combine %ss with different'
                             ' bounds.' % self.__class__)
         super(ProjectionGrid, self).update(other)
+
+
+    def empty(self):
+        """
+        Returns an empty duplicate of itself with all parameter values and
+        metadata copied across.
+        """
+        settings = dict(self.get_param_values(), **self.metadata)
+        return self.__class__(bounds=self.bounds, shape=self.shape, **settings)
 
 
 
