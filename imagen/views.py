@@ -11,6 +11,63 @@ from boundingregion import BoundingBox, BoundingRegion
 from ndmapping import NdMapping
 
 
+class SheetPoints(param.Parameterized):
+    """
+    Allows sets of points to be positioned over a sheet coordinate
+    system.
+
+    The input data is an Nx2 Numpy array where each point in the numpy
+    array corresponds to an X,Y coordinate in sheet coordinates,
+    within the declared bounding region.
+    """
+
+    bounds = param.ClassSelector(class_=BoundingRegion, default=None)
+
+    style = param.Dict(default={}, doc="""
+        Optional keywords for specifying the display style.""")
+
+    _deep_indexable = False
+
+    def __init__(self, points, bounds, **kwargs):
+        self.points = points
+        super(SheetPoints, self).__init__(bounds=bounds, **kwargs)
+
+
+    def resize(self, bounds):
+        return SheetPoints(self.points, bounds, style=self.style)
+
+    def __len__(self):
+        return self.data.shape[0]
+
+
+class SheetContours(param.Parameterized):
+    """
+    Allows sets of contour lines to be defined over a
+    SheetCoordinateSystem.
+
+    The input data is a list of Nx2 numpy arrays where each array
+    corresponds to a contour in the group. Each point in the numpy
+    array corresponds to an X,Y coordinate.
+    """
+
+    bounds = param.ClassSelector(class_=BoundingRegion, default=None)
+
+    style = param.Dict(default={}, doc="""
+        Optional keywords for specifying the display style.""")
+
+    _deep_indexable = False
+
+    def __init__(self, contours, bounds, **kwargs):
+        self.contours = contours
+        super(SheetContours, self).__init__(bounds=bounds, **kwargs)
+
+    def resize(self, bounds):
+        return SheetContours(self.contours, bounds, style=self.style)
+
+    def __len__(self):
+        return self.data.shape[0]
+
+
 class SheetView(param.Parameterized, SheetCoordinateSystem):
     """
     SheetView is the atomic unit as which 2D data is stored, along with its
@@ -31,17 +88,27 @@ class SheetView(param.Parameterized, SheetCoordinateSystem):
         The ROI can be specified to select only a sub-region of the bounds to
         be stored as data.""")
 
+    layers = param.List(default=[], doc="""
+        Annotation layers for the SheetView such as SheetPoints or SheetContours.""")
+
+    metadata = param.Dict(default={}, doc="""
+        Additional information to be associated with the SheetView.""")
+
     _deep_indexable = True
 
     def __init__(self, data, bounds, **kwargs):
         self.data = data
+        param.Parameterized.__init__(self, **kwargs)
+
+        lbrt_list = [bounds.lbrt()] + [l.bounds.lbrt() for l in self.layers]
+        if not all(lbrt_list[0] == lbrt for lbrt in lbrt_list):
+            raise Exception("All layers of a SheetComposite must share the same bounds")
 
         (l, b, r, t) = bounds.lbrt()
         (dim1, dim2) = data.shape
         xdensity = dim1 / (r - l)
         ydensity = dim2 / (t - b)
 
-        param.Parameterized.__init__(self, **kwargs)
         SheetCoordinateSystem.__init__(self, bounds, xdensity, ydensity)
 
         if self.roi_bounds is None:
@@ -71,7 +138,9 @@ class SheetView(param.Parameterized, SheetCoordinateSystem):
 
     @property
     def roi(self):
-        return SheetView(Slice(self.roi_bounds, self).submatrix(self.data), self.roi_bounds)
+        bounds = self.bounds if self.roi_bounds is None else self.roi_bounds
+        return SheetView(Slice(bounds, self).submatrix(self.data), bounds,
+                         layers=[l.resize(self.roi_bounds) for l in self.layers])
 
 
 
@@ -91,6 +160,11 @@ class SheetStack(NdMapping):
         if not data.bounds.lbrt() == self.bounds.lbrt():
             raise AssertionError("All SheetView elements must have matching bounds.")
 
+    @property
+    def roi(self):
+        cropped_data = [(k, v.roi) for (k, v) in self.items()]
+        return SheetStack(initial_items=cropped_data,
+                          dimension_labels=self.dimension_labels)
 
 
 class ProjectionGrid(NdMapping, SheetCoordinateSystem):
