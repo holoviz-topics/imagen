@@ -40,6 +40,7 @@ class SheetPoints(param.Parameterized):
         return self.data.shape[0]
 
 
+
 class SheetContours(param.Parameterized):
     """
     Allows sets of contour lines to be defined over a
@@ -66,6 +67,7 @@ class SheetContours(param.Parameterized):
 
     def __len__(self):
         return self.data.shape[0]
+
 
 
 class SheetView(param.Parameterized, SheetCoordinateSystem):
@@ -138,8 +140,7 @@ class SheetView(param.Parameterized, SheetCoordinateSystem):
 
     @property
     def roi(self):
-        bounds = self.bounds if self.roi_bounds is None else self.roi_bounds
-        return SheetView(Slice(bounds, self).submatrix(self.data), bounds,
+        return SheetView(Slice(self.roi_bounds, self).submatrix(self.data), self.roi_bounds,
                          layers=[l.resize(self.roi_bounds) for l in self.layers])
 
 
@@ -162,9 +163,10 @@ class SheetStack(NdMapping):
 
     @property
     def roi(self):
-        cropped_data = [(k, v.roi) for (k, v) in self.items()]
-        return SheetStack(initial_items=cropped_data,
-                          dimension_labels=self.dimension_labels)
+        new_stack = self.empty()
+        new_stack.update(dict([(k, v.roi) for (k, v) in self.items()]))
+        return new_stack
+
 
 
 class ProjectionGrid(NdMapping, SheetCoordinateSystem):
@@ -176,10 +178,7 @@ class ProjectionGrid(NdMapping, SheetCoordinateSystem):
 
     dimension_labels = param.List(default=['X', 'Y'])
 
-    def __init__(self, bounds=None, shape=None, **kwargs):
-        if bounds is None or shape is None:
-            raise Exception("Specify bounds and shape to initialize ProjectionGrid.")
-
+    def __init__(self, bounds, shape, **kwargs):
         (l, b, r, t) = bounds.lbrt()
         (dim1, dim2) = shape
         xdensity = dim1 / (r - l)
@@ -238,7 +237,7 @@ class ProjectionGrid(NdMapping, SheetCoordinateSystem):
         metadata copied across.
         """
         settings = dict(self.get_param_values(), **self.metadata)
-        return self.__class__(bounds=self.bounds, shape=self.shape, **settings)
+        return self.__class__(self.bounds, self.shape, **settings)
 
 
 
