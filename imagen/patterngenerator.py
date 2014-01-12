@@ -12,6 +12,7 @@ import param
 from param.parameterized import ParamOverrides
 
 from boundingregion import BoundingBox, BoundingRegionParameter
+from views import SheetView
 from sheetcoords import SheetCoordinateSystem
 from imagen.transferfn import TransferFn
 
@@ -240,6 +241,8 @@ class PatternGenerator(param.Parameterized):
         super(PatternGenerator, self).state_pop()
 
 
+    def view(self, **kwargs):
+        return SheetView(self(**kwargs), kwargs.get('bounds',self.bounds))
 
 
 # Override class type; must be set here rather than when mask_shape is declared,
