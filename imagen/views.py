@@ -5,6 +5,8 @@ systems.
 
 __version__='$Revision$'
 
+import numpy as np
+
 import param
 from sheetcoords import SheetCoordinateSystem, Slice
 from boundingregion import BoundingBox, BoundingRegion
@@ -134,6 +136,22 @@ class SheetView(SheetLayer, SheetCoordinateSystem):
         return Slice(bounds, self).submatrix(self.data)
 
 
+    def normalize(self, min=0.0, max=1.0, norm_factor=None):
+        norm_factor = self.cyclic_range if norm_factor is None else norm_factor
+        if norm_factor is None:
+            norm_factor = self.data.max() - self.data.min()
+        else:
+            min, max = (0.0, 1.0)
+        norm_data = (((self.data - self.data.min()) / norm_factor) * abs((max-min))) + min
+        return SheetView(norm_data, self.bounds, cyclic_range=self.cyclic_range,
+                         metadata=self.metadata, roi_bounds=self.roi_bounds,
+                         style=self.style)
+
+    @property
+    def norm(self):
+        return self.normalize()
+
+
     @property
     def roi(self):
         return SheetView(Slice(self.roi_bounds, self).submatrix(self.data),
@@ -220,13 +238,27 @@ class SheetStack(NdMapping):
             if not isinstance(data, stack_type):
                 raise AssertionError("All elements of SheetStack must be of matching SheetLayer type")
 
+    def map(self, map_fn):
+        new_stack = self.empty()
+        new_stack.update(dict([(k, map_fn(el)) for k,el in self.items()]))
+        return new_stack
+
+
+    def normalize_elements(self, **kwargs):
+        return self.map(lambda x: x.normalize(**kwargs))
+
+
+    def normalize(self, min=0.0, max=1.0):
+        data_max = np.max([el.data.max() for el in self.values()])
+        data_min = np.min([el.data.min() for el in self.values()])
+        norm_factor = data_max-data_min
+        return self.map(lambda x: x.normalize(min=min, max=max,
+                                              norm_factor=norm_factor))
+
 
     @property
     def roi(self):
-        new_stack = self.empty()
-        new_stack.update(dict([(k, v.roi) for (k, v) in self.items()]))
-        return new_stack
-
+        return self.map(lambda x: x.roi)
 
 
 class ProjectionGrid(NdMapping, SheetCoordinateSystem):
