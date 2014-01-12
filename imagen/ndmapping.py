@@ -53,11 +53,14 @@ class NdIndexableMapping(param.Parameterized):
         The dimension_labels parameter accepts a list of the features
         along which the data will indexed.""")
 
-    enforced_type = param.Parameter(default=None, constant=True)
+    data_type = param.Parameter(default=None, constant=True)
 
     info_format = param.String(default="{label}={value} ", doc="""
         Determines how the info string is formatted from the dimension labels
         and values.""")
+
+    key_type = param.List(default=[], doc="""Type checking of the keys, if empty
+        no type checking is applied.""")
 
     metadata = param.Dict(default=AttrDict(), doc="""
         Additional labels to be associated with the Dataview.""")
@@ -121,30 +124,31 @@ class NdIndexableMapping(param.Parameterized):
         return len(self.dimension_labels)
 
 
-    def _element_check(self, data):
+    def _item_check(self, dim_vals, data):
         """
         Applies checks to individual data elements before they are inserted
         ensuring that they are of a certain type. Can be subclassed to implement
         further element restrictions.
         """
-        if self.enforced_type is not None and not isinstance(data, self.enforced_type):
+        if self.data_type is not None and not isinstance(data, self.data_type):
             raise TypeError('{slf} does not accept {data} type, data elements have '
                             'to be a {restr}.'.format(slf=type(self).__name__,
                                                       data=type(data).__name__,
-                                                      restr=self.enforced_type.__name__))
+                                                      restr=self.data_type.__name__))
+        elif not len(dim_vals) == self.ndim:
+            raise KeyError('Key has to match number of dimensions.')
+        elif self.key_type and not all(isinstance(v, t) for v, t in zip(dim_vals, self.key_type)):
+            raise TypeError('Key does not match declared key type.')
 
 
     def _add_item(self, dim_vals, data, sort=True):
         """
         Records data indexing it in the specified feature dimensions.
         """
-        self._element_check(data)
         if not isinstance(dim_vals, tuple):
             dim_vals = (dim_vals,)
-        if len(dim_vals) == self.ndim:
-            self._update_item(dim_vals, data)
-        else:
-            KeyError('Key has to match number of dimensions.')
+        self._item_check(dim_vals, data)
+        self._update_item(dim_vals, data)
         if sort and self.sorted:
             self._data = map_type(sorted(self._data.items()))
 

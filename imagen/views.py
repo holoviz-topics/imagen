@@ -153,13 +153,18 @@ class SheetStack(NdMapping):
     which SheetViews may vary.
     """
 
-    enforced_type = param.Parameter(default=SheetView, constant=True)
+    data_type = param.Parameter(default=SheetView, constant=True)
 
-    def _element_check(self, data):
-        super(SheetStack, self)._element_check(data)
+    def _item_check(self, dim_vals, data):
+        super(SheetStack, self)._item_check(dim_vals, data)
         if not hasattr(self, 'bounds'): self.bounds = data.bounds
         if not data.bounds.lbrt() == self.bounds.lbrt():
             raise AssertionError("All SheetView elements must have matching bounds.")
+        if len(self) != 0:
+            stack_type = self._data.values()[-1]._class_
+            if not isinstance(data, stack_type):
+                raise AssertionError("All elements of SheetStack must be of matching SheetLayer type")
+
 
     @property
     def roi(self):
@@ -195,7 +200,7 @@ class ProjectionGrid(NdMapping, SheetCoordinateSystem):
         if not self.bounds.contains(*coords):
             self.warning('Specified coordinate is outside grid bounds,'
                          ' data could not be added')
-        self._element_check(data)
+        self._item_check(coords, data)
         coords = self._transform_indices(coords)
         super(ProjectionGrid, self)._add_item(coords, data, sort=sort)
 
