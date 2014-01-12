@@ -55,6 +55,10 @@ class NdIndexableMapping(param.Parameterized):
 
     enforced_type = param.Parameter(default=None, constant=True)
 
+    info_format = param.String(default="{label}={value} ", doc="""
+        Determines how the info string is formatted from the dimension labels
+        and values.""")
+
     metadata = param.Dict(default=AttrDict(), doc="""
         Additional labels to be associated with the Dataview.""")
 
@@ -150,6 +154,10 @@ class NdIndexableMapping(param.Parameterized):
         Subclasses default method to allow updating of nested data structures
         rather than simply overriding them.
         """
+        if hasattr(data, 'metadata'):
+            info_els = [self.info_format.format(label=k, value=v) for k, v in
+                        zip(self.dimension_labels, dim_vals)]
+            data.metadata.info = ''.join(info_els)
         if dim_vals in self._data and hasattr(self._data[dim_vals], 'update'):
             self._data[dim_vals].update(data)
         else:

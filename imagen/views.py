@@ -8,7 +8,7 @@ __version__='$Revision$'
 import param
 from sheetcoords import SheetCoordinateSystem, Slice
 from boundingregion import BoundingBox, BoundingRegion
-from ndmapping import NdMapping
+from ndmapping import NdMapping, AttrDict
 
 
 class SheetPoints(param.Parameterized):
@@ -93,7 +93,7 @@ class SheetView(param.Parameterized, SheetCoordinateSystem):
     layers = param.List(default=[], doc="""
         Annotation layers for the SheetView such as SheetPoints or SheetContours.""")
 
-    metadata = param.Dict(default={}, doc="""
+    metadata = param.Dict(default=AttrDict(), doc="""
         Additional information to be associated with the SheetView.""")
 
     _deep_indexable = True
