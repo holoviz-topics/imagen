@@ -25,6 +25,9 @@ class BoundingRegion(object):
 
     def contains(self,x,y):
         raise NotImplementedError
+    def __contains__(self, point):
+        (x,y) = point
+        return self.contains(x,y)
     def scale(self,xs,ys):
         raise NotImplementedError
     def translate(self,xoff,yoff):
@@ -112,6 +115,13 @@ class BoundingBox(BoundingRegion):
             self._aarect = AARectangle((-0.5,-0.5),(0.5,0.5))
 
         super(BoundingBox,self).__init__(**args)
+
+
+    def __contains__(self, other):
+        if isinstance(other, BoundingBox):
+            return self.containsbb_inclusive(other)
+        (x,y) = other
+        return self.contains(x,y)
 
 
     def contains(self,x,y):
