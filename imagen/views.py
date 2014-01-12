@@ -11,66 +11,80 @@ from boundingregion import BoundingBox, BoundingRegion
 from ndmapping import NdMapping, AttrDict
 
 
-class SheetPoints(param.Parameterized):
+
+class SheetLayer(param.Parameterized):
     """
-    Allows sets of points to be positioned over a sheet coordinate
-    system.
-
-    The input data is an Nx2 Numpy array where each point in the numpy
-    array corresponds to an X,Y coordinate in sheet coordinates,
-    within the declared bounding region.
-    """
-
-    bounds = param.ClassSelector(class_=BoundingRegion, default=None)
-
-    style = param.Dict(default={}, doc="""
-        Optional keywords for specifying the display style.""")
-
-    _deep_indexable = False
-
-    def __init__(self, points, bounds, **kwargs):
-        self.points = points
-        super(SheetPoints, self).__init__(bounds=bounds, **kwargs)
-
-
-    def resize(self, bounds):
-        return SheetPoints(self.points, bounds, style=self.style)
-
-    def __len__(self):
-        return self.data.shape[0]
-
-
-
-class SheetContours(param.Parameterized):
-    """
-    Allows sets of contour lines to be defined over a
-    SheetCoordinateSystem.
-
-    The input data is a list of Nx2 numpy arrays where each array
-    corresponds to a contour in the group. Each point in the numpy
-    array corresponds to an X,Y coordinate.
+    A SheetLayer is a data structure for holding one or more numpy
+    arrays embedded within a two-dimensional space. The array(s) may
+    correspond to a discretisation of an image (i.e. a rasterisation)
+    or vector elements such as points or lines. Lines may be linearly
+    interpolated or correspond to control nodes of a smooth vector
+    representation such as Bezier splines.
     """
 
     bounds = param.ClassSelector(class_=BoundingRegion, default=None)
 
-    style = param.Dict(default={}, doc="""
+    roi_bounds = param.ClassSelector(class_=BoundingRegion, default=None, doc="""
+        The ROI can be specified to select only a sub-region of the bounds to
+        be stored as data.""")
+
+    style = param.Dict(default=AttrDict(), doc="""
         Optional keywords for specifying the display style.""")
 
-    _deep_indexable = False
+    metadata = param.Dict(default=AttrDict(), doc="""
+        Additional information to be associated with the SheetView.""")
 
-    def __init__(self, contours, bounds, **kwargs):
-        self.contours = contours
-        super(SheetContours, self).__init__(bounds=bounds, **kwargs)
+    _abstract = True
 
-    def resize(self, bounds):
-        return SheetContours(self.contours, bounds, style=self.style)
+    def __init__(self, data, bounds, **kwargs):
+        self.data = data
+        super(SheetLayer, self).__init__(bounds=bounds, **kwargs)
 
-    def __len__(self):
-        return self.data.shape[0]
+        if self.roi_bounds is None:
+            self.roi_bounds = self.bounds
+
+    def __add__(self, obj):
+        if not isinstance(obj, SheetLayer):
+            raise TypeError('Can only create an overlay using SheetLayers.')
+
+        if isinstance(obj, SheetOverlay):
+            return self.add(obj)
+        else:
+            return SheetOverlay([self, obj], self.bounds)
+
+    def stack(self):
+        return SheetStack(dimension_labels=['Index'], initial_items=[(0,self)])
 
 
 
-class SheetView(param.Parameterized, SheetCoordinateSystem):
+class SheetOverlay(SheetLayer):
+
+    def __init__(self, overlays, bounds, **kwargs):
+
+        lbrt_list = [bounds.lbrt()] + [o.bounds.lbrt() for o in overlays]
+        if not all(lbrt_list[0] == lbrt for lbrt in lbrt_list):
+            raise Exception("All layers in a SheetOverlay must have common bounds")
+
+        super(SheetOverlay, self).__init__(overlays, bounds, **kwargs)
+
+
+    def add(self, layer):
+        if layer.bounds.lbrt() != self.bounds.lbrt():
+            raise Exception("Layer must have same bounds as SheetOverlay")
+        self.data.append(layer)
+
+    def __getitem__(self, ind):
+        return self.data[ind]
+
+    @property
+    def roi(self):
+        return SheetOverlay(self.roi_bounds,
+                            [el.roi for el in self.data],
+                            style=self.style, metadata=self.metadata)
+
+
+
+class SheetView(SheetLayer, SheetCoordinateSystem):
     """
     SheetView is the atomic unit as which 2D data is stored, along with its
     bounds object. Allows slicing operations of the data in sheet coordinates or
@@ -86,36 +100,18 @@ class SheetView(param.Parameterized, SheetCoordinateSystem):
         that can be useful for automatic plotting and/or normalization, and is
         not used within this class itself.""")
 
-    roi_bounds = param.ClassSelector(class_=BoundingRegion, default=None, doc="""
-        The ROI can be specified to select only a sub-region of the bounds to
-        be stored as data.""")
-
-    layers = param.List(default=[], doc="""
-        Annotation layers for the SheetView such as SheetPoints or SheetContours.""")
-
-    metadata = param.Dict(default=AttrDict(), doc="""
-        Additional information to be associated with the SheetView.""")
-
     _deep_indexable = True
 
     def __init__(self, data, bounds, **kwargs):
         self.data = data
-        param.Parameterized.__init__(self, **kwargs)
-
-        lbrt_list = [bounds.lbrt()] + [l.bounds.lbrt() for l in self.layers]
-        if not all(lbrt_list[0] == lbrt for lbrt in lbrt_list):
-            raise Exception("All layers of a SheetComposite must share the same bounds")
 
         (l, b, r, t) = bounds.lbrt()
         (dim1, dim2) = data.shape
         xdensity = dim1 / (r - l)
         ydensity = dim2 / (t - b)
 
+        SheetLayer.__init__(self, data, bounds, **kwargs)
         SheetCoordinateSystem.__init__(self, bounds, xdensity, ydensity)
-
-        if self.roi_bounds is None:
-            self.roi_bounds = self.bounds
-
 
     def __getitem__(self, coords):
         """
@@ -140,28 +136,87 @@ class SheetView(param.Parameterized, SheetCoordinateSystem):
 
     @property
     def roi(self):
-        return SheetView(Slice(self.roi_bounds, self).submatrix(self.data), self.roi_bounds,
-                         layers=[l.resize(self.roi_bounds) for l in self.layers])
+        return SheetView(Slice(self.roi_bounds, self).submatrix(self.data),
+                         self.roi_bounds, cyclic_range=self.cyclic_range,
+                         style=self.style, metadata=self.metadata)
+
+
+
+class SheetPoints(SheetLayer):
+    """
+    Allows sets of points to be positioned over a sheet coordinate
+    system.
+
+    The input data is an Nx2 Numpy array where each point in the numpy
+    array corresponds to an X,Y coordinate in sheet coordinates,
+    within the declared bounding region.
+    """
+
+    def __init__(self, data, bounds, **kwargs):
+        super(SheetPoints, self).__init__(data, bounds, **kwargs)
+
+
+    def resize(self, bounds):
+        return SheetPoints(self.points, bounds, style=self.style)
+
+    def __len__(self):
+        return self.data.shape[0]
+
+    @property
+    def roi(self):
+        (N,_) = self.data.shape
+        roi_data = self.data[[n for n in range(N) if self.data[n,:] in self.roi_bounds]]
+        return SheetPoints(roi_data, self.roi_bounds,
+                           style=self.style, metadata=self.metadata)
+
+
+
+class SheetContours(SheetLayer):
+    """
+    Allows sets of contour lines to be defined over a
+    SheetCoordinateSystem.
+
+    The input data is a list of Nx2 numpy arrays where each array
+    corresponds to a contour in the group. Each point in the numpy
+    array corresponds to an X,Y coordinate.
+    """
+
+    def __init__(self, data, bounds, **kwargs):
+        super(SheetContours, self).__init__(data, bounds, **kwargs)
+
+    def resize(self, bounds):
+        return SheetContours(self.contours, bounds, style=self.style)
+
+    def __len__(self):
+        return self.data.shape[0]
+
+    @property
+    def roi(self):
+        # Note: Data returned is not sliced to ROI because vertices
+        # outside the bounds need to be snapped to the bounding box
+        # edges.
+        return SheetContours(self.data, self.roi_bounds,
+                             style=self.style, metadata=self.metadata)
 
 
 
 class SheetStack(NdMapping):
     """
-    A SheetStack is a stack of SheetViews over some dimensions. The
+    A SheetStack is a stack of SheetLayers over some dimensions. The
     dimension may be a spatial dimension (i.e., a ZStack), time
     (specifying a frame sequence) or any other dimensions along
-    which SheetViews may vary.
+    which SheetLayers may vary.
     """
 
-    data_type = param.Parameter(default=SheetView, constant=True)
+    data_type = param.Parameter(default=SheetLayer, constant=True)
 
     def _item_check(self, dim_vals, data):
         super(SheetStack, self)._item_check(dim_vals, data)
         if not hasattr(self, 'bounds'): self.bounds = data.bounds
         if not data.bounds.lbrt() == self.bounds.lbrt():
-            raise AssertionError("All SheetView elements must have matching bounds.")
+            raise AssertionError("All SheetLayer elements must have matching bounds.")
         if len(self) != 0:
-            stack_type = self._data.values()[-1]._class_
+            stack_type = self.values()[-1].__class__
             if not isinstance(data, stack_type):
                 raise AssertionError("All elements of SheetStack must be of matching SheetLayer type")
 
