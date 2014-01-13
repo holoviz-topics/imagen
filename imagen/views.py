@@ -119,21 +119,23 @@ class SheetView(SheetLayer, SheetCoordinateSystem):
         """
         Slice the underlying numpy array in sheet coordinates.
         """
-        if coords is ():
+        if coords is () or coords == slice(None,None):
             return self
 
         if all([isinstance(c, slice) for c in coords]):
             l, b, r, t = self.bounds.lbrt()
             xcoords, ycoords = coords
-            xstart = l if xcoords.start is None else xcoords.start
-            xend = b if xcoords.end is None else xcoords.end
-            ystart = r if ycoords.start is None else ycoords.start
-            yend = t if ycoords.end is None else ycoords.end
+            xstart = l if xcoords.start is None else max(l,xcoords.start)
+            xend = r if xcoords.stop is None else min(r, xcoords.stop)
+            ystart = b if ycoords.start is None else max(b,ycoords.start)
+            yend = t if ycoords.stop is None else min(t, ycoords.stop)
             bounds = BoundingBox(points=((xstart, ystart), (xend, yend)))
         else:
             raise IndexError('Indexing requires x- and y-slice ranges.')
 
-        return Slice(bounds, self).submatrix(self.data)
+        return SheetView(Slice(bounds, self).submatrix(self.data),
+                         bounds, cyclic_range=self.cyclic_range,
+                         style=self.style, metadata=self.metadata)
 
 
     def normalize(self, min=0.0, max=1.0, norm_factor=None):
