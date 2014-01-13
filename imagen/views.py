@@ -189,7 +189,11 @@ class SheetPoints(SheetLayer):
         return SheetPoints(roi_data, self.roi_bounds,
                            style=self.style, metadata=self.metadata)
 
-
+    def __iter__(self):
+        i = 0
+        while i < len(self):
+            yield tuple(self.data[i,:])
+            i+=1
 
 class SheetContours(SheetLayer):
     """
