@@ -115,13 +115,16 @@ class SheetView(SheetLayer, SheetCoordinateSystem):
         SheetLayer.__init__(self, data, bounds, **kwargs)
         SheetCoordinateSystem.__init__(self, bounds, xdensity, ydensity)
 
+
     def __getitem__(self, coords):
         """
         Slice the underlying numpy array in sheet coordinates.
         """
-        if coords is () or coords == slice(None,None):
+        if coords is () or coords == slice(None, None):
             return self
 
+        if not any([isinstance(el, slice) for el in coords]):
+            return self.data[self.sheet2matrixidx(*coords)]
         if all([isinstance(c, slice) for c in coords]):
             l, b, r, t = self.bounds.lbrt()
             xcoords, ycoords = coords
