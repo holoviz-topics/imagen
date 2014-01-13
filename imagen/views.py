@@ -45,14 +45,14 @@ class SheetLayer(param.Parameterized):
         if self.roi_bounds is None:
             self.roi_bounds = self.bounds
 
-    def __add__(self, obj):
-        if not isinstance(obj, SheetLayer):
+    def __mul__(self, other):
+        if not isinstance(other, SheetLayer):
             raise TypeError('Can only create an overlay using SheetLayers.')
 
-        if isinstance(obj, SheetOverlay):
-            return self.add(obj)
+        if isinstance(other, SheetOverlay):
+            return other.add(self)
         else:
-            return SheetOverlay([self, obj], self.bounds)
+            return SheetOverlay([self, other], self.bounds)
 
     def stack(self):
         return SheetStack(dimension_labels=['Index'], initial_items=[(0,self)])
@@ -250,9 +250,7 @@ class SheetStack(NdMapping):
 
 
     def map(self, map_fn):
-        new_stack = self.empty()
-        new_stack.update(dict([(k, map_fn(el)) for k,el in self.items()]))
-        return new_stack
+        return self.clone([(k, map_fn(el)) for k,el in self.items()])
 
 
     def normalize_elements(self, **kwargs):
@@ -285,14 +283,14 @@ class ProjectionGrid(NdMapping, SheetCoordinateSystem):
 
     dimension_labels = param.List(default=['X', 'Y'])
 
-    def __init__(self, bounds, shape, **kwargs):
+    def __init__(self, bounds, shape, initial_items=None, **kwargs):
         (l, b, r, t) = bounds.lbrt()
         (dim1, dim2) = shape
         xdensity = dim1 / (r - l)
         ydensity = dim2 / (t - b)
 
         SheetCoordinateSystem.__init__(self, bounds, xdensity, ydensity)
-        super(ProjectionGrid, self).__init__(**kwargs)
+        super(ProjectionGrid, self).__init__(initial_items, **kwargs)
 
 
     def _add_item(self, coords, data, sort=True):
@@ -338,13 +336,13 @@ class ProjectionGrid(NdMapping, SheetCoordinateSystem):
         super(ProjectionGrid, self).update(other)
 
 
-    def empty(self):
+    def clone(self, items=None):
         """
         Returns an empty duplicate of itself with all parameter values and
         metadata copied across.
         """
         settings = dict(self.get_param_values(), **self.metadata)
-        return self.__class__(self.bounds, self.shape, **settings)
+        return self.__class__(self.bounds, self.shape, items, **settings)
 
 
 

@@ -141,6 +141,15 @@ class NdIndexableMapping(param.Parameterized):
             raise TypeError('Key does not match declared key type.')
 
 
+    def sorted(self):
+        self._resort()
+        return
+
+
+    def _resort(self):
+        self._data = map_type(sorted(self._data.items()))
+
+
     def _add_item(self, dim_vals, data, sort=True):
         """
         Records data indexing it in the specified feature dimensions.
@@ -150,7 +159,7 @@ class NdIndexableMapping(param.Parameterized):
         self._item_check(dim_vals, data)
         self._update_item(dim_vals, data)
         if sort and self.sorted:
-            self._data = map_type(sorted(self._data.items()))
+            self._resort()
 
 
     def _update_item(self, dim_vals, data):
@@ -177,7 +186,7 @@ class NdIndexableMapping(param.Parameterized):
         for key, data in other.items():
             self._add_item(key, data, sort=False)
         if self.sorted:
-            self._data = map_type(sorted(self._data.items()))
+            self._resort()
 
 
     def reindex(self, dimension_labels):
@@ -233,13 +242,13 @@ class NdIndexableMapping(param.Parameterized):
         return self.__class__(initial_items=items, **settings)
 
 
-    def empty(self):
+    def clone(self, items=None):
         """
-        Returns an empty duplicate of itself with all parameter values and
-        metadata copied across.
+        Returns a clone with matching parameter values and metadata, containing
+        the specified items (empty by default).
         """
         settings = dict(self.get_param_values(), **self.metadata)
-        return self.__class__(**settings)
+        return self.__class__(initial_items=items, **settings)
 
 
     def dframe(self, value_label='data'):
