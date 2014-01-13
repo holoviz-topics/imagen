@@ -152,8 +152,9 @@ class SheetView(SheetLayer, SheetCoordinateSystem):
                          metadata=self.metadata, roi_bounds=self.roi_bounds,
                          style=self.style)
 
+
     @property
-    def norm(self):
+    def N(self):
         return self.normalize()
 
 
@@ -247,6 +248,7 @@ class SheetStack(NdMapping):
             if not isinstance(data, stack_type):
                 raise AssertionError("All elements of SheetStack must be of matching SheetLayer type")
 
+
     def map(self, map_fn):
         new_stack = self.empty()
         new_stack.update(dict([(k, map_fn(el)) for k,el in self.items()]))
@@ -264,10 +266,14 @@ class SheetStack(NdMapping):
         return self.map(lambda x: x.normalize(min=min, max=max,
                                               norm_factor=norm_factor))
 
+    @property
+    def N(self):
+        return self.normalize()
 
     @property
     def roi(self):
         return self.map(lambda x: x.roi)
+
 
 
 class ProjectionGrid(NdMapping, SheetCoordinateSystem):
