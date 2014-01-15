@@ -24,7 +24,8 @@ class SheetLayer(param.Parameterized):
     representation such as Bezier splines.
     """
 
-    bounds = param.ClassSelector(class_=BoundingRegion, default=None)
+    bounds = param.ClassSelector(class_=BoundingRegion, default=None, doc="""
+       The bounding region in sheet coordinates containing the data.""")
 
     roi_bounds = param.ClassSelector(class_=BoundingRegion, default=None, doc="""
         The ROI can be specified to select only a sub-region of the bounds to
@@ -56,10 +57,6 @@ class SheetLayer(param.Parameterized):
             return other.add(self)
         else:
             return SheetOverlay([self, other], self.bounds)
-
-    def stack(self):
-        return SheetStack(dimension_labels=['Index'], initial_items=[(0,self)])
-
 
 
 class SheetOverlay(SheetLayer):
@@ -250,6 +247,8 @@ class SheetStack(NdMapping):
        value. Numbering is by dimension position and extends across
        all available dimensions e.g. {label1}, {value2} and so on.""")
 
+    bounds = param.ClassSelector(class_=BoundingRegion, default=None, doc="""
+       The bounding region in sheet coordinates containing the data""")
 
     def _item_check(self, dim_vals, data):
         super(SheetStack, self)._item_check(dim_vals, data)
