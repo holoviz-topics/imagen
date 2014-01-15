@@ -501,8 +501,8 @@ class Timeline(param.Parameterized):
         return ndmap
 
 
-    def stack(self, obj, steps, offset=0, timestep=None, bounds=None,
-              array_fn=lambda obj: obj(), **kwargs):
+    def animation(self, obj, steps, offset=0, duration=1,
+                  sheetview_fn=lambda obj: obj[:], **kwargs):
         """
         Builds a SheetStack from some time-varying object with bounds
         and representation as a numpy array. The bounds are used
@@ -512,8 +512,6 @@ class Timeline(param.Parameterized):
         This method accepts time-varying Imagen patterns directly,
         without needing to specify array_fn.
         """
-        bounds = obj.bounds if (bounds is None) else bounds
-        ndmap = self.ndmap(obj, steps, offset=offset, timestep=timestep,
-                           value_fn=lambda obj: SheetView(array_fn(obj),
-                                                          bounds))
-        return SheetStack(ndmap, metadata=kwargs)
+        ndmap = self.ndmap(obj, steps, offset=offset, timestep=duration,
+                           value_fn = sheetview_fn)
+        return Animation(ndmap, metadata=kwargs, duration=duration)
