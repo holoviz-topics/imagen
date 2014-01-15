@@ -402,13 +402,14 @@ class ProjectionGrid(NdMapping, SheetCoordinateSystem):
         super(ProjectionGrid, self).update(other)
 
 
-    def clone(self, items=None):
+    def clone(self, items=None, **kwargs):
         """
         Returns an empty duplicate of itself with all parameter values and
         metadata copied across.
         """
-        settings = dict(self.get_param_values(), **self.metadata)
-        return self.__class__(self.bounds, self.shape, items, **settings)
+        settings = dict(self.get_param_values(), **kwargs)
+        return self.__class__(self.bounds, self.shape, items,
+                              metadata=self.metadata, **settings)
 
 
 

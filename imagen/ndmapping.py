@@ -234,12 +234,12 @@ class NdIndexableMapping(param.Parameterized):
         return self.__class__(initial_items=items, **settings)
 
 
-    def clone(self, items=None):
+    def clone(self, items=None, **kwargs):
         """
         Returns a clone with matching parameter values and metadata, containing
         the specified items (empty by default).
         """
-        settings = dict(self.get_param_values(), **self.metadata)
+        settings = dict(self.get_param_values(), **kwargs)
         return self.__class__(initial_items=items, **settings)
 
 
