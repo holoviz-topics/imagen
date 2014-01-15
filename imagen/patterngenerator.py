@@ -241,9 +241,8 @@ class PatternGenerator(param.Parameterized):
         super(PatternGenerator, self).state_pop()
 
 
-    def view(self, **kwargs):
-        return SheetView(self(**kwargs), kwargs.get('bounds',self.bounds))
-
+    def __getitem__(self, coords):
+        return SheetView(self(), self.bounds)[coords]
 
 # Override class type; must be set here rather than when mask_shape is declared,
 # to avoid referring to class not yet constructed
