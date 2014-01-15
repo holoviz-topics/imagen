@@ -30,6 +30,9 @@ class SheetLayer(param.Parameterized):
         The ROI can be specified to select only a sub-region of the bounds to
         be stored as data.""")
 
+    title = param.String(default=None, allow_None=True, doc="""
+       A short description of the layer that may be used as a title.""")
+
     style = param.Dict(default=AttrDict(), doc="""
         Optional keywords for specifying the display style.""")
 
@@ -237,6 +240,16 @@ class SheetStack(NdMapping):
     """
 
     data_type = param.Parameter(default=SheetLayer, constant=True)
+
+    title = param.String(default=None, doc="""
+       A short description of the stack that may be used as a title
+       (e.g. the title of an animation) but may also accept a
+       formatting string to generate a unique title per layer. For
+       instance the format string '{label0} = {value0}' will generate
+       a title using the first dimension label and corresponding key
+       value. Numbering is by dimension position and extends across
+       all available dimensions e.g. {label1}, {value2} and so on.""")
+
 
     def _item_check(self, dim_vals, data):
         super(SheetStack, self)._item_check(dim_vals, data)
