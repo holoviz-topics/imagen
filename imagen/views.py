@@ -250,15 +250,19 @@ class SheetStack(NdMapping):
     bounds = param.ClassSelector(class_=BoundingRegion, default=None, doc="""
        The bounding region in sheet coordinates containing the data""")
 
+    @property
+    def type(self):
+        "The type of elements stored in the stack."
+        return None if len(self) == 0 else self.top.__class__
+
     def _item_check(self, dim_vals, data):
-        super(SheetStack, self)._item_check(dim_vals, data)
-        if not hasattr(self, 'bounds'): self.bounds = data.bounds
+        if self.bounds is None:
+            self.bounds = data.bounds
         if not data.bounds.lbrt() == self.bounds.lbrt():
             raise AssertionError("All SheetLayer elements must have matching bounds.")
-        if len(self) != 0:
-            stack_type = self.values()[-1].__class__
-            if not isinstance(data, stack_type):
-                raise AssertionError("All elements of SheetStack must be of matching SheetLayer type")
+        if self.type is not None and (type(data) != self.type):
+            raise AssertionError("%s must only contain one type of SheetLayer." % self.__class__.__name__)
+        super(SheetStack, self)._item_check(dim_vals, data)
 
 
     def map(self, map_fn):
