@@ -6,6 +6,7 @@ systems.
 __version__='$Revision$'
 
 import numpy as np
+from collections import defaultdict
 
 import param
 from sheetcoords import SheetCoordinateSystem, Slice
@@ -287,6 +288,15 @@ class SheetStack(NdMapping):
         "The type of elements stored in the stack."
         return None if len(self) == 0 else self.top.__class__
 
+    @property
+    def N(self):
+        return self.normalize()
+
+    @property
+    def roi(self):
+        return self.map(lambda x: x.roi)
+
+
     def _item_check(self, dim_vals, data):
         if self.bounds is None:
             self.bounds = data.bounds
@@ -312,13 +322,42 @@ class SheetStack(NdMapping):
         return self.map(lambda x: x.normalize(min=min, max=max,
                                               norm_factor=norm_factor))
 
-    @property
-    def N(self):
-        return self.normalize()
+    def split(self):
+        """
+        Given a SheetStack of SheetOverlays of N layers, split out the
+        layers into N separate SheetStacks.
+        """
+        if self.type is not SheetOverlay:
+            return self.clone(self.items())
 
-    @property
-    def roi(self):
-        return self.map(lambda x: x.roi)
+        stacks = []
+        item_stacks = defaultdict(list)
+        for k, overlay in self.items():
+            for i, el in enumerate(overlay):
+                item_stacks[i].append((k,el))
+
+        for k in sorted(item_stacks.keys()):
+            stacks.append(self.clone(item_stacks[k]))
+        return stacks
+
+
+    def __mul__(self, other):
+        if isinstance(other, SheetStack):
+            all_keys = sorted(set(self.keys() + other.keys()))
+            items = []
+            for key in all_keys:
+                if (key in self) and (key in other):
+                    items.append((key, self[key] * other[key]))
+                elif (key in self):
+                    items.append((key, self[key] * other.type(None, self.bounds)))
+                else:
+                    items.append((key, self.type(None, self.bounds) * other[key]))
+            return self.clone(items=items)
+        elif isinstance(other, SheetLayer):
+            items = [(k, v * other) for (k,v) in  self.items()]
+            return self.clone(items=items)
+        else:
+            raise Exception("Can only overlay with SheetLayer of SheetStack.")
 
 
 class Animation(SheetStack):
