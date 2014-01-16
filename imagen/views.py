@@ -5,14 +5,15 @@ systems.
 
 __version__='$Revision$'
 
-import numpy as np
-from collections import defaultdict
 
+import math
+from collections import defaultdict
+import numpy as np
 import param
+
 from sheetcoords import SheetCoordinateSystem, Slice
 from boundingregion import BoundingBox, BoundingRegion
-from ndmapping import NdMapping, AttrDict
-
+from ndmapping import NdMapping, AttrDict, map_type
 
 
 class SheetLayer(param.Parameterized):
@@ -68,6 +69,9 @@ class SheetLayer(param.Parameterized):
                             style=self.style, metadata=self.metadata,
                             roi_bounds=self.roi_bounds)
 
+    def __add__(self, obj):
+        if not isinstance(obj, GridLayout):
+            return GridLayout(initial_grid=[[self, obj]])
 
 class SheetOverlay(SheetLayer):
     """
@@ -360,6 +364,13 @@ class SheetStack(NdMapping):
             raise Exception("Can only overlay with SheetLayer of SheetStack.")
 
 
+    def __add__(self, obj):
+        if not isinstance(obj, GridLayout):
+            return GridLayout(initial_grid=[[self, obj]])
+
+
+
+
 
 class ProjectionGrid(NdMapping, SheetCoordinateSystem):
     """
@@ -431,6 +442,134 @@ class ProjectionGrid(NdMapping, SheetCoordinateSystem):
         settings = dict(self.get_param_values(), **kwargs)
         return self.__class__(self.bounds, self.shape, items,
                               metadata=self.metadata, **settings)
+
+
+class GridLayout(NdMapping):
+
+    key_type = param.List(default=[int, int], constant=True)
+
+    dimension_labels = param.List(default=['Row', 'Column'])
+
+    def __init__(self, initial_grid=[], **kwargs):
+
+        self._max_cols = 4
+        initial_grid = [[]] if initial_grid == [] else initial_grid
+        items = self._grid_to_items(initial_grid)
+        super(GridLayout, self).__init__(initial_items=items, **kwargs)
+
+    @property
+    def shape(self):
+        rows, cols = zip(*self.keys())
+        return max(rows)+1, max(cols)+1
+
+
+    def __len__(self):
+        return max([len(v) for v in self.values() if isinstance(v, SheetStack)]+[1])
+
+    @property
+    def coords(self):
+        """
+        Compute the list of (row,column,view) elements from the
+        current set of items (i.e. tuples of form ((row, column), view))
+        """
+        if self.keys() == []:  return []
+        return [(r,c,v) for ((r,c),v) in zip(self.keys(), self.values())]
+
+    @property
+    def max_cols(self):
+        return self._max_cols
+
+    @max_cols.setter
+    def max_cols(self, n):
+        self._max_cols = n
+        self.update({}, n)
+
+    def cols(self, n):
+        self.update({}, n)
+        return self
+
+    def _grid_to_items(self, grid):
+        """
+        Given a grid (i.e. a list of lists), compute the list of
+        items.
+        """
+        items = []  # Flatten this method to single list comprehension.
+        for rind, row in enumerate(grid):
+            for cind, view in enumerate(row):
+                items.append(((rind, cind), view))
+        return items
+
+
+    def update(self, other, cols=None):
+        """
+        Given a mapping or iterable of additional views, extend the
+        grid in scaline order, obeying max_cols if applicable.
+        """
+        values = other if isinstance(other, list) else other.values()
+        grid = [[]] if self.coords == [] else self._grid(self.coords)
+        new_grid = grid[:-1] + ([grid[-1]+ values])
+        cols = self.max_cols if cols is None else cols
+        reshaped_grid = self._reshape_grid(new_grid, cols)
+        self._data = map_type(self._grid_to_items(reshaped_grid))
+
+
+    def __call__(self, cols=None):
+        """
+        Recompute the grid layout of the views based on precedence and
+        row_precendence value metadata. Formats the grid to a maximum
+        of cols columns if specified.
+        """
+        # Plots are sorted first by precedence, then grouped by row_precedence
+        values = sorted(self.values(), key=lambda x: x.metadata.get('precedence', 0.5))
+        precedences = sorted(set(v.metadata.get('row_precedence', 0.5) for v in values))
+
+        coords=[]
+        # Can use collections.Counter in Python >= 2.7
+        column_counter = dict((i, 0) for i, _ in enumerate(precedences))
+        for view in values:
+            # Find the row number based on the row_precedences
+            row = precedences.index(view.metadata.get('row_precedence', 0.5))
+            # Look up the current column position of the row
+            col = column_counter[row]
+            # The next view on this row will have to be in the next column
+            column_counter[row] += 1
+            coords.append((row, col, view))
+
+        grid = self._reshape_grid(self._grid(coords), cols)
+        self._data = map_type(self._grid_to_items(grid))
+        return self
+
+    def _grid(self, coords):
+        """
+        From a list of coordinates of form [<(row, col, view)>] build
+        a corresponding list of lists grid.
+        """
+        rows = max(r for (r,_,_) in coords) + 1 if coords != [] else 0
+        cols = max(c for (_,c,_) in coords) + 1 if coords != [] else 0
+        unpadded_grid = [[p for (r,_, p) in coords if r==row] for row in range(rows)]
+        return unpadded_grid
+
+
+    def _reshape_grid(self, grid, cols):
+        """
+        Given a grid (i.e. a list of lists) , reformat it to a layout
+        with a maximum of cols columns (if not None).
+        """
+        if cols is None: return grid
+        flattened = [view for row in grid for view in row if (view is not None)]
+        row_num = int(math.ceil(len(flattened) / float(cols)))
+
+        reshaped_grid = []
+        for rind in range(row_num):
+            new_row = flattened[rind*cols:cols*(rind+1)]
+            reshaped_grid.append(new_row)
+
+        return reshaped_grid
+
+    def __add__(self, other):
+        new_values = other.values() if isinstance(other, GridLayout) else [other]
+        self.update(new_values)
+        return self
 
 
 
