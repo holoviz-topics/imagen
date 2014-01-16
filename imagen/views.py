@@ -545,7 +545,6 @@ class GridLayout(NdMapping):
         a corresponding list of lists grid.
         """
         rows = max(r for (r,_,_) in coords) + 1 if coords != [] else 0
-        cols = max(c for (_,c,_) in coords) + 1 if coords != [] else 0
         unpadded_grid = [[p for (r,_, p) in coords if r==row] for row in range(rows)]
         return unpadded_grid
 
