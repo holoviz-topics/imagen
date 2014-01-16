@@ -4,7 +4,7 @@ from IPython.core.pylabtools import print_figure
 from tempfile import NamedTemporaryFile
 
 from patterngenerator import PatternGenerator
-from plots import GridLayoutPlot, viewmap
+from plots import Plot, GridLayoutPlot, viewmap
 from views import SheetStack, SheetLayer, GridLayout
 
 VIDEO_TAG = """<video controls>
@@ -35,17 +35,21 @@ def animation_to_HTML(anim):
     return VIDEO_TAG.format(anim._encoded_video)
 
 
-def figure_display(fig, size=256, format='svg'):
-    inches = size / float(fig.dpi)
-    fig.set_size_inches(inches, inches)
+def figure_display(fig, size=None, format='svg'):
+    if size is not None:
+        inches = size / float(fig.dpi)
+        fig.set_size_inches(inches, inches)
     prefix = 'data:image/png;base64,'
     b64 = prefix + print_figure(fig, 'png').encode("base64")
-    html = "<img height='%d' width='%d' src='%s' />" % (size, size, b64)
+    if size is not None:
+        html = "<img height='%d' width='%d' src='%s' />" % (size, size, b64)
+    else:
+        html = "<img src='%s' />" % b64
     plt.close(fig)
     return html
 
 
-def sheetstack_display(stack,size=256, format='svg'):
+def sheetstack_display(stack, size=256, format='svg'):
     if not isinstance(stack, SheetStack): return None
     stackplot = viewmap[stack.type](stack, **opts(stack))
     if len(stack)==1:
@@ -63,8 +67,8 @@ def sheetlayer_display(view, size=256, format='svg'):
 
 def layout_display(grid, size=256, format='svg'):
     if not isinstance(grid, GridLayout): return None
-
-    gridplot = GridLayoutPlot(grid, **opts(grid))
+    grid_size = grid.shape[1]*Plot.size[1], grid.shape[0]*Plot.size[0]
+    gridplot = GridLayoutPlot(grid, **dict(opts(grid), size=grid_size))
     if len(grid)==1:
         fig =  gridplot()
         return figure_display(fig)
