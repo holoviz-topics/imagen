@@ -60,29 +60,50 @@ class SheetLayer(param.Parameterized):
 
 
 class SheetOverlay(SheetLayer):
+    """
+    A SheetOverlay allows a group of SheetLayers with common bounds to
+    be overlaid together. Layers can be indexed out of an overlay and
+    an overlay is an iterable that iterates over the contained layers.
+    """
 
     def __init__(self, overlays, bounds, **kwargs):
-
-        lbrt_list = [bounds.lbrt()] + [o.bounds.lbrt() for o in overlays]
-        if not all(lbrt_list[0] == lbrt for lbrt in lbrt_list):
-            raise Exception("All layers in a SheetOverlay must have common bounds")
-
-        super(SheetOverlay, self).__init__(overlays, bounds, **kwargs)
-
+        super(SheetOverlay, self).__init__([], bounds, **kwargs)
+        self.set(overlays)
 
     def add(self, layer):
+        """
+        Overlay a single layer on top of the existing overlay.
+        """
         if layer.bounds.lbrt() != self.bounds.lbrt():
             raise Exception("Layer must have same bounds as SheetOverlay")
         self.data.append(layer)
 
-    def __getitem__(self, ind):
-        return self.data[ind]
+    def set(self, layers):
+        """
+        Set a collection of layers to be overlaid with each other.
+        """
+        self.data = []
+        for layer in layers:
+            self.add(layer)
+        return self
 
     @property
     def roi(self):
         return SheetOverlay(self.roi_bounds,
                             [el.roi for el in self.data],
                             style=self.style, metadata=self.metadata)
+
+    def __getitem__(self, ind):
+        return self.data[ind]
+
+    def __len__(self):
+        return len(self.data)
+
+    def __iter__(self):
+        i = 0
+        while i < len(self):
+            yield self[i]
+            i+=1
 
 
 
