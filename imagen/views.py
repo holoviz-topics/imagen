@@ -135,8 +135,8 @@ class SheetView(SheetLayer, SheetCoordinateSystem):
     _deep_indexable = True
 
     def __init__(self, data, bounds, **kwargs):
-        self.data = data
 
+        data = np.array([[0]]) if data is None else data
         (l, b, r, t) = bounds.lbrt()
         (dim1, dim2) = data.shape
         xdensity = dim1 / (r - l)
@@ -207,6 +207,7 @@ class SheetPoints(SheetLayer):
     """
 
     def __init__(self, data, bounds, **kwargs):
+        data = np.array([[],[]]).T if data is None else data
         super(SheetPoints, self).__init__(data, bounds, **kwargs)
 
 
@@ -240,6 +241,7 @@ class SheetContours(SheetLayer):
     """
 
     def __init__(self, data, bounds, **kwargs):
+        data = [] if data is None else data
         super(SheetContours, self).__init__(data, bounds, **kwargs)
 
     def resize(self, bounds):
