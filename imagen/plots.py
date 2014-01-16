@@ -174,8 +174,9 @@ class SheetLinesPlot(Plot):
     def __call__(self, axis=None, zorder=0):
         title = self._format_title(self._stack, -1)
         ax = self._axis(axis, title, 'x','y', self._stack.bounds.lbrt())
-        line_segments = LineCollection([], zorder=zorder, linestyles = 'solid')
-        line_segments.set_paths(self._stack.top.data)
+        lines = self._stack.top
+        line_segments = LineCollection([], zorder=zorder, **lines.style)
+        line_segments.set_paths(lines.data)
         self.handles['line_segments'] = line_segments
         ax.add_collection(line_segments)
         if axis is None: plt.close(self.handles['fig'])
