@@ -349,8 +349,8 @@ class GridLayoutPlot(Plot):
     roi = param.Boolean(default=False, doc="""
       Whether to apply the ROI to each element of the grid.""")
 
-    show_axes= param.Boolean(default=False, constant=True, doc="""
-      Whether to show labelled axes for the entire grid plot.""")
+    show_axes= param.Boolean(default=True, constant=True, doc="""
+      Whether to show labelled axes for individual subplots.""")
 
     def __init__(self, grid, **kwargs):
 
@@ -366,6 +366,9 @@ class GridLayoutPlot(Plot):
 
     def __call__(self, axis=None):
         ax = self._axis(axis, '', '','', None)
+        ax.get_xaxis().set_visible(False)
+        ax.get_yaxis().set_visible(False)
+
         coords = [(r,c) for c in range(self.cols) for r in range(self.rows)]
 
         self.subplots = []
