@@ -231,7 +231,7 @@ class SheetPoints(SheetLayer):
             yield tuple(self.data[i,:])
             i+=1
 
-class SheetContours(SheetLayer):
+class SheetLines(SheetLayer):
     """
     Allows sets of contour lines to be defined over a
     SheetCoordinateSystem.
@@ -243,10 +243,10 @@ class SheetContours(SheetLayer):
 
     def __init__(self, data, bounds, **kwargs):
         data = [] if data is None else data
-        super(SheetContours, self).__init__(data, bounds, **kwargs)
+        super(SheetLines, self).__init__(data, bounds, **kwargs)
 
     def resize(self, bounds):
-        return SheetContours(self.contours, bounds, style=self.style)
+        return SheetLines(self.contours, bounds, style=self.style)
 
     def __len__(self):
         return self.data.shape[0]
@@ -256,7 +256,7 @@ class SheetContours(SheetLayer):
         # Note: Data returned is not sliced to ROI because vertices
         # outside the bounds need to be snapped to the bounding box
         # edges.
-        return SheetContours(self.data, self.roi_bounds,
+        return SheetLines(self.data, self.roi_bounds,
                              style=self.style, metadata=self.metadata)
 
 
