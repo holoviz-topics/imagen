@@ -53,10 +53,19 @@ class SheetLayer(param.Parameterized):
         if not isinstance(other, SheetLayer):
             raise TypeError('Can only create an overlay using SheetLayers.')
 
-        if isinstance(other, SheetOverlay):
-            return other.add(self)
+        if isinstance(self, SheetOverlay):
+            if  isinstance(other, SheetOverlay):
+                overlays = self.data + other.data
+            else:
+                overlays = self.data + [other]
+        elif isinstance(other, SheetOverlay):
+            overlays = [self] + other.data
         else:
-            return SheetOverlay([self, other], self.bounds)
+            overlays = [self, other]
+
+        return SheetOverlay(overlays, self.bounds,
+                            style=self.style, metadata=self.metadata,
+                            roi_bounds=self.roi_bounds)
 
 
 class SheetOverlay(SheetLayer):
