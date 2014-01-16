@@ -360,56 +360,6 @@ class SheetStack(NdMapping):
             raise Exception("Can only overlay with SheetLayer of SheetStack.")
 
 
-class Animation(SheetStack):
-    """
-    An Animation is a collection of SheetLayers associated with
-    corresponding time values using a fixed timebase. Each individual
-    Sheetlayers is given a time value that is a multiple of the
-    duration parameter and therefore Animations assume regular
-    sampling of data over time.
-    """
-
-    duration = param.Number(default=1, doc="""
-       The time interval between successive layers. Valid time values
-       must be an integer multiple of this duration value (which may
-       be a float or some other numeric type).""" )
-
-    dimension_labels = param.List(default=['Time'], constant=True, doc="""
-       Animations are indexed by time. This may be by integer frame
-       number or some continuous (e.g. floating point or rational)
-       representation of time.""")
-
-    def _item_check(self, dim_vals, data):
-        if (dim_vals[0] % self.duration) != 0:
-            raise ValueError("Frame time value not multiple of duration.")
-
-        super(Animation,self)._item_check(dim_vals, data)
-
-    def __or__(self, other):
-        """
-        Create a new animation that contains an additional SheetLayer
-        appended to the end. If appending to an empty animation, the
-        timebase starts at zero. For instance, to make a new animation
-        with one additional frame, you may use:
-
-        anim = anim | frame
-        """
-        anim = self.clone(self.items())
-        last_key = max(self.keys()+[0])
-        if isinstance(other, Animation):
-            if other.duration != self.duration:
-                raise Exception("Animations need to share common duration value.")
-            for (n, view) in enumerate(other):
-
-                if last_key == 0:
-                    anim[0] = view
-                else:
-                    anim[last_key+((n+1)*self.duration)] = view
-        else:
-            key = 0 if self.keys() == [] else last_key+self.duration
-            anim[key] = other
-        return anim
-
 
 class ProjectionGrid(NdMapping, SheetCoordinateSystem):
     """
@@ -571,19 +521,3 @@ class Timeline(param.Parameterized):
                 val = value_fn(obj)
                 ndmap[time] = val
         return ndmap
-
-
-    def animation(self, obj, steps, offset=0, duration=1,
-                  sheetview_fn=lambda obj: obj[:], **kwargs):
-        """
-        Builds a SheetStack from some time-varying object with bounds
-        and representation as a numpy array. The bounds are used
-        together with the numpy arrays returned by array_fn to build a
-        series of SheetViews into a SheetStack.
-
-        This method accepts time-varying Imagen patterns directly,
-        without needing to specify array_fn.
-        """
-        ndmap = self.ndmap(obj, steps, offset=offset, timestep=duration,
-                           value_fn = sheetview_fn)
-        return Animation(ndmap, metadata=kwargs, duration=duration)
