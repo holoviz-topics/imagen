@@ -11,8 +11,8 @@ from patterngenerator import PatternGenerator
 from plots import Plot, GridLayoutPlot, viewmap
 from views import SheetStack, SheetLayer, GridLayout
 
-video_format='x264'  # Either 'x264' or 'gif'
-GIF_FPS = 3
+VIDEO_FORMAT='x264'  # Either 'x264' or 'gif'
+GIF_FPS = 10
 
 GIF_TAG = "<img src='data:image/gif;base64,{0}'/>"
 
@@ -51,7 +51,15 @@ def animation_x264(anim):
     return x264_TAG.format(anim._encoded_video)
 
 
-def animation_to_HTML(anim):
+def HTML_animation(plot, view):
+    anim_kwargs =  dict((k, view.metadata[k]) for k in ['fps']
+                        if (k in view.metadata))
+    fmt = view.metadata.get('video_format', VIDEO_FORMAT)
+    return animation_to_HTML(plot.anim(**anim_kwargs), fmt)
+
+
+def animation_to_HTML(anim, video_format=None):
+    video_format = VIDEO_FORMAT if (video_format is None) else video_format
     assert video_format in ['x264', 'gif']
     writers = animation.writers.avail
     if video_format=='x264' and ('ffmpeg' in writers):
@@ -85,7 +93,8 @@ def sheetstack_display(stack, size=256, format='svg'):
         return figure_display(fig)
 
     try:
-        return animation_to_HTML(stackplot.anim(**anim_opts(stack)))
+        return HTML_animation(stackplot, stack)
+        return animation_to_HTML(stackplot.anim(**anim_opts(stack)),)
     except:
         message = ('Cannot import matplotlib.animation' if animation is None
                    else 'Failed to generate matplotlib animation')
@@ -102,7 +111,7 @@ def layout_display(grid, size=256, format='svg'):
         return figure_display(fig)
 
     try:
-        return animation_to_HTML(gridplot.anim(**anim_opts(grid)))
+        return HTML_animation(gridplot, grid)
     except:
         message = ('Cannot import matplotlib.animation' if animation is None
                    else 'Failed to generate matplotlib animation')
