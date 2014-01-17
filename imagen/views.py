@@ -16,7 +16,82 @@ from boundingregion import BoundingBox, BoundingRegion
 from ndmapping import NdMapping, AttrDict, map_type
 
 
-class SheetLayer(param.Parameterized):
+class View(param.Parameterized):
+    """
+    A view is a data structure for holding data, which may be plotted using
+    matplotlib. Views have an associated title, style and metadata and can
+    be composed together into a GridLayout using the plus operator.
+    """
+
+    title = param.String(default=None, allow_None=True, doc="""
+       A short description of the layer that may be used as a title.""")
+
+    style = param.Dict(default=AttrDict(), doc="""
+        Optional keywords for specifying the display style.""")
+
+    metadata = param.Dict(default=AttrDict(), doc="""
+        Additional information to be associated with the Layer.""")
+
+
+    def __init__(self, data, **kwargs):
+        self.data = data
+        super(View, self).__init__(**kwargs)
+
+
+    def __add__(self, obj):
+        if not isinstance(obj, GridLayout):
+            return GridLayout(initial_grid=[[self, obj]])
+
+
+
+class Overlay(View):
+    """
+    An Overlay allows a group of Layers to be overlaid together. Layers can
+    be indexed out of an overlay and an overlay is an iterable that iterates
+    over the contained layers.
+    """
+
+    _abstract = True
+
+    def __init__(self, overlays, **kwargs):
+        super(Overlay, self).__init__([], **kwargs)
+        self.set(overlays)
+
+
+    def add(self, layer):
+        """
+        Overlay a single layer on top of the existing overlay.
+        """
+        self.data.append(layer)
+
+
+    def set(self, layers):
+        """
+        Set a collection of layers to be overlaid with each other.
+        """
+        self.data = []
+        for layer in layers:
+            self.add(layer)
+        return self
+
+
+    def __getitem__(self, ind):
+        return self.data[ind]
+
+
+    def __len__(self):
+        return len(self.data)
+
+
+    def __iter__(self):
+        i = 0
+        while i < len(self):
+            yield self[i]
+            i += 1
+
+
+
+class SheetLayer(View):
     """
     A SheetLayer is a data structure for holding one or more numpy
     arrays embedded within a two-dimensional space. The array(s) may
@@ -33,30 +108,22 @@ class SheetLayer(param.Parameterized):
         The ROI can be specified to select only a sub-region of the bounds to
         be stored as data.""")
 
-    title = param.String(default=None, allow_None=True, doc="""
-       A short description of the layer that may be used as a title.""")
-
-    style = param.Dict(default=AttrDict(), doc="""
-        Optional keywords for specifying the display style.""")
-
-    metadata = param.Dict(default=AttrDict(), doc="""
-        Additional information to be associated with the SheetView.""")
-
     _abstract = True
 
     def __init__(self, data, bounds, **kwargs):
-        self.data = data
-        super(SheetLayer, self).__init__(bounds=bounds, **kwargs)
+        kwargs['bounds'] = bounds
+        super(SheetLayer, self).__init__(data, **kwargs)
 
         if self.roi_bounds is None:
             self.roi_bounds = self.bounds
+
 
     def __mul__(self, other):
         if not isinstance(other, SheetLayer):
             raise TypeError('Can only create an overlay using SheetLayers.')
 
         if isinstance(self, SheetOverlay):
-            if  isinstance(other, SheetOverlay):
+            if isinstance(other, SheetOverlay):
                 overlays = self.data + other.data
             else:
                 overlays = self.data + [other]
@@ -69,20 +136,13 @@ class SheetLayer(param.Parameterized):
                             style=self.style, metadata=self.metadata,
                             roi_bounds=self.roi_bounds)
 
-    def __add__(self, obj):
-        if not isinstance(obj, GridLayout):
-            return GridLayout(initial_grid=[[self, obj]])
 
-class SheetOverlay(SheetLayer):
-    """
-    A SheetOverlay allows a group of SheetLayers with common bounds to
-    be overlaid together. Layers can be indexed out of an overlay and
-    an overlay is an iterable that iterates over the contained layers.
-    """
 
-    def __init__(self, overlays, bounds, **kwargs):
-        super(SheetOverlay, self).__init__([], bounds, **kwargs)
-        self.set(overlays)
+class SheetOverlay(SheetLayer, Overlay):
+    """
+    SheetOverlay extends a regular Overlay with bounds checking and an ROI
+    property, which applies the roi_bounds to all SheetLayer objects it contains.
+    """
 
     def add(self, layer):
         """
@@ -92,32 +152,12 @@ class SheetOverlay(SheetLayer):
             raise Exception("Layer must have same bounds as SheetOverlay")
         self.data.append(layer)
 
-    def set(self, layers):
-        """
-        Set a collection of layers to be overlaid with each other.
-        """
-        self.data = []
-        for layer in layers:
-            self.add(layer)
-        return self
-
     @property
     def roi(self):
+        "Apply the roi_bounds to all elements in the SheetOverlay"
         return SheetOverlay(self.roi_bounds,
                             [el.roi for el in self.data],
                             style=self.style, metadata=self.metadata)
-
-    def __getitem__(self, ind):
-        return self.data[ind]
-
-    def __len__(self):
-        return len(self.data)
-
-    def __iter__(self):
-        i = 0
-        while i < len(self):
-            yield self[i]
-            i+=1
 
 
 
@@ -234,6 +274,8 @@ class SheetPoints(SheetLayer):
         while i < len(self):
             yield tuple(self.data[i,:])
             i+=1
+
+
 
 class SheetLines(SheetLayer):
     """
@@ -367,8 +409,6 @@ class SheetStack(NdMapping):
     def __add__(self, obj):
         if not isinstance(obj, GridLayout):
             return GridLayout(initial_grid=[[self, obj]])
-
-
 
 
 
