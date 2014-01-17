@@ -1,5 +1,4 @@
 import matplotlib.pyplot as plt
-
 try:    from matplotlib import animation
 except: animation = None
 
@@ -10,6 +9,7 @@ from tempfile import NamedTemporaryFile
 from patterngenerator import PatternGenerator
 from plots import Plot, GridLayoutPlot, viewmap
 from views import SheetStack, SheetLayer, GridLayout
+
 
 VIDEO_FORMAT='x264'  # Either 'x264' or 'gif'
 GIF_FPS = 10
@@ -115,7 +115,7 @@ def layout_display(grid, size=256, format='svg'):
     except:
         message = ('Cannot import matplotlib.animation' if animation is None
                    else 'Failed to generate matplotlib animation')
-        fig =  stackplot()
+        fig =  gridplot()
         return figure_display(fig, message=message)
 
 
@@ -123,6 +123,20 @@ def sheetlayer_display(view, size=256, format='svg'):
     if not isinstance(view, SheetLayer): return None
     fig = viewmap[view.__class__](view, **opts(view))()
     return figure_display(fig)
+
+def update_matplotlib_rc():
+    """
+    Default changes to the matplotlib rc used by IPython Notebook.
+    """
+    import matplotlib
+    rc= {'figure.figsize': (6.0,4.0),
+         'figure.facecolor': 'white',
+         'figure.edgecolor': 'white',
+         'font.size': 10,
+         'savefig.dpi': 72,
+         'figure.subplot.bottom' : .125
+         }
+    matplotlib.rcParams.update(rc)
 
 
 _loaded = False
@@ -139,3 +153,5 @@ def load_ipython_extension(ip):
         html_formatter.for_type(SheetLayer, sheetlayer_display)
         html_formatter.for_type(SheetStack, sheetstack_display)
         html_formatter.for_type(GridLayout, layout_display)
+
+        update_matplotlib_rc()
