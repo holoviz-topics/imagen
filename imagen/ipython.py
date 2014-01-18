@@ -152,15 +152,15 @@ message = """Welcome to the Imagen IPython extension! (http://ioam.github.io/ima
 
 _loaded = False
 
-def load_ipython_extension(ip):
+def load_ipython_extension(ip, verbose=True):
 
-    print message
-    if VIDEO_FORMAT=='gif':
-        gif_fps = "imagen.ipython.GIF_FPS=%s" % GIF_FPS
-        print "[Animations rendered in GIF format: %s]" % gif_fps
+    if verbose:
+        print message
+        if VIDEO_FORMAT=='gif':
+            gif_fps = "imagen.ipython.GIF_FPS=%s" % GIF_FPS
+            print "[Animations rendered in GIF format: %s]" % gif_fps
 
     global _loaded
-
     if not _loaded:
         _loaded = True
         PatternGenerator.xdensity = 256
