@@ -11,15 +11,25 @@ from plots import Plot, GridLayoutPlot, viewmap
 from views import SheetStack, SheetLayer, GridLayout
 
 
-VIDEO_FORMAT='x264'  # Either 'x264' or 'gif'
-GIF_FPS = 10
-
 GIF_TAG = "<img src='data:image/gif;base64,{0}'/>"
 
 x264_TAG = """<video controls>
  <source src="data:video/x-m4v;base64,{0}" type="video/mp4">
  Your browser does not support the video tag.
 </video>"""
+
+
+def x264_available():
+    try:
+        with NamedTemporaryFile(suffix='.mp4') as f:
+            a = animation.FuncAnimation(plt.figure(), lambda x: x, frames=[0,1])
+            a.save(f.name, extra_args=['-vcodec', 'libx264'])
+        return True
+    except:
+        return False
+
+VIDEO_FORMAT='x264' if x264_available() else 'gif'
+GIF_FPS = 10
 
 def opts(obj, additional_opts=[]):
     default_options = ['size']
@@ -94,7 +104,6 @@ def sheetstack_display(stack, size=256, format='svg'):
 
     try:
         return HTML_animation(stackplot, stack)
-        return animation_to_HTML(stackplot.anim(**anim_opts(stack)),)
     except:
         message = ('Cannot import matplotlib.animation' if animation is None
                    else 'Failed to generate matplotlib animation')
@@ -139,9 +148,17 @@ def update_matplotlib_rc():
     matplotlib.rcParams.update(rc)
 
 
+message = """Welcome to the Imagen IPython extension! (http://ioam.github.io/imagen/)"""
+
 _loaded = False
 
 def load_ipython_extension(ip):
+
+    print message
+    if VIDEO_FORMAT=='gif':
+        gif_fps = "imagen.ipython.GIF_FPS=%s" % GIF_FPS
+        print "[Animations rendered in GIF format: %s]" % gif_fps
+
     global _loaded
 
     if not _loaded:
