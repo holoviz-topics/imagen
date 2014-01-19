@@ -352,7 +352,7 @@ class SheetStack(NdMapping):
             raise AssertionError("%s must only contain one type of SheetLayer." % self.__class__.__name__)
         super(SheetStack, self)._item_check(dim_vals, data)
 
-        
+
     def map(self, map_fn, **kwargs):
         mapped_items = [(k, map_fn(el)) for k,el in self.items()]
         bounds = mapped_items[0][1].bounds # Bounds of first mapped item
@@ -470,7 +470,7 @@ class ProjectionGrid(NdMapping, SheetCoordinateSystem):
         """
         Adds bounds checking to the default update behavior.
         """
-        if self.bounds.lbrt() != other.bounds.lbrt():
+        if hasattr(other, 'bounds') and (self.bounds.lbrt() != other.bounds.lbrt()):
             raise Exception('Cannot combine %ss with different'
                             ' bounds.' % self.__class__)
         super(ProjectionGrid, self).update(other)
@@ -482,7 +482,9 @@ class ProjectionGrid(NdMapping, SheetCoordinateSystem):
         metadata copied across.
         """
         settings = dict(self.get_param_values(), **kwargs)
-        return self.__class__(self.bounds, self.shape, items,
+        settings.pop('metadata', None)
+        return ProjectionGrid(bounds=self.bounds, shape=self.shape,
+                              initial_items=items,
                               metadata=self.metadata, **settings)
 
 
