@@ -396,12 +396,6 @@ class GridLayoutPlot(Plot):
         return len(self.grid)
 
 
-viewmap = {SheetView:SheetViewPlot,
-           SheetPoints:SheetPointsPlot,
-           SheetLines:SheetLinesPlot,
-           SheetOverlay:SheetPlot}
-
-
 
 class ProjectionGridPlot(Plot):
     """
@@ -418,7 +412,7 @@ class ProjectionGridPlot(Plot):
     situate = param.Boolean(default=False, doc="""
         Determines whether to situate the projection in the full bounds or
         apply the ROI.""")
-    
+
     def __init__(self, grid, **kwargs):
         if not isinstance(grid, ProjectionGrid):
             raise Exception("ProjectionGridPlot only accepts ProjectionGrids.")
@@ -426,8 +420,8 @@ class ProjectionGridPlot(Plot):
         self.rows, self.cols = grid.shape
         super(ProjectionGridPlot, self).__init__(**kwargs)
 
-        
-    def __call__(self, axis=None):              
+
+    def __call__(self, axis=None):
         ax = self._axis(axis, '', '','', None)
         ax.get_xaxis().set_visible(False)
         ax.get_yaxis().set_visible(False)
@@ -435,10 +429,11 @@ class ProjectionGridPlot(Plot):
         grid_shape = [[v for (k,v) in col[1]] for col in groupby(self.grid.items(),
                                                                  lambda (k,v): k[0])]
         width, height, b_w, b_h = self._compute_borders(grid_shape)
-            
+
         plt.xlim(0,width)
         plt.ylim(0,height)
-        
+
+        cmap = self.grid.metadata.get('cmap', 'gray')
         self.handles['projs'] = []
         x, y = b_w, b_h
         for row in grid_shape:
@@ -446,7 +441,8 @@ class ProjectionGridPlot(Plot):
                 w, h = self._get_dims(view)
                 data = view.top.data if self.situate else view.top.roi.data
                 self.handles['projs'].append(plt.imshow(data, extent=(x,x+w, y, y+h),
-                                                        interpolation='nearest'))
+                                                        interpolation='nearest',
+                                                        cmap=cmap))
                 y += h + b_h
             y = b_h
             x += w + b_w
@@ -454,7 +450,7 @@ class ProjectionGridPlot(Plot):
         if not axis: plt.close(self.handles['fig'])
         return ax if axis else self.handles['fig']
 
-    
+
     def update_frame(self, n):
         n = n  if n < len(self) else len(self) - 1
         for i, plot in enumerate(self.handles['projs']):
@@ -462,12 +458,12 @@ class ProjectionGridPlot(Plot):
             data = view.data if self.situate else view.roi.data
             plot.set_data(data)
 
-            
+
     def _get_dims(self, view):
         l,b,r,t = view.bounds.lbrt() if self.situate else view.roi.bounds.lbrt()
         return (r-l, t-b)
-    
-    
+
+
     def _compute_borders(self, grid_shape):
         width = 0
         for view in grid_shape[0]:
@@ -481,10 +477,15 @@ class ProjectionGridPlot(Plot):
         border_height = (height/10)/(self.rows+1)
         width += width/10
         height += height/10
-        
+
         return width, height, border_width, border_height
 
-    
+
     def __len__(self):
         return len(self.grid.top)
 
+
+viewmap = {SheetView:SheetViewPlot,
+           SheetPoints:SheetPointsPlot,
+           SheetLines:SheetLinesPlot,
+           SheetOverlay:SheetPlot}
