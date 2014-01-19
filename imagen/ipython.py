@@ -7,8 +7,8 @@ from IPython.core.pylabtools import print_figure
 from tempfile import NamedTemporaryFile
 
 from patterngenerator import PatternGenerator
-from plots import Plot, GridLayoutPlot, viewmap
-from views import SheetStack, SheetLayer, GridLayout
+from plots import Plot, GridLayoutPlot, viewmap, ProjectionGridPlot
+from views import SheetStack, SheetLayer, GridLayout, ProjectionGrid
 
 
 GIF_TAG = "<img src='data:image/gif;base64,{0}'/>"
@@ -128,6 +128,21 @@ def layout_display(grid, size=256, format='svg'):
         return figure_display(fig, message=message)
 
 
+def projection_display(grid, size=256, format='svg'):
+    if not isinstance(grid, ProjectionGrid): return None
+    gridplot = ProjectionGridPlot(grid, **dict(opts(grid)))
+    if len(grid)==1:
+        fig =  gridplot()
+        return figure_display(fig)
+    try:
+        return HTML_animation(gridplot, grid)
+    except:
+        message = ('Cannot import matplotlib.animation' if animation is None
+                   else 'Failed to generate matplotlib animation')
+        fig = gridplot()
+        return figure_display(fig, message=message)
+
+    
 def sheetlayer_display(view, size=256, format='svg'):
     if not isinstance(view, SheetLayer): return None
     fig = viewmap[view.__class__](view, **opts(view))()
@@ -170,5 +185,6 @@ def load_ipython_extension(ip, verbose=True):
         html_formatter.for_type(SheetLayer, sheetlayer_display)
         html_formatter.for_type(SheetStack, sheetstack_display)
         html_formatter.for_type(GridLayout, layout_display)
+        html_formatter.for_type(ProjectionGrid, projection_display)
 
         update_matplotlib_rc()

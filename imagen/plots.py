@@ -1,8 +1,9 @@
+from itertools import groupby
 import string
 import numpy as np
 
 import param
-from views import SheetView, SheetLayer, SheetOverlay, SheetLines, SheetStack, SheetPoints, GridLayout
+from views import SheetView, SheetLayer, SheetOverlay, SheetLines, SheetStack, SheetPoints, GridLayout, ProjectionGrid
 
 from matplotlib import pyplot as plt
 from matplotlib.collections import LineCollection
@@ -399,3 +400,91 @@ viewmap = {SheetView:SheetViewPlot,
            SheetPoints:SheetPointsPlot,
            SheetLines:SheetLinesPlot,
            SheetOverlay:SheetPlot}
+
+
+
+class ProjectionGridPlot(Plot):
+    """
+    ProjectionGridPlot evenly spaces out plots of individual projections on
+    a grid, even when they differ in size. The projections can be situated
+    or an ROI can be applied to each element. Since this class uses a single
+    axis to generate all the individual plots it is much faster than the
+    equivalent using subplots.
+    """
+
+    border = param.Number(default=10, doc="""
+        Aggregate border as a fraction of total plot size.""")
+
+    situate = param.Boolean(default=False, doc="""
+        Determines whether to situate the projection in the full bounds or
+        apply the ROI.""")
+    
+    def __init__(self, grid, **kwargs):
+        if not isinstance(grid, ProjectionGrid):
+            raise Exception("ProjectionGridPlot only accepts ProjectionGrids.")
+        self.grid = grid
+        self.rows, self.cols = grid.shape
+        super(ProjectionGridPlot, self).__init__(**kwargs)
+
+        
+    def __call__(self, axis=None):              
+        ax = self._axis(axis, '', '','', None)
+        ax.get_xaxis().set_visible(False)
+        ax.get_yaxis().set_visible(False)
+
+        grid_shape = [[v for (k,v) in col[1]] for col in groupby(self.grid.items(),
+                                                                 lambda (k,v): k[0])]
+        width, height, b_w, b_h = self._compute_borders(grid_shape)
+            
+        plt.xlim(0,width)
+        plt.ylim(0,height)
+        
+        self.handles['projs'] = []
+        x, y = b_w, b_h
+        for row in grid_shape:
+            for view in row:
+                w, h = self._get_dims(view)
+                data = view.top.data if self.situate else view.top.roi.data
+                self.handles['projs'].append(plt.imshow(data, extent=(x,x+w, y, y+h),
+                                                        interpolation='nearest'))
+                y += h + b_h
+            y = b_h
+            x += w + b_w
+
+        if not axis: plt.close(self.handles['fig'])
+        return ax if axis else self.handles['fig']
+
+    
+    def update_frame(self, n):
+        n = n  if n < len(self) else len(self) - 1
+        for i, plot in enumerate(self.handles['projs']):
+            view = self.grid.values()[i].values()[n]
+            data = view.data if self.situate else view.roi.data
+            plot.set_data(data)
+
+            
+    def _get_dims(self, view):
+        l,b,r,t = view.bounds.lbrt() if self.situate else view.roi.bounds.lbrt()
+        return (r-l, t-b)
+    
+    
+    def _compute_borders(self, grid_shape):
+        width = 0
+        for view in grid_shape[0]:
+            width += self._get_dims(view)[1] + 0
+
+        height = 0
+        for view in [row[0] for row in grid_shape]:
+            height += self._get_dims(view)[0] + 0
+
+        border_width = (width/10)/(self.cols+1)
+        border_height = (height/10)/(self.rows+1)
+        width += width/10
+        height += height/10
+        
+        return width, height, border_width, border_height
+
+    
+    def __len__(self):
+        return len(self.grid.top)
+
