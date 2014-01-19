@@ -130,8 +130,10 @@ def layout_display(grid, size=256, format='svg'):
 
 def projection_display(grid, size=256, format='svg'):
     if not isinstance(grid, ProjectionGrid): return None
-    gridplot = ProjectionGridPlot(grid, **dict(opts(grid)))
-    if len(grid)==1:
+    size_factor = 0.25
+    grid_size = size_factor*grid.shape[1]*Plot.size[1], size_factor*grid.shape[0]*Plot.size[0]
+    gridplot = ProjectionGridPlot(grid, **dict(opts(grid), size=grid_size))
+    if max(len(v) for v in grid.values())==1:
         fig =  gridplot()
         return figure_display(fig)
     try:
@@ -142,7 +144,7 @@ def projection_display(grid, size=256, format='svg'):
         fig = gridplot()
         return figure_display(fig, message=message)
 
-    
+
 def sheetlayer_display(view, size=256, format='svg'):
     if not isinstance(view, SheetLayer): return None
     fig = viewmap[view.__class__](view, **opts(view))()
