@@ -486,6 +486,7 @@ class ProjectionGrid(NdMapping, SheetCoordinateSystem):
                               metadata=self.metadata, **settings)
 
 
+
 class GridLayout(NdMapping):
 
     key_type = param.List(default=[int, int], constant=True)
@@ -503,10 +504,6 @@ class GridLayout(NdMapping):
     def shape(self):
         rows, cols = zip(*self.keys())
         return max(rows)+1, max(cols)+1
-
-
-    def __len__(self):
-        return max([len(v) for v in self.values() if isinstance(v, SheetStack)]+[1])
 
     @property
     def coords(self):
@@ -545,7 +542,7 @@ class GridLayout(NdMapping):
     def update(self, other, cols=None):
         """
         Given a mapping or iterable of additional views, extend the
-        grid in scaline order, obeying max_cols if applicable.
+        grid in scanline order, obeying max_cols (if applicable).
         """
         values = other if isinstance(other, list) else other.values()
         grid = [[]] if self.coords == [] else self._grid(self.coords)
@@ -612,6 +609,8 @@ class GridLayout(NdMapping):
         self.update(new_values)
         return self
 
+    def __len__(self):
+        return max([len(v) for v in self.values() if isinstance(v, SheetStack)]+[1])
 
 
 class Timeline(param.Parameterized):
