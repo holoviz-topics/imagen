@@ -482,7 +482,7 @@ class ProjectionGridPlot(Plot):
 
 
     def __len__(self):
-        return len(self.grid.top)
+        return len(self.grid)
 
 
 viewmap = {SheetView:SheetViewPlot,

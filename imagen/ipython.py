@@ -133,7 +133,7 @@ def projection_display(grid, size=256, format='svg'):
     size_factor = 0.25
     grid_size = size_factor*grid.shape[1]*Plot.size[1], size_factor*grid.shape[0]*Plot.size[0]
     gridplot = ProjectionGridPlot(grid, **dict(opts(grid), size=grid_size))
-    if max(len(v) for v in grid.values())==1:
+    if len(grid)==1:
         fig =  gridplot()
         return figure_display(fig)
     try:
