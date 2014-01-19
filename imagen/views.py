@@ -487,6 +487,27 @@ class ProjectionGrid(NdMapping, SheetCoordinateSystem):
                               initial_items=items,
                               metadata=self.metadata, **settings)
 
+    @property
+    def top(self):
+        """
+        The top of a ProjectionGrid is another ProjectionGrid
+        constituted of the top of the individual elements. To access
+        the elements by their X,Y position, either index the position
+        directly or use the items() method.
+        """
+
+        top_items=[(k, v.clone(items=(v.keys()[-1], v.top)))
+                   for (k,v) in self.items()]
+        return self.clone(top_items)
+
+    def __len__(self):
+        """
+        The maximum depth of all the elements. Matches the semantics
+        of __len__ used by SheetStack. For the total number of
+        elements, count the full set of keys.
+        """
+        return  max(len(v) for v in self.values())
+
 
 
 class GridLayout(NdMapping):
