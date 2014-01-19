@@ -352,9 +352,11 @@ class SheetStack(NdMapping):
             raise AssertionError("%s must only contain one type of SheetLayer." % self.__class__.__name__)
         super(SheetStack, self)._item_check(dim_vals, data)
 
-
-    def map(self, map_fn):
-        return self.clone([(k, map_fn(el)) for k,el in self.items()])
+        
+    def map(self, map_fn, **kwargs):
+        mapped_items = [(k, map_fn(el)) for k,el in self.items()]
+        bounds = mapped_items[0][1].bounds # Bounds of first mapped item
+        return self.clone(mapped_items, bounds=bounds, **kwargs)
 
 
     def normalize_elements(self, **kwargs):
