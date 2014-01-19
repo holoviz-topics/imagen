@@ -741,10 +741,6 @@ class Animation(SheetStack):
 
     def __init__(self, initial_items=None, **kwargs):
         super(Animation, self).__init__(initial_items, **kwargs)
-
-        if (self.offset % self.timestep) != 0:
-            raise ValueError("Offset value not a multiple of timestep.")
-
         if self.keys() and self.frames:
             raise Exception("Initial items can only be used if frames is set to None.")
         elif self.frames:
@@ -757,8 +753,8 @@ class Animation(SheetStack):
             self.pattern.state_pop()
 
     def _item_check(self, dim_vals, data):
-        if (dim_vals[0] % self.time_fn.time_type(self.timestep)) != 0:
-            raise ValueError("Frame time value not a multiple of timestep.")
+        if (dim_vals[0] % self.time_fn.time_type(self.timestep)) != self.time_fn.time_type(self.offset):
+             raise ValueError("Frame time value not a multiple of timestep.")
         super(Animation,self)._item_check(dim_vals, data)
 
 
