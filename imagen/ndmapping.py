@@ -251,6 +251,18 @@ class NdIndexableMapping(param.Parameterized):
         labels = self.dimension_labels + [value_label]
         return pandas.DataFrame([dict(zip(labels, k+(v,))) for (k,v) in self._data.items()])
 
+    def _apply_key_type(self, key, key_ind):
+        if self.key_type == []:
+            return key
+        key_type = self.key_type[key_ind]
+        if isinstance(key, slice):
+            sl_vals = [key.start, key.stop, key.step]
+            return slice(*[key_type(el) if el is not None else None for el in sl_vals])
+        elif key is Ellipsis:
+            return key
+        else:
+            return key_type(key)
+
 
     def _split_index(self, key):
         """
@@ -259,7 +271,8 @@ class NdIndexableMapping(param.Parameterized):
         """
         if not isinstance(key, tuple):
             key = (key,)
-        map_slice = key[:self.ndim]
+        map_slice = tuple(self._apply_key_type(el, i) for i, el
+                          in enumerate(key[:self.ndim]))
         data_slice = key[self.ndim:] if len(key[self.ndim:]) > 0 else ()
         return map_slice, data_slice
 
@@ -433,19 +446,28 @@ class NdMapping(NdIndexableMapping):
 
 
     def _range_condition(self, slice):
-        if slice.step is not None: raise Exception('Ignoring step value.')
-        return lambda x: slice.start <= x < slice.stop
+        if slice.step is None:
+            lmbd = lambda x: slice.start <= x < slice.stop
+        else:
+            lmbd = lambda x: slice.start <= x < slice.stop and not ((x-slice.start)
+                                                                    % slice.step)
+        return lmbd
 
 
     def _upto_condition(self, slice):
-        if slice.step is not None: raise Exception('Ignoring step value.')
-        return lambda x: x < slice.stop
+        if slice.step is None:
+            lmbd = lambda x: x < slice.stop
+        else:
+            lmbd = lambda x: x < slice.stop and not (x % slice.step)
+        return lmbd
 
 
     def _from_condition(self, slice):
-        if slice.step is not None: raise Exception('Ignoring step value.')
-        return lambda x: x > slice.start
-
+        if slice.step is None:
+            lmbd = lambda x: x > slice.start
+        else:
+            lmbd = lambda x: x > slice.start and ((x-slice.start) % slice.step)
+        return lmbd
 
     def _all_condition(self, ellipsis):
         return lambda x: True
