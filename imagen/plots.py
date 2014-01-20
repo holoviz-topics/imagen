@@ -430,8 +430,8 @@ class ProjectionGridPlot(Plot):
                                                                  lambda (k,v): k[0])]
         width, height, b_w, b_h = self._compute_borders(grid_shape)
 
-        plt.xlim(0,width)
-        plt.ylim(0,height)
+        plt.xlim(0, width)
+        plt.ylim(0, height)
 
         cmap = self.grid.metadata.get('cmap', 'gray')
         self.handles['projs'] = []
@@ -465,13 +465,13 @@ class ProjectionGridPlot(Plot):
 
 
     def _compute_borders(self, grid_shape):
-        width = 0
-        for view in grid_shape[0]:
-            width += self._get_dims(view)[1] + 0
-
         height = 0
+        for view in grid_shape[0]:
+            height += self._get_dims(view)[1]
+
+        width = 0
         for view in [row[0] for row in grid_shape]:
-            height += self._get_dims(view)[0] + 0
+            width += self._get_dims(view)[0]
 
         border_width = (width/10)/(self.cols+1)
         border_height = (height/10)/(self.rows+1)
