@@ -210,7 +210,7 @@ class NdIndexableMapping(param.Parameterized):
                               **self.metadata)
 
 
-    def add_dimension(self, dim_name, dim_pos, dim_val):
+    def add_dimension(self, dim_name, dim_pos, dim_val, dim_type=None, **kwargs):
         """
         Create a new object with an additional dimension along which items are
         indexed. Requires the dimension name, the desired position in the
@@ -223,15 +223,21 @@ class NdIndexableMapping(param.Parameterized):
         dim_labels = self.dimension_labels[:]
         dim_labels.insert(dim_pos, dim_name)
 
+        key_type = self.key_type[:]
+        if dim_type is not None:
+            if key_type is []:
+                raise Exception
+            else:
+                key_type.insert(dim_pos, dim_type)
+
         items = map_type()
         for key, val in self._data.items():
             new_key = list(key)
             new_key.insert(dim_pos, dim_val)
             items[tuple(new_key)] = val
 
-        settings = dict(self.get_param_values()+[('dimension_labels', dim_labels)],
-                        **self.metadata)
-        return self.__class__(initial_items=items, **settings)
+        return self.clone(items, dimension_labels=dim_labels,
+                          key_type=key_type, **kwargs)
 
 
     def clone(self, items=None, **kwargs):
