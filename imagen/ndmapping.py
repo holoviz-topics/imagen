@@ -116,7 +116,7 @@ class NdIndexableMapping(param.Parameterized):
 
 
     @property
-    def ndim(self):
+    def ndims(self):
         return len(self.dimension_labels)
 
 
@@ -131,7 +131,7 @@ class NdIndexableMapping(param.Parameterized):
                             'to be a {restr}.'.format(slf=type(self).__name__,
                                                       data=type(data).__name__,
                                                       restr=self.data_type.__name__))
-        elif not len(dim_vals) == self.ndim:
+        elif not len(dim_vals) == self.ndims:
             raise KeyError('Key has to match number of dimensions.')
         elif self.key_type and not all(isinstance(v, t) for v, t in zip(dim_vals, self.key_type)):
             raise TypeError('Key does not match declared key type.')
@@ -278,8 +278,8 @@ class NdIndexableMapping(param.Parameterized):
         if not isinstance(key, tuple):
             key = (key,)
         map_slice = tuple(self._apply_key_type(el, i) for i, el
-                          in enumerate(key[:self.ndim]))
-        data_slice = key[self.ndim:] if len(key[self.ndim:]) > 0 else ()
+                          in enumerate(key[:self.ndims]))
+        data_slice = key[self.ndims:] if len(key[self.ndims:]) > 0 else ()
         return map_slice, data_slice
 
 
@@ -331,7 +331,7 @@ class NdIndexableMapping(param.Parameterized):
         """
         Returns indices for all data elements.
         """
-        if self.ndim == 1:
+        if self.ndims == 1:
             return [k[0] for k in self._data.keys()]
         else:
             return self._data.keys()
@@ -411,7 +411,7 @@ class NdMapping(NdIndexableMapping):
         else:
             items = [(k, self._dataslice(v, data_slice)) for k, v
                      in self._data.items() if self._conjunction(k, conditions)]
-            if self.ndim == 1:
+            if self.ndims == 1:
                 items = [(k[0], v) for (k, v) in items]
             return self.__class__(initial_items=items, metadata=self.metadata,
                                   dimension_labels=self.dimension_labels, sorted=self.sorted)
