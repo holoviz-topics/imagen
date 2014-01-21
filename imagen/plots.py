@@ -227,7 +227,6 @@ class SheetPointsPlot(Plot):
         return len(self._stack)
 
 
-
 class SheetViewPlot(Plot):
 
     colorbar = param.ObjectSelector(default='horizontal',
@@ -257,11 +256,9 @@ class SheetViewPlot(Plot):
         (l,b,r,t) = self._stack.bounds.lbrt()
         ax = self._axis(axis, title, 'x','y', (l,b,r,t))
 
-        cmap = 'hsv' if (sheetview.cyclic_range is not None) else 'gray'
-        cmap = sheetview.style.get('cmap', cmap)
+        cmap = {'cmap':sheetview.mode} if sheetview.depth==1 else {}
         im = ax.imshow(sheetview.data, extent=[l,r,b,t],
-                       cmap=cmap, zorder=zorder,
-                       interpolation='nearest')
+                       zorder=zorder, interpolation='nearest', **cmap)
         self.handles['im'] = im
 
         normalization = sheetview.data.max()
