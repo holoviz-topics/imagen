@@ -55,8 +55,8 @@ class NdIndexableMapping(param.Parameterized):
 
     data_type = param.Parameter(default=None, constant=True)
 
-    key_type = param.List(default=[], doc="""Type checking of the keys, if empty
-        no type checking is applied.""")
+    key_type = param.List(default=[], constant=True, doc="""Type checking of the
+        keys, if empty no type checking is applied.""")
 
     metadata = param.Dict(default=AttrDict(), doc="""
         Additional labels to be associated with the Dataview.""")
@@ -76,6 +76,9 @@ class NdIndexableMapping(param.Parameterized):
 
         super(NdIndexableMapping, self).__init__(metadata=metadata, **kwargs)
 
+        if self.key_type and len(self.key_type) != self.ndims:
+            raise Exception('Declared key types not the same as the number '
+                            'of dimensions.')
         self._next_ind = 0
 
         if isinstance(initial_items, tuple):
@@ -133,8 +136,6 @@ class NdIndexableMapping(param.Parameterized):
                                                       restr=self.data_type.__name__))
         elif not len(dim_vals) == self.ndims:
             raise KeyError('Key has to match number of dimensions.')
-        elif self.key_type and not all(isinstance(v, t) for v, t in zip(dim_vals, self.key_type)):
-            raise TypeError('Key does not match declared key type.')
 
 
     def sorted(self):
@@ -152,6 +153,8 @@ class NdIndexableMapping(param.Parameterized):
         """
         if not isinstance(dim_vals, tuple):
             dim_vals = (dim_vals,)
+        dim_types = zip(self.key_type, dim_vals)
+        dim_vals = tuple(t(v) for t, v in dim_types) if dim_types else dim_vals
         self._item_check(dim_vals, data)
         self._update_item(dim_vals, data)
         if sort and self.sorted:
