@@ -140,8 +140,14 @@ class SheetLayer(View):
 
 class SheetOverlay(SheetLayer, Overlay):
     """
-    SheetOverlay extends a regular Overlay with bounds checking and an ROI
-    property, which applies the roi_bounds to all SheetLayer objects it contains.
+    SheetOverlay extends a regular Overlay with bounds checking and an
+    ROI property, which applies the roi_bounds to all SheetLayer
+    objects it contains.
+
+    A SheetOverlay may be used to overlay lines or points over a
+    SheetView. In addition, if an overlay consists of three or four
+    SheetViews of depth 1, the overlay may be converted to an RGB(A)
+    SheetView via the rgb property.
     """
 
     def add(self, layer):
@@ -153,11 +159,29 @@ class SheetOverlay(SheetLayer, Overlay):
         self.data.append(layer)
 
     @property
+    def rgb(self):
+        """
+        Convert an overlay of three or four SheetViews into a
+        SheetView in RGB(A) mode.
+        """
+        if len(self) not in [3,4]:
+            raise Exception("Requires 3 or 4 layers to convert to RGB(A)")
+        if not all(isinstance(el, SheetView) for el in self.data):
+            raise Exception("All layers must be SheetViews to convert to RGB(A) format")
+        if not all(el.depth==1 for el in self.data):
+            raise Exception("All SheetViews must have a depth of one for conversion to RGB(A) format")
+        mode = 'rgb' if len(self)==3 else 'rgba'
+        return SheetView(np.dstack([el.data for el in self.data]), self.bounds, mode=mode)
+
+    @property
     def roi(self):
         "Apply the roi_bounds to all elements in the SheetOverlay"
         return SheetOverlay(self.roi_bounds,
                             [el.roi for el in self.data],
                             style=self.style, metadata=self.metadata)
+
+    def __len__(self):
+        return len(self.data)
 
 
 
