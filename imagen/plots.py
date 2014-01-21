@@ -229,7 +229,7 @@ class SheetPointsPlot(Plot):
 
 class SheetViewPlot(Plot):
 
-    colorbar = param.ObjectSelector(default='horizontal',
+    colorbar = param.ObjectSelector(default=None,
                                     objects=['horizontal','vertical', None],
         doc="""The style of the colorbar if applicable. """)
 
