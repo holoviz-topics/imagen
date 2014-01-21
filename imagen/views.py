@@ -119,18 +119,21 @@ class SheetLayer(View):
 
 
     def __mul__(self, other):
-        if not isinstance(other, SheetLayer):
-            raise TypeError('Can only create an overlay using SheetLayers.')
 
-        if isinstance(self, SheetOverlay):
+        if isinstance(other, SheetStack):
+            items = [(k, self * v) for (k,v) in  other.items()]
+            return other.clone(items=items)
+        elif isinstance(self, SheetOverlay):
             if isinstance(other, SheetOverlay):
                 overlays = self.data + other.data
             else:
                 overlays = self.data + [other]
         elif isinstance(other, SheetOverlay):
             overlays = [self] + other.data
-        else:
+        elif isinstance(other, SheetLayer):
             overlays = [self, other]
+        else:
+            raise TypeError('Can only create an overlay of SheetLayers.')
 
         return SheetOverlay(overlays, self.bounds,
                             style=self.style, metadata=self.metadata,
