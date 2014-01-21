@@ -166,6 +166,10 @@ class SheetView(SheetLayer, SheetCoordinateSystem):
     SheetView is the atomic unit as which 2D data is stored, along with its
     bounds object. Allows slicing operations of the data in sheet coordinates or
     direct access to the data, via the .data attribute.
+
+    Arrays with a shape of (X,Y) or (X,Y,Z) are valid. In the case of
+    3D arrays, each depth layer is interpreted as a channel of the 2D
+    representation.
     """
 
     cyclic_range = param.Number(default=None, bounds=(0, None), doc="""
@@ -183,10 +187,11 @@ class SheetView(SheetLayer, SheetCoordinateSystem):
 
         data = np.array([[0]]) if data is None else data
         (l, b, r, t) = bounds.lbrt()
-        (dim1, dim2) = data.shape
+        (dim1, dim2) = data.shape[0], data.shape[1]
         xdensity = dim1 / (r - l)
         ydensity = dim2 / (t - b)
 
+        self._mode = kwargs.pop('mode', None)
         SheetLayer.__init__(self, data, bounds, **kwargs)
         SheetCoordinateSystem.__init__(self, bounds, xdensity, ydensity)
 
@@ -227,6 +232,31 @@ class SheetView(SheetLayer, SheetCoordinateSystem):
                          metadata=self.metadata, roi_bounds=self.roi_bounds,
                          style=self.style)
 
+
+    @property
+    def depth(self):
+        return 1 if len(self.data.shape)==2 else self.data.shape[2]
+
+
+    @property
+    def mode(self):
+        """
+        Mode specifying the color space for visualizing the array
+        data. The string returned corresponds to the matplotlib colour
+        map name unless depth is 3 or 4 with modes 'rgb' or 'rgba'
+        respectively.
+
+        If not explicitly specified, the mode defaults to 'gray'
+        unless the cyclic_range is set, in which case 'hsv' is
+        returned.
+        """
+        if self._mode is not None:
+            return self._mode
+        return 'gray' if (self.cyclic_range is None) else 'hsv'
+
+    @mode.setter
+    def mode(self, val):
+        self._mode = val
 
     @property
     def N(self):
