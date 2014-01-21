@@ -229,6 +229,9 @@ class NdIndexableMapping(param.Parameterized):
                 raise Exception
             else:
                 key_type.insert(dim_pos, dim_type)
+            if len(key_type) != len(dim_labels):
+                raise Exception('Cannot add key_type to untyped %s.' %
+                                self.__class__.__name__)
 
         items = map_type()
         for key, val in self._data.items():
