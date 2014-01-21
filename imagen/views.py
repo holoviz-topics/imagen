@@ -399,6 +399,13 @@ class SheetStack(NdMapping):
     def roi(self):
         return self.map(lambda x: x.roi)
 
+    @property
+    def rgb(self):
+        if self.type == SheetOverlay:
+            return self.map(lambda x: x.rgb)
+        else:
+            raise Exception("Can only convert SheetStack of overlays to RGB(A)")
+
 
     def _item_check(self, dim_vals, data):
         if self.bounds is None:
