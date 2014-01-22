@@ -438,11 +438,14 @@ class ProjectionGridPlot(Plot):
                 w, h = self._get_dims(view)
                 if view.type == SheetOverlay:
                     data = view.top[-1].data if self.situate else view.top[-1].roi.data
+                    cmap = {'cmap':view.top[-1].mode} if view.top[-1].depth==1 else {}
                 else:
                     data = view.top.data if self.situate else view.top.roi.data
+                    cmap = {'cmap':view.top.mode} if view.top.depth==1 else {}
+
                 self.handles['projs'].append(plt.imshow(data, extent=(x,x+w, y, y+h),
                                                         interpolation='nearest',
-                                                        cmap=cmap))
+                                                        **cmap))
                 y += h + b_h
             y = b_h
             x += w + b_w
@@ -455,7 +458,11 @@ class ProjectionGridPlot(Plot):
         n = n  if n < len(self) else len(self) - 1
         for i, plot in enumerate(self.handles['projs']):
             view = self.grid.values()[i].values()[n]
-            data = view.data if self.situate else view.roi.data
+            if isinstance(view, SheetOverlay):
+                data = view[-1].data if self.situate else view[-1].roi.data
+            else:
+                data = view.data if self.situate else view.roi.data
+
             plot.set_data(data)
 
 
