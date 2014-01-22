@@ -397,12 +397,12 @@ class SheetStack(NdMapping):
 
     @property
     def roi(self):
-        return self.map(lambda x: x.roi)
+        return self.map(lambda x, _: x.roi)
 
     @property
     def rgb(self):
         if self.type == SheetOverlay:
-            return self.map(lambda x: x.rgb)
+            return self.map(lambda x, _: x.rgb)
         else:
             raise Exception("Can only convert SheetStack of overlays to RGB(A)")
 
@@ -418,21 +418,30 @@ class SheetStack(NdMapping):
 
 
     def map(self, map_fn, **kwargs):
-        mapped_items = [(k, map_fn(el)) for k,el in self.items()]
-        bounds = mapped_items[0][1].bounds # Bounds of first mapped item
-        return self.clone(mapped_items, bounds=bounds, **kwargs)
-
+        """
+        Map a function across the stack, using the bounds of first
+        mapped item.
+        """
+        mapped_items = [(k, map_fn(el,k)) for k,el in self.items()]
+        if isinstance(mapped_items[0][1], tuple):
+            split = [[(k,v) for v in val] for (k,val) in mapped_items]
+            item_groups = [list(el) for el in zip(*split)]
+        else:
+            item_groups =  [mapped_items]
+        clones = tuple(self.clone(els, bounds=els[0][1].bounds, **kwargs)
+                       for (i,els) in enumerate(item_groups))
+        return clones if len(clones)>1 else clones[0]
 
     def normalize_elements(self, **kwargs):
-        return self.map(lambda x: x.normalize(**kwargs))
+        return self.map(lambda x, _: x.normalize(**kwargs))
 
 
     def normalize(self, min=0.0, max=1.0):
         data_max = np.max([el.data.max() for el in self.values()])
         data_min = np.min([el.data.min() for el in self.values()])
         norm_factor = data_max-data_min
-        return self.map(lambda x: x.normalize(min=min, max=max,
-                                              norm_factor=norm_factor))
+        return self.map(lambda x, _: x.normalize(min=min, max=max,
+                                                 norm_factor=norm_factor))
 
     def split(self):
         """
