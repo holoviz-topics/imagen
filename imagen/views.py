@@ -179,8 +179,8 @@ class SheetOverlay(SheetLayer, Overlay):
     @property
     def roi(self):
         "Apply the roi_bounds to all elements in the SheetOverlay"
-        return SheetOverlay(self.roi_bounds,
-                            [el.roi for el in self.data],
+        return SheetOverlay([el.roi for el in self.data],
+                            bounds=self.roi_bounds,
                             style=self.style, metadata=self.metadata)
 
     def __len__(self):
