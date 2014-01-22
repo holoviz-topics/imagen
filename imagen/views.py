@@ -551,6 +551,13 @@ class ProjectionGrid(NdMapping, SheetCoordinateSystem):
                               initial_items=items,
                               metadata=self.metadata, **settings)
 
+    def __mul__(self, other):
+        if isinstance(other, SheetStack) and len(other) == 1:
+            other = other.top
+        overlayed_items = [(k, el * other) for k,el in self.items()]
+        return self.clone(overlayed_items)
+
+
     @property
     def top(self):
         """
