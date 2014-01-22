@@ -752,6 +752,9 @@ class Animation(SheetStack):
                     t += self.timestep
             self.pattern.state_pop()
 
+    def map(self, map_fn, **kwargs):
+        return super(Animation,self).map(map_fn, **dict(kwargs, frames=None))
+
     def _item_check(self, dim_vals, data):
         if (dim_vals[0] % self.time_fn.time_type(self.timestep)) != self.time_fn.time_type(self.offset):
              raise ValueError("Frame time value not a multiple of timestep.")
