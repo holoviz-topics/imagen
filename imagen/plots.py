@@ -485,4 +485,5 @@ class ProjectionGridPlot(Plot):
 viewmap = {SheetView:SheetViewPlot,
            SheetPoints:SheetPointsPlot,
            SheetLines:SheetLinesPlot,
-           SheetOverlay:SheetPlot}
+           SheetOverlay:SheetPlot,
+           ProjectionGrid:ProjectionGridPlot}

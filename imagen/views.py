@@ -572,6 +572,9 @@ class ProjectionGrid(NdMapping, SheetCoordinateSystem):
         """
         return  max(len(v) for v in self.values())
 
+    def __add__(self, obj):
+        if not isinstance(obj, GridLayout):
+            return GridLayout(initial_grid=[[self, obj]])
 
 
 class GridLayout(NdMapping):
