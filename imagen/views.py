@@ -114,10 +114,6 @@ class SheetLayer(View):
         kwargs['bounds'] = bounds
         super(SheetLayer, self).__init__(data, **kwargs)
 
-        if self.roi_bounds is None:
-            self.roi_bounds = self.bounds
-
-
     def __mul__(self, other):
 
         if isinstance(other, SheetStack):
@@ -135,9 +131,14 @@ class SheetLayer(View):
         else:
             raise TypeError('Can only create an overlay of SheetLayers.')
 
+        if self.roi_bounds and other.roi_bounds:
+            if self.roi_bounds.lbrt() != other.roi_bounds.lbrt():
+                raise Exception("Declared ROI bounds do not match.")
+
+        roi_bounds = self.roi_bounds if self.roi_bounds else other.roi_bounds
         return SheetOverlay(overlays, self.bounds,
                             style=self.style, metadata=self.metadata,
-                            roi_bounds=self.roi_bounds)
+                            roi_bounds=roi_bounds)
 
 
 
@@ -145,7 +146,8 @@ class SheetOverlay(SheetLayer, Overlay):
     """
     SheetOverlay extends a regular Overlay with bounds checking and an
     ROI property, which applies the roi_bounds to all SheetLayer
-    objects it contains.
+    objects it contains. When adding SheetLayers to an Overlay, a
+    common ROI bounds is enforced.
 
     A SheetOverlay may be used to overlay lines or points over a
     SheetView. In addition, if an overlay consists of three or four
@@ -157,6 +159,7 @@ class SheetOverlay(SheetLayer, Overlay):
         """
         Overlay a single layer on top of the existing overlay.
         """
+        layer.roi_bounds = self.roi_bounds
         if layer.bounds.lbrt() != self.bounds.lbrt():
             raise Exception("Layer must have same bounds as SheetOverlay")
         self.data.append(layer)
@@ -174,13 +177,14 @@ class SheetOverlay(SheetLayer, Overlay):
         if not all(el.depth==1 for el in self.data):
             raise Exception("All SheetViews must have a depth of one for conversion to RGB(A) format")
         mode = 'rgb' if len(self)==3 else 'rgba'
-        return SheetView(np.dstack([el.data for el in self.data]), self.bounds, mode=mode)
+        return SheetView(np.dstack([el.data for el in self.data]), self.bounds,
+                         roi_bounds=self.roi_bounds, mode=mode)
 
     @property
     def roi(self):
         "Apply the roi_bounds to all elements in the SheetOverlay"
         return SheetOverlay([el.roi for el in self.data],
-                            bounds=self.roi_bounds,
+                            bounds=self.roi_bounds if self.roi_bounds else self.bounds,
                             style=self.style, metadata=self.metadata)
 
     def __len__(self):
@@ -292,8 +296,13 @@ class SheetView(SheetLayer, SheetCoordinateSystem):
 
     @property
     def roi(self):
-        return SheetView(Slice(self.roi_bounds, self).submatrix(self.data),
-                         self.roi_bounds, cyclic_range=self.cyclic_range,
+        bounds = self.roi_bounds if self.roi_bounds else self.bounds
+        if self.depth == 1:
+            data = Slice(bounds, self).submatrix(self.data)
+        else:
+            data = np.dstack([Slice(bounds, self).submatrix(self.data[:,:,i])
+                              for i in range(self.depth)])
+        return SheetView(data, bounds, cyclic_range=self.cyclic_range,
                          style=self.style, metadata=self.metadata)
 
 
@@ -323,7 +332,7 @@ class SheetPoints(SheetLayer):
     def roi(self):
         (N,_) = self.data.shape
         roi_data = self.data[[n for n in range(N) if self.data[n,:] in self.roi_bounds]]
-        return SheetPoints(roi_data, self.roi_bounds,
+        return SheetPoints(roi_data, self.roi_bounds if self.roi_bounds else self.bounds,
                            style=self.style, metadata=self.metadata)
 
     def __iter__(self):
@@ -359,7 +368,7 @@ class SheetLines(SheetLayer):
         # Note: Data returned is not sliced to ROI because vertices
         # outside the bounds need to be snapped to the bounding box
         # edges.
-        return SheetLines(self.data, self.roi_bounds,
+        return SheetLines(self.data, self.roi_bounds if self.roi_bounds else self.bounds,
                              style=self.style, metadata=self.metadata)
 
 
