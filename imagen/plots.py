@@ -436,7 +436,10 @@ class ProjectionGridPlot(Plot):
         for row in grid_shape:
             for view in row:
                 w, h = self._get_dims(view)
-                data = view.top.data if self.situate else view.top.roi.data
+                if view.type == SheetOverlay:
+                    data = view.top[-1].data if self.situate else view.top[-1].roi.data
+                else:
+                    data = view.top.data if self.situate else view.top.roi.data
                 self.handles['projs'].append(plt.imshow(data, extent=(x,x+w, y, y+h),
                                                         interpolation='nearest',
                                                         cmap=cmap))
