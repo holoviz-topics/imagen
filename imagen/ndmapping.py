@@ -333,6 +333,14 @@ class NdIndexableMapping(param.Parameterized):
         return self.dimension_labels.index(dimension_label)
 
 
+    def dimension_keys(self):
+        """
+        Returns the list of keys together with the dimension labels.
+        """
+        return [tuple(zip(self.dimension_labels, [k] if self.ndims==1 else k))
+                for k in self.keys()]
+
+
     def keys(self):
         """
         Returns indices for all data elements.
