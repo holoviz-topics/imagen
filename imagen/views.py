@@ -475,18 +475,42 @@ class SheetStack(NdMapping):
 
     def __mul__(self, other):
         if isinstance(other, SheetStack):
-            all_keys = sorted(set(self.keys() + other.keys()))
+            self_set = set(self.dimension_labels)
+            other_set = set(other.dimension_labels)
+
+            # Determine which is the subset, to generate list of keys and
+            # dimension labels for the new view
+            self_in_other = self_set.issubset(other_set)
+            other_in_self = other_set.issubset(self_set)
+            dim_labels = self.dimension_labels
+            if self_in_other and other_in_self: # superset of each other
+                super_keys = sorted(set(self.dimension_keys() + other.dimension_keys()))
+            elif self_in_other: # self is superset
+                dim_labels = other.dimension_labels
+                super_keys = other.dimension_keys()
+            elif other_in_self: # self is superset
+                super_keys = self.dimension_keys()
+            else: # neither is superset
+                raise Exception('One set of keys needs to be a strict subset of the other.')
+
             items = []
-            for key in all_keys:
-                if (key in self) and (key in other):
-                    items.append((key, self[key] * other[key]))
-                elif (key in self):
-                    items.append((key, self[key] * other.type(None, self.bounds)))
+            for dim_keys in super_keys:
+                # Generate keys for both subset and superset and sort them by the dimension index.
+                self_key = tuple(k for p, k in sorted([(self.dim_index(dim), v) for dim, v in dim_keys
+                                                        if dim in self.dimension_labels]))
+                other_key = tuple(k for p, k in sorted([(other.dim_index(dim), v) for dim, v in dim_keys
+                                                        if dim in other.dimension_labels]))
+                new_key = self_key if other_in_self else other_key
+                # Append SheetOverlay of combined items
+                if (self_key in self) and (other_key in other):
+                    items.append((new_key, self[self_key] * other[other_key]))
+                elif (self_key in self):
+                    items.append((new_key, self[self_key] * other.type(None, self.bounds)))
                 else:
-                    items.append((key, self.type(None, self.bounds) * other[key]))
-            return self.clone(items=items)
+                    items.append((new_key, self.type(None, self.bounds) * other[other_key]))
+            return self.clone(items=items, dimension_labels=dim_labels)
         elif isinstance(other, SheetLayer):
-            items = [(k, v * other) for (k,v) in  self.items()]
+            items = [(k, v * other) for (k,v) in self.items()]
             return self.clone(items=items)
         else:
             raise Exception("Can only overlay with SheetLayer of SheetStack.")
