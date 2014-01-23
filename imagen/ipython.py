@@ -130,7 +130,7 @@ def layout_display(grid, size=256, format='svg'):
 
 def projection_display(grid, size=256, format='svg'):
     if not isinstance(grid, ProjectionGrid): return None
-    size_factor = 0.25
+    size_factor = 0.17
     grid_size = size_factor*grid.shape[1]*Plot.size[1], size_factor*grid.shape[0]*Plot.size[0]
     gridplot = ProjectionGridPlot(grid, **dict(opts(grid), size=grid_size))
     if len(grid)==1:
