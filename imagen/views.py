@@ -132,11 +132,8 @@ class SheetLayer(View):
         else:
             raise TypeError('Can only create an overlay of SheetLayers.')
 
-        if self.roi_bounds and other.roi_bounds:
-            if self.roi_bounds.lbrt() != other.roi_bounds.lbrt():
-                raise Exception("Declared ROI bounds do not match.")
-
         roi_bounds = self.roi_bounds if self.roi_bounds else other.roi_bounds
+        roi_bounds = self.bounds if roi_bounds is None else roi_bounds
         return SheetOverlay(overlays, self.bounds,
                             style=self.style, metadata=self.metadata,
                             roi_bounds=roi_bounds)
@@ -160,7 +157,6 @@ class SheetOverlay(SheetLayer, Overlay):
         """
         Overlay a single layer on top of the existing overlay.
         """
-        layer.roi_bounds = self.roi_bounds
         if layer.bounds.lbrt() != self.bounds.lbrt():
             raise Exception("Layer must have same bounds as SheetOverlay")
         self.data.append(layer)
@@ -184,7 +180,7 @@ class SheetOverlay(SheetLayer, Overlay):
     @property
     def roi(self):
         "Apply the roi_bounds to all elements in the SheetOverlay"
-        return SheetOverlay([el.roi for el in self.data],
+        return SheetOverlay([el.get_roi(self.roi_bounds) for el in self.data],
                             bounds=self.roi_bounds if self.roi_bounds else self.bounds,
                             style=self.style, metadata=self.metadata)
 
@@ -298,13 +294,18 @@ class SheetView(SheetLayer, SheetCoordinateSystem):
     @property
     def roi(self):
         bounds = self.roi_bounds if self.roi_bounds else self.bounds
+        return self.get_roi(bounds)
+
+
+    def get_roi(self, roi_bounds):
         if self.depth == 1:
-            data = Slice(bounds, self).submatrix(self.data)
+            data = Slice(roi_bounds, self).submatrix(self.data)
         else:
-            data = np.dstack([Slice(bounds, self).submatrix(self.data[:,:,i])
+            data = np.dstack([Slice(roi_bounds, self).submatrix(self.data[:,:,i])
                               for i in range(self.depth)])
-        return SheetView(data, bounds, cyclic_range=self.cyclic_range,
+        return SheetView(data, roi_bounds, cyclic_range=self.cyclic_range,
                          style=self.style, metadata=self.metadata)
+
 
 
 
@@ -573,7 +574,7 @@ class ProjectionGrid(NdMapping, SheetCoordinateSystem):
     def __mul__(self, other):
         if isinstance(other, SheetStack) and len(other) == 1:
             other = other.top
-        overlayed_items = [(k, el * copy.deepcopy(other)) for k,el in self.items()]
+        overlayed_items = [(k, el * other) for k, el in self.items()]
         return self.clone(overlayed_items)
 
 
@@ -596,7 +597,7 @@ class ProjectionGrid(NdMapping, SheetCoordinateSystem):
         of __len__ used by SheetStack. For the total number of
         elements, count the full set of keys.
         """
-        return  max(len(v) for v in self.values())
+        return max(len(v) for v in self.values())
 
     def __add__(self, obj):
         if not isinstance(obj, GridLayout):
