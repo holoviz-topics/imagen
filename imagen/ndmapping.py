@@ -393,7 +393,10 @@ class NdIndexableMapping(param.Parameterized):
 
 
     def __contains__(self, key):
-        return key in self.keys()
+        if self.ndims == 1:
+            return key in self._data.keys()
+        else:
+            return key in self.keys()
 
 
     def __len__(self):
