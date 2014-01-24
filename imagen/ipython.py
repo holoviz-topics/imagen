@@ -68,7 +68,7 @@ def animation_ogg(anim):
 def animation_x264(anim):
     if not hasattr(anim, '_encoded_video'):
         with NamedTemporaryFile(suffix='.mp4') as f:
-            anim.save(f.name, extra_args=['-vcodec', 'libx264'])
+            anim.save(f.name, codec='libx264',  extra_args=['-pix_fmt', 'yuv420p'])
             video = open(f.name, "rb").read()
         anim._encoded_video = video.encode("base64")
     return x264_TAG.format(anim._encoded_video)
