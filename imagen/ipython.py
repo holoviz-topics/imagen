@@ -18,6 +18,10 @@ x264_TAG = """<video controls>
  Your browser does not support the video tag.
 </video>"""
 
+ogg_TAG = """<video controls>
+ <source src="data:video/ogg;base64,{0}" type="video/ogg">
+ Your browser does not support the video tag.
+</video>"""
 
 def x264_available():
     try:
@@ -51,11 +55,20 @@ def animation_gif(anim):
         anim._encoded_video = video.encode("base64")
     return GIF_TAG.format(anim._encoded_video)
 
+def animation_ogg(anim):
+    extra_args=['-vcodec', 'libtheora', '-b:v', '4000k']
+    if not hasattr(anim, '_encoded_video'):
+        with NamedTemporaryFile(suffix='.ogg') as f:
+            anim.save(f.name, extra_args=extra_args)
+            video = open(f.name, "rb").read()
+        anim._encoded_video = video.encode("base64")
+    return ogg_TAG.format(anim._encoded_video)
+
 
 def animation_x264(anim):
     if not hasattr(anim, '_encoded_video'):
         with NamedTemporaryFile(suffix='.mp4') as f:
-            anim.save(f.name, extra_args=['-vcodec', 'libx264']) # fps=20
+            anim.save(f.name, extra_args=['-vcodec', 'libx264'])
             video = open(f.name, "rb").read()
         anim._encoded_video = video.encode("base64")
     return x264_TAG.format(anim._encoded_video)
@@ -70,8 +83,11 @@ def HTML_animation(plot, view):
 
 def animation_to_HTML(anim, video_format=None):
     video_format = VIDEO_FORMAT if (video_format is None) else video_format
-    assert video_format in ['x264', 'gif']
+    assert video_format in ['x264', 'gif', 'ogg']
     writers = animation.writers.avail
+    if video_format=='ogg' and ('ffmpeg' in writers):
+        try:     return animation_ogg(anim)
+        except:  pass
     if video_format=='x264' and ('ffmpeg' in writers):
         try:     return animation_x264(anim)
         except:  pass
