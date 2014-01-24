@@ -414,7 +414,6 @@ class ProjectionGridPlot(Plot):
         if not isinstance(grid, ProjectionGrid):
             raise Exception("ProjectionGridPlot only accepts ProjectionGrids.")
         self.grid = grid
-        self.rows, self.cols = grid.shape
         super(ProjectionGridPlot, self).__init__(**kwargs)
 
 
@@ -430,7 +429,6 @@ class ProjectionGridPlot(Plot):
         plt.xlim(0, width)
         plt.ylim(0, height)
 
-        cmap = self.grid.metadata.get('cmap', 'gray')
         self.handles['projs'] = []
         x, y = b_w, b_h
         for row in grid_shape:
@@ -473,12 +471,16 @@ class ProjectionGridPlot(Plot):
 
     def _compute_borders(self, grid_shape):
         height = 0
+        self.rows = 0
         for view in grid_shape[0]:
             height += self._get_dims(view)[1]
+            self.rows += 1
 
         width = 0
+        self.cols = 0
         for view in [row[0] for row in grid_shape]:
             width += self._get_dims(view)[0]
+            self.cols += 1
 
         border_width = (width/10)/(self.cols+1)
         border_height = (height/10)/(self.rows+1)
