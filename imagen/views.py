@@ -5,8 +5,6 @@ systems.
 
 __version__='$Revision$'
 
-
-import copy
 import math
 from collections import defaultdict
 import numpy as np
