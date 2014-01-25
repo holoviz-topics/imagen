@@ -11,29 +11,35 @@ from plots import Plot, GridLayoutPlot, viewmap, ProjectionGridPlot
 from views import SheetStack, SheetLayer, GridLayout, ProjectionGrid
 
 
-GIF_TAG = "<img src='data:image/gif;base64,{0}'/>"
+GIF_TAG = "<img src='data:image/gif;base64,{b64}'/>"
 
-x264_TAG = """<video controls>
- <source src="data:video/x-m4v;base64,{0}" type="video/mp4">
+VIDEO_TAG = """<video controls>
+ <source src="data:video/{mime_type};base64,{b64}" type="video/{mime_type}">
  Your browser does not support the video tag.
 </video>"""
 
-ogg_TAG = """<video controls>
- <source src="data:video/ogg;base64,{0}" type="video/ogg">
- Your browser does not support the video tag.
-</video>"""
+# 'format name':(animation writer, mime_type,  anim_kwargs, extra_args, tag)
+ANIMATION_OPTS = {
+    'webm':('ffmpeg', 'webm',  {},
+            ['-vcodec', 'libvpx', '-b', '1000k'],
+            VIDEO_TAG),
+    'h264':('ffmpeg', 'mp4', {'codec':'libx264'},
+            ['-pix_fmt', 'yuv420p'],
+            VIDEO_TAG),
+    'gif':('imagemagick', 'gif', {'fps':10}, [],
+           GIF_TAG)
+}
 
-def x264_available():
-    try:
-        with NamedTemporaryFile(suffix='.mp4') as f:
-            a = animation.FuncAnimation(plt.figure(), lambda x: x, frames=[0,1])
-            a.save(f.name, extra_args=['-vcodec', 'libx264'])
-        return True
-    except:
-        return False
+def select_format(format_priority):
+    for fmt in format_priority:
+        try:
+            anim = animation.FuncAnimation(plt.figure(),
+                                           lambda x: x, frames=[0,1])
+            animate(anim, *ANIMATION_OPTS[fmt])
+            return fmt
+        except: pass
+    return format_priority[-1]
 
-VIDEO_FORMAT='x264' if x264_available() else 'gif'
-GIF_FPS = 10
 
 def opts(obj, additional_opts=[]):
     default_options = ['size']
@@ -47,53 +53,33 @@ def anim_opts(obj, additional_opts=[]):
     return dict((k, obj.metadata.get(k)) for k in options if (k in obj.metadata))
 
 
-def animation_gif(anim):
+def animate(anim, writer, mime_type, anim_kwargs, extra_args, tag):
+    if extra_args != []:
+        anim_kwargs = dict(anim_kwargs, extra_args=extra_args)
+
     if not hasattr(anim, '_encoded_video'):
-        with NamedTemporaryFile(suffix='.gif') as f:
-            anim.save(f.name, writer='imagemagick', fps=GIF_FPS)
+        with NamedTemporaryFile(suffix='.%s' % mime_type) as f:
+            anim.save(f.name, writer=writer, **anim_kwargs)
             video = open(f.name, "rb").read()
         anim._encoded_video = video.encode("base64")
-    return GIF_TAG.format(anim._encoded_video)
-
-def animation_ogg(anim):
-    extra_args=['-vcodec', 'libtheora', '-b:v', '4000k']
-    if not hasattr(anim, '_encoded_video'):
-        with NamedTemporaryFile(suffix='.ogg') as f:
-            anim.save(f.name, extra_args=extra_args)
-            video = open(f.name, "rb").read()
-        anim._encoded_video = video.encode("base64")
-    return ogg_TAG.format(anim._encoded_video)
+    return tag.format(b64=anim._encoded_video,
+                      mime_type=mime_type)
 
 
-def animation_x264(anim):
-    if not hasattr(anim, '_encoded_video'):
-        with NamedTemporaryFile(suffix='.mp4') as f:
-            anim.save(f.name, codec='libx264',  extra_args=['-pix_fmt', 'yuv420p'])
-            video = open(f.name, "rb").read()
-        anim._encoded_video = video.encode("base64")
-    return x264_TAG.format(anim._encoded_video)
-
-
-def HTML_animation(plot, view):
+def HTML_video(plot, view):
     anim_kwargs =  dict((k, view.metadata[k]) for k in ['fps']
                         if (k in view.metadata))
-    fmt = view.metadata.get('video_format', VIDEO_FORMAT)
-    return animation_to_HTML(plot.anim(**anim_kwargs), fmt)
+    video_format = view.metadata.get('video_format', VIDEO_FORMAT)
+    if video_format not in ANIMATION_OPTS.keys():
+        raise Exception("Unrecognized video format: %s" % video_format)
+    anim = plot.anim(**anim_kwargs)
 
-
-def animation_to_HTML(anim, video_format=None):
-    video_format = VIDEO_FORMAT if (video_format is None) else video_format
-    assert video_format in ['x264', 'gif', 'ogg']
     writers = animation.writers.avail
-    if video_format=='ogg' and ('ffmpeg' in writers):
-        try:     return animation_ogg(anim)
-        except:  pass
-    if video_format=='x264' and ('ffmpeg' in writers):
-        try:     return animation_x264(anim)
-        except:  pass
-    if video_format=='gif' and 'imagemagick' in writers:
-        try:     return animation_gif(anim)
-        except:  pass
+    for fmt in [video_format] + ANIMATION_OPTS.keys():
+        if ANIMATION_OPTS[fmt][0] in writers:
+            try:
+                return animate(anim, *ANIMATION_OPTS[fmt])
+            except: pass
     return "<b>Could not generate %s animation</b>" % video_format
 
 
@@ -111,6 +97,20 @@ def figure_display(fig, size=None, format='svg', message=None):
     return html if (message is None) else '<b>%s</b></br>%s' % (message, html)
 
 
+def figure_fallback(plotobj):
+        message = ('Cannot import matplotlib.animation' if animation is None
+                   else 'Failed to generate matplotlib animation')
+        fig =  plotobj()
+        return figure_display(fig, message=message)
+
+#===============#
+# Display hooks #
+#===============#
+
+def animation_display(anim):
+    return animate(anim, *ANIMATION_OPTS[VIDEO_FORMAT])
+
+
 def sheetstack_display(stack, size=256, format='svg'):
     if not isinstance(stack, SheetStack): return None
     stackplot = viewmap[stack.type](stack, **opts(stack))
@@ -118,13 +118,8 @@ def sheetstack_display(stack, size=256, format='svg'):
         fig =  stackplot()
         return figure_display(fig)
 
-    try:
-        return HTML_animation(stackplot, stack)
-    except:
-        message = ('Cannot import matplotlib.animation' if animation is None
-                   else 'Failed to generate matplotlib animation')
-        fig =  stackplot()
-        return figure_display(fig, message=message)
+    try:    return HTML_video(stackplot, stack)
+    except: return figure_fallback(stackplot)
 
 
 def layout_display(grid, size=256, format='svg'):
@@ -135,36 +130,29 @@ def layout_display(grid, size=256, format='svg'):
         fig =  gridplot()
         return figure_display(fig)
 
-    try:
-        return HTML_animation(gridplot, grid)
-    except:
-        message = ('Cannot import matplotlib.animation' if animation is None
-                   else 'Failed to generate matplotlib animation')
-        fig =  gridplot()
-        return figure_display(fig, message=message)
+    try:     return HTML_video(gridplot, grid)
+    except:  return figure_fallback(gridplot)
 
 
 def projection_display(grid, size=256, format='svg'):
     if not isinstance(grid, ProjectionGrid): return None
     size_factor = 0.17
-    grid_size = size_factor*grid.shape[1]*Plot.size[1], size_factor*grid.shape[0]*Plot.size[0]
+    grid_size = (size_factor*grid.shape[1]*Plot.size[1],
+                 size_factor*grid.shape[0]*Plot.size[0])
     gridplot = ProjectionGridPlot(grid, **dict(opts(grid), size=grid_size))
     if len(grid)==1:
         fig =  gridplot()
         return figure_display(fig)
-    try:
-        return HTML_animation(gridplot, grid)
-    except:
-        message = ('Cannot import matplotlib.animation' if animation is None
-                   else 'Failed to generate matplotlib animation')
-        fig = gridplot()
-        return figure_display(fig, message=message)
+
+    try:     return HTML_video(gridplot, grid)
+    except:  return figure_fallback(gridplot)
 
 
 def sheetlayer_display(view, size=256, format='svg'):
     if not isinstance(view, SheetLayer): return None
     fig = viewmap[view.__class__](view, **opts(view))()
     return figure_display(fig)
+
 
 def update_matplotlib_rc():
     """
@@ -184,14 +172,11 @@ def update_matplotlib_rc():
 message = """Welcome to the Imagen IPython extension! (http://ioam.github.io/imagen/)"""
 
 _loaded = False
+VIDEO_FORMAT = select_format(['webm','h264','gif'])
 
 def load_ipython_extension(ip, verbose=True):
 
-    if verbose:
-        print message
-        if VIDEO_FORMAT=='gif':
-            gif_fps = "imagen.ipython.GIF_FPS=%s" % GIF_FPS
-            print "[Animations rendered in GIF format: %s]" % gif_fps
+    if verbose: print message
 
     global _loaded
     if not _loaded:
@@ -199,7 +184,7 @@ def load_ipython_extension(ip, verbose=True):
         PatternGenerator.xdensity = 256
         PatternGenerator.ydensity = 256
         html_formatter = ip.display_formatter.formatters['text/html']
-        html_formatter.for_type_by_name('matplotlib.animation', 'FuncAnimation', animation_to_HTML)
+        html_formatter.for_type_by_name('matplotlib.animation', 'FuncAnimation', animation_display)
         html_formatter.for_type(SheetLayer, sheetlayer_display)
         html_formatter.for_type(SheetStack, sheetstack_display)
         html_formatter.for_type(GridLayout, layout_display)
