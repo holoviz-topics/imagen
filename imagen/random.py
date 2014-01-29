@@ -66,7 +66,22 @@ class RandomGenerator(PatternGenerator):
 
         return result
 
-
+class SparseNoise(RandomGenerator):
+ """ Sparse Noise Generator, Currently the seed is not properly implemented """
+    def _distrib(self,shape,p):
+        size1 = shape[0]
+        size2 = shape[1]
+      
+        x = np.random.randint(0, size1)
+        y = np.random.randint(0,size2)
+        z = np.random.randint(-1,2)
+    
+        A = np.zeros((size1, size2))
+    
+        A[x,y] = z 
+          
+      
+        return A
 
 class UniformRandom(RandomGenerator):
     """2D uniform random noise pattern generator."""
