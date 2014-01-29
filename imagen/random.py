@@ -57,6 +57,7 @@ class RandomGenerator(PatternGenerator):
 
         shape = SheetCoordinateSystem(p.bounds,p.xdensity,p.ydensity).shape
 
+
         result = self._distrib(shape,p)
         self._apply_mask(p,result)
 
