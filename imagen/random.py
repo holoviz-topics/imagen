@@ -82,10 +82,10 @@ class SparseNoise(RandomGenerator):
         size1 = shape[0]
         size2 = shape[1]
         
-        x = np.random.randint(0, size1)
-        y = np.random.randint(0, size2)
-        z = np.random.randint(-1,2) * self.scale
-        
+        x = p.random_generator.randint(0, size1)
+        y = p.random_generator.randint(0, size2)
+        z = p.random_generator.randint(-1, 2) * self.scale
+
         A = np.zeros((size1, size2)) + self.offset
         
         A[x,y] = A[x,y] + z
@@ -105,8 +105,9 @@ class DenseNoise(RandomGenerator):
     and adding a new one I chose the latter. Although I think that just adding the
     functionality to the other class will be better. 
     """
+    
     def _distrib(self,shape,p):
-        return np.random.randint(-1, 2, shape) * self.scale + self.offset
+        return p.random_generator.randint(-1, 2, shape) * self.scale + self.offset
     
     
 class UniformRandom(RandomGenerator):
