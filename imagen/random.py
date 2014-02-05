@@ -67,7 +67,17 @@ class RandomGenerator(PatternGenerator):
         return result
 
 class SparseNoise(RandomGenerator):
-    '''2D sparse noise pattern generator'''
+    '''
+    2D sparse noise pattern generator
+    In the default this produces a matrix with shape given by shape
+    and zeros everywhere except one value. 
+    This value can be either -1,0,1 and then is scaled with the parameter 
+    scaled and translated with the parameter offset in the following way:
+    -1 -> offset - scale
+     0 -> offset
+     1 -> offset + scale 
+       
+    '''
     def _distrib(self,shape,p):
         size1 = shape[0]
         size2 = shape[1]
@@ -82,6 +92,23 @@ class SparseNoise(RandomGenerator):
         
         return A
     
+class DenseNoise(RandomGenerator):
+    """
+    2D Generator of Dense Noise
+    By default this produces a matrix with random values 0,-1 and 1
+    When a scale and an offset are provided the transformation maps them to:
+    -1 -> offset - scale
+     0 -> offset
+     1 -> offset + scale 
+    NOTE: This can also be implemented by modifying the UniformRandomInt class
+    below and adding a linear transformation. Between modifying the existing class 
+    and adding a new one I chose the latter. Although I think that just adding the
+    functionality to the other class will be better. 
+    """
+    def _distrib(self,shape,p):
+        return np.random.randint(-1, 2, shape) * self.scale + self.offset
+    
+    
 class UniformRandom(RandomGenerator):
     """2D uniform random noise pattern generator."""
 
@@ -94,6 +121,8 @@ class UniformRandomInt(RandomGenerator):
     """
     2D distribution of integer values from low to high in the in the
     half-open interval [`low`, `high`).
+    
+    self.scale and self.offest add spatial translation of the pattern 
 
     Matches semantics of numpy.random.randint.
     """
@@ -105,7 +134,7 @@ class UniformRandomInt(RandomGenerator):
         The highest integer to be drawn from the distribution.""")
 
     def _distrib(self,shape,p):
-        return np.random.randint(p.low, p.high, shape)
+        return np.random.randint(p.low, p.high, shape) 
 
 
 
