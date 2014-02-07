@@ -71,10 +71,9 @@ class SparseNoise(RandomGenerator):
     2D sparse noise pattern generator
     In the default this produces a matrix with shape given by shape
     and zeros everywhere except one value. 
-    This value can be either -1,0,1 and then is scaled with the parameter 
+    This value can be either -1 or 1 and then is scaled with the parameter 
     scaled and translated with the parameter offset in the following way:
     -1 -> offset - scale
-     0 -> offset
      1 -> offset + scale 
        
     '''
@@ -84,7 +83,9 @@ class SparseNoise(RandomGenerator):
         
         x = p.random_generator.randint(0, size1)
         y = p.random_generator.randint(0, size2)
-        z = p.random_generator.randint(-1, 2) * self.scale
+        z = p.random_generator.choice([-1,1]) * self.scale
+        # Activate this if you want to have 0's in your stream
+        #z = p.random_generator.ranint(-1, 2) * self.scale 
 
         A = np.zeros((size1, size2)) + self.offset
         
