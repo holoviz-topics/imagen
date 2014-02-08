@@ -10,9 +10,10 @@ from numpy.oldnumeric import zeros,floor,where,choose,less,greater,Int,random_ar
 import param
 from param.parameterized import ParamOverrides
 
+from dataviews.sheetcoords import SheetCoordinateSystem
+
 from patterngenerator import PatternGenerator
-from . import Composite, Gaussian
-from sheetcoords import SheetCoordinateSystem
+from imagen import Composite, Gaussian
 
 
 

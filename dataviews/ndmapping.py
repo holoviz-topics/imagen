@@ -6,12 +6,15 @@ __version__='$Revision$'
 
 import param
 
+import numpy as np
+
 try:
     from collections import OrderedDict
 except:
     from odict import OrderedDict # pyflakes:ignore (try/except import)
 
 map_type = OrderedDict
+
 
 class AttrDict(dict):
     """
@@ -22,6 +25,7 @@ class AttrDict(dict):
     def __init__(self, *args, **kwargs):
         super(AttrDict, self).__init__(*args, **kwargs)
         self.__dict__ = self
+
 
 
 class NdIndexableMapping(param.Parameterized):
@@ -55,8 +59,10 @@ class NdIndexableMapping(param.Parameterized):
 
     data_type = param.Parameter(default=None, constant=True)
 
-    key_type = param.List(default=[], constant=True, doc="""Type checking of the
-        keys, if empty no type checking is applied.""")
+    dim_info = param.Dict(default={}, constant=True, doc="""
+        Information associated with the dimension labels, supplied as a
+        dictionary. The key 'type' specifies the key type, other potentially
+        useful keys include units and cyclic_range for periodic dimensions.""")
 
     metadata = param.Dict(default=AttrDict(), doc="""
         Additional labels to be associated with the Dataview.""")
@@ -69,6 +75,8 @@ class NdIndexableMapping(param.Parameterized):
 
     _deep_indexable = True
 
+    _check_key_type = True
+
     def __init__(self, initial_items=None, **kwargs):
         self._data = map_type()
 
@@ -76,15 +84,13 @@ class NdIndexableMapping(param.Parameterized):
 
         super(NdIndexableMapping, self).__init__(metadata=metadata, **kwargs)
 
-        if self.key_type and len(self.key_type) != self.ndims:
-            raise Exception('Declared key types not the same as the number '
-                            'of dimensions.')
         self._next_ind = 0
 
         if isinstance(initial_items, tuple):
             self._add_item(initial_items[0], initial_items[1])
         elif initial_items is not None:
             self.update(map_type(initial_items))
+
 
 
     def write_metadata(self, kwargs):
@@ -119,6 +125,12 @@ class NdIndexableMapping(param.Parameterized):
 
 
     @property
+    def _types(self):
+        return [self.dim_info.get(d, {}).get('type', None)
+                for d in self.dimension_labels]
+
+
+    @property
     def ndims(self):
         return len(self.dimension_labels)
 
@@ -138,11 +150,6 @@ class NdIndexableMapping(param.Parameterized):
             raise KeyError('Key has to match number of dimensions.')
 
 
-    def sorted(self):
-        self._resort()
-        return
-
-
     def _resort(self):
         self._data = map_type(sorted(self._data.items()))
 
@@ -153,8 +160,8 @@ class NdIndexableMapping(param.Parameterized):
         """
         if not isinstance(dim_vals, tuple):
             dim_vals = (dim_vals,)
-        dim_types = zip(self.key_type, dim_vals)
-        dim_vals = tuple(t(v) for t, v in dim_types) if dim_types else dim_vals
+        dim_types = zip(self._types, dim_vals)
+        dim_vals = tuple(v if t is None else t(v) for t, v in dim_types)
         self._item_check(dim_vals, data)
         self._update_item(dim_vals, data)
         if sort and self.sorted:
@@ -202,18 +209,19 @@ class NdIndexableMapping(param.Parameterized):
             indices = [self.dim_index(el) for el in dimension_labels]
 
         keys = [tuple(k[i] for i in indices) for k in self._data.keys()]
-        initial_items = map_type((k,v) for (k,v) in zip(keys, self._data.values()))
+        reindexed_items = map_type(
+            (k, v) for (k, v) in zip(keys, self._data.values()))
+        reduced_dims = set(self.dimension_labels).difference(dimension_labels)
+        dim_info = dict([(k, v) for k, v in self.dim_info if k not in reduced_dims])
 
         if len(set(keys)) != len(keys):
             raise Exception("Given dimension labels not sufficient to address all values uniquely")
 
-        return self.__class__(initial_items=initial_items,
-                              dimension_labels=dimension_labels,
-                              sorted=self.sorted,
-                              **self.metadata)
+        return self.clone(reindexed_items, dimension_labels=dimension_labels,
+                          dim_info=dim_info)
 
 
-    def add_dimension(self, dim_name, dim_pos, dim_val, dim_type=None, **kwargs):
+    def add_dimension(self, dim_name, dim_pos, dim_val, dim_info=None, **kwargs):
         """
         Create a new object with an additional dimension along which items are
         indexed. Requires the dimension name, the desired position in the
@@ -226,15 +234,9 @@ class NdIndexableMapping(param.Parameterized):
         dim_labels = self.dimension_labels[:]
         dim_labels.insert(dim_pos, dim_name)
 
-        key_type = self.key_type[:]
-        if dim_type is not None:
-            if key_type is []:
-                raise Exception
-            else:
-                key_type.insert(dim_pos, dim_type)
-            if len(key_type) != len(dim_labels):
-                raise Exception('Cannot add key_type to untyped %s.' %
-                                self.__class__.__name__)
+        dimension_info = self.dim_info.copy()
+        if dim_info is not None:
+            dimension_info.update(dim_name, dim_info)
 
         items = map_type()
         for key, val in self._data.items():
@@ -243,7 +245,7 @@ class NdIndexableMapping(param.Parameterized):
             items[tuple(new_key)] = val
 
         return self.clone(items, dimension_labels=dim_labels,
-                          key_type=key_type, **kwargs)
+                          dim_info=dim_info, **kwargs)
 
 
     def clone(self, items=None, **kwargs):
@@ -261,19 +263,29 @@ class NdIndexableMapping(param.Parameterized):
         except ImportError:
             raise Exception("Cannot build a DataFrame without the pandas library.")
         labels = self.dimension_labels + [value_label]
-        return pandas.DataFrame([dict(zip(labels, k+(v,))) for (k,v) in self._data.items()])
+        return pandas.DataFrame(
+            [dict(zip(labels, k + (v,))) for (k, v) in self._data.items()])
 
-    def _apply_key_type(self, key, key_ind):
-        if self.key_type == []:
-            return key
-        key_type = self.key_type[key_ind]
-        if isinstance(key, slice):
-            sl_vals = [key.start, key.stop, key.step]
-            return slice(*[key_type(el) if el is not None else None for el in sl_vals])
-        elif key is Ellipsis:
-            return key
-        else:
-            return key_type(key)
+
+    def _apply_key_type(self, keys):
+        """
+        If a key type is set in the dim_info dictionary, this method applies the
+        type to the supplied key.
+        """
+        typed_key = () 
+        for dim, key in zip(self.dimension_labels, keys):
+            key_type = self.dim_info.get(dim, {}).get('type')
+            if key_type is None:
+                typed_key += (key,)
+            elif isinstance(key, slice):
+                sl_vals = [key.start, key.stop, key.step]
+                typed_key += (slice(*[key_type(el) if el is not None else None
+                                      for el in sl_vals]),)
+            elif key is Ellipsis:
+                typed_key += (key,)
+            else:
+                typed_key += (key_type(key),)
+        return typed_key
 
 
     def _split_index(self, key):
@@ -283,10 +295,13 @@ class NdIndexableMapping(param.Parameterized):
         """
         if not isinstance(key, tuple):
             key = (key,)
-        map_slice = tuple(self._apply_key_type(el, i) for i, el
-                          in enumerate(key[:self.ndims]))
-        data_slice = key[self.ndims:] if len(key[self.ndims:]) > 0 else ()
-        return map_slice, data_slice
+        map_slice = key[:self.ndims]
+        if self._check_key_type:
+            self._apply_key_type(key)
+        if len(key) == self.ndims:
+            return map_slice, ()
+        else:
+            return map_slice, key[self.ndims:]
 
 
     def __getitem__(self, key):
@@ -306,7 +321,8 @@ class NdIndexableMapping(param.Parameterized):
         if hasattr(data, '_deep_indexable'):
             return data[indices]
         elif len(indices) > 0:
-            self.warning('Cannot index into data element, extra data indices ignored.')
+            self.warning('Cannot index into data element, extra data'
+                         ' indices ignored.')
         return data
 
 
@@ -316,6 +332,10 @@ class NdIndexableMapping(param.Parameterized):
 
     def __str__(self):
         return repr(self)
+
+
+    def dim_max(self, dim):
+        return np.max([k[self.dim_index(dim)] for k in self.keys()])
 
 
     @property
@@ -337,7 +357,7 @@ class NdIndexableMapping(param.Parameterized):
         """
         Returns the list of keys together with the dimension labels.
         """
-        return [tuple(zip(self.dimension_labels, [k] if self.ndims==1 else k))
+        return [tuple(zip(self.dimension_labels, [k] if self.ndims == 1 else k))
                 for k in self.keys()]
 
 
@@ -430,8 +450,7 @@ class NdMapping(NdIndexableMapping):
                      in self._data.items() if self._conjunction(k, conditions)]
             if self.ndims == 1:
                 items = [(k[0], v) for (k, v) in items]
-            return self.__class__(initial_items=items, metadata=self.metadata,
-                                  dimension_labels=self.dimension_labels, sorted=self.sorted)
+            return self.clone(items)
 
 
     def _transform_indices(self, indices):
@@ -450,7 +469,7 @@ class NdMapping(NdIndexableMapping):
         for dim in map_slice:
             if isinstance(dim, slice):
                 if dim == slice(None):
-                    conditions.append(self._all_condition(dim))
+                    conditions.append(self._all_condition())
                 elif dim.start is None:
                     conditions.append(self._upto_condition(dim))
                 elif dim.stop is None:
@@ -458,7 +477,7 @@ class NdMapping(NdIndexableMapping):
                 else:
                     conditions.append(self._range_condition(dim))
             elif dim is Ellipsis:
-                conditions.append(self._all_condition(dim))
+                conditions.append(self._all_condition())
             else:
                 conditions.append(self._value_condition(dim))
         return conditions
@@ -472,8 +491,8 @@ class NdMapping(NdIndexableMapping):
         if slice.step is None:
             lmbd = lambda x: slice.start <= x < slice.stop
         else:
-            lmbd = lambda x: slice.start <= x < slice.stop and not ((x-slice.start)
-                                                                    % slice.step)
+            lmbd = lambda x: slice.start <= x < slice.stop and not (
+                (x-slice.start) % slice.step)
         return lmbd
 
 
@@ -492,7 +511,7 @@ class NdMapping(NdIndexableMapping):
             lmbd = lambda x: x > slice.start and ((x-slice.start) % slice.step)
         return lmbd
 
-    def _all_condition(self, ellipsis):
+    def _all_condition(self):
         return lambda x: True
 
 
@@ -502,3 +521,7 @@ class NdMapping(NdIndexableMapping):
             conds.append(cond(key[i]))
         return all(conds)
 
+        
+__all__ = ["NdIndexableMapping",
+           "NdMapping",
+           "AttrDict"]

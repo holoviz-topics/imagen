@@ -15,9 +15,10 @@ from numpy.fft.helper import fftshift
 import param
 from param import ParamOverrides
 
-from . import wrap
-from views import SheetView, SheetStack
-from sheetcoords import BoundingBox
+from dataviews import SheetView, SheetStack
+from dataviews.sheetcoords import BoundingBox
+
+from imagen import wrap
 from transferfn import TransferFn
 
 
@@ -42,8 +43,6 @@ class analysis(param.ParameterizedFunction):
         elif isinstance(view, SheetStack):
             return view.clone([(k, self._analysis(p, sv))
                                for k, sv in view.items()], bounds=None)
-        elif isinstance(view, list):
-            return [self._analysis(p, sv) for sv in view]
 
 
     def _analysis(self, p, sheetview):

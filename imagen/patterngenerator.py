@@ -6,15 +6,16 @@ __version__='$Revision$'
 
 from math import pi
 
-from numpy import add,subtract,cos,sin
+from numpy import add, subtract, cos, sin
 
 import param
 from param.parameterized import ParamOverrides
 
-from boundingregion import BoundingBox, BoundingRegionParameter
-from views import SheetView
-from sheetcoords import SheetCoordinateSystem
-from imagen.transferfn import TransferFn
+from dataviews import SheetView
+from dataviews.boundingregion import BoundingBox, BoundingRegionParameter
+from dataviews.sheetcoords import SheetCoordinateSystem
+
+from transferfn import TransferFn
 
 
 # CEBALERT: PatternGenerator has become a bit of a monster abstract

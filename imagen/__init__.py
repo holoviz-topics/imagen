@@ -12,7 +12,6 @@ from __future__ import with_statement
 
 __version__='$Revision$'
 
-#from math import pi, sqrt
 
 import numpy
 from numpy.oldnumeric import around, bitwise_and, bitwise_or
@@ -27,8 +26,10 @@ from param import ClassSelector
 # Imported here so that all PatternGenerators will be in the same package
 from patterngenerator import Constant, PatternGenerator
 
-from views import SheetStack
-from sheetcoords import SheetCoordinateSystem
+from dataviews import SheetStack
+from dataviews.sheetcoords import SheetCoordinateSystem
+from dataviews import boundingregion, sheetcoords # pyflakes:ignore (API import)
+
 from patternfn import gaussian,exponential,gabor,line,disk,ring,\
     sigmoid,arc_by_radian,arc_by_center,smooth_rectangle,float_error_ignore, \
     log_gaussian
@@ -1538,10 +1539,8 @@ class Spectrogram(PowerSpectrum):
         return super(Spectrogram, self).__call__()
 
 
-
 _public = list(set([_k for _k,_v in locals().items() if isinstance(_v,type) and issubclass(_v,PatternGenerator)]))
-del _k,_v
-__all__ = _public + ["image","random"]
+__all__ = _public + ["image", "random", "boundingregion", "sheetcoords"]
 
 # Avoids loading the audio and opencvcamera modules, which rely on external
 # libraries that might not be present on this system.

@@ -180,21 +180,23 @@ class Stack(NdMapping):
             items = []
             for dim_keys in super_keys:
                 # Generate keys for both subset and superset and sort them by the dimension index.
-                self_key = tuple(k for p, k in sorted([(self.dim_index(dim), v) for dim, v in dim_keys
-                                                        if dim in self.dimension_labels]))
-                other_key = tuple(k for p, k in sorted([(other.dim_index(dim), v) for dim, v in dim_keys
-                                                        if dim in other.dimension_labels]))
+                self_key = tuple(k for p, k in sorted(
+                    [(self.dim_index(dim), v) for dim, v in dim_keys
+                     if dim in self.dimension_labels]))
+                other_key = tuple(k for p, k in sorted(
+                    [(other.dim_index(dim), v) for dim, v in dim_keys
+                     if dim in other.dimension_labels]))
                 new_key = self_key if other_in_self else other_key
                 # Append SheetOverlay of combined items
                 if (self_key in self) and (other_key in other):
                     items.append((new_key, self[self_key] * other[other_key]))
-                elif (self_key in self):
+                elif self_key in self:
                     items.append((new_key, self[self_key] * other.type(None)))
                 else:
                     items.append((new_key, self.type(None) * other[other_key]))
             return self.clone(items=items, dimension_labels=dim_labels)
         elif isinstance(other, self.data_type):
-            items = [(k, v * other) for (k,v) in self.items()]
+            items = [(k, v * other) for (k, v) in self.items()]
             return self.clone(items=items)
         else:
             raise Exception("Can only overlay with {data} or {stack}.".format(
@@ -209,9 +211,10 @@ class Stack(NdMapping):
 
 class GridLayout(NdMapping):
 
-    key_type = param.List(default=[int, int], constant=True)
+    dim_info = param.Dict(default=dict(Row={'type': int}, Column={'type':int}),
+                          constant=True)
 
-    dimension_labels = param.List(default=['Row', 'Column'])
+    dimension_labels = param.List(default=['Row', 'Column'], constant=True)
 
     def __init__(self, initial_items=[], **kwargs):
         self._max_cols = 4
@@ -220,10 +223,12 @@ class GridLayout(NdMapping):
             initial_items = self._grid_to_items(initial_items)
         super(GridLayout, self).__init__(initial_items=initial_items, **kwargs)
 
+
     @property
     def shape(self):
         rows, cols = zip(*self.keys())
         return max(rows)+1, max(cols)+1
+
 
     @property
     def coords(self):
@@ -232,20 +237,24 @@ class GridLayout(NdMapping):
         current set of items (i.e. tuples of form ((row, column), view))
         """
         if self.keys() == []:  return []
-        return [(r,c,v) for ((r,c),v) in zip(self.keys(), self.values())]
+        return [(r, c, v) for ((r, c), v) in zip(self.keys(), self.values())]
+
 
     @property
     def max_cols(self):
         return self._max_cols
+
 
     @max_cols.setter
     def max_cols(self, n):
         self._max_cols = n
         self.update({}, n)
 
+
     def cols(self, n):
         self.update({}, n)
         return self
+
 
     def _grid_to_items(self, grid):
         """
@@ -279,8 +288,10 @@ class GridLayout(NdMapping):
         of cols columns if specified.
         """
         # Plots are sorted first by precedence, then grouped by row_precedence
-        values = sorted(self.values(), key=lambda x: x.metadata.get('precedence', 0.5))
-        precedences = sorted(set(v.metadata.get('row_precedence', 0.5) for v in values))
+        values = sorted(self.values(),
+                        key=lambda x: x.metadata.get('precedence', 0.5))
+        precedences = sorted(
+            set(v.metadata.get('row_precedence', 0.5) for v in values))
 
         coords=[]
         # Can use collections.Counter in Python >= 2.7
@@ -298,13 +309,15 @@ class GridLayout(NdMapping):
         self._data = map_type(self._grid_to_items(grid))
         return self
 
+
     def _grid(self, coords):
         """
         From a list of coordinates of form [<(row, col, view)>] build
         a corresponding list of lists grid.
         """
-        rows = max(r for (r,_,_) in coords) + 1 if coords != [] else 0
-        unpadded_grid = [[p for (r,_, p) in coords if r==row] for row in range(rows)]
+        rows = max(r for (r, _, _) in coords) + 1 if coords != [] else 0
+        unpadded_grid = [[p for (r, _, p) in coords if r == row] for row in
+                         range(rows)]
         return unpadded_grid
 
 
@@ -324,10 +337,16 @@ class GridLayout(NdMapping):
 
         return reshaped_grid
 
+
     def __add__(self, other):
         new_values = other.values() if isinstance(other, GridLayout) else [other]
         self.update(new_values)
         return self
 
+
     def __len__(self):
         return max([len(v) for v in self.values() if isinstance(v, Stack)]+[1])
+
+
+__all__ = list(set([_k for _k,_v in locals().items() if isinstance(_v,type) and
+                    (issubclass(_v, NdMapping) or issubclass(_v, View))]))

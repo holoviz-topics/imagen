@@ -6,9 +6,10 @@ from IPython.core.pylabtools import print_figure
 
 from tempfile import NamedTemporaryFile
 
-from patterngenerator import PatternGenerator
-from plots import Plot, GridLayoutPlot, viewmap, ProjectionGridPlot
-from views import SheetStack, SheetLayer, GridLayout, ProjectionGrid
+from dataviews import DataStack, DataLayer
+from plots import Plot, GridLayoutPlot, viewmap
+from sheetviews import SheetStack, SheetLayer, GridLayout, CoordinateGrid
+from views import Stack, View
 
 
 GIF_TAG = "<img src='data:image/gif;base64,{b64}'/>"
@@ -111,11 +112,11 @@ def animation_display(anim):
     return animate(anim, *ANIMATION_OPTS[VIDEO_FORMAT])
 
 
-def sheetstack_display(stack, size=256, format='svg'):
-    if not isinstance(stack, SheetStack): return None
+def stack_display(stack, size=256, format='svg'):
+    if not isinstance(stack, Stack): return None
     stackplot = viewmap[stack.type](stack, **opts(stack))
-    if len(stack)==1:
-        fig =  stackplot()
+    if len(stack) == 1:
+        fig = stackplot()
         return figure_display(fig)
 
     try:    return HTML_video(stackplot, stack)
@@ -135,11 +136,11 @@ def layout_display(grid, size=256, format='svg'):
 
 
 def projection_display(grid, size=256, format='svg'):
-    if not isinstance(grid, ProjectionGrid): return None
+    if not isinstance(grid, CoordinateGrid): return None
     size_factor = 0.17
     grid_size = (size_factor*grid.shape[1]*Plot.size[1],
                  size_factor*grid.shape[0]*Plot.size[0])
-    gridplot = ProjectionGridPlot(grid, **dict(opts(grid), size=grid_size))
+    gridplot = viewmap[grid.__class__](grid, **dict(opts(grid), size=grid_size))
     if len(grid)==1:
         fig =  gridplot()
         return figure_display(fig)
@@ -148,8 +149,8 @@ def projection_display(grid, size=256, format='svg'):
     except:  return figure_fallback(gridplot)
 
 
-def sheetlayer_display(view, size=256, format='svg'):
-    if not isinstance(view, SheetLayer): return None
+def view_display(view, size=256, format='svg'):
+    if not isinstance(view, View): return None
     fig = viewmap[view.__class__](view, **opts(view))()
     return figure_display(fig)
 
@@ -181,13 +182,13 @@ def load_ipython_extension(ip, verbose=True):
     global _loaded
     if not _loaded:
         _loaded = True
-        PatternGenerator.xdensity = 256
-        PatternGenerator.ydensity = 256
         html_formatter = ip.display_formatter.formatters['text/html']
         html_formatter.for_type_by_name('matplotlib.animation', 'FuncAnimation', animation_display)
-        html_formatter.for_type(SheetLayer, sheetlayer_display)
-        html_formatter.for_type(SheetStack, sheetstack_display)
+        html_formatter.for_type(SheetLayer, view_display)
+        html_formatter.for_type(DataLayer, view_display)
+        html_formatter.for_type(SheetStack, stack_display)
+        html_formatter.for_type(DataStack, stack_display)
         html_formatter.for_type(GridLayout, layout_display)
-        html_formatter.for_type(ProjectionGrid, projection_display)
+        html_formatter.for_type(CoordinateGrid, projection_display)
 
         update_matplotlib_rc()
