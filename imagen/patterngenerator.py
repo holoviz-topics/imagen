@@ -66,10 +66,10 @@ class PatternGenerator(param.Parameterized):
         default=BoundingBox(points=((-0.5,-0.5), (0.5,0.5))),precedence=-1,
         doc="BoundingBox of the area in which the pattern is generated.")
 
-    xdensity = param.Number(default=10,bounds=(0,None),precedence=-1,doc="""
+    xdensity = param.Number(default=256,bounds=(0,None),precedence=-1,doc="""
         Density (number of samples per 1.0 length) in the x direction.""")
 
-    ydensity = param.Number(default=10,bounds=(0,None),precedence=-1,doc="""
+    ydensity = param.Number(default=256,bounds=(0,None),precedence=-1,doc="""
         Density (number of samples per 1.0 length) in the y direction.
         Typically the same as the xdensity.""")
 
