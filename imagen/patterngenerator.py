@@ -128,6 +128,9 @@ class PatternGenerator(param.Parameterized):
         as currently set on the object. Otherwise, any params
         specified override those currently set on the object.
         """
+        if 'output_fns' in params_to_override:
+            self.warning("Output functions specified through the call method will be ignored.")
+
         p=ParamOverrides(self,params_to_override)
 
         # CEBERRORALERT: position parameter is not currently
@@ -224,7 +227,9 @@ class PatternGenerator(param.Parameterized):
         self.bounds = bounds
         self.xdensity = xdensity
         self.ydensity = ydensity
-
+        scs = SheetCoordinateSystem(bounds, xdensity, ydensity)
+        for of in self.output_fns:
+            of.initialize(SCS=scs, shape=scs.shape)
 
     def state_push(self):
         "Save the state of the output functions, to be restored with state_pop."
