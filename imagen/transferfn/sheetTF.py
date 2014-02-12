@@ -47,21 +47,14 @@ class Convolve(TransferFn):
         pattern_copy.set_matrix_dimensions(self.kernel_pattern.bounds,
                                            scs.xdensity,
                                            scs.ydensity)
-
-        # The kernel needs to be zero padded to reach the SCS bounds
-        # A Composite pattern handles the centering and zero padding
-        generators=[Constant(scale=0, bounds=scs.bounds), pattern_copy]
-        self.kernel = Composite(generators=generators,
-                                bounds=scs.bounds,
-                                xdensity = scs.xdensity,
-                                ydensity = scs.ydensity)()
+        self.kernel = pattern_copy()
 
     def __call__(self, x):
         if not hasattr(self, 'kernel'):
             raise Exception("Convolve has not been properly initialized with %s"
                             % ','.join(repr(el) for el in self.init_keys))
         fft1 = np.fft.fft2(x)
-        fft2 = np.fft.fft2(self.kernel)
+        fft2 = np.fft.fft2(self.kernel, s=x.shape)
         convolved_raw = np.fft.ifft2( fft1 * fft2).real
 
         k_rows, k_cols = self.kernel.shape  # ORIGINAL
