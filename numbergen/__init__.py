@@ -390,7 +390,7 @@ class ScaledTime(NumberGenerator, TimeDependent):
 
 
     def __call__(self):
-        return self.time_fn() * self.factor
+        return float(self.time_fn() * self.factor)
 
 
 
