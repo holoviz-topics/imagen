@@ -45,6 +45,18 @@ class IdentityTF(TransferFn):
         pass
 
 
+class Scale(TransferFn):
+    """
+    Multiply the input array by some constant factor.
+    """
+
+    scale = param.Number(default=1.0, doc="""
+         The multiplicative factor that scales the input values.""")
+
+    def __call__(self, x):
+        x *= self.divisor
+
+
 
 class Threshold(TransferFn):
     """
