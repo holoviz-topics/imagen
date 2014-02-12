@@ -72,7 +72,7 @@ class Scale(TransferFn):
          The multiplicative factor that scales the input values.""")
 
     def __call__(self, x):
-        x *= self.divisor
+        x *= self.scale
 
 
 
