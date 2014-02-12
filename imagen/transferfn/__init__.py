@@ -20,13 +20,31 @@ class TransferFn(param.Parameterized):
     """
     __abstract = True
 
+    init_keys = param.List(default=[], constant=True, doc="""
+        List of item key labels for metadata that that must be
+        supplied to the initialize method before the TransferFn may be
+        used.""")
+
     # CEBALERT: can we have this here - is there a more appropriate
     # term for it, general to output functions?  JAB: Please do rename it!
     norm_value = param.Parameter(default=None)
 
+    def initialize(self,  **kwargs):
+        """
+        Transfer functions may need additional information before the
+        supplied numpy array can be modified in place. For instance,
+        transfer functions may have state which needs to be allocated
+        in memory with a certain size. In other cases, the transfer
+        function may need to know about the coordinate system
+        associated with the input data.
+        """
+        if not set(kwargs.keys()).issuperset(self.init_keys):
+            raise Exception("TransferFn needs to be initialized with %s"
+                            % ','.join(repr(el) for el in self.init_keys))
 
     def __call__(self,x):
         raise NotImplementedError
+
 
 # Trivial example of a TransferFn, provided for when a default
 # is needed.  The other concrete OutputFunction classes are stored
