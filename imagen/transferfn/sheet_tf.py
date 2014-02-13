@@ -11,7 +11,7 @@ import numpy as np
 
 import param
 import copy
-from imagen import PatternGenerator, Gaussian, Constant, Composite
+from imagen import PatternGenerator, Gaussian
 from imagen.transferfn import TransferFn
 
 
