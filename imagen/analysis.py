@@ -1,11 +1,13 @@
 """
-ImaGen analysis provides common analysis functions, which can be applied to
-any SheetView or SheetStack. This allows the user to perform analyses on their
-input patterns or any other arrays embedded within a SheetView and display
-the output of the analysis alongside the original patterns.
+The ImaGen analysis module provides common analysis functions, which
+can be applied to any SheetView or SheetStack. This allows the user to
+perform analyses on their input patterns or any other arrays embedded
+within a SheetView and display the output of the analysis alongside
+the original patterns.
 
-Currently this module provides FFT, auto-correlation and gradient analyses as
-well the analysis baseclass, which will apply any TransferFn to the data.
+Currently this module provides FFT, auto-correlation and gradient
+analyses as well the analysis baseclass, which will apply any
+TransferFn to the data.
 """
 
 import numpy as np
@@ -15,61 +17,76 @@ from numpy.fft.helper import fftshift
 import param
 from param import ParamOverrides
 
-from dataviews import SheetView, SheetStack
+from dataviews import SheetView, SheetStack,  SheetLayer
 from dataviews.sheetcoords import BoundingBox
 
 from imagen import wrap
 from transferfn import TransferFn
 
 
-class analysis(param.ParameterizedFunction):
+
+class SheetOperation(param.ParameterizedFunction):
     """
-    The analysis baseclass provides support for processing SheetStacks,
-    SheetViews and lists of SheetView objects. The actual transformation is
-    performed by the _analysis method, which can be subclassed to provide any
-    desired transformation, however by default it will apply the supplied
-    transfer_fn.
+    A SheetOperation is a transformation that operates on the
+    SheetLayer level.
     """
 
-    transfer_fn = param.ClassSelector(class_=TransferFn, default=None)
-
-    __abstract = True
+    def _process(self, view,p=None):
+        """
+        A single SheetLayer may be returned but multiple SheetLayer
+        outputs may be returned as a tuple..
+        """
+        raise NotImplementedError
 
     def __call__(self, view, **params):
-        p = ParamOverrides(self, params)
+        self.p = ParamOverrides(self, params)
 
-        if isinstance(view, SheetView):
-            return self._analysis(p, view)
+        if isinstance(view, SheetLayer):
+            return self._process(view, self.p)
         elif isinstance(view, SheetStack):
-            return view.clone([(k, self._analysis(p, sv))
-                               for k, sv in view.items()], bounds=None)
+            return view.map(self._process)
+        else:
+            raise TypeError("Not a SheetLayer or SheetStack.")
 
 
-    def _analysis(self, p, sheetview):
+
+class analysis(SheetOperation):
+    """
+    The analysis baseclass provides support for processing
+    SheetStacks, SheetViews and lists of SheetView objects. The actual
+    transformation is performed by the _process method, which can be
+    subclassed to provide any desired transformation, however by
+    default it will apply the supplied transfer_fn.
+    """
+
+    transfer_fns = param.List(default=[], class_=TransferFn)
+
+    def _process(self, sheetview):
         data = sheetview.data.copy()
-        if p.transfer_fn is not None:
-            p.transfer_fn(data)
+        for transfer_fn in self.p.transfer_fns:
+            data = transfer_fn(data)
         return SheetView(data, sheetview.bounds, metadata=sheetview.metadata)
 
 
 
-class fft(analysis):
+class fft_power_spectrum(SheetOperation):
     """
     Compute the 2D Fast Fourier Transform (FFT) of the supplied sheet view.
 
-    Example:: fft(topo.sim.V1.views.maps.OrientationPreference)
+    Example::
+    fft_power_spectrum(topo.sim.V1.views.maps.OrientationPreference)
     """
 
     peak_val = param.Number(default=1.0)
 
-    def _analysis(self, p, sheetview):
+    def _process(self, sheetview, p=None):
         cr = sheetview.cyclic_range
         data = sheetview.data if cr is None else sheetview.data/cr
         fft_spectrum = abs(fftshift(fft2(data - 0.5, s=None, axes=(-2, -1))))
         fft_spectrum = 1 - fft_spectrum # Inverted spectrum by convention
         zero_min_spectrum = fft_spectrum - fft_spectrum.min()
         spectrum_range = fft_spectrum.max() - fft_spectrum.min()
-        normalized_spectrum = (p.peak_val * zero_min_spectrum) / spectrum_range
+        normalized_spectrum = (self.p.peak_val * zero_min_spectrum) / spectrum_range
 
         l, b, r, t = sheetview.bounds.lbrt()
         density = sheetview.xdensity
@@ -79,20 +96,18 @@ class fft(analysis):
 
 
 
-class gradient(analysis):
+class gradient(SheetOperation):
     """
     Compute the gradient plot of the supplied SheetView or SheetStack.
     Translated from Octave code originally written by Yoonsuck Choe.
 
-    If the SheetView has a cyclic_range, negative differences will
-    be wrapped into the range.
+    If the SheetView has a cyclic_range, negative differences will be
+    wrapped into the range.
 
     Example:: gradient(topo.sim.V1.views.maps.OrientationPreference)
     """
 
-    cyclic_range = param.Number(default=None, allow_None=True)
-
-    def _analysis(self, p, sheetview):
+    def _process(self, sheetview):
         data = sheetview.data
         r, c = data.shape
         dx = np.diff(data, 1, axis=1)[0:r-1, 0:c-1]
@@ -114,15 +129,16 @@ class gradient(analysis):
 
 
 
-class autocorrelation(analysis):
+class autocorrelation(SheetOperation):
     """
-    Compute the 2D autocorrelation of the supplied data. Requires the external
-    SciPy package.
+    Compute the 2D autocorrelation of the supplied data. Requires the
+    external SciPy package.
 
-    Example:: autocorrelation(topo.sim.V1.views.maps.OrientationPreference)
+    Example::
+    autocorrelation(topo.sim.V1.views.maps.OrientationPreference)
     """
 
-    def _analysis(self, p, sheetview):
+    def _process(self, sheetview):
         import scipy.signal
         data = sheetview.data
         autocorr_data = scipy.signal.correlate2d(data, data)
