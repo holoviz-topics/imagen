@@ -93,6 +93,30 @@ class SparseNoise(RandomGenerator):
         
         return A
     
+class SpareNoise2(RandomGenerator):
+    
+    def __init__(self,pattern_size, **params):
+        super(SparseNoise2, self).__init__(**params)
+        self.pattern_size = pattern_size
+  
+    def _distrib(self,shape,p):  
+        N1 = shape[0]
+        N2 = shape[1]
+        ps = self.pattern_size
+        
+        n1 = N1 / ps
+        n2 = N2 / ps
+        
+        A = np.zeros((N1,N2)) + self.offset
+        
+        x = np.random.randint(0, N1 - ps + 1)
+        y = np.random.randint(0, N2 - ps + 1)
+        z = np.random.choice([-1,1]) * self.scale
+        
+        A[x: (x + ps), y: (y + ps)] = A[x: (x + ps), y: (y + ps)] + z
+        
+        return A 
+    
 class DenseNoise(RandomGenerator):
     """
     2D Generator of Dense Noise
@@ -109,7 +133,30 @@ class DenseNoise(RandomGenerator):
     
     def _distrib(self,shape,p):
         return p.random_generator.randint(-1, 2, shape) * self.scale + self.offset
+
+
+class DenseNoise2(RandomGenerator):
     
+    def __init__(self,pattern_size, **params):
+        super(DenseNoise2, self).__init__(**params)
+        self.pattern_size = pattern_size
+    
+    def _distrib(self,shape,p):
+        N1 = shape[0]
+        N2 = shape[1]
+        n1 = N1 / ps
+        n2 = N2 / ps
+        
+        A = np.zeros((N1,N2))    
+        # Explain what sub is for 
+        sub = p.random_generator.randint(-1, 2, (n1, n2)) * self.scale + self.offset
+              
+        for i in range(n1):
+            for j in range(n2): 
+                A[i * ps: (i + 1) * ps, j * ps: (j + 1) * ps] = sub[i,j]
+        
+        return A 
+        
     
 class UniformRandom(RandomGenerator):
     """2D uniform random noise pattern generator."""
