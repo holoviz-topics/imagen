@@ -11,7 +11,7 @@ import numpy as np
 
 import param
 import copy
-from imagen import Gaussian, Constant, Composite
+from imagen import PatternGenerator, Gaussian, Constant, Composite
 from imagen.transferfn import TransferFn
 
 
@@ -28,15 +28,14 @@ class Convolve(TransferFn):
     sheetcoordinates.
     """
 
-    kernel_pattern = param.Parameter(default=Gaussian(size=0.05,
-                                                      aspect_ratio=1.0), doc="""
+    kernel_pattern = param.ClassSelector(PatternGenerator,
+                     default=Gaussian(size=0.05,aspect_ratio=1.0), doc="""
       The kernel pattern used in the convolution. The default kernel
       results in an isotropic Gaussian blur.""")
 
     init_keys = param.List(default=['SCS'], constant=True)
 
     def __init__(self, **kwargs):
-        self.kernel = None
         super(Convolve,self).__init__(**kwargs)
 
 
@@ -51,8 +50,7 @@ class Convolve(TransferFn):
 
     def __call__(self, x):
         if not hasattr(self, 'kernel'):
-            raise Exception("Convolve has not been properly initialized with %s"
-                            % ','.join(repr(el) for el in self.init_keys))
+            raise Exception("Convolve must be initialized before being called.")
         fft1 = np.fft.fft2(x)
         fft2 = np.fft.fft2(self.kernel, s=x.shape)
         convolved_raw = np.fft.ifft2( fft1 * fft2).real
