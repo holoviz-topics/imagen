@@ -75,48 +75,51 @@ class SparseNoise(RandomGenerator):
     scaled and translated with the parameter offset in the following way:
     -1 -> offset - scale
      1 -> offset + scale 
+     
+     pattern_size: 
+     This is the size of the spot in units of pixels
+     
+     grid: 
+     True - Forces the spots to appear in a grid
+     False - The patterns can appear randomly anywhere 
        
     '''
-    def _distrib(self,shape,p):
-        size1 = shape[0]
-        size2 = shape[1]
-        
-        x = p.random_generator.randint(0, size1)
-        y = p.random_generator.randint(0, size2)
-        z = p.random_generator.choice([-1,1]) * self.scale
-        # Activate this if you want to have 0's in your stream
-        #z = p.random_generator.ranint(-1, 2) * self.scale 
-
-        A = np.zeros((size1, size2)) + self.offset
-        
-        A[x,y] = A[x,y] + z
-        
-        return A
-    
-class SparseNoise2(RandomGenerator):
-    
-    def __init__(self,pattern_size, **params):
-        super(SparseNoise2, self).__init__(**params)
+    def __init__(self, pattern_size = 1, grid = True, **params):
+        super(SparseNoise, self).__init__(**params)
         self.pattern_size = pattern_size
-  
-    def _distrib(self,shape,p):  
+        self.grid = grid
+    
+    def _distrib(self, shape, p):
+      
         N1 = shape[0]
         N2 = shape[1]
         ps = self.pattern_size
         
         n1 = N1 / ps
         n2 = N2 / ps
+        A = np.zeros((N1,N2)) + self.offset    
+            
+        if self.grid == True:
+                
+            x = p.random_generator.randint(0, n1)
+            y = p.random_generator.randint(0, n2)
+            z = p.random_generator.choice([-1,1]) * self.scale
+            
+            A[x*ps: (x*ps + ps), y*ps: (y*ps + ps)] = A[x*ps: (x*ps + ps), y*ps: (y*ps + ps)] + z
+
+        else:
+          
+            A = np.zeros((N1,N2)) + self.offset
+            
+            x = p.random_generator.randint(0, N1 - ps + 1)
+            y = p.random_generator.randint(0, N2 - ps + 1)
+            z = p.random_generator.choice([-1,1]) * self.scale
+            
+            A[x: (x + ps), y: (y + ps)] = A[x: (x + ps), y: (y + ps)] + z
         
-        A = np.zeros((N1,N2)) + self.offset
-        
-        x = np.random.randint(0, N1 - ps + 1)
-        y = np.random.randint(0, N2 - ps + 1)
-        z = np.random.choice([-1,1]) * self.scale
-        
-        A[x: (x + ps), y: (y + ps)] = A[x: (x + ps), y: (y + ps)] + z
-        
-        return A 
-    
+        return A
+
+
 class DenseNoise(RandomGenerator):
     """
     2D Generator of Dense Noise
@@ -136,7 +139,21 @@ class DenseNoise(RandomGenerator):
 
 
 class DenseNoise2(RandomGenerator):
+        """
+        2D Generator of Dense Noise with variable spot size
+        By default this produces a matrix with random values 0,-1 and 1
+        When a scale and an offset are provided the transformation maps them to:
+        -1 -> offset - scale
+        0 -> offset
+        1 -> offset + scale 
+        NOTE: This can also be implemented by modifying the UniformRandomInt class
+        below and adding a linear transformation. Between modifying the existing class 
+        and adding a new one I chose the latter. Although I think that just adding the
+        functionality to the other class will be better. 
         
+        
+        
+        """
         def __init__(self,pattern_size, **params):
            super(DenseNoise2, self).__init__(**params)
            self.pattern_size = pattern_size
@@ -151,13 +168,13 @@ class DenseNoise2(RandomGenerator):
             
             A = np.zeros((N1,N2))    
             # Explain what sub is for 
-            sub = p.random_generator.randint(-1, 2, (n1, n2)) * self.scale + self.offset
+            sub = p.random_generator.randint(-1, 2, (n1, n2)) 
               
             for i in range(n1):
                 for j in range(n2): 
                     A[i * ps: (i + 1) * ps, j * ps: (j + 1) * ps] = sub[i,j]
             
-            return A 
+            return A * self.scale + self.offset
 
     
 class UniformRandom(RandomGenerator):
