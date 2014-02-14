@@ -76,6 +76,12 @@ class SparseNoise(RandomGenerator):
     -1 -> offset - scale
      1 -> offset + scale 
      
+     ----
+     Parameters
+     ----
+     
+     It includes all the parameters of pattern_generator
+     
      pattern_size: 
      This is the size of the spot in units of pixels
      
@@ -99,7 +105,7 @@ class SparseNoise(RandomGenerator):
         n2 = N2 / ps
         A = np.zeros((N1,N2)) + self.offset    
             
-        if self.grid == True:
+        if self.grid == True: #In case you want the grid
                 
             x = p.random_generator.randint(0, n1)
             y = p.random_generator.randint(0, n2)
@@ -107,7 +113,7 @@ class SparseNoise(RandomGenerator):
             
             A[x*ps: (x*ps + ps), y*ps: (y*ps + ps)] = A[x*ps: (x*ps + ps), y*ps: (y*ps + ps)] + z
 
-        else:
+        else: #The centers of the spots are randomly distributed in space
           
             A = np.zeros((N1,N2)) + self.offset
             
@@ -128,46 +134,38 @@ class DenseNoise(RandomGenerator):
     -1 -> offset - scale
      0 -> offset
      1 -> offset + scale 
-    NOTE: This can also be implemented by modifying the UniformRandomInt class
-    below and adding a linear transformation. Between modifying the existing class 
-    and adding a new one I chose the latter. Although I think that just adding the
-    functionality to the other class will be better. 
+     ----
+     Parameters
+     ----
+     
+     It includes all the parameters of pattern_generator
+     
+     pattern_size: 
+     This is the size of the spot in units of pixels
+     
     """
     
-    def _distrib(self,shape,p):
-        return p.random_generator.randint(-1, 2, shape) * self.scale + self.offset
-
-
-class DenseNoise2(RandomGenerator):
-        """
-        2D Generator of Dense Noise with variable spot size
-        By default this produces a matrix with random values 0,-1 and 1
-        When a scale and an offset are provided the transformation maps them to:
-        -1 -> offset - scale
-        0 -> offset
-        1 -> offset + scale 
-        NOTE: This can also be implemented by modifying the UniformRandomInt class
-        below and adding a linear transformation. Between modifying the existing class 
-        and adding a new one I chose the latter. Although I think that just adding the
-        functionality to the other class will be better. 
-        
-        
-        
-        """
-        def __init__(self,pattern_size, **params):
-           super(DenseNoise2, self).__init__(**params)
+    def __init__(self, pattern_size = 1, **params):
+           super(DenseNoise, self).__init__(**params)
            self.pattern_size = pattern_size
+
+    
+    def _distrib(self,shape,p):
+        ps = self.pattern_size
         
-        def _distrib(self,shape,p):  
+        if ps == 1:  #This is faster than to call the other else procedure
+            return p.random_generator.randint(-1, 2, shape) * self.scale + self.offset
+        
+        else: 
             N1 = shape[0]
             N2 = shape[1]
-            ps = self.pattern_size
+           
             
             n1 = N1 / ps
             n2 = N2 / ps
             
             A = np.zeros((N1,N2))    
-            # Explain what sub is for 
+            # Sub matrix that contains the structure of -1,0 and 1's 
             sub = p.random_generator.randint(-1, 2, (n1, n2)) 
               
             for i in range(n1):
@@ -175,6 +173,7 @@ class DenseNoise2(RandomGenerator):
                     A[i * ps: (i + 1) * ps, j * ps: (j + 1) * ps] = sub[i,j]
             
             return A * self.scale + self.offset
+        
 
     
 class UniformRandom(RandomGenerator):
