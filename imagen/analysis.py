@@ -50,25 +50,6 @@ class SheetOperation(param.ParameterizedFunction):
 
 
 
-class analysis(SheetOperation):
-    """
-    The analysis baseclass provides support for processing
-    SheetStacks, SheetViews and lists of SheetView objects. The actual
-    transformation is performed by the _process method, which can be
-    subclassed to provide any desired transformation, however by
-    default it will apply the supplied transfer_fn.
-    """
-
-    transfer_fns = param.List(default=[], class_=TransferFn)
-
-    def _process(self, sheetview):
-        data = sheetview.data.copy()
-        for transfer_fn in self.p.transfer_fns:
-            data = transfer_fn(data)
-        return SheetView(data, sheetview.bounds, metadata=sheetview.metadata)
-
-
-
 class fft_power_spectrum(SheetOperation):
     """
     Compute the 2D Fast Fourier Transform (FFT) of the supplied sheet view.
