@@ -626,51 +626,6 @@ class Composite(PatternGenerator):
 
 
 
-class Crop(PatternGenerator):
-    """
-    Crop may be used to select a subregion of the output of another
-    pattern generator. This may be useful to eliminate possible border
-    effects that may result after applying an output function applied
-    to a pattern generator.
-
-    The bounds of the Crop object must be contained within the bounds
-    of the supplied pattern object.
-    """
-
-    pattern = param.Parameter(default=Gaussian(), doc="""
-        The pattern to be cropped.""")
-
-    bounds = boundingregion.BoundingRegionParameter(
-        default=boundingregion.BoundingBox(radius=0.2), doc="""
-        The cropping bounds used to define the subregion to be cropped.""")
-
-    def __call__(self,**params_to_override):
-        p = ParamOverrides(self,params_to_override)
-
-        if p.bounds not in p.pattern.bounds:
-            raise Exception("The crop bounds must be within the pattern bounds.")
-
-        data = p.pattern(xdensity=p.xdensity, ydensity=p.ydensity)
-        sheetcoord = SheetCoordinateSystem(p.pattern.bounds, p.xdensity, p.ydensity)
-        return Slice(p.bounds, sheetcoord).submatrix(data)
-
-    def state_push(self):
-        """
-        Push the state of the cropped pattern.
-        """
-        super(Crop,self).state_push()
-        self.pattern.state_push()
-
-    def state_pop(self):
-        """
-        Pop the state of the cropped pattern.
-        """
-        super(Crop,self).state_pop()
-        self.pattern.state_pop()
-
-
-
-
 class SeparatedComposite(Composite):
     """
     Generalized version of the Composite PatternGenerator that enforces spacing constraints
