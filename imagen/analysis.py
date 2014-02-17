@@ -6,8 +6,7 @@ within a SheetView and display the output of the analysis alongside
 the original patterns.
 
 Currently this module provides FFT, auto-correlation and gradient
-analyses as well the analysis baseclass, which will apply any
-TransferFn to the data.
+analyses.
 """
 
 import numpy as np
@@ -21,7 +20,6 @@ from dataviews import SheetView, SheetStack,  SheetLayer
 from dataviews.sheetcoords import BoundingBox
 
 from imagen import wrap
-from transferfn import TransferFn
 
 
 
