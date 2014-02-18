@@ -68,17 +68,21 @@ class RandomGenerator(PatternGenerator):
     
 class SparseNoiseReticulate(RandomGenerator):    
     """
-    2D sparse noise pattern generator with arbitrary grid
-    In the default this produces a matrix with shape given by shape
-    and zeros everywhere except one value. 
-    This value can be either -1 or 1 and then is scaled with the parameter 
-    scaled and translated with the parameter offset in the following way:
+    2D Generator of Sparse Noise with variable and free grid size
+    
+    By default this produces a matrix with random values 0,-1 and 1
+    When a scale and an offset are provided the transformation maps them to:
     -1 -> offset - scale
+     0 -> offset
      1 -> offset + scale 
-     
      ----
      Parameters
      ----
+     
+     It includes all the parameters of pattern_generator
+     
+     lines_per_grid: 
+     The number of lines per grid, for example in a 10 x 10 grid this will be 10
      
     """
     def __init__(self, lines_per_grid, **params):
@@ -125,7 +129,22 @@ class SparseNoiseReticulate(RandomGenerator):
     
 class DenseNoiseReticulate(RandomGenerator):
     """
-    Write documentation here 
+    2D Generator of Dense Noise with variable and free gird size
+    
+    By default this produces a matrix with random values 0,-1 and 1
+    When a scale and an offset are provided the transformation maps them to:
+    -1 -> offset - scale
+     0 -> offset
+     1 -> offset + scale 
+     ----
+     Parameters
+     ----
+     
+     It includes all the parameters of pattern_generator
+     
+     lines_per_grid: 
+     The number of lines per grid, for example in a 10 x 10 grid this will be 10
+     
     """
     def __init__(self, lines_per_grid, **params):
            super(DenseNoiseReticulate, self).__init__(**params)
@@ -165,68 +184,75 @@ class DenseNoiseReticulate(RandomGenerator):
 
 class SparseNoise(RandomGenerator):
     '''
-    2D sparse noise pattern generator
+    2D sparse noise pattern generator with variable grid size but restricted
+    to integer division sizes of the total pattern size. For example in a
+    10 x 10 pattern size the size of the gridt that this function will allow are
+    1 x 1, 2 x 2, 5 x 5, 10 x10 
+    
     In the default this produces a matrix with shape given by shape
-    and zeros everywhere except one value. 
-    This value can be either -1 or 1 and then is scaled with the parameter 
-    scaled and translated with the parameter offset in the following way:
+    and zeros everywhere except one value. This value can be either 
+    -1 or 1 and then is scaled with the parameters  scale and offset 
+    in the following way
+    
     -1 -> offset - scale
      1 -> offset + scale 
      
      ----
      Parameters
      ----
-     
-     It includes all the parameters of pattern_generator
-     
-     pattern_size: 
-     This is the size of the spot in units of pixels
-     
+               
+     lines_per_grid: 
+     The number of lines per grid, for example in a 10 x 10 grid this will be 10
+          
      grid: 
      True - Forces the spots to appear in a grid
      False - The patterns can appear randomly anywhere 
        
     '''
-    def __init__(self, pattern_size = 1, grid = True, **params):
+    def __init__(self, lines_per_grid, grid = True, **params):
         super(SparseNoise, self).__init__(**params)
-        self.pattern_size = pattern_size
+        self.lines_per_grid = lines_per_grid
         self.grid = grid
     
     def _distrib(self, shape, p):
+        n1 = self.lines_per_grid
+        ps = int(round(shape[0] / n1 ))
+        assert (ps >= 1)," Pattern Size smaller than one"
+        assert ( shape[0] % n1 == 0), 'Size of the pattern = '+str(shape[0])+' must be proportional to lines_per_grid = ' + str(n1)
         
         N1 = shape[0]
         N2 = shape[1]
-        ps = int(round(self.pattern_size))
-        assert (ps >= 1)," Pattern Size smaller than one"
         
-        n1 = N1 / ps
-        n2 = N2 / ps
-        A = np.zeros((N1,N2)) + self.offset    
+        A = np.zeros((N1,N2))   
             
         if self.grid == True: #In case you want the grid
                 
             x = p.random_generator.randint(0, n1)
-            y = p.random_generator.randint(0, n2)
-            z = p.random_generator.choice([-1,1]) * self.scale
+            y = p.random_generator.randint(0, n1)
+            z = p.random_generator.choice([-1,1])
             
             A[x*ps: (x*ps + ps), y*ps: (y*ps + ps)] = A[x*ps: (x*ps + ps), y*ps: (y*ps + ps)] + z
 
         else: #The centers of the spots are randomly distributed in space
           
-            A = np.zeros((N1,N2)) + self.offset
+            A = np.zeros((N1,N2)) 
             
             x = p.random_generator.randint(0, N1 - ps + 1)
             y = p.random_generator.randint(0, N2 - ps + 1)
-            z = p.random_generator.choice([-1,1]) * self.scale
+            z = p.random_generator.choice([-1,1]) 
             
             A[x: (x + ps), y: (y + ps)] = A[x: (x + ps), y: (y + ps)] + z
         
-        return A
+        return A * self.scale + self.offset
 
 
 class DenseNoise(RandomGenerator):
     """
-    2D Generator of Dense Noise
+    2D Generator of Dense Noise with variable grid size but restricted
+    to integer division sizes of the total pattern size. For example in a
+    10 x 10 pattern size the sizes of the grid that this function will allow are
+    1 x 1, 2 x 2, 5 x 5, 10 x10 
+    
     By default this produces a matrix with random values 0,-1 and 1
     When a scale and an offset are provided the transformation maps them to:
     -1 -> offset - scale
@@ -238,19 +264,21 @@ class DenseNoise(RandomGenerator):
      
      It includes all the parameters of pattern_generator
      
-     pattern_size: 
-     This is the size of the spot in units of pixels
+     lines_per_grid: 
+     The number of lines per grid, for example in a 10 x 10 grid this will be 10
      
     """
     
-    def __init__(self, pattern_size = 1, **params):
+    def __init__(self, lines_per_grid, **params):
            super(DenseNoise, self).__init__(**params)
-           self.pattern_size = pattern_size
+           self.lines_per_grid = lines_per_grid
 
     
     def _distrib(self,shape,p):
-        ps = int(round(self.pattern_size))
+        n1 = self.lines_per_grid
+        ps = int(round(shape[0] / n1 ))
         assert (ps >= 1)," Pattern Size smaller than one"
+        assert ( shape[0] % n1 == 0), 'Size of the pattern = '+str(shape[0])+' must be proportional to lines_per_grid = ' + str(n1)
         
         if ps == 1:  #This is faster to call the other else procedure
             return p.random_generator.randint(-1, 2, shape) * self.scale + self.offset
@@ -258,16 +286,13 @@ class DenseNoise(RandomGenerator):
         else: 
             N1 = shape[0]
             N2 = shape[1]
-      
-            n1 = N1 / ps
-            n2 = N2 / ps
-            
+                  
             A = np.zeros((N1,N2))    
             # Sub matrix that contains the structure of -1,0 and 1's 
-            sub = p.random_generator.randint(-1, 2, (n1, n2)) 
+            sub = p.random_generator.randint(-1, 2, (n1, n1)) 
               
             for i in range(n1):
-                for j in range(n2): 
+                for j in range(n1): 
                     A[i * ps: (i + 1) * ps, j * ps: (j + 1) * ps] = sub[i,j]
             
             return A * self.scale + self.offset
