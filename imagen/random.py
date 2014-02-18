@@ -65,6 +65,103 @@ class RandomGenerator(PatternGenerator):
             of(result)
 
         return result
+    
+class SparseNoiseReticulate(RandomGenerator):    
+    """
+    2D sparse noise pattern generator with arbitrary grid
+    In the default this produces a matrix with shape given by shape
+    and zeros everywhere except one value. 
+    This value can be either -1 or 1 and then is scaled with the parameter 
+    scaled and translated with the parameter offset in the following way:
+    -1 -> offset - scale
+     1 -> offset + scale 
+     
+     ----
+     Parameters
+     ----
+     
+    """
+    def __init__(self, lines_per_grid, **params):
+       super(SparseNoiseReticulate, self).__init__(**params)
+       self.lines_per_grid = lines_per_grid
+
+    def _distrib(self, shape, p):
+        assert (shape[0] == shape[1])," This only works for square matrices"
+        assert (self.lines_per_grid <= shape[0])," Number of lines in the grid bigger than number of pixels"
+        
+        N = self.lines_per_grid
+        SC = SheetCoordinateSystem(p.bounds, p.xdensity, p.ydensity)
+        x_points,y_points = SC.sheetcoordinates_of_matrixidx()
+        shape1 = shape[0]
+        
+        # Obtain length of the side and lenght of the
+        # division line between the grid 
+        unitary_distance = x_points[1] - x_points[0]
+        side = round(unitary_distance * shape1)
+        division = side / N
+        
+        # Define matrix to stop and matrix to map
+        A = np.zeros(shape)
+        Z = np.zeros((N,N))
+        
+        x = p.random_generator.randint(0, N)
+        y = p.random_generator.randint(0, N)
+        z = p.random_generator.choice([-1,1]) 
+        
+        Z[x,y] = z
+
+        for i in range(shape1):
+            for j in range(shape1):
+                # Map along the x coordinates 
+                aux11 = x_points[i] + (side / 2)
+                outcome1 = int(aux11 / division)
+                # Map along the y coordinates
+                aux12 = y_points[-(j+1)] + (side / 2)
+                outcome2 = int(aux12 / division)
+                # Assign 
+                A[i][j] = Z[outcome1][outcome2]
+        
+        return A * self.scale + self.offset
+    
+class DenseNoiseReticulate(RandomGenerator):
+    """
+    Write documentation here 
+    """
+    def __init__(self, lines_per_grid, **params):
+           super(DenseNoiseReticulate, self).__init__(**params)
+           self.lines_per_grid = lines_per_grid
+
+    def _distrib(self, shape, p):
+        assert (shape[0] == shape[1])," This only works for square matrices"
+        assert (self.lines_per_grid <= shape[0])," Number of lines in the grid bigger than number of pixels"
+        
+        N = self.lines_per_grid
+        SC = SheetCoordinateSystem(p.bounds, p.xdensity, p.ydensity)
+        x_points,y_points = SC.sheetcoordinates_of_matrixidx()
+        shape1 = shape[0]
+        
+        # Obtain length of the side and lenght of the
+        # division line between the grid 
+        unitary_distance = x_points[1] - x_points[0]
+        side = round(unitary_distance * shape1)
+        division = side / N
+        
+        # Define matrix to stop and matrix to map
+        A = np.zeros(shape)
+        Z = p.random_generator.randint(-1, 2, (N,N))
+
+        for i in range(shape1):
+            for j in range(shape1):
+                # Map along the x coordinates 
+                aux11 = x_points[i] + (side / 2)
+                outcome1 = int(aux11 / division)
+                # Map along the y coordinates
+                aux12 = y_points[-(j+1)] + (side / 2)
+                outcome2 = int(aux12 / division)
+                # Assign 
+                A[i][j] = Z[outcome1][outcome2]
+        
+        return A * self.scale + self.offset
 
 class SparseNoise(RandomGenerator):
     '''
@@ -96,10 +193,11 @@ class SparseNoise(RandomGenerator):
         self.grid = grid
     
     def _distrib(self, shape, p):
-      
+        
         N1 = shape[0]
         N2 = shape[1]
-        ps = self.pattern_size
+        ps = int(round(self.pattern_size))
+        assert (ps >= 1)," Pattern Size smaller than one"
         
         n1 = N1 / ps
         n2 = N2 / ps
@@ -151,16 +249,16 @@ class DenseNoise(RandomGenerator):
 
     
     def _distrib(self,shape,p):
-        ps = self.pattern_size
+        ps = int(round(self.pattern_size))
+        assert (ps >= 1)," Pattern Size smaller than one"
         
-        if ps == 1:  #This is faster than to call the other else procedure
+        if ps == 1:  #This is faster to call the other else procedure
             return p.random_generator.randint(-1, 2, shape) * self.scale + self.offset
         
         else: 
             N1 = shape[0]
             N2 = shape[1]
-           
-            
+      
             n1 = N1 / ps
             n2 = N2 / ps
             
@@ -174,7 +272,6 @@ class DenseNoise(RandomGenerator):
             
             return A * self.scale + self.offset
         
-
     
 class UniformRandom(RandomGenerator):
     """2D uniform random noise pattern generator."""
