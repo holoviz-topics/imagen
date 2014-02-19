@@ -66,6 +66,7 @@ class RandomGenerator(PatternGenerator):
 
         return result
     
+
 class DenseNoise(RandomGenerator):
     """
     2D Generator of Dense Noise with variable and free gird size
@@ -160,8 +161,7 @@ class DenseNoise(RandomGenerator):
                     A[i][j] = Z[outcome1][outcome2]
             
             return A * self.scale + self.offset
-    
-        
+
 
 class SparseNoise(RandomGenerator):
     '''
@@ -272,7 +272,7 @@ class SparseNoise(RandomGenerator):
                 return A * self.scale + self.offset
         
         
- class UniformRandom(RandomGenerator):
+class UniformRandom(RandomGenerator):
     """2D uniform random noise pattern generator."""
 
     def _distrib(self,shape,p):
