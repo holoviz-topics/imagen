@@ -66,68 +66,7 @@ class RandomGenerator(PatternGenerator):
 
         return result
     
-class SparseNoiseReticulate(RandomGenerator):    
-    """
-    2D Generator of Sparse Noise with variable and free grid size
-    
-    By default this produces a matrix with random values 0,-1 and 1
-    When a scale and an offset are provided the transformation maps them to:
-    -1 -> offset - scale
-     0 -> offset
-     1 -> offset + scale 
-     ----
-     Parameters
-     ----
-     
-     It includes all the parameters of pattern_generator
-     
-     lines_per_grid: 
-     The number of lines per grid, for example in a 10 x 10 grid this will be 10
-     
-    """
-    def __init__(self, lines_per_grid, **params):
-       super(SparseNoiseReticulate, self).__init__(**params)
-       self.lines_per_grid = lines_per_grid
-
-    def _distrib(self, shape, p):
-        assert (shape[0] == shape[1])," This only works for square matrices"
-        assert (self.lines_per_grid <= shape[0])," Number of lines in the grid bigger than number of pixels"
-        
-        N = self.lines_per_grid
-        SC = SheetCoordinateSystem(p.bounds, p.xdensity, p.ydensity)
-        x_points,y_points = SC.sheetcoordinates_of_matrixidx()
-        shape1 = shape[0]
-        
-        # Obtain length of the side and lenght of the
-        # division line between the grid 
-        unitary_distance = x_points[1] - x_points[0]
-        side = round(unitary_distance * shape1)
-        division = side / N
-        
-        # Define matrix to stop and matrix to map
-        A = np.zeros(shape)
-        Z = np.zeros((N,N))
-        
-        x = p.random_generator.randint(0, N)
-        y = p.random_generator.randint(0, N)
-        z = p.random_generator.choice([-1,1]) 
-        
-        Z[x,y] = z
-
-        for i in range(shape1):
-            for j in range(shape1):
-                # Map along the x coordinates 
-                aux11 = x_points[i] + (side / 2)
-                outcome1 = int(aux11 / division)
-                # Map along the y coordinates
-                aux12 = y_points[-(j+1)] + (side / 2)
-                outcome2 = int(aux12 / division)
-                # Assign 
-                A[i][j] = Z[outcome1][outcome2]
-        
-        return A * self.scale + self.offset
-    
-class DenseNoiseReticulate(RandomGenerator):
+class DenseNoise(RandomGenerator):
     """
     2D Generator of Dense Noise with variable and free gird size
     
@@ -136,58 +75,97 @@ class DenseNoiseReticulate(RandomGenerator):
     -1 -> offset - scale
      0 -> offset
      1 -> offset + scale 
-     ----
-     Parameters
-     ----
+    ----
+    Parameters
+    ----
      
      It includes all the parameters of pattern_generator
      
-     lines_per_grid: 
-     The number of lines per grid, for example in a 10 x 10 grid this will be 10
-     
+     grid_size: 
+     In a 10 x 10 grid this will be 10
+    
+    ---
+    Notes 
+    ---
+    1 ) This method works much faster when the size of the matrix of pixels 
+    is proportional to the grid_size  shape[0] % grid_size == 0
+    
+    2 ) This method only works for square pixels matrix shape[0] = shape[1]
+    
+    3 ) In case that the a pixel has an intersection with two or more squares from the noise
+    grid, the allocating of the value is done by taking into account where the center
+    of the pixels lies
     """
-    def __init__(self, lines_per_grid, **params):
-           super(DenseNoiseReticulate, self).__init__(**params)
-           self.lines_per_grid = lines_per_grid
+    def __init__(self, grid_size, **params):
+           super(DenseNoise, self).__init__(**params)
+           self.grid_size = grid_size
 
     def _distrib(self, shape, p):
-        assert (shape[0] == shape[1])," This only works for square matrices"
-        assert (self.lines_per_grid <= shape[0])," Number of lines in the grid bigger than number of pixels"
         
-        N = self.lines_per_grid
-        SC = SheetCoordinateSystem(p.bounds, p.xdensity, p.ydensity)
-        x_points,y_points = SC.sheetcoordinates_of_matrixidx()
-        shape1 = shape[0]
+        assert (shape[0] == shape[1])," This method only works for square matrices"
+        assert (self.grid_size <= shape[0])," Size of the grid  must be smaller than the number of pixels"
         
-        # Obtain length of the side and lenght of the
-        # division line between the grid 
-        unitary_distance = x_points[1] - x_points[0]
-        side = round(unitary_distance * shape1)
-        division = side / N
+        n = self.grid_size
+        N = shape[0]
+        ps = int(round(N / n))
         
-        # Define matrix to stop and matrix to map
-        A = np.zeros(shape)
-        Z = p.random_generator.randint(-1, 2, (N,N))
-
-        for i in range(shape1):
-            for j in range(shape1):
-                # Map along the x coordinates 
-                aux11 = x_points[i] + (side / 2)
-                outcome1 = int(aux11 / division)
-                # Map along the y coordinates
-                aux12 = y_points[-(j+1)] + (side / 2)
-                outcome2 = int(aux12 / division)
-                # Assign 
-                A[i][j] = Z[outcome1][outcome2]
+        # If the noise grid is proportional to the pixel grid 
+        # and fits neatly into it then this method is faster (~100 times faster)
+        if ( shape[0] % n == 0):
+              
+            if ps == 1:  #This is faster to call the whole procedure 
+                return p.random_generator.randint(-1, 2, shape) * self.scale + self.offset
+            
+            else: 
+                # This is the actual matrix of the pixels 
+                A = np.zeros(shape)    
+                # Noise matrix that contains the structure of -1,0 and 1's 
+                Z = p.random_generator.randint(-1, 2, (n, n)) 
+                
+                # Noise matrix is mapped to the pixel matrix   
+                for i in range(n):
+                    for j in range(n): 
+                        A[i * ps: (i + 1) * ps, j * ps: (j + 1) * ps] = Z[i,j]
+                
+                return A * self.scale + self.offset
+            
+        # General method in case the noise grid does not 
+        # fall neatly in the pixels grid      
+        else:
         
-        return A * self.scale + self.offset
+            SC = SheetCoordinateSystem(p.bounds, p.xdensity, p.ydensity)
+            x_points,y_points = SC.sheetcoordinates_of_matrixidx()
+            
+            # Obtain length of the side and length of the
+            # division line between the grid 
+            unitary_distance = x_points[1] - x_points[0]
+            side_length = round(unitary_distance * N)
+            division = side_length / n
+            
+            # This is the actual matrix of the pixels 
+            A = np.zeros(shape)
+            # Noise matrix that contains the structure of -1,0 and 1's 
+            Z = p.random_generator.randint(-1, 2, (n,n))
+    
+            # Noise matrix is mapped to the pixel matrix   
+            for i in range(N):
+                for j in range(N):
+                    # Map along the x coordinates 
+                    aux1 = x_points[i] + (side_length / 2)
+                    outcome1 = int(aux1 / division)
+                    # Map along the y coordinates
+                    aux2 = y_points[-(j+1)] + (side_length / 2)
+                    outcome2 = int(aux2 / division)
+                    # Assign 
+                    A[i][j] = Z[outcome1][outcome2]
+            
+            return A * self.scale + self.offset
+    
+        
 
 class SparseNoise(RandomGenerator):
     '''
-    2D sparse noise pattern generator with variable grid size but restricted
-    to integer division sizes of the total pattern size. For example in a
-    10 x 10 pattern size the size of the gridt that this function will allow are
-    1 x 1, 2 x 2, 5 x 5, 10 x10 
+    2D sparse noise pattern generator with variable and free grid size
     
     In the default this produces a matrix with shape given by shape
     and zeros everywhere except one value. This value can be either 
@@ -197,108 +175,105 @@ class SparseNoise(RandomGenerator):
     -1 -> offset - scale
      1 -> offset + scale 
      
-     ----
-     Parameters
-     ----
+    ----
+    Parameters
+    ----
                
-     lines_per_grid: 
-     The number of lines per grid, for example in a 10 x 10 grid this will be 10
+     grid_size: 
+     In a 10 x 10 grid this will be 10
           
      grid: 
      True - Forces the spots to appear in a grid
      False - The patterns can appear randomly anywhere 
        
+    
+    ---
+    Notes 
+    ---
+    1 ) This method works much faster when the size of the matrix of pixels 
+    is proportional to the grid_size  shape[0] % grid_size == 0
+    
+    2 ) This method only works for square pixels matrix shape[0] = shape[1]
+    
+    3 ) In case that the a pixel has an intersection with two or more squares from the noise
+    grid, the allocating of the value is done by taking into account where the center
+    of the pixels lies
     '''
-    def __init__(self, lines_per_grid, grid = True, **params):
+    
+    def __init__(self, grid_size, grid = True, **params):
         super(SparseNoise, self).__init__(**params)
-        self.lines_per_grid = lines_per_grid
+        self.grid_size = grid_size
         self.grid = grid
     
     def _distrib(self, shape, p):
-        n1 = self.lines_per_grid
-        ps = int(round(shape[0] / n1 ))
-        assert (ps >= 1)," Pattern Size smaller than one"
-        assert ( shape[0] % n1 == 0), 'Size of the pattern = '+str(shape[0])+' must be proportional to lines_per_grid = ' + str(n1)
         
-        N1 = shape[0]
-        N2 = shape[1]
+        assert (shape[0] == shape[1])," This method only works for square matrices"
+        assert (self.grid_size <= shape[0])," Size of the grid  must be smaller than the number of pixels"               
         
-        A = np.zeros((N1,N2))   
-            
-        if self.grid == True: #In case you want the grid
-                
-            x = p.random_generator.randint(0, n1)
-            y = p.random_generator.randint(0, n1)
-            z = p.random_generator.choice([-1,1])
-            
-            A[x*ps: (x*ps + ps), y*ps: (y*ps + ps)] = A[x*ps: (x*ps + ps), y*ps: (y*ps + ps)] + z
-
-        else: #The centers of the spots are randomly distributed in space
-          
-            A = np.zeros((N1,N2)) 
-            
-            x = p.random_generator.randint(0, N1 - ps + 1)
-            y = p.random_generator.randint(0, N2 - ps + 1)
+        N = shape[0] #Size of the pixel matrix
+        n = self.grid_size
+        ps = int(round( N / n ))
+      
+        # This is the actual matrix of the pixels 
+        A = np.zeros(shape)   
+           
+        if self.grid == False:  #The centers of the spots are randomly distributed in space 
+                        
+            x = p.random_generator.randint(0, N - ps + 1)
+            y = p.random_generator.randint(0, N - ps + 1)
             z = p.random_generator.choice([-1,1]) 
             
-            A[x: (x + ps), y: (y + ps)] = A[x: (x + ps), y: (y + ps)] + z
-        
-        return A * self.scale + self.offset
-
-
-class DenseNoise(RandomGenerator):
-    """
-    2D Generator of Dense Noise with variable grid size but restricted
-    to integer division sizes of the total pattern size. For example in a
-    10 x 10 pattern size the sizes of the grid that this function will allow are
-    1 x 1, 2 x 2, 5 x 5, 10 x10 
-    
-    By default this produces a matrix with random values 0,-1 and 1
-    When a scale and an offset are provided the transformation maps them to:
-    -1 -> offset - scale
-     0 -> offset
-     1 -> offset + scale 
-     ----
-     Parameters
-     ----
-     
-     It includes all the parameters of pattern_generator
-     
-     lines_per_grid: 
-     The number of lines per grid, for example in a 10 x 10 grid this will be 10
-     
-    """
-    
-    def __init__(self, lines_per_grid, **params):
-           super(DenseNoise, self).__init__(**params)
-           self.lines_per_grid = lines_per_grid
-
-    
-    def _distrib(self,shape,p):
-        n1 = self.lines_per_grid
-        ps = int(round(shape[0] / n1 ))
-        assert (ps >= 1)," Pattern Size smaller than one"
-        assert ( shape[0] % n1 == 0), 'Size of the pattern = '+str(shape[0])+' must be proportional to lines_per_grid = ' + str(n1)
-        
-        if ps == 1:  #This is faster to call the other else procedure
-            return p.random_generator.randint(-1, 2, shape) * self.scale + self.offset
-        
-        else: 
-            N1 = shape[0]
-            N2 = shape[1]
-                  
-            A = np.zeros((N1,N2))    
-            # Sub matrix that contains the structure of -1,0 and 1's 
-            sub = p.random_generator.randint(-1, 2, (n1, n1)) 
-              
-            for i in range(n1):
-                for j in range(n1): 
-                    A[i * ps: (i + 1) * ps, j * ps: (j + 1) * ps] = sub[i,j]
-            
+            # Noise matrix is mapped to the pixel matrix   
+            A[x: (x + ps), y: (y + ps)] = A[x: (x + ps), y: (y + ps)] + z   
+           
             return A * self.scale + self.offset
         
-    
-class UniformRandom(RandomGenerator):
+        else: #In case you want the grid
+            
+            if ( N % n == 0): #When the noise grid falls neatly into the the pixel grid 
+                x = p.random_generator.randint(0, n)
+                y = p.random_generator.randint(0, n)
+                z = p.random_generator.choice([-1,1])
+                
+               # Noise matrix is mapped to the pixel matrix       
+                A[x*ps: (x*ps + ps), y*ps: (y*ps + ps)] = A[x*ps: (x*ps + ps), y*ps: (y*ps + ps)] + z  
+                
+                return A * self.scale + self.offset
+                    
+            else: # If noise grid does not fit neatly in the pixel grid  
+               
+                SC = SheetCoordinateSystem(p.bounds, p.xdensity, p.ydensity)
+                x_points,y_points = SC.sheetcoordinates_of_matrixidx()
+                
+                # Obtain length of the side and length of the
+                # division line between the grid 
+                unitary_distance = x_points[1] - x_points[0]
+                side_length = round( unitary_distance * N)
+                division = side_length / n
+            
+                # Construct the noise matrix 
+                Z = np.zeros((n,n))
+                x = p.random_generator.randint(0, n)
+                y = p.random_generator.randint(0, n)
+                z = p.random_generator.choice([-1,1]) 
+                Z[x,y] = z
+                
+                # Noise matrix is mapped to the pixel matrix   
+                for i in range(N):
+                    for j in range(N):
+                        # Map along the x coordinates 
+                        aux1 = x_points[i] + (side_length / 2)
+                        outcome1 = int(aux1 / division)
+                        # Map along the y coordinates
+                        aux2 = y_points[-(j+1)] + (side_length / 2)
+                        outcome2 = int(aux2 / division)
+                        # Assign 
+                        A[i][j] = Z[outcome1][outcome2]
+                
+                return A * self.scale + self.offset
+        
+        
+ class UniformRandom(RandomGenerator):
     """2D uniform random noise pattern generator."""
 
     def _distrib(self,shape,p):
