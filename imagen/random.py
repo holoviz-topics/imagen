@@ -111,7 +111,7 @@ class DenseNoise(RandomGenerator):
         
         # If the noise grid is proportional to the pixel grid 
         # and fits neatly into it then this method is faster (~100 times faster)
-        if ( shape[0] % n == 0):
+        if ( N % n == 0):
               
             if ps == 1:  #This is faster to call the whole procedure 
                 return p.random_generator.randint(-1, 2, shape) * self.scale + self.offset
