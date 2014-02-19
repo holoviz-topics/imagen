@@ -88,9 +88,9 @@ class DenseNoise(RandomGenerator):
     Notes 
     ---
     1 ) This method works much faster when the size of the matrix of pixels 
-    is proportional to the grid_size  shape[0] % grid_size == 0
+    is proportional to the grid_size  shape[0] % grid_size == 0 ( ~ 100 times faster)
     
-    2 ) This method only works for square pixels matrix shape[0] = shape[1]
+    2 ) This method only works for square pixels matrix shape[0] == shape[1]
     
     3 ) In case that the a pixel has an intersection with two or more squares from the noise
     grid, the allocating of the value is done by taking into account where the center
@@ -185,13 +185,12 @@ class SparseNoise(RandomGenerator):
      grid: 
      True - Forces the spots to appear in a grid
      False - The patterns can appear randomly anywhere 
-       
-    
+         
     ---
     Notes 
     ---
     1 ) This method works much faster when the size of the matrix of pixels 
-    is proportional to the grid_size  shape[0] % grid_size == 0
+    is proportional to the grid_size  shape[0] % grid_size == 0 (~ 100 times faster)
     
     2 ) This method only works for square pixels matrix shape[0] = shape[1]
     
