@@ -155,7 +155,7 @@ class contours(SheetOperation):
         figure_handle = plt.figure()
         (l,b,r,t) = sheetview.bounds.lbrt()
         contour_set = plt.contour(sheetview.data,
-                                  extent=(l,r,b,t),
+                                  extent=(l,r,t,b),
                                   levels=p.levels)
 
         sheetlines = []
