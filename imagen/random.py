@@ -69,7 +69,7 @@ class RandomGenerator(PatternGenerator):
 
 class DenseNoise(RandomGenerator):
     """
-    2D Generator of Dense Noise with variable and free gird size
+    2D dense noise pattern generator with variable and free gird size
     
     By default this produces a matrix with random values 0,-1 and 1
     When a scale and an offset are provided the transformation maps them to:
