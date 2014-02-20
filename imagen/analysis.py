@@ -13,10 +13,12 @@ import numpy as np
 from numpy.fft.fftpack import fft2
 from numpy.fft.helper import fftshift
 
+from matplotlib import pyplot as plt
+
 import param
 from param import ParamOverrides
 
-from dataviews import SheetView, SheetStack,  SheetLayer
+from dataviews import SheetView, SheetStack,  SheetLayer, SheetLines, SheetOverlay
 from dataviews.sheetcoords import BoundingBox
 
 from imagen import wrap
@@ -123,3 +125,53 @@ class autocorrelation(SheetOperation):
         autocorr_data = scipy.signal.correlate2d(data, data)
         return SheetView(autocorr_data, sheetview.bounds,
                          metadata=sheetview.metadata)
+
+
+
+class contours(SheetOperation):
+    """
+    Given a SheetView with a single channel, annotate it with contour
+    lines for a given set of contour levels.
+
+    The return is a overlay with a SheetLines layer for each given
+    level, overlaid on top of the input SheetView.
+    """
+
+    levels = param.NumericTuple(default=(0.5,), doc="""
+         A list of scalar values used to specify the contour levels.""")
+
+    colors = param.List(default=[], doc="""
+         If not empty, this is a list of color strings to associate
+         with each contour level. This list must have the same length
+         as the levels parameter.""")
+
+    def _process(self, sheetview, p=None):
+
+        if p.colors and len(p.colors) != len(p.levels):
+            raise Exception("List of colors must match number of levels.")
+
+        colors = p.colors if p.colors else [None] * len(p.levels)
+
+        figure_handle = plt.figure()
+        (l,b,r,t) = sheetview.bounds.lbrt()
+        contour_set = plt.contour(sheetview.data,
+                                  extent=(l,r,b,t),
+                                  levels=p.levels)
+
+        sheetlines = []
+        for col, level, cset in zip(colors, p.levels, contour_set.collections):
+            paths = cset.get_paths()
+            lines = [path.vertices for path in paths]
+            sheetline = SheetLines(lines,
+                                   sheetview.bounds,
+                                   metadata={'level':level})
+            if col is not None:
+                sheetline.style['color']=col
+            sheetlines.append(sheetline)
+
+        plt.close(figure_handle)
+
+        if len(sheetlines) == 1:
+            return (sheetview * sheetlines[0])
+        else:
+            return sheetview * SheetOverlay(sheetlines, sheetview.bounds)
