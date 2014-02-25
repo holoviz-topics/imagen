@@ -284,8 +284,6 @@ class UniformRandomInt(RandomGenerator):
     2D distribution of integer values from low to high in the in the
     half-open interval [`low`, `high`).
     
-    self.scale and self.offest add spatial translation of the pattern 
-
     Matches semantics of numpy.random.randint.
     """
 
