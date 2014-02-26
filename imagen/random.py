@@ -135,7 +135,7 @@ class DenseNoise(RandomGenerator):
         if ( N % n == 0):
               
             if ps == 1:  #This is faster to call the whole procedure 
-                return p.random_generator.randint(-1, 2, shape) * self.scale + self.offset
+                return p.random_generator.randint(-1, 2, shape) * p.scale + p.offset
             
             else: 
                 # This is the actual matrix of the pixels 
@@ -148,7 +148,7 @@ class DenseNoise(RandomGenerator):
                     for j in range(n): 
                         A[i * ps: (i + 1) * ps, j * ps: (j + 1) * ps] = Z[i,j]
                 
-                return A * self.scale + self.offset
+                return A * p.scale + p.offset
             
         # General method in case the noise grid does not 
         # fall neatly in the pixels grid      
@@ -180,7 +180,7 @@ class DenseNoise(RandomGenerator):
                     # Assign 
                     A[i][j] = Z[outcome1][outcome2]
             
-            return A * self.scale + self.offset
+            return A * p.scale + p.offset
 
 
 class SparseNoise(RandomGenerator):
@@ -266,7 +266,7 @@ class SparseNoise(RandomGenerator):
             # Noise matrix is mapped to the pixel matrix   
             A[x: (x + ps), y: (y + ps)] = A[x: (x + ps), y: (y + ps)] + z   
            
-            return A * self.scale + self.offset
+            return A * p.scale + p.offset
         
         else: #In case you want the grid
             
@@ -278,7 +278,7 @@ class SparseNoise(RandomGenerator):
                # Noise matrix is mapped to the pixel matrix (faster method)       
                 A[x*ps: (x*ps + ps), y*ps: (y*ps + ps)] = A[x*ps: (x*ps + ps), y*ps: (y*ps + ps)] + z  
                 
-                return A * self.scale + self.offset
+                return A * p.scale + p.offset
                     
             else: # If noise grid does not fit neatly in the pixel grid (slow method)
                
@@ -310,7 +310,7 @@ class SparseNoise(RandomGenerator):
                         # Assign 
                         A[i][j] = Z[outcome1][outcome2]
                 
-                return A * self.scale + self.offset
+                return A * p.scale + p.offset
         
         
 class UniformRandom(RandomGenerator):
