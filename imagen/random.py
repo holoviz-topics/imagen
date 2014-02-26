@@ -68,21 +68,42 @@ class RandomGenerator(PatternGenerator):
 
 class DenseNoise(RandomGenerator):
     """
-    2D dense noise pattern generator with variable and free gird size
+    2D dense noise pattern generator with variable and free grid size
     
     By default this produces a matrix with random values 0,-1 and 1
     When a scale and an offset are provided the transformation maps them to:
     -1 -> offset - scale
      0 -> offset
      1 -> offset + scale 
-    ----
-    Parameters
-    ----
      
-     It includes all the parameters of pattern_generator
+    if grid_size > 1 then instead of entries spots or boxes of size grid_size 
+    with -1, 0 or 1 will be mapped to the full matrix 
+ 
+    ---
+    Examples 
+    ---
+    SparseNoise(grid_size = 2, grid = True, bounds = BoundingBox(radius = 1),
+    xdensity = 4, ydensity = 4) will produce something like this:
      
-     grid_size: 
-     In a 10 x 10 grid this will be 10
+    [[ 1.  1.  1.  1.  0.  0.  0.  0.]
+    [ 1.  1.  1.  1.  0.  0.  0.  0.]
+    [ 1.  1.  1.  1.  0.  0.  0.  0.] <-- grid_size = 2 of this spots will
+    [-1. -1. -1. -1. -1. -1. -1. -1.]     fill the matrix 
+    [-1. -1. -1. -1. -1. -1. -1. -1.]
+    [-1. -1. -1. -1. -1. -1. -1. -1.]
+    [-1. -1. -1. -1. -1. -1. -1. -1.]]
+    
+    SparseNoise(grid_size = 4, grid = True, bounds = BoundingBox(radius = 1),
+    xdensity = 4, ydensity = 4) on the other hand will produce:
+    
+    [[ 1.  1.  0.  0. -1. -1. -1. -1.]
+    [ 1.  1.  0.  0. -1. -1. -1. -1.]
+    [ 1.  1. -1. -1.  0.  0.  1.  1.]
+    [ 1.  1. -1. -1.  0.  0.  1.  1.] < -- grid_size = 4 of this spots will 
+    [ 0.  0.  0.  0.  1.  1.  1.  1.]      fill the matrix 
+    [ 0.  0.  0.  0.  1.  1.  1.  1.]
+    [-1. -1.  0.  0.  0.  0.  0.  0.]
+    [-1. -1.  0.  0.  0.  0.  0.  0.]]
     
     ---
     Notes 
@@ -96,18 +117,18 @@ class DenseNoise(RandomGenerator):
     grid, the allocating of the value is done by taking into account where the center
     of the pixels lies
     """
-    def __init__(self, grid_size, **params):
-           super(DenseNoise, self).__init__(**params)
-           self.grid_size = grid_size
+    
+    grid_size = param.Integer(default=10, bounds=(1,None), doc="""
+    In a 10 x 10 grid this will be 10.""")
 
     def _distrib(self, shape, p):
         
         assert (shape[0] == shape[1])," This method only works for square matrices"
-        assert (self.grid_size <= shape[0])," Size of the grid  must be smaller than the number of pixels"
+        assert (p.grid_size <= shape[0])," Size of the grid  must be smaller than the number of pixels"
         
-        n = self.grid_size
-        N = shape[0]
-        ps = int(round(N / n))
+        N = shape[0] # Size of the pixel matrix 
+        n = p.grid_size #Size of the grid spots 
+        ps = int(round(N / n)) #Closest integer 
         
         # If the noise grid is proportional to the pixel grid 
         # and fits neatly into it then this method is faster (~100 times faster)
@@ -166,25 +187,44 @@ class SparseNoise(RandomGenerator):
     '''
     2D sparse noise pattern generator with variable and free grid size
     
-    In the default this produces a matrix with shape given by shape
-    and zeros everywhere except one value. This value can be either 
-    -1 or 1 and then is scaled with the parameters  scale and offset 
-    in the following way
+    In the default this produces a matrix with zeros everywhere except in one 
+    random entry. This value is randomly assigned to either  -1 or 1 and then
+    is scaled with the parameters scale and offset in the following way
     
     -1 -> offset - scale
      1 -> offset + scale 
      
-    ----
-    Parameters
-    ----
-               
-     grid_size: 
-     In a 10 x 10 grid this will be 10
+     if grid_size > 1 then instead of entries spots or boxes of size grid_size 
+     with -1 or 1 will be mapped to the full matrix 
           
-     grid: 
-     True - Forces the spots to appear in a grid
-     False - The patterns can appear randomly anywhere 
-         
+    ---
+    Example 
+    ---
+    
+    SparseNoise(grid_size = 2, grid = True, bounds = BoundingBox(radius = 1),
+    xdensity = 4, ydensity = 4) will produce something like this
+   
+    [[ 0.  0.  0.  0. -1. -1. -1. -1.]
+     [ 0.  0.  0.  0. -1. -1. -1. -1.] < -- grid_size = 2 of those spots 
+     [ 0.  0.  0.  0. -1. -1. -1. -1.]      will fill the matrix 
+     [ 0.  0.  0.  0. -1. -1. -1. -1.]
+     [ 0.  0.  0.  0.  0.  0.  0.  0.]
+     [ 0.  0.  0.  0.  0.  0.  0.  0.]
+     [ 0.  0.  0.  0.  0.  0.  0.  0.]
+     [ 0.  0.  0.  0.  0.  0.  0.  0.]]    
+     
+    SparseNoise(grid_size = 4, grid = True, bounds = BoundingBox(radius = 1) ,
+    xdensity = 4, ydensity = 4) on the other hand will produce:
+     
+    [[ 0.  0.  0.  0.  0.  0.  0.  0.]
+    [ 0.  0.  0.  0.  0.  0.  0.  0.]
+    [ 0.  0.  0.  0.  0.  0.  0.  0.]
+    [ 0.  0.  0.  0.  0.  0.  0.  0.]
+    [ 0.  0.  0.  0.  0.  0. -1. -1.] < --- grid_size = 4 of those spots  
+    [ 0.  0.  0.  0.  0.  0. -1. -1.]       will fill the matrix 
+    [ 0.  0.  0.  0.  0.  0.  0.  0.]
+    [ 0.  0.  0.  0.  0.  0.  0.  0.]]
+
     ---
     Notes 
     ---
@@ -198,24 +238,26 @@ class SparseNoise(RandomGenerator):
     of the pixels lies
     '''
     
-    def __init__(self, grid_size, grid = True, **params):
-        super(SparseNoise, self).__init__(**params)
-        self.grid_size = grid_size
-        self.grid = grid
+    grid_size = param.Integer(default=10, bounds=(1,None), doc="""
+    In a 10 x 10 grid this will be 10.""")
+    grid = param.Boolean(default = True, doc=""" 
+    True - Forces the spots to appear in a grid
+    False - The patterns can appear randomly anywhere d""")
+
     
     def _distrib(self, shape, p):
         
         assert (shape[0] == shape[1])," This method only works for square matrices"
-        assert (self.grid_size <= shape[0])," Size of the grid  must be smaller than the number of pixels"               
+        assert (p.grid_size <= shape[0])," Size of the grid  must be smaller than the number of pixels"               
         
         N = shape[0] #Size of the pixel matrix
-        n = self.grid_size
-        ps = int(round( N / n ))
+        n = p.grid_size #Size of the grid spots  
+        ps = int(round( N / n )) #Closest integer 
       
         # This is the actual matrix of the pixels 
         A = np.zeros(shape)   
            
-        if self.grid == False:  #The centers of the spots are randomly distributed in space 
+        if p.grid == False:  #The centers of the spots are randomly distributed in space 
                         
             x = p.random_generator.randint(0, N - ps + 1)
             y = p.random_generator.randint(0, N - ps + 1)
@@ -233,12 +275,12 @@ class SparseNoise(RandomGenerator):
                 y = p.random_generator.randint(0, n)
                 z = p.random_generator.choice([-1,1])
                 
-               # Noise matrix is mapped to the pixel matrix       
+               # Noise matrix is mapped to the pixel matrix (faster method)       
                 A[x*ps: (x*ps + ps), y*ps: (y*ps + ps)] = A[x*ps: (x*ps + ps), y*ps: (y*ps + ps)] + z  
                 
                 return A * self.scale + self.offset
                     
-            else: # If noise grid does not fit neatly in the pixel grid  
+            else: # If noise grid does not fit neatly in the pixel grid (slow method)
                
                 SC = SheetCoordinateSystem(p.bounds, p.xdensity, p.ydensity)
                 x_points,y_points = SC.sheetcoordinates_of_matrixidx()
