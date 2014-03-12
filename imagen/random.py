@@ -64,16 +64,16 @@ class RandomGenerator(PatternGenerator):
             of(result)
 
         return result
-    
+
 
 class DenseNoise(RandomGenerator):
     """
-    2D dense noise pattern generator with variable and free grid size
+    2D Dense noise pattern generator with variable and free grid size
     
-    By default this produces a matrix with random values 0,-1 and 1
+    By default this produces a matrix with random values 0,0.5 and 1
     When a scale and an offset are provided the transformation maps them to:
-    -1 -> offset - scale
-     0 -> offset
+     0 -> offset - scale
+     0.5 -> offset
      1 -> offset + scale 
      
     if grid_size > 1 then instead of entries spots or boxes of size grid_size 
@@ -82,7 +82,7 @@ class DenseNoise(RandomGenerator):
     ---
     Examples 
     ---
-    SparseNoise(grid_size = 2, grid = True, bounds = BoundingBox(radius = 1),
+    DenseNoise(grid_size = 2, grid = True, bounds = BoundingBox(radius = 1),
     xdensity = 4, ydensity = 4) will produce something like this:
      
     [[ 1.  1.  1.  1.  0.  0.  0.  0.]
@@ -93,7 +93,7 @@ class DenseNoise(RandomGenerator):
     [-1. -1. -1. -1. -1. -1. -1. -1.]
     [-1. -1. -1. -1. -1. -1. -1. -1.]]
     
-    SparseNoise(grid_size = 4, grid = True, bounds = BoundingBox(radius = 1),
+    DenseNoise(grid_size = 4, grid = True, bounds = BoundingBox(radius = 1),
     xdensity = 4, ydensity = 4) on the other hand will produce:
     
     [[ 1.  1.  0.  0. -1. -1. -1. -1.]
@@ -117,6 +117,12 @@ class DenseNoise(RandomGenerator):
     grid, the allocating of the value is done by taking into account where the center
     of the pixels lies
     """
+    
+    scale = param.Number(default=0.5,softbounds=(0.0,2.0),precedence=0.10,doc="""
+        Multiplicative strength of input pattern, defaulting to 1.0""")
+
+    offset = param.Number(default=1,softbounds=(-1.0,1.0),precedence=0.11,doc="""
+        Additive offset to input pattern, defaulting to 0.0""")
     
     grid_size = param.Integer(default=10, bounds=(1,None), doc="""
     In a 10 x 10 grid this will be 10.""")
@@ -238,8 +244,15 @@ class SparseNoise(RandomGenerator):
     of the pixels lies
     '''
     
+    scale = param.Number(default=0.5,softbounds=(0.0,2.0),precedence=0.10,doc="""
+        Multiplicative strength of input pattern, defaulting to 1.0""")
+    
+    offset = param.Number(default=1,softbounds=(-1.0,1.0),precedence=0.11,doc="""
+        Additive offset to input pattern, defaulting to 0.0""")
+    
     grid_size = param.Integer(default=10, bounds=(1,None), doc="""
     In a 10 x 10 grid this will be 10.""")
+    
     grid = param.Boolean(default = True, doc=""" 
     True - Forces the spots to appear in a grid
     False - The patterns can appear randomly anywhere d""")
@@ -312,12 +325,12 @@ class SparseNoise(RandomGenerator):
                 
                 return A * p.scale + p.offset
         
-        
+         
 class UniformRandom(RandomGenerator):
     """2D uniform random noise pattern generator."""
 
     def _distrib(self,shape,p):
-        return p.random_generator.uniform(p.offset, p.offset + p.scale, shape)
+        return p.random_generator.uniform(p.offset, p.offset+p.scale, shape)
 
 
 
