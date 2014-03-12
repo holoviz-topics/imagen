@@ -117,7 +117,7 @@ class DenseNoise(RandomGenerator):
     grid, the allocating of the value is done by taking into account where the center
     of the pixels lies
     """
-    
+    #Scale and offset assure a positive default 
     scale = param.Number(default=0.5,softbounds=(0.0,2.0),precedence=0.10,doc="""
         Multiplicative strength of input pattern, defaulting to 1.0""")
 
@@ -194,10 +194,10 @@ class SparseNoise(RandomGenerator):
     2D sparse noise pattern generator with variable and free grid size
     
     In the default this produces a matrix with zeros everywhere except in one 
-    random entry. This value is randomly assigned to either  -1 or 1 and then
+    random entry. This value is randomly assigned to either  0 or 1 and then
     is scaled with the parameters scale and offset in the following way
     
-    -1 -> offset - scale
+     0 -> offset - scale
      1 -> offset + scale 
      
      if grid_size > 1 then instead of entries spots or boxes of size grid_size 
@@ -243,7 +243,7 @@ class SparseNoise(RandomGenerator):
     grid, the allocating of the value is done by taking into account where the center
     of the pixels lies
     '''
-    
+    #Scale and offset assure a positive default 
     scale = param.Number(default=0.5,softbounds=(0.0,2.0),precedence=0.10,doc="""
         Multiplicative strength of input pattern, defaulting to 1.0""")
     
@@ -338,7 +338,7 @@ class UniformRandomInt(RandomGenerator):
     """
     2D distribution of integer values from low to high in the in the
     half-open interval [`low`, `high`).
-    
+       
     Matches semantics of numpy.random.randint.
     """
 
@@ -349,7 +349,7 @@ class UniformRandomInt(RandomGenerator):
         The highest integer to be drawn from the distribution.""")
 
     def _distrib(self,shape,p):
-        return np.random.randint(p.low, p.high, shape) 
+        return np.random.randint(p.low, p.high, shape)
 
 
 
