@@ -337,8 +337,8 @@ class UniformRandom(RandomGenerator):
 class UniformRandomInt(RandomGenerator):
     """
     2D distribution of integer values from low to high in the in the
-    half-open interval [`low`, `high`).
-       
+    half-open interval [`low`, `high`). 
+    
     Matches semantics of numpy.random.randint.
     """
 
