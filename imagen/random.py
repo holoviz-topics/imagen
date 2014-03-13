@@ -121,7 +121,7 @@ class DenseNoise(RandomGenerator):
     scale = param.Number(default=0.5,softbounds=(0.0,2.0),precedence=0.10,doc="""
         Multiplicative strength of input pattern, defaulting to 1.0""")
 
-    offset = param.Number(default=1,softbounds=(-1.0,1.0),precedence=0.11,doc="""
+    offset = param.Number(default=0.5,softbounds=(-1.0,1.0),precedence=0.11,doc="""
         Additive offset to input pattern, defaulting to 0.0""")
     
     grid_size = param.Integer(default=10, bounds=(1,None), doc="""
@@ -247,7 +247,7 @@ class SparseNoise(RandomGenerator):
     scale = param.Number(default=0.5,softbounds=(0.0,2.0),precedence=0.10,doc="""
         Multiplicative strength of input pattern, defaulting to 1.0""")
     
-    offset = param.Number(default=1,softbounds=(-1.0,1.0),precedence=0.11,doc="""
+    offset = param.Number(default=0.5,softbounds=(-1.0,1.0),precedence=0.11,doc="""
         Additive offset to input pattern, defaulting to 0.0""")
     
     grid_size = param.Integer(default=10, bounds=(1,None), doc="""
