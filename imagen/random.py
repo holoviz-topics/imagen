@@ -70,40 +70,41 @@ class DenseNoise(RandomGenerator):
     """
     2D Dense noise pattern generator with variable and free grid size
     
-    By default this produces a matrix with random values 0,0.5 and 1
+    By default this produces a matrix with random values 0.0, 0.5 and 1
     When a scale and an offset are provided the transformation maps them to:
      0 -> offset - scale
      0.5 -> offset
      1 -> offset + scale 
      
-    if grid_size > 1 then instead of entries spots or boxes of size grid_size 
-    with -1, 0 or 1 will be mapped to the full matrix 
+    if grid_size > 1 then instead of entries spots or boxes with size equal
+    to grid_size filled with 0, 0.5 or 1 will be mapped to the full matrix 
  
     ---
     Examples 
     ---
-    DenseNoise(grid_size = 2, grid = True, bounds = BoundingBox(radius = 1),
-    xdensity = 4, ydensity = 4) will produce something like this:
+    DenseNoise(grid_size = 2, bounds = BoundingBox(radius = 1),
+    xdensity = 4, ydensity = 4)  will produce something like this:
      
-    [[ 1.  1.  1.  1.  0.  0.  0.  0.]
+    [[ 0.  0.  0.  0.  1.  1.  1.  1.]
+    [ 0.  0.  0.  0.  1.  1.  1.  1.]
+    [ 0.  0.  0.  0.  1.  1.  1.  1.]   Where grid_size = 2 indicates that the matrix
+    [ 0.  0.  0.  0.  1.  1.  1.  1.]   will be divided in 2 * 2 boxes 
     [ 1.  1.  1.  1.  0.  0.  0.  0.]
-    [ 1.  1.  1.  1.  0.  0.  0.  0.] <-- grid_size = 2 of this spots will
-    [-1. -1. -1. -1. -1. -1. -1. -1.]     fill the matrix 
-    [-1. -1. -1. -1. -1. -1. -1. -1.]
-    [-1. -1. -1. -1. -1. -1. -1. -1.]
-    [-1. -1. -1. -1. -1. -1. -1. -1.]]
+    [ 1.  1.  1.  1.  0.  0.  0.  0.]
+    [ 1.  1.  1.  1.  0.  0.  0.  0.]
+    [ 1.  1.  1.  1.  0.  0.  0.  0.]]
     
-    DenseNoise(grid_size = 4, grid = True, bounds = BoundingBox(radius = 1),
+    DenseNoise(grid_size = 4, bounds = BoundingBox(radius = 1),
     xdensity = 4, ydensity = 4) on the other hand will produce:
     
-    [[ 1.  1.  0.  0. -1. -1. -1. -1.]
-    [ 1.  1.  0.  0. -1. -1. -1. -1.]
-    [ 1.  1. -1. -1.  0.  0.  1.  1.]
-    [ 1.  1. -1. -1.  0.  0.  1.  1.] < -- grid_size = 4 of this spots will 
-    [ 0.  0.  0.  0.  1.  1.  1.  1.]      fill the matrix 
-    [ 0.  0.  0.  0.  1.  1.  1.  1.]
-    [-1. -1.  0.  0.  0.  0.  0.  0.]
-    [-1. -1.  0.  0.  0.  0.  0.  0.]]
+    [[ 1.   1.   0.   0.   0.   0.   0.5  0.5]
+    [ 1.   1.   0.   0.   0.   0.   0.5  0.5]
+    [ 1.   1.   1.   1.   0.   0.   0.   0. ] Where grid_size = 4 indicates that 
+    [ 1.   1.   1.   1.   0.   0.   0.   0. ] the matrix will be divided in 4 * 4 boxes 
+    [ 0.   0.   0.5  0.5  1.   1.   1.   1. ]
+    [ 0.   0.   0.5  0.5  1.   1.   1.   1. ]
+    [ 1.   1.   0.   0.   1.   1.   1.   1. ]
+    [ 1.   1.   0.   0.   1.   1.   1.   1. ]]
     
     ---
     Notes 
@@ -193,7 +194,7 @@ class SparseNoise(RandomGenerator):
     '''
     2D sparse noise pattern generator with variable and free grid size
     
-    In the default this produces a matrix with zeros everywhere except in one 
+    In the default this produces a matrix with 0.5 everywhere except in one 
     random entry. This value is randomly assigned to either  0 or 1 and then
     is scaled with the parameters scale and offset in the following way
     
@@ -210,26 +211,26 @@ class SparseNoise(RandomGenerator):
     SparseNoise(grid_size = 2, grid = True, bounds = BoundingBox(radius = 1),
     xdensity = 4, ydensity = 4) will produce something like this
    
-    [[ 0.  0.  0.  0. -1. -1. -1. -1.]
-     [ 0.  0.  0.  0. -1. -1. -1. -1.] < -- grid_size = 2 of those spots 
-     [ 0.  0.  0.  0. -1. -1. -1. -1.]      will fill the matrix 
-     [ 0.  0.  0.  0. -1. -1. -1. -1.]
-     [ 0.  0.  0.  0.  0.  0.  0.  0.]
-     [ 0.  0.  0.  0.  0.  0.  0.  0.]
-     [ 0.  0.  0.  0.  0.  0.  0.  0.]
-     [ 0.  0.  0.  0.  0.  0.  0.  0.]]    
+    [[ 0.5  0.5  0.5  0.5  0.0  0.0  0.0  0.0]
+     [ 0.5  0.5  0.5  0.5  0.0  0.0  0.0  0.0] < -- Where grid_size = 2 indicates that the 
+     [ 0.5  0.5  0.5  0.5  0.0  0.0  0.0  0.0]      matrix will be divided in 2 * 2 boxes 
+     [ 0.5  0.5  0.5  0.5  0 0  0.0  0.0  0.0]
+     [ 0.5  0.5  0.5  0.5  0.5  0.5  0.5  0.5]
+     [ 0.5  0.5  0.5  0.5  0.5  0.5  0.5  0.5]
+     [ 0.5  0.5  0.5  0.5  0.5  0.5  0.5  0.5]
+     [ 0.5  0.5  0.5  0.5  0.5  0.5  0.5  0.5]]    
      
     SparseNoise(grid_size = 4, grid = True, bounds = BoundingBox(radius = 1) ,
     xdensity = 4, ydensity = 4) on the other hand will produce:
      
-    [[ 0.  0.  0.  0.  0.  0.  0.  0.]
-    [ 0.  0.  0.  0.  0.  0.  0.  0.]
-    [ 0.  0.  0.  0.  0.  0.  0.  0.]
-    [ 0.  0.  0.  0.  0.  0.  0.  0.]
-    [ 0.  0.  0.  0.  0.  0. -1. -1.] < --- grid_size = 4 of those spots  
-    [ 0.  0.  0.  0.  0.  0. -1. -1.]       will fill the matrix 
-    [ 0.  0.  0.  0.  0.  0.  0.  0.]
-    [ 0.  0.  0.  0.  0.  0.  0.  0.]]
+   [[ 0.5  0.5  0.  0.  0.  0.  0.  0.]
+    [ 0.5  0.5  0.  0.  0.  0.  0.  0.]
+    [ 0.5  0.5  0.  0.  0.  0.  0.  0.]
+    [ 0.5  0.5  0.  0.  0.  0.  0.  0.]
+    [ 0.5  0.5  0.  0.  0.  0.  1.  1.] < --- Where grid_size = 4 indicates that the 
+    [ 0.5  0.5  0.  0.  0.  0.  1.  1.]       matrix will be divided in 4 * 4 boxes  
+    [ 0.5  0.5  0.  0.  0.  0.  0.  0.]
+    [ 0.5  0.5  0.  0.  0.  0.  0.  0.]]
 
     ---
     Notes 
