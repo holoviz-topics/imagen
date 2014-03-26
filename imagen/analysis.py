@@ -175,3 +175,40 @@ class contours(SheetOperation):
             return (sheetview * sheetlines[0])
         else:
             return sheetview * SheetOverlay(sheetlines, sheetview.bounds)
+
+
+class cyclic_similarity_index(SheetOperation):
+    """
+    The similarity index between any two cyclic maps. By default, a
+    zero value indicates uncorrelated SheetView data. The similarity
+    index may be useful for quantifying the stability of some cyclic
+    quantity over time by comparing each sample in a SheetStack to the
+    final SheetView element.
+    """
+
+    unit_range = param.Boolean(default=True, doc="""
+        Whether to scale the similarity values linearly so that
+        uncorrelated values have a value of zero and exactly matching
+        elements are indicated with a value of 1.0. Negative values
+        are then used to indicate anticorrelation.""")
+
+    def _process(self, overlay):
+
+        if len(overlay) != 2:
+             raise Exception("The similarity index may only be computed using overlays of SheetViews.")
+
+        if  any(el.cyclic_range is None for el in overlay):
+             raise Exception("The SheetViews in each  overlay must have a defined cyclic range.")
+
+        prefA_data = overlay[0].N.data
+        prefB_data = overlay[1].N.data
+        # Ensure difference is symmetric distance.
+        difference = abs(prefA_data - prefB_data)
+        greaterHalf = (difference >= 0.5)
+        difference[greaterHalf] = 1.0 - difference[greaterHalf]
+        # Difference [0,0.5] so 2x normalizes...
+        similarity = 1 - difference * 2.0
+        # Subtracted from 1.0 as low difference => high stability
+        # As this is made into a unit metric, uncorrelated has value zero.
+        similarity = (2 * (similarity - 0.5)) if self.p.unit_range else similarity
+        return SheetView(similarity, bounds=overlay.bounds)
