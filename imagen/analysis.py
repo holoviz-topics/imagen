@@ -31,10 +31,10 @@ class SheetOperation(param.ParameterizedFunction):
     SheetLayer level.
     """
 
-    def _process(self, view,p=None):
+    def _process(self, view):
         """
         A single SheetLayer may be returned but multiple SheetLayer
-        outputs may be returned as a tuple..
+        outputs may be returned as a tuple.
         """
         raise NotImplementedError
 
@@ -42,9 +42,9 @@ class SheetOperation(param.ParameterizedFunction):
         self.p = ParamOverrides(self, params)
 
         if isinstance(view, SheetLayer):
-            return self._process(view, self.p)
+            return self._process(view)
         elif isinstance(view, SheetStack):
-            return view.map(self._process)
+            return view.map(lambda el, k: self._process(el))
         else:
             raise TypeError("Not a SheetLayer or SheetStack.")
 
@@ -60,7 +60,7 @@ class fft_power_spectrum(SheetOperation):
 
     peak_val = param.Number(default=1.0)
 
-    def _process(self, sheetview, p=None):
+    def _process(self, sheetview):
         cr = sheetview.cyclic_range
         data = sheetview.data if cr is None else sheetview.data/cr
         fft_spectrum = abs(fftshift(fft2(data - 0.5, s=None, axes=(-2, -1))))
@@ -145,21 +145,21 @@ class contours(SheetOperation):
          with each contour level. This list must have the same length
          as the levels parameter.""")
 
-    def _process(self, sheetview, p=None):
+    def _process(self, sheetview):
 
-        if p.colors and len(p.colors) != len(p.levels):
+        if self.p.colors and len(self.p.colors) != len(self.p.levels):
             raise Exception("List of colors must match number of levels.")
 
-        colors = p.colors if p.colors else [None] * len(p.levels)
+        colors = self.p.colors if self.p.colors else [None] * len(self.p.levels)
 
         figure_handle = plt.figure()
         (l,b,r,t) = sheetview.bounds.lbrt()
         contour_set = plt.contour(sheetview.data,
                                   extent=(l,r,t,b),
-                                  levels=p.levels)
+                                  levels=self.p.levels)
 
         sheetlines = []
-        for col, level, cset in zip(colors, p.levels, contour_set.collections):
+        for col, level, cset in zip(colors, self.p.levels, contour_set.collections):
             paths = cset.get_paths()
             lines = [path.vertices for path in paths]
             sheetline = SheetLines(lines,
