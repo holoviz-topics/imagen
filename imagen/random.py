@@ -275,8 +275,9 @@ class SparseNoise(RandomGenerator):
                         
             x = p.random_generator.randint(0, N - ps + 1)
             y = p.random_generator.randint(0, N - ps + 1)
-            z = p.random_generator.choice([-1,1]) 
-            
+            z = p.random_generator.randint(0,2) - 0.5
+            z = int( z / 0.5 )
+                        
             # Noise matrix is mapped to the pixel matrix   
             A[x: (x + ps), y: (y + ps)] = A[x: (x + ps), y: (y + ps)] + z   
            
@@ -287,7 +288,9 @@ class SparseNoise(RandomGenerator):
             if ( N % n == 0): #When the noise grid falls neatly into the the pixel grid 
                 x = p.random_generator.randint(0, n)
                 y = p.random_generator.randint(0, n)
-                z = p.random_generator.choice([-1,1])
+                z = p.random_generator.randint(0,2) - 0.5
+                z = int( z / 0.5 )  
+                
                 
                # Noise matrix is mapped to the pixel matrix (faster method)       
                 A[x*ps: (x*ps + ps), y*ps: (y*ps + ps)] = A[x*ps: (x*ps + ps), y*ps: (y*ps + ps)] + z  
@@ -309,7 +312,8 @@ class SparseNoise(RandomGenerator):
                 Z = np.zeros((n,n))
                 x = p.random_generator.randint(0, n)
                 y = p.random_generator.randint(0, n)
-                z = p.random_generator.choice([-1,1]) 
+                z = p.random_generator.randint(0,2) - 0.5
+                z = int( z / 0.5 )   
                 Z[x,y] = z
                 
                 # Noise matrix is mapped to the pixel matrix   
