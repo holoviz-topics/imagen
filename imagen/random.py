@@ -72,8 +72,8 @@ class DenseNoise(RandomGenerator):
     
     By default this produces a matrix with random values 0.0, 0.5 and 1
     When a scale and an offset are provided the transformation maps them to:
-     0 -> offset - scale
-     0.5 -> offset
+     0 -> offset 
+     0.5 -> offset + 0.5 * scale
      1 -> offset + scale 
      
     if grid_size > 1 then instead of entries spots or boxes with size equal
@@ -118,12 +118,6 @@ class DenseNoise(RandomGenerator):
     grid, the allocating of the value is done by taking into account where the center
     of the pixels lies
     """
-    #Scale and offset assure a positive default 
-    scale = param.Number(default=0.5,softbounds=(0.0,2.0),precedence=0.10,doc="""
-        Multiplicative strength of input pattern, defaulting to 1.0""")
-
-    offset = param.Number(default=0.5,softbounds=(-1.0,1.0),precedence=0.11,doc="""
-        Additive offset to input pattern, defaulting to 0.0""")
     
     grid_size = param.Integer(default=10, bounds=(1,None), doc="""
     In a 10 x 10 grid this will be 10.""")
@@ -142,13 +136,14 @@ class DenseNoise(RandomGenerator):
         if ( N % n == 0):
               
             if ps == 1:  #This is faster to call the whole procedure 
-                return p.random_generator.randint(-1, 2, shape) * p.scale + p.offset
+                result = 0.5 * (p.random_generator.randint(-1, 2, shape) + 1)
+                return  result * p.scale + p.offset
             
             else: 
                 # This is the actual matrix of the pixels 
                 A = np.zeros(shape)    
-                # Noise matrix that contains the structure of -1,0 and 1's 
-                Z = p.random_generator.randint(-1, 2, (n, n)) 
+                # Noise matrix that contains the structure of 0, 0.5 and 1's  
+                Z = 0.5 * (p.random_generator.randint(-1, 2, (n, n)) + 1 )
                 
                 # Noise matrix is mapped to the pixel matrix   
                 for i in range(n):
@@ -172,9 +167,9 @@ class DenseNoise(RandomGenerator):
             
             # This is the actual matrix of the pixels 
             A = np.zeros(shape)
-            # Noise matrix that contains the structure of -1,0 and 1's 
-            Z = p.random_generator.randint(-1, 2, (n,n))
-    
+            # Noise matrix that contains the structure of 0, 0.5 and 1's  
+            Z = 0.5 * (p.random_generator.randint(-1, 2, (n, n)) + 1 )
+                
             # Noise matrix is mapped to the pixel matrix   
             for i in range(N):
                 for j in range(N):
@@ -198,7 +193,7 @@ class SparseNoise(RandomGenerator):
     random entry. This value is randomly assigned to either  0 or 1 and then
     is scaled with the parameters scale and offset in the following way
     
-     0 -> offset - scale
+     0 -> offset 
      1 -> offset + scale 
      
      if grid_size > 1 then instead of entries spots or boxes of size grid_size 
@@ -244,12 +239,6 @@ class SparseNoise(RandomGenerator):
     grid, the allocating of the value is done by taking into account where the center
     of the pixels lies
     '''
-    #Scale and offset assure a positive default 
-    scale = param.Number(default=0.5,softbounds=(0.0,2.0),precedence=0.10,doc="""
-        Multiplicative strength of input pattern, defaulting to 1.0""")
-    
-    offset = param.Number(default=0.5,softbounds=(-1.0,1.0),precedence=0.11,doc="""
-        Additive offset to input pattern, defaulting to 0.0""")
     
     grid_size = param.Integer(default=10, bounds=(1,None), doc="""
     In a 10 x 10 grid this will be 10.""")
@@ -269,17 +258,16 @@ class SparseNoise(RandomGenerator):
         ps = int(round( N / n )) #Closest integer 
       
         # This is the actual matrix of the pixels 
-        A = np.zeros(shape)   
+        A = np.ones(shape) * 0.5   
            
         if p.grid == False:  #The centers of the spots are randomly distributed in space 
                         
             x = p.random_generator.randint(0, N - ps + 1)
             y = p.random_generator.randint(0, N - ps + 1)
-            z = p.random_generator.randint(0,2) - 0.5
-            z = int( z / 0.5 )
+            z = p.random_generator.randint(0,2) 
                         
             # Noise matrix is mapped to the pixel matrix   
-            A[x: (x + ps), y: (y + ps)] = A[x: (x + ps), y: (y + ps)] + z   
+            A[x: (x + ps), y: (y + ps)] =  z   
            
             return A * p.scale + p.offset
         
@@ -288,12 +276,11 @@ class SparseNoise(RandomGenerator):
             if ( N % n == 0): #When the noise grid falls neatly into the the pixel grid 
                 x = p.random_generator.randint(0, n)
                 y = p.random_generator.randint(0, n)
-                z = p.random_generator.randint(0,2) - 0.5
-                z = int( z / 0.5 )  
+                z = p.random_generator.randint(0,2) 
                 
                 
                # Noise matrix is mapped to the pixel matrix (faster method)       
-                A[x*ps: (x*ps + ps), y*ps: (y*ps + ps)] = A[x*ps: (x*ps + ps), y*ps: (y*ps + ps)] + z  
+                A[x*ps: (x*ps + ps), y*ps: (y*ps + ps)] = z  
                 
                 return A * p.scale + p.offset
                     
@@ -309,11 +296,10 @@ class SparseNoise(RandomGenerator):
                 division = side_length / n
             
                 # Construct the noise matrix 
-                Z = np.zeros((n,n))
+                Z = np.ones((n,n)) * 0.5
                 x = p.random_generator.randint(0, n)
                 y = p.random_generator.randint(0, n)
-                z = p.random_generator.randint(0,2) - 0.5
-                z = int( z / 0.5 )   
+                z = p.random_generator.randint(0,2) 
                 Z[x,y] = z
                 
                 # Noise matrix is mapped to the pixel matrix   
@@ -343,7 +329,7 @@ class UniformRandomInt(RandomGenerator):
     """
     2D distribution of integer values from low to high in the in the
     half-open interval [`low`, `high`). 
-    
+
     Matches semantics of numpy.random.randint.
     """
 
