@@ -25,6 +25,8 @@ from dataviews import TableView, TableStack
 from dataviews import GridLayout, CoordinateGrid, DataGrid
 from dataviews.sheetcoords import BoundingBox
 
+from dataviews.styles import Styles, Style, Cycle
+
 from imagen import wrap
 
 
@@ -148,7 +150,9 @@ class fft_power_spectrum(ViewOperation):
         density = sheetview.xdensity
         bb = BoundingBox(radius=(density/2)/(r-l))
 
-        return [SheetView(normalized_spectrum, bb, metadata=sheetview.metadata)]
+        return [SheetView(normalized_spectrum, bb,
+                          metadata=sheetview.metadata,
+                          label=sheetview.label+' FFT Power Spectrum')]
 
 
 
@@ -181,7 +185,8 @@ class gradient(ViewOperation):
             dy = 0.5 * cyclic_range - np.abs(dy - 0.5 * cyclic_range)
 
         return [SheetView(np.sqrt(dx*dx + dy*dy), sheetview.bounds,
-                         metadata=sheetview.metadata)]
+                          metadata=sheetview.metadata,
+                          label=sheetview.label+' Gradient')]
 
 
 
@@ -199,7 +204,8 @@ class autocorrelation(ViewOperation):
         data = sheetview.data
         autocorr_data = scipy.signal.correlate2d(data, data)
         return [SheetView(autocorr_data, sheetview.bounds,
-                         metadata=sheetview.metadata)]
+                         metadata=sheetview.metadata,
+                          label=sheetview.label+' AutoCorrelation')]
 
 
 
@@ -215,17 +221,7 @@ class contours(ViewOperation):
     levels = param.NumericTuple(default=(0.5,), doc="""
          A list of scalar values used to specify the contour levels.""")
 
-    colors = param.List(default=[], doc="""
-         If not empty, this is a list of color strings to associate
-         with each contour level. This list must have the same length
-         as the levels parameter.""")
-
     def _process(self, sheetview):
-
-        if self.p.colors and len(self.p.colors) != len(self.p.levels):
-            raise Exception("List of colors must match number of levels.")
-
-        colors = self.p.colors if self.p.colors else [None] * len(self.p.levels)
 
         figure_handle = plt.figure()
         (l,b,r,t) = sheetview.bounds.lbrt()
@@ -234,14 +230,13 @@ class contours(ViewOperation):
                                   levels=self.p.levels)
 
         sheetlines = []
-        for col, level, cset in zip(colors, self.p.levels, contour_set.collections):
+        for level, cset in zip(self.p.levels, contour_set.collections):
             paths = cset.get_paths()
             lines = [path.vertices for path in paths]
             sheetline = SheetLines(lines,
                                    sheetview.bounds,
-                                   metadata={'level':level})
-            if col is not None:
-                sheetline.style['color']=col
+                                   metadata={'level':level},
+                                   label=sheetview.label+' Contours')
             sheetlines.append(sheetline)
 
         plt.close(figure_handle)
@@ -249,7 +244,8 @@ class contours(ViewOperation):
         if len(sheetlines) == 1:
             return [(sheetview * sheetlines[0])]
         else:
-            return [sheetview * SheetOverlay(sheetlines, sheetview.bounds)]
+            return [sheetview * SheetOverlay(sheetlines,
+                                             sheetview.bounds)]
 
 
 class cyclic_similarity_index(ViewOperation):
@@ -272,7 +268,7 @@ class cyclic_similarity_index(ViewOperation):
         if len(overlay) != 2:
              raise Exception("The similarity index may only be computed using overlays of SheetViews.")
 
-        if  any(el.cyclic_range is None for el in overlay):
+        if any(el.cyclic_range is None for el in overlay):
              raise Exception("The SheetViews in each  overlay must have a defined cyclic range.")
 
         prefA_data = overlay[0].N.data
@@ -286,4 +282,12 @@ class cyclic_similarity_index(ViewOperation):
         # Subtracted from 1.0 as low difference => high stability
         # As this is made into a unit metric, uncorrelated has value zero.
         similarity = (2 * (similarity - 0.5)) if self.p.unit_range else similarity
-        return [SheetView(similarity, bounds=overlay.bounds)]
+        return [SheetView(similarity, bounds=overlay.bounds,
+                          label=overlay[0].label+' Cyclic Similarity')]
+
+
+Styles.Cyclic_Similarity    = Style(cmap='gray')
+Styles.AutoCorrelation      = Style(cmap='gray')
+Styles.Gradient             = Style(cmap='gray')
+Styles.FFT_Power_Spectrum   = Style(cmap='gray')
+Styles.Contours             = Style(color=Cycle(['b', 'g', 'r']))
