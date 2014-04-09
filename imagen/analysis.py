@@ -18,6 +18,7 @@ from matplotlib import pyplot as plt
 import param
 from param import ParamOverrides
 
+from dataviews import Overlay
 from dataviews import SheetView, SheetStack, SheetLayer, SheetLines, SheetOverlay
 from dataviews import DataLayer, DataStack, Stack
 from dataviews import TableView, TableStack
@@ -54,6 +55,21 @@ class ViewOperation(param.ParameterizedFunction):
         sequentially.
         """
         raise NotImplementedError
+
+    def get_views(self, view, pattern, view_type=SheetView):
+        """
+        Helper method that return a list of views with labels ending
+        with the given pattern and which have the specified type. This
+        may be useful to check is a single view satisfies some
+        condition or to extract the appropriate views from an Overlay.
+        """
+        if isinstance(view, Overlay):
+            matches = [v for v in view.data if v.label.endswith(pattern)]
+        elif isinstance(view, SheetView):
+            matches = [view] if view.label.endswith(pattern) else []
+
+        return [match for match in matches if isinstance(match, view_type)]
+
 
     def _get_signature(self, view_lists):
         """
