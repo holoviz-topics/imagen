@@ -14,6 +14,7 @@ from param.parameterized import ParamOverrides
 from dataviews import SheetView
 from dataviews.boundingregion import BoundingBox, BoundingRegionParameter
 from dataviews.sheetcoords import SheetCoordinateSystem
+from dataviews.styles import Styles, Style
 
 from transferfn import TransferFn
 
@@ -248,7 +249,8 @@ class PatternGenerator(param.Parameterized):
 
 
     def __getitem__(self, coords):
-        return SheetView(self(), self.bounds)[coords]
+        label = self.__class__.__name__+ ' Pattern'
+        return SheetView(self(), self.bounds, label=label)[coords]
 
 # Override class type; must be set here rather than when mask_shape is declared,
 # to avoid referring to class not yet constructed
@@ -281,3 +283,6 @@ class Constant(PatternGenerator):
             of(result)
 
         return result
+
+
+Styles.Pattern = Style(cmap='gray')
