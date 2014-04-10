@@ -25,7 +25,7 @@ from dataviews import TableView, TableStack
 from dataviews import GridLayout, CoordinateGrid, DataGrid
 from dataviews.sheetcoords import BoundingBox
 
-from dataviews.styles import Styles, Style, Cycle
+from dataviews.styles import Styles, Style, Cycle, GrayNearest
 
 from imagen import wrap
 
@@ -286,8 +286,8 @@ class cyclic_similarity_index(ViewOperation):
                           label=overlay[0].label+' Cyclic Similarity')]
 
 
-Styles.Cyclic_Similarity    = Style(cmap='gray')
-Styles.AutoCorrelation      = Style(cmap='gray')
-Styles.Gradient             = Style(cmap='gray')
-Styles.FFT_Power_Spectrum   = Style(cmap='gray')
+Styles.Cyclic_Similarity    = GrayNearest
+Styles.AutoCorrelation      = GrayNearest
+Styles.Gradient             = GrayNearest
+Styles.FFT_Power_Spectrum   = GrayNearest
 Styles.Contours             = Style(color=Cycle(['b', 'g', 'r']))
