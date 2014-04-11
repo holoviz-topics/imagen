@@ -742,9 +742,7 @@ class Animation(SheetStack):
 
     def __init__(self, initial_items=None, **kwargs):
         super(Animation, self).__init__(initial_items, **kwargs)
-        if self.keys() and self.frames:
-            raise Exception("Initial items can only be used if frames is set to None.")
-        elif self.frames:
+        if (initial_items is None) and self.frames:
             self.pattern.state_push()
             with self.time_fn as t:
                 t(self.offset)
