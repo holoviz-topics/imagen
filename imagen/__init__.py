@@ -734,7 +734,7 @@ class Animation(SheetStack):
        must be an integer multiple of this timestep value (which may
        be a float or some other numeric type).""" )
 
-    dimensions = param.List(default=['Time'], constant=True, doc="""
+    dimensions = param.List(default=['frames'], constant=True, doc="""
        Animations are indexed by time. This may be by integer frame
        number or some continuous (e.g. floating point or rational)
        representation of time.""")
