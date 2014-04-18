@@ -121,6 +121,8 @@ class DenseNoise(RandomGenerator):
     
     grid_size = param.Integer(default=10, bounds=(1,None), doc="""
     In a 10 x 10 grid this will be 10.""")
+    grid_density = param.Float(default=1, bounds(None,None), doc="""
+    Grid elements per unit """)
 
     def _distrib(self, shape, p):
         
@@ -128,6 +130,12 @@ class DenseNoise(RandomGenerator):
         assert (p.grid_size <= shape[0])," Size of the grid  must be smaller than the number of pixels"
         
         N = shape[0] # Size of the pixel matrix 
+        
+        SC = SheetCoordinateSystem(p.bounds, p.xdensity, p.ydensity)
+        unitary_distance = SC._SheetCoordinateSystem__xstep
+        side_length = round(unitary_distance * N)
+        
+        
         n = p.grid_size #Size of the grid spots 
         ps = int(round(N / n)) #Closest integer 
         
@@ -156,13 +164,13 @@ class DenseNoise(RandomGenerator):
         # fall neatly in the pixels grid      
         else:
         
-            SC = SheetCoordinateSystem(p.bounds, p.xdensity, p.ydensity)
+            
             x_points,y_points = SC.sheetcoordinates_of_matrixidx()
             
             # Obtain length of the side and length of the
             # division line between the grid 
-            unitary_distance = x_points[1] - x_points[0]
-            side_length = round(unitary_distance * N)
+            #unitary_distance = x_points[1] - x_points[0]
+            
             division = side_length / n
             
             # This is the actual matrix of the pixels 
