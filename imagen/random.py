@@ -82,24 +82,24 @@ class DenseNoise(RandomGenerator):
     ---
     Examples 
     ---
-    DenseNoise(grid_size = 2, bounds = BoundingBox(radius = 1),
+    DenseNoise(grid_density = 1, bounds = BoundingBox(radius = 1),
     xdensity = 4, ydensity = 4)  will produce something like this:
      
     [[ 0.  0.  0.  0.  1.  1.  1.  1.]
-    [ 0.  0.  0.  0.  1.  1.  1.  1.]
-    [ 0.  0.  0.  0.  1.  1.  1.  1.]   Where grid_size = 2 indicates that the matrix
+    [ 0.  0.  0.  0.  1.  1.  1.  1.]   Here there are two units per side and therefore
+    [ 0.  0.  0.  0.  1.  1.  1.  1.]   grid_density = 1 indicates that the matrix
     [ 0.  0.  0.  0.  1.  1.  1.  1.]   will be divided in 2 * 2 boxes 
     [ 1.  1.  1.  1.  0.  0.  0.  0.]
     [ 1.  1.  1.  1.  0.  0.  0.  0.]
     [ 1.  1.  1.  1.  0.  0.  0.  0.]
     [ 1.  1.  1.  1.  0.  0.  0.  0.]]
     
-    DenseNoise(grid_size = 4, bounds = BoundingBox(radius = 1),
+    DenseNoise(grid_density = 2, bounds = BoundingBox(radius = 1),
     xdensity = 4, ydensity = 4) on the other hand will produce:
     
     [[ 1.   1.   0.   0.   0.   0.   0.5  0.5]
-    [ 1.   1.   0.   0.   0.   0.   0.5  0.5]
-    [ 1.   1.   1.   1.   0.   0.   0.   0. ] Where grid_size = 4 indicates that 
+    [ 1.   1.   0.   0.   0.   0.   0.5  0.5] Here again there are two units per side and therefore
+    [ 1.   1.   1.   1.   0.   0.   0.   0. ] grind_density = 2 indicates that 
     [ 1.   1.   1.   1.   0.   0.   0.   0. ] the matrix will be divided in 4 * 4 boxes 
     [ 0.   0.   0.5  0.5  1.   1.   1.   1. ]
     [ 0.   0.   0.5  0.5  1.   1.   1.   1. ]
@@ -109,48 +109,45 @@ class DenseNoise(RandomGenerator):
     ---
     Notes 
     ---
-    1 ) This method works much faster when the size of the matrix of pixels 
-    is proportional to the grid_size  shape[0] % grid_size == 0 ( ~ 100 times faster)
-    
-    2 ) This method only works for square pixels matrix shape[0] == shape[1]
-    
-    3 ) In case that the a pixel has an intersection with two or more squares from the noise
+    1 ) This method works much faster when the noise matrix falls neatly
+    into the pixel matrix ( ~ 100 times faster)
+       
+    2 ) In case that the a pixel has an intersection with two or more squares from the noise
     grid, the allocating of the value is done by taking into account where the center
     of the pixels lies
+    
+    3) If a particular number of cells N is wanted it is necessary to divide it by the length of 
+    the side of the bounding box. 
+    
+    For example if the user wnats to have N = 10 cells and  the following bounding box is used 
+    BoundingBox(radius = 1) the density must be set to N / 2 = 5 in order to have ten cells. 
+    
+    Note that the x-density and y-density must be both bigger than 5 in order for this work
     """
     
-    grid_size = param.Integer(default=10, bounds=(1,None), doc="""
-    In a 10 x 10 grid this will be 10.""")
     grid_density = param.Number(default=1, bounds=(None,None), doc="""
     Grid elements per unit """)
 
-    def _distrib(self, shape, p):
-        print shape
-        #assert (shape[0] == shape[1])," This method only works for square matrices"
-        assert (p.grid_size <= shape[0])," Size of the grid  must be smaller than the number of pixels"
-      
+    def _distrib(self, shape, p):               
+        assert ( p.grid_density <= p.xdensity ), 'grid density bigger than pixel density x'
+        assert ( p.grid_density <= p.ydensity),  'grid density bigger than pixel density y'
+        
         Nx = shape[1]  
         Ny = shape[0] # Size of the pixel matrix 
       
-        
         SC = SheetCoordinateSystem(p.bounds, p.xdensity, p.ydensity)
         unitary_distance_x = SC._SheetCoordinateSystem__xstep
-        print 'unitary distance x', unitary_distance_x
         unitary_distance_y = SC._SheetCoordinateSystem__ystep
-        print 'unitary distance y', unitary_distance_y
         
         sheet_x_size = round(unitary_distance_x * Nx)
         sheet_y_size = round(unitary_distance_y * Ny)
         
-        print 'sheet sizes x and y', sheet_x_size, sheet_y_size
         # Sizes of the structure matrix 
         nx = int(sheet_x_size * p.grid_density)
         ny = int(sheet_y_size * p.grid_density)
-        print 'nx and ny', nx, ny
         
         ps_x = int(round(Nx / nx)) #Closest integer 
         ps_y = int(round(Ny / ny))
-        print 'ps x and y', ps_x, ps_y
         
         # If the noise grid is proportional to the pixel grid 
         # and fits neatly into it then this method is faster (~100 times faster)
@@ -164,8 +161,8 @@ class DenseNoise(RandomGenerator):
                 # This is the actual matrix of the pixels 
                 A = np.zeros(shape)    
                 # Noise matrix that contains the structure of 0, 0.5 and 1's  
-                Z = 0.5 * (p.random_generator.randint(-1, 2, (nx, ny)) + 1 )
-                print Z                
+                Z = 0.5 * (p.random_generator.randint(-1, 2, (nx, ny)) + 1 )               
+                
                 # Noise matrix is mapped to the pixel matrix   
                 for i in range(nx):
                     for j in range(ny): 
@@ -176,10 +173,8 @@ class DenseNoise(RandomGenerator):
         # General method in case the noise grid does not 
         # fall neatly in the pixels grid      
         else:
-        
-            
+                  
             x_points,y_points = SC.sheetcoordinates_of_matrixidx()
-            print 'points', x_points, y_points
             
             # Obtain length of the side and length of the
             # division line between the grid 
@@ -188,14 +183,11 @@ class DenseNoise(RandomGenerator):
             division_x = sheet_x_size / nx
             division_y = sheet_y_size / ny
             
-            print Nx, x_points.shape
-            print Ny, y_points.shape
-             
             # This is the actual matrix of the pixels 
             A = np.zeros(shape)
             # Noise matrix that contains the structure of 0, 0.5 and 1's  
             Z = 0.5 * (p.random_generator.randint(-1, 2, (nx, ny)) + 1 )
-            print Z 
+            
             # Noise matrix is mapped to the pixel matrix   
             for i in range(Nx):
                 for j in range(Ny):
@@ -206,7 +198,7 @@ class DenseNoise(RandomGenerator):
                     aux2 = y_points[-(j+1)] + (sheet_y_size  / 2)
                     outcome2 = int(aux2 / division_y)
                     # Assign 
-                    A[i][j] = Z[outcome1][outcome2]
+                    A[j][i] = Z[outcome2][outcome1]
             
             return A * p.scale + p.offset
 
