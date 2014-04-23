@@ -178,7 +178,6 @@ class DenseNoise(RandomGenerator):
             
             # Obtain length of the side and length of the
             # division line between the grid 
-            #unitary_distance = x_points[1] - x_points[0]
             
             division_x = sheet_x_size / nx
             division_y = sheet_y_size / ny
@@ -213,19 +212,16 @@ class SparseNoise(RandomGenerator):
     
      0 -> offset 
      1 -> offset + scale 
-     
-     if grid_size > 1 then instead of entries spots or boxes of size grid_size 
-     with -1 or 1 will be mapped to the full matrix 
-          
+                  
     ---
     Example 
     ---
     
-    SparseNoise(grid_size = 2, grid = True, bounds = BoundingBox(radius = 1),
+    SparseNoise(grid_density = 1, grid = True, bounds = BoundingBox(radius = 1),
     xdensity = 4, ydensity = 4) will produce something like this
    
-    [[ 0.5  0.5  0.5  0.5  0.0  0.0  0.0  0.0]
-     [ 0.5  0.5  0.5  0.5  0.0  0.0  0.0  0.0] < -- Where grid_size = 2 indicates that the 
+    [[ 0.5  0.5  0.5  0.5  0.0  0.0  0.0  0.0]      Here there are two units per side, and therefore
+     [ 0.5  0.5  0.5  0.5  0.0  0.0  0.0  0.0] < -- grid_density = 1 indicates that the 
      [ 0.5  0.5  0.5  0.5  0.0  0.0  0.0  0.0]      matrix will be divided in 2 * 2 boxes 
      [ 0.5  0.5  0.5  0.5  0 0  0.0  0.0  0.0]
      [ 0.5  0.5  0.5  0.5  0.5  0.5  0.5  0.5]
@@ -233,14 +229,14 @@ class SparseNoise(RandomGenerator):
      [ 0.5  0.5  0.5  0.5  0.5  0.5  0.5  0.5]
      [ 0.5  0.5  0.5  0.5  0.5  0.5  0.5  0.5]]    
      
-    SparseNoise(grid_size = 4, grid = True, bounds = BoundingBox(radius = 1) ,
+    SparseNoise(grid_density = 2, grid = True, bounds = BoundingBox(radius = 1) ,
     xdensity = 4, ydensity = 4) on the other hand will produce:
      
    [[ 0.5  0.5  0.  0.  0.  0.  0.  0.]
     [ 0.5  0.5  0.  0.  0.  0.  0.  0.]
     [ 0.5  0.5  0.  0.  0.  0.  0.  0.]
-    [ 0.5  0.5  0.  0.  0.  0.  0.  0.]
-    [ 0.5  0.5  0.  0.  0.  0.  1.  1.] < --- Where grid_size = 4 indicates that the 
+    [ 0.5  0.5  0.  0.  0.  0.  0.  0.]       Here there are two units per side and therefore
+    [ 0.5  0.5  0.  0.  0.  0.  1.  1.] < --- grid_density = 2 indicates that the 
     [ 0.5  0.5  0.  0.  0.  0.  1.  1.]       matrix will be divided in 4 * 4 boxes  
     [ 0.5  0.5  0.  0.  0.  0.  0.  0.]
     [ 0.5  0.5  0.  0.  0.  0.  0.  0.]]
@@ -248,89 +244,113 @@ class SparseNoise(RandomGenerator):
     ---
     Notes 
     ---
-    1 ) This method works much faster when the size of the matrix of pixels 
-    is proportional to the grid_size  shape[0] % grid_size == 0 (~ 100 times faster)
     
-    2 ) This method only works for square pixels matrix shape[0] = shape[1]
-    
-    3 ) In case that the a pixel has an intersection with two or more squares from the noise
+    1 ) This method works much faster when the noise matrix falls neatly
+    into the pixel matrix ( ~ 100 times faster)
+       
+    2 ) In case that the a pixel has an intersection with two or more squares from the noise
     grid, the allocating of the value is done by taking into account where the center
     of the pixels lies
+    
+    3) If a particular number of cells N is wanted it is necessary to divide it by the length of 
+    the side of the bounding box. 
+    
+    For example if the user wnats to have N = 10 cells and  the following bounding box is used 
+    BoundingBox(radius = 1) the density must be set to N / 2 = 5 in order to have ten cells. 
+    
+    Note that the x-density and y-density must be both bigger than 5 in order for this work
+    
     '''
     
-    grid_size = param.Integer(default=10, bounds=(1,None), doc="""
-    In a 10 x 10 grid this will be 10.""")
-    
+  
+    grid_density = param.Number(default=1, bounds=(None,None), doc="""
+    Grid elements per unit """)
+   
     grid = param.Boolean(default = True, doc=""" 
     True - Forces the spots to appear in a grid
     False - The patterns can appear randomly anywhere d""")
 
     
     def _distrib(self, shape, p):
+        assert ( p.grid_density <= p.xdensity ), 'grid density bigger than pixel density x'
+        assert ( p.grid_density <= p.ydensity),  'grid density bigger than pixel density y'
         
-        assert (shape[0] == shape[1])," This method only works for square matrices"
-        assert (p.grid_size <= shape[0])," Size of the grid  must be smaller than the number of pixels"               
+        Nx = shape[1]  
+        Ny = shape[0] # Size of the pixel matrix 
+      
+        SC = SheetCoordinateSystem(p.bounds, p.xdensity, p.ydensity)
+        unitary_distance_x = SC._SheetCoordinateSystem__xstep
+        unitary_distance_y = SC._SheetCoordinateSystem__ystep
         
-        N = shape[0] #Size of the pixel matrix
-        n = p.grid_size #Size of the grid spots  
-        ps = int(round( N / n )) #Closest integer 
+        sheet_x_size = round(unitary_distance_x * Nx)
+        sheet_y_size = round(unitary_distance_y * Ny)
+        
+        # Sizes of the structure matrix 
+        nx = int(sheet_x_size * p.grid_density)
+        ny = int(sheet_y_size * p.grid_density)
+        
+        ps_x = int(round(Nx / nx)) #Closest integer 
+        ps_y = int(round(Ny / ny))
+        
+        
       
         # This is the actual matrix of the pixels 
         A = np.ones(shape) * 0.5   
            
         if p.grid == False:  #The centers of the spots are randomly distributed in space 
                         
-            x = p.random_generator.randint(0, N - ps + 1)
-            y = p.random_generator.randint(0, N - ps + 1)
+            x = p.random_generator.randint(0, Nx - ps_x + 1)
+            y = p.random_generator.randint(0, Ny - ps_y + 1)
             z = p.random_generator.randint(0,2) 
                         
             # Noise matrix is mapped to the pixel matrix   
-            A[x: (x + ps), y: (y + ps)] =  z   
+            A[x: (x + ps_y), y: (y + ps_x)] =  z   
            
             return A * p.scale + p.offset
         
         else: #In case you want the grid
             
-            if ( N % n == 0): #When the noise grid falls neatly into the the pixel grid 
-                x = p.random_generator.randint(0, n)
-                y = p.random_generator.randint(0, n)
+            if  ( Nx % nx == 0) and (Ny % ny == 0): #When the noise grid falls neatly into the the pixel grid 
+                x = p.random_generator.randint(0, nx)
+                y = p.random_generator.randint(0, ny)
                 z = p.random_generator.randint(0,2) 
                 
-                
                # Noise matrix is mapped to the pixel matrix (faster method)       
-                A[x*ps: (x*ps + ps), y*ps: (y*ps + ps)] = z  
+                A[x*ps_y: (x*ps_y + ps_y), y*ps_x: (y*ps_x + ps_x)] = z  
                 
                 return A * p.scale + p.offset
                     
             else: # If noise grid does not fit neatly in the pixel grid (slow method)
-               
-                SC = SheetCoordinateSystem(p.bounds, p.xdensity, p.ydensity)
+                
                 x_points,y_points = SC.sheetcoordinates_of_matrixidx()
                 
                 # Obtain length of the side and length of the
                 # division line between the grid 
-                unitary_distance = x_points[1] - x_points[0]
-                side_length = round( unitary_distance * N)
-                division = side_length / n
+                
+                division_x = sheet_x_size / nx
+                division_y = sheet_y_size / ny
+            
             
                 # Construct the noise matrix 
-                Z = np.ones((n,n)) * 0.5
-                x = p.random_generator.randint(0, n)
-                y = p.random_generator.randint(0, n)
+                Z = np.ones((nx,ny)) * 0.5
+                x = p.random_generator.randint(0, nx)
+                y = p.random_generator.randint(0, ny)
                 z = p.random_generator.randint(0,2) 
                 Z[x,y] = z
                 
+                print Z
+                
                 # Noise matrix is mapped to the pixel matrix   
-                for i in range(N):
-                    for j in range(N):
+                for i in range(Nx):
+                    for j in range(Ny):
                         # Map along the x coordinates 
-                        aux1 = x_points[i] + (side_length / 2)
-                        outcome1 = int(aux1 / division)
+                        aux1 = x_points[i] + (sheet_x_size / 2)
+                        outcome1 = int(aux1 / division_x)
                         # Map along the y coordinates
-                        aux2 = y_points[-(j+1)] + (side_length / 2)
-                        outcome2 = int(aux2 / division)
+                        aux2 = y_points[-(j+1)] + (sheet_y_size / 2)
+                        outcome2 = int(aux2 / division_y)
                         # Assign 
-                        A[i][j] = Z[outcome1][outcome2]
+                        A[j][i] = Z[outcome2][outcome1]
                 
                 return A * p.scale + p.offset
         
