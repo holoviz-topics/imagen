@@ -19,7 +19,7 @@ import param
 from dataviews import SheetView, SheetLines, SheetOverlay
 from dataviews.sheetcoords import BoundingBox
 from dataviews.options import options, StyleOpts, Cycle, GrayNearest
-from dataviews.transform  import ViewOperation
+from dataviews.operation  import ViewOperation
 
 from imagen import wrap
 
