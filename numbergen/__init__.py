@@ -246,7 +246,10 @@ class RandomDistribution(NumberGenerator, TimeAware):
                          "random values conditional on object instantiation order.")
 
     def _hash_and_seed(self):
-        hashval = hash((self.name, self.time_fn(), param.random_seed))
+        time = self.time_fn()
+        if hasattr(time, 'numer'):
+            time = (int(time.numer()), int(time.denom()))
+        hashval = hash((self.name, time, param.random_seed))
         self.random_generator.seed(hashval)
 
 
