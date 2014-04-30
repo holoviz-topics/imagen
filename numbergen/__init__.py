@@ -249,6 +249,8 @@ class RandomDistribution(NumberGenerator, TimeAware):
         time = self.time_fn()
         if hasattr(time, 'numer'):
             time = (int(time.numer()), int(time.denom()))
+        elif not isinstance(time, int):
+            self.warning("Cannot generate known hash format for time type '%s'" % type(time).__name__)
         hashval = hash((self.name, time, param.random_seed))
         self.random_generator.seed(hashval)
 
