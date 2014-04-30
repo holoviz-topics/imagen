@@ -134,7 +134,7 @@ class contours(ViewOperation):
             lines = [path.vertices for path in paths]
             contours.append(Contours(lines, sheetview.bounds,
                             metadata={'level': level},
-                            label=sheetview.label+' Contours'))
+                            label=sheetview.label+' Level'))
 
         plt.close(figure_handle)
 
@@ -182,8 +182,8 @@ class cyclic_similarity_index(ViewOperation):
                           label=overlay[0].label+' Cyclic Similarity')]
 
 
-options.Cyclic_Similarity    = GrayNearest
-options.AutoCorrelation      = GrayNearest
-options.Gradient             = GrayNearest
-options.FFT_Power_Spectrum   = GrayNearest
-options.Contours             = StyleOpts(color=Cycle(['b', 'g', 'r']))
+options.CyclicSimilarity_SheetView    = GrayNearest
+options.AutoCorrelation_SheetView     = GrayNearest
+options.Gradient_SheetView            = GrayNearest
+options.FFTPowerSpectrum_SheetView    = GrayNearest
+options.Level_Contours                = StyleOpts(color=Cycle(['b', 'g', 'r']))
