@@ -14,7 +14,7 @@ from param.parameterized import ParamOverrides
 from dataviews import SheetView
 from dataviews.boundingregion import BoundingBox, BoundingRegionParameter
 from dataviews.sheetcoords import SheetCoordinateSystem
-from dataviews.options import options, GrayNearest
+from dataviews.options import options, StyleOpts
 
 from transferfn import TransferFn
 
@@ -285,4 +285,4 @@ class Constant(PatternGenerator):
         return result
 
 
-options.Pattern = GrayNearest
+options.Pattern_SheetView = StyleOpts(cmap='gray')
