@@ -4,3 +4,5 @@ include setup.py
 recursive-include imagen *.py
 recursive-include numbergen *.py
 
+include versioneer.py
+include imagen/_version.py

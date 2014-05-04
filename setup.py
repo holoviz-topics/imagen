@@ -3,6 +3,12 @@
 import sys
 from distutils.core import setup
 
+import versioneer
+versioneer.versionfile_source = 'imagen/_version.py'
+versioneer.versionfile_build = 'imagen/_version.py'
+versioneer.tag_prefix = '' 
+versioneer.parentdir_prefix = 'imagen-' 
+
 
 setup_args = {}
 
@@ -39,7 +45,8 @@ for package_list in packages_to_state:
 
 setup_args.update(dict(
     name='imagen',
-    version='1.0',
+    version=versioneer.get_version(),
+    cmdclass=versioneer.get_cmdclass(),
     description='Generic Python library for 0D, 1D, and 2D pattern distributions.',
     long_description=open('README.rst').read(),
     author= "IOAM",
