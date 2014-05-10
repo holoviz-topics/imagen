@@ -10,9 +10,6 @@ combined with the existing classes easily.
 
 from __future__ import with_statement
 
-__version__='$Revision$'
-
-
 import numpy
 from numpy.oldnumeric import around, bitwise_and, bitwise_or
 from numpy import abs, add, alltrue, array, ceil, clip, cos, fft, flipud, \
@@ -36,6 +33,30 @@ from patternfn import gaussian,exponential,gabor,line,disk,ring,\
 
 import numbergen
 from imagen.transferfn import DivisiveNormalizeL1
+
+
+# Set __version__ using versioneer.
+#
+# Encased in a try/except to guarantee this does not interfere with
+# using imagen.
+try:
+    from ._version import get_versions
+    __version__ = get_versions()['version']
+    del get_versions
+    if __version__=='unknown': 
+        # Think 'unknown' is what versioneer returns if unable to
+        # determine version info
+        raise ValueError       
+except:
+    main.warning("""\
+Unable to determine the version of this copy of imagen.
+
+For an official release, the version is stored in imagen/_version.py.
+
+For a development copy, the version information is requested from Git
+by imagen/_version.py.
+""")
+    __version__ = 'unknown'
 
 
 # Could add a Gradient class, where the brightness varies as a
