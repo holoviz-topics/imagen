@@ -1,0 +1,209 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>imagen.analysis &mdash; ImaGen 1.0-dev documentation</title>
+    
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0-dev',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/custom.js"></script>
+    <link rel="top" title="ImaGen 1.0-dev documentation" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+
+<li><a href="../index.html">ImaGen Home</a></li>
+<li><a href="../Tutorials/index.html">Tutorials</a></li>
+<li><a href="imagen-module.html">Reference Manual</a></li>
+
+
+
+
+
+
+
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="imagen-analysis">
+<h1>imagen.analysis<a class="headerlink" href="#imagen-analysis" title="Permalink to this headline">¶</a></h1>
+<p class="graphviz">
+<img src="../_images/inheritance-466c0e0ef3c13091114fcebbc45c400c5e045059.png" alt="Inheritance diagram of imagen.analysis" usemap="#inheritance75655fcdea" class="inheritance"/>
+<map id="inheritance75655fcdea" name="inheritance75655fcdea">
+<area shape="rect" id="node1" title="A ViewOperation takes one or more views as inputs and processes" alt="" coords="416,50,568,67"/>
+<area shape="rect" id="node4" href="#imagen.analysis.autocorrelation" title="Compute the 2D autocorrelation of the supplied data. Requires the" alt="" coords="611,3,752,20"/>
+<area shape="rect" id="node6" href="#imagen.analysis.cyclic_similarity_index" title="The similarity index between any two cyclic maps. By default, a" alt="" coords="599,34,764,52"/>
+<area shape="rect" id="node8" href="#imagen.analysis.fft_power_spectrum" title="Compute the 2D Fast Fourier Transform (FFT) of the supplied sheet view." alt="" coords="603,66,760,83"/>
+<area shape="rect" id="node10" href="#imagen.analysis.gradient" title="Compute the gradient plot of the supplied SheetView or SheetStack." alt="" coords="625,97,738,114"/>
+<area shape="rect" id="node2" title="Acts like a Python function, but with arguments that are Parameters." alt="" coords="193,50,386,67"/>
+<area shape="rect" id="node12" title="Base class for named objects that support Parameters and message" alt="" coords="3,50,163,67"/>
+</map>
+</p>
+<div class="section" id="module-imagen.analysis">
+<span id="module"></span><h2>Module<a class="headerlink" href="#module-imagen.analysis" title="Permalink to this headline">¶</a></h2>
+<p>The ImaGen analysis module provides common analysis functions, which
+can be applied to any SheetView or SheetStack. This allows the user to
+perform analyses on their input patterns or any other arrays embedded
+within a SheetView and display the output of the analysis alongside
+the original patterns.</p>
+<p>Currently this module provides FFT, auto-correlation and gradient
+analyses.</p>
+<dl class="class">
+<dt id="imagen.analysis.autocorrelation">
+<em class="property">class </em><tt class="descclassname">imagen.analysis.</tt><tt class="descname">autocorrelation</tt><big>(</big><em>**params</em><big>)</big><a class="reference internal" href="../_modules/imagen/analysis.html#autocorrelation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagen.analysis.autocorrelation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="http://ioam.github.io/dataviews/Reference_Manual/dataviews.operation-module.html#dataviews.operation.ViewOperation" title="(in DataViews v2014.05.14)"><tt class="xref py py-class docutils literal"><span class="pre">dataviews.operation.ViewOperation</span></tt></a></p>
+<p>Compute the 2D autocorrelation of the supplied data. Requires the
+external SciPy package.</p>
+<p>Example::
+autocorrelation(topo.sim.V1.views.maps.OrientationPreference)</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="imagen.analysis.cyclic_similarity_index">
+<em class="property">class </em><tt class="descclassname">imagen.analysis.</tt><tt class="descname">cyclic_similarity_index</tt><big>(</big><em>**params</em><big>)</big><a class="reference internal" href="../_modules/imagen/analysis.html#cyclic_similarity_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagen.analysis.cyclic_similarity_index" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="http://ioam.github.io/dataviews/Reference_Manual/dataviews.operation-module.html#dataviews.operation.ViewOperation" title="(in DataViews v2014.05.14)"><tt class="xref py py-class docutils literal"><span class="pre">dataviews.operation.ViewOperation</span></tt></a></p>
+<p>The similarity index between any two cyclic maps. By default, a
+zero value indicates uncorrelated SheetView data. The similarity
+index may be useful for quantifying the stability of some cyclic
+quantity over time by comparing each sample in a SheetStack to the
+final SheetView element.</p>
+<dl class="docutils">
+<dt><em>param Boolean</em> <tt class="docutils literal"><span class="pre">unit_range</span></tt> (<em>allow_None=False, bounds=(0, 1), constant=False, default=True, instantiate=False, pickle_default_value=True, precedence=None, readonly=False</em>)</dt>
+<dd>Whether to scale the similarity values linearly so that
+        uncorrelated values have a value of zero and exactly matching
+        elements are indicated with a value of 1.0. Negative values
+        are then used to indicate anticorrelation.</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="imagen.analysis.fft_power_spectrum">
+<em class="property">class </em><tt class="descclassname">imagen.analysis.</tt><tt class="descname">fft_power_spectrum</tt><big>(</big><em>**params</em><big>)</big><a class="reference internal" href="../_modules/imagen/analysis.html#fft_power_spectrum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagen.analysis.fft_power_spectrum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="http://ioam.github.io/dataviews/Reference_Manual/dataviews.operation-module.html#dataviews.operation.ViewOperation" title="(in DataViews v2014.05.14)"><tt class="xref py py-class docutils literal"><span class="pre">dataviews.operation.ViewOperation</span></tt></a></p>
+<p>Compute the 2D Fast Fourier Transform (FFT) of the supplied sheet view.</p>
+<p>Example::
+fft_power_spectrum(topo.sim.V1.views.maps.OrientationPreference)</p>
+<p><em>param Number</em> <tt class="docutils literal"><span class="pre">peak_val</span></tt> (<em>allow_None=False, bounds=None, constant=False, default=1.0, inclusive_bounds=(True, True), instantiate=False, pickle_default_value=True, precedence=None, readonly=False, time_dependent=False, time_fn=&lt;Time Time00001&gt;</em>)</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="imagen.analysis.gradient">
+<em class="property">class </em><tt class="descclassname">imagen.analysis.</tt><tt class="descname">gradient</tt><big>(</big><em>**params</em><big>)</big><a class="reference internal" href="../_modules/imagen/analysis.html#gradient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagen.analysis.gradient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="http://ioam.github.io/dataviews/Reference_Manual/dataviews.operation-module.html#dataviews.operation.ViewOperation" title="(in DataViews v2014.05.14)"><tt class="xref py py-class docutils literal"><span class="pre">dataviews.operation.ViewOperation</span></tt></a></p>
+<p>Compute the gradient plot of the supplied SheetView or SheetStack.
+Translated from Octave code originally written by Yoonsuck Choe.</p>
+<p>If the SheetView has a cyclic_range, negative differences will be
+wrapped into the range.</p>
+<p>Example:: gradient(topo.sim.V1.views.maps.OrientationPreference)</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div align="center"><h1>ImaGen</h1></div>
+<ul class="global-toc">
+
+<li><a href="../index.html">Home</a></li>
+<li><a href="../Tutorials/index.html">Tutorials</a></li>
+<li><a href="imagen-module.html">Reference Manual</a></li>
+<li><a href="http://github.com/ioam/imagen">Github Source Code</a></li>
+<li><a href="../site_map.html">Site Map</a></li>
+</ul>
+<h3><a href="../index.html">Table Of Contents</a></h3>
+
+<ul>
+<li><a class="reference internal" href="#">imagen.analysis</a><ul>
+<li><a class="reference internal" href="#module-imagen.analysis">Module</a></li>
+</ul>
+</li>
+</ul>
+
+
+<h3>This Page</h3>
+<ul class="this-page-menu">
+	<li><a	href="https://github.com/ioam/imagen/edit/master/doc/Reference_Manual/imagen.analysis-module.rst" rel="nofollow">Edit on GitHub</a></li>
+</ul>
+
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+
+<li><a href="../index.html">ImaGen Home</a></li>
+<li><a href="../Tutorials/index.html">Tutorials</a></li>
+<li><a href="imagen-module.html">Reference Manual</a></li>
+
+
+
+
+
+
+
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, IOAM.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

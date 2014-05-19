@@ -1,0 +1,345 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>imagen.transferfn &mdash; ImaGen 1.0-dev documentation</title>
+    
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0-dev',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/custom.js"></script>
+    <link rel="top" title="ImaGen 1.0-dev documentation" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+
+<li><a href="../index.html">ImaGen Home</a></li>
+<li><a href="../Tutorials/index.html">Tutorials</a></li>
+<li><a href="imagen-module.html">Reference Manual</a></li>
+
+
+
+
+
+
+
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="imagen-transferfn">
+<h1>imagen.transferfn<a class="headerlink" href="#imagen-transferfn" title="Permalink to this headline">¶</a></h1>
+<p class="graphviz">
+<img src="../_images/inheritance-bf8287611d0e3862828a5384ff0df4a040e4fbbc.png" alt="Inheritance diagram of imagen.transferfn" usemap="#inheritancea9586fb404" class="inheritance"/>
+<map id="inheritancea9586fb404" name="inheritancea9586fb404">
+<area shape="rect" id="node1" href="#imagen.transferfn.BinaryThreshold" title="Forces all values below a threshold to zero, and above it to 1.0." alt="" coords="528,4,749,30"/>
+<area shape="rect" id="node2" href="#imagen.transferfn.TransferFn" title="Function object to modify a matrix in place, e.g. for normalization." alt="" coords="283,165,470,191"/>
+<area shape="rect" id="node4" href="#imagen.transferfn.DivisiveNormalizeL1" title="TransferFn that divides an array by its L1 norm." alt="" coords="517,50,760,76"/>
+<area shape="rect" id="node6" href="#imagen.transferfn.DivisiveNormalizeL2" title="TransferFn to divide an array by its Euclidean length (aka its L2 norm)." alt="" coords="517,96,760,122"/>
+<area shape="rect" id="node8" href="#imagen.transferfn.DivisiveNormalizeLinf" title="TransferFn to divide an array by its L&#45;infinity norm" alt="" coords="514,142,763,168"/>
+<area shape="rect" id="node10" href="#imagen.transferfn.DivisiveNormalizeLp" title="TransferFn to divide an array by its Lp&#45;Norm, where p is specified." alt="" coords="517,188,760,214"/>
+<area shape="rect" id="node12" href="#imagen.transferfn.IdentityTF" title="Identity function, returning its argument as&#45;is." alt="" coords="548,234,729,260"/>
+<area shape="rect" id="node14" href="#imagen.transferfn.Scale" title="Multiply the input array by some constant factor." alt="" coords="560,280,717,306"/>
+<area shape="rect" id="node16" href="#imagen.transferfn.Threshold" title="Forces all values below a threshold to zero, and leaves others unchanged." alt="" coords="546,326,730,352"/>
+<area shape="rect" id="node18" title="Base class for named objects that support Parameters and message" alt="" coords="5,165,240,191"/>
+</map>
+</p>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><a class="reference external" href="imagen.transferfn.sheet_tf-module.html">imagen.transferfn.sheet_tf</a></li>
+</ul>
+</div>
+<div class="section" id="module-imagen.transferfn">
+<span id="module"></span><h2>Module<a class="headerlink" href="#module-imagen.transferfn" title="Permalink to this headline">¶</a></h2>
+<p>TransferFns: accept and modify a 2d array</p>
+<dl class="class">
+<dt id="imagen.transferfn.BinaryThreshold">
+<em class="property">class </em><tt class="descclassname">imagen.transferfn.</tt><tt class="descname">BinaryThreshold</tt><big>(</big><em>**params</em><big>)</big><a class="reference internal" href="../_modules/imagen/transferfn.html#BinaryThreshold"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagen.transferfn.BinaryThreshold" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#imagen.transferfn.TransferFn" title="imagen.transferfn.TransferFn"><tt class="xref py py-class docutils literal"><span class="pre">imagen.transferfn.TransferFn</span></tt></a></p>
+<p>Forces all values below a threshold to zero, and above it to 1.0.</p>
+<dl class="docutils">
+<dt><em>param Number</em> <tt class="docutils literal"><span class="pre">threshold</span></tt> (<em>allow_None=False, bounds=None, constant=False, default=0.25, inclusive_bounds=(True, True), instantiate=False, pickle_default_value=True, precedence=None, readonly=False, time_dependent=False, time_fn=&lt;Time Time00001&gt;</em>)</dt>
+<dd>Decision point for determining binary value.</dd>
+</dl>
+<p><em>param Parameter</em> <tt class="docutils literal"><span class="pre">norm_value</span></tt> (<em>constant=False, default=None, instantiate=False, pickle_default_value=True, precedence=None, readonly=False</em>)</p>
+<dl class="docutils">
+<dt><em>param List</em> <tt class="docutils literal"><span class="pre">init_keys</span></tt> (<em>bounds=(0, None), constant=True, default=[], instantiate=True, pickle_default_value=True, precedence=None, readonly=False</em>)</dt>
+<dd>List of item key labels for metadata that that must be
+        supplied to the initialize method before the TransferFn may be
+        used.</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="imagen.transferfn.DivisiveNormalizeL1">
+<em class="property">class </em><tt class="descclassname">imagen.transferfn.</tt><tt class="descname">DivisiveNormalizeL1</tt><big>(</big><em>**params</em><big>)</big><a class="reference internal" href="../_modules/imagen/transferfn.html#DivisiveNormalizeL1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#imagen.transferfn.TransferFn" title="imagen.transferfn.TransferFn"><tt class="xref py py-class docutils literal"><span class="pre">imagen.transferfn.TransferFn</span></tt></a></p>
+<p>TransferFn that divides an array by its L1 norm.</p>
+<p>This operation ensures that the sum of the absolute values of the
+array is equal to the specified norm_value, rescaling each value
+to make this true.  The array is unchanged if the sum of absolute
+values is zero.  For arrays of non-negative values where at least
+one is non-zero, this operation is equivalent to a divisive sum
+normalization.</p>
+<p><em>param Number</em> <tt class="docutils literal"><span class="pre">norm_value</span></tt> (<em>allow_None=False, bounds=None, constant=False, default=1.0, inclusive_bounds=(True, True), instantiate=False, pickle_default_value=True, precedence=None, readonly=False, time_dependent=False, time_fn=&lt;Time Time00001&gt;</em>)</p>
+<dl class="docutils">
+<dt><em>param List</em> <tt class="docutils literal"><span class="pre">init_keys</span></tt> (<em>bounds=(0, None), constant=True, default=[], instantiate=True, pickle_default_value=True, precedence=None, readonly=False</em>)</dt>
+<dd>List of item key labels for metadata that that must be
+        supplied to the initialize method before the TransferFn may be
+        used.</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="imagen.transferfn.DivisiveNormalizeL2">
+<em class="property">class </em><tt class="descclassname">imagen.transferfn.</tt><tt class="descname">DivisiveNormalizeL2</tt><big>(</big><em>**params</em><big>)</big><a class="reference internal" href="../_modules/imagen/transferfn.html#DivisiveNormalizeL2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#imagen.transferfn.TransferFn" title="imagen.transferfn.TransferFn"><tt class="xref py py-class docutils literal"><span class="pre">imagen.transferfn.TransferFn</span></tt></a></p>
+<p>TransferFn to divide an array by its Euclidean length (aka its L2 norm).</p>
+<p>For a given array interpreted as a flattened vector, keeps the
+Euclidean length of the vector at a specified norm_value.</p>
+<p><em>param Number</em> <tt class="docutils literal"><span class="pre">norm_value</span></tt> (<em>allow_None=False, bounds=None, constant=False, default=1.0, inclusive_bounds=(True, True), instantiate=False, pickle_default_value=True, precedence=None, readonly=False, time_dependent=False, time_fn=&lt;Time Time00001&gt;</em>)</p>
+<dl class="docutils">
+<dt><em>param List</em> <tt class="docutils literal"><span class="pre">init_keys</span></tt> (<em>bounds=(0, None), constant=True, default=[], instantiate=True, pickle_default_value=True, precedence=None, readonly=False</em>)</dt>
+<dd>List of item key labels for metadata that that must be
+        supplied to the initialize method before the TransferFn may be
+        used.</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="imagen.transferfn.DivisiveNormalizeLinf">
+<em class="property">class </em><tt class="descclassname">imagen.transferfn.</tt><tt class="descname">DivisiveNormalizeLinf</tt><big>(</big><em>**params</em><big>)</big><a class="reference internal" href="../_modules/imagen/transferfn.html#DivisiveNormalizeLinf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLinf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#imagen.transferfn.TransferFn" title="imagen.transferfn.TransferFn"><tt class="xref py py-class docutils literal"><span class="pre">imagen.transferfn.TransferFn</span></tt></a></p>
+<p>TransferFn to divide an array by its L-infinity norm
+(i.e. the maximum absolute value of its elements).</p>
+<p>For a given array interpreted as a flattened vector, scales the
+elements divisively so that the maximum absolute value is the
+specified norm_value.</p>
+<p>The L-infinity norm is also known as the divisive infinity norm
+and Chebyshev norm.</p>
+<p><em>param Number</em> <tt class="docutils literal"><span class="pre">norm_value</span></tt> (<em>allow_None=False, bounds=None, constant=False, default=1.0, inclusive_bounds=(True, True), instantiate=False, pickle_default_value=True, precedence=None, readonly=False, time_dependent=False, time_fn=&lt;Time Time00001&gt;</em>)</p>
+<dl class="docutils">
+<dt><em>param List</em> <tt class="docutils literal"><span class="pre">init_keys</span></tt> (<em>bounds=(0, None), constant=True, default=[], instantiate=True, pickle_default_value=True, precedence=None, readonly=False</em>)</dt>
+<dd>List of item key labels for metadata that that must be
+        supplied to the initialize method before the TransferFn may be
+        used.</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="imagen.transferfn.DivisiveNormalizeLp">
+<em class="property">class </em><tt class="descclassname">imagen.transferfn.</tt><tt class="descname">DivisiveNormalizeLp</tt><big>(</big><em>**params</em><big>)</big><a class="reference internal" href="../_modules/imagen/transferfn.html#DivisiveNormalizeLp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#imagen.transferfn.TransferFn" title="imagen.transferfn.TransferFn"><tt class="xref py py-class docutils literal"><span class="pre">imagen.transferfn.TransferFn</span></tt></a></p>
+<p>TransferFn to divide an array by its Lp-Norm, where p is specified.</p>
+<p>For a parameter p and a given array interpreted as a flattened
+vector, keeps the Lp-norm of the vector at a specified norm_value.
+Faster versions are provided separately for the typical L1-norm
+and L2-norm cases.  Defaults to be the same as an L2-norm, i.e.,
+DivisiveNormalizeL2.</p>
+<p><em>param Number</em> <tt class="docutils literal"><span class="pre">p</span></tt> (<em>allow_None=False, bounds=None, constant=False, default=2, inclusive_bounds=(True, True), instantiate=False, pickle_default_value=True, precedence=None, readonly=False, time_dependent=False, time_fn=&lt;Time Time00001&gt;</em>)</p>
+<p><em>param Number</em> <tt class="docutils literal"><span class="pre">norm_value</span></tt> (<em>allow_None=False, bounds=None, constant=False, default=1.0, inclusive_bounds=(True, True), instantiate=False, pickle_default_value=True, precedence=None, readonly=False, time_dependent=False, time_fn=&lt;Time Time00001&gt;</em>)</p>
+<dl class="docutils">
+<dt><em>param List</em> <tt class="docutils literal"><span class="pre">init_keys</span></tt> (<em>bounds=(0, None), constant=True, default=[], instantiate=True, pickle_default_value=True, precedence=None, readonly=False</em>)</dt>
+<dd>List of item key labels for metadata that that must be
+        supplied to the initialize method before the TransferFn may be
+        used.</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="imagen.transferfn.IdentityTF">
+<em class="property">class </em><tt class="descclassname">imagen.transferfn.</tt><tt class="descname">IdentityTF</tt><big>(</big><em>**params</em><big>)</big><a class="reference internal" href="../_modules/imagen/transferfn.html#IdentityTF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagen.transferfn.IdentityTF" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#imagen.transferfn.TransferFn" title="imagen.transferfn.TransferFn"><tt class="xref py py-class docutils literal"><span class="pre">imagen.transferfn.TransferFn</span></tt></a></p>
+<p>Identity function, returning its argument as-is.</p>
+<p>For speed, calling this function object is sometimes optimized
+away entirely.  To make this feasible, it is not allowable to
+derive other classes from this object, modify it to have different
+behavior, add side effects, or anything of that nature.</p>
+<p><em>param Parameter</em> <tt class="docutils literal"><span class="pre">norm_value</span></tt> (<em>constant=False, default=None, instantiate=False, pickle_default_value=True, precedence=None, readonly=False</em>)</p>
+<dl class="docutils">
+<dt><em>param List</em> <tt class="docutils literal"><span class="pre">init_keys</span></tt> (<em>bounds=(0, None), constant=True, default=[], instantiate=True, pickle_default_value=True, precedence=None, readonly=False</em>)</dt>
+<dd>List of item key labels for metadata that that must be
+        supplied to the initialize method before the TransferFn may be
+        used.</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="imagen.transferfn.Scale">
+<em class="property">class </em><tt class="descclassname">imagen.transferfn.</tt><tt class="descname">Scale</tt><big>(</big><em>**params</em><big>)</big><a class="reference internal" href="../_modules/imagen/transferfn.html#Scale"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagen.transferfn.Scale" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#imagen.transferfn.TransferFn" title="imagen.transferfn.TransferFn"><tt class="xref py py-class docutils literal"><span class="pre">imagen.transferfn.TransferFn</span></tt></a></p>
+<p>Multiply the input array by some constant factor.</p>
+<p><em>param Parameter</em> <tt class="docutils literal"><span class="pre">norm_value</span></tt> (<em>constant=False, default=None, instantiate=False, pickle_default_value=True, precedence=None, readonly=False</em>)</p>
+<dl class="docutils">
+<dt><em>param Number</em> <tt class="docutils literal"><span class="pre">scale</span></tt> (<em>allow_None=False, bounds=None, constant=False, default=1.0, inclusive_bounds=(True, True), instantiate=False, pickle_default_value=True, precedence=None, readonly=False, time_dependent=False, time_fn=&lt;Time Time00001&gt;</em>)</dt>
+<dd>The multiplicative factor that scales the input values.</dd>
+<dt><em>param List</em> <tt class="docutils literal"><span class="pre">init_keys</span></tt> (<em>bounds=(0, None), constant=True, default=[], instantiate=True, pickle_default_value=True, precedence=None, readonly=False</em>)</dt>
+<dd>List of item key labels for metadata that that must be
+        supplied to the initialize method before the TransferFn may be
+        used.</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="imagen.transferfn.Threshold">
+<em class="property">class </em><tt class="descclassname">imagen.transferfn.</tt><tt class="descname">Threshold</tt><big>(</big><em>**params</em><big>)</big><a class="reference internal" href="../_modules/imagen/transferfn.html#Threshold"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagen.transferfn.Threshold" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#imagen.transferfn.TransferFn" title="imagen.transferfn.TransferFn"><tt class="xref py py-class docutils literal"><span class="pre">imagen.transferfn.TransferFn</span></tt></a></p>
+<p>Forces all values below a threshold to zero, and leaves others unchanged.</p>
+<dl class="docutils">
+<dt><em>param Number</em> <tt class="docutils literal"><span class="pre">threshold</span></tt> (<em>allow_None=False, bounds=None, constant=False, default=0.25, inclusive_bounds=(True, True), instantiate=False, pickle_default_value=True, precedence=None, readonly=False, time_dependent=False, time_fn=&lt;Time Time00001&gt;</em>)</dt>
+<dd>Decision point for determining values to clip.</dd>
+</dl>
+<p><em>param Parameter</em> <tt class="docutils literal"><span class="pre">norm_value</span></tt> (<em>constant=False, default=None, instantiate=False, pickle_default_value=True, precedence=None, readonly=False</em>)</p>
+<dl class="docutils">
+<dt><em>param List</em> <tt class="docutils literal"><span class="pre">init_keys</span></tt> (<em>bounds=(0, None), constant=True, default=[], instantiate=True, pickle_default_value=True, precedence=None, readonly=False</em>)</dt>
+<dd>List of item key labels for metadata that that must be
+        supplied to the initialize method before the TransferFn may be
+        used.</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="imagen.transferfn.TransferFn">
+<em class="property">class </em><tt class="descclassname">imagen.transferfn.</tt><tt class="descname">TransferFn</tt><big>(</big><em>**params</em><big>)</big><a class="reference internal" href="../_modules/imagen/transferfn.html#TransferFn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagen.transferfn.TransferFn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="http://ioam.github.io/param/Reference_Manual/param.parameterized-module.html#param.parameterized.Parameterized" title="(in Param v1.1)"><tt class="xref py py-class docutils literal"><span class="pre">param.parameterized.Parameterized</span></tt></a></p>
+<p>Function object to modify a matrix in place, e.g. for normalization.</p>
+<p>Used for transforming an array of intermediate results into a
+final version, by cropping it, normalizing it, squaring it, etc.</p>
+<p>Objects in this class must support being called as a function with
+one matrix argument, and are expected to change that matrix in place.</p>
+<p><em>param Parameter</em> <tt class="docutils literal"><span class="pre">norm_value</span></tt> (<em>constant=False, default=None, instantiate=False, pickle_default_value=True, precedence=None, readonly=False</em>)</p>
+<dl class="docutils">
+<dt><em>param List</em> <tt class="docutils literal"><span class="pre">init_keys</span></tt> (<em>bounds=(0, None), constant=True, default=[], instantiate=True, pickle_default_value=True, precedence=None, readonly=False</em>)</dt>
+<dd>List of item key labels for metadata that that must be
+        supplied to the initialize method before the TransferFn may be
+        used.</dd>
+</dl>
+<dl class="method">
+<dt id="imagen.transferfn.TransferFn.initialize">
+<tt class="descname">initialize</tt><big>(</big><em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/imagen/transferfn.html#TransferFn.initialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagen.transferfn.TransferFn.initialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transfer functions may need additional information before the
+supplied numpy array can be modified in place. For instance,
+transfer functions may have state which needs to be allocated
+in memory with a certain size. In other cases, the transfer
+function may need to know about the coordinate system
+associated with the input data.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="imagen.transferfn.norm">
+<tt class="descclassname">imagen.transferfn.</tt><tt class="descname">norm</tt><big>(</big><em>v</em>, <em>p=2</em><big>)</big><a class="reference internal" href="../_modules/imagen/transferfn.html#norm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagen.transferfn.norm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the Lp norm of v, where p is an arbitrary number defaulting to 2.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div align="center"><h1>ImaGen</h1></div>
+<ul class="global-toc">
+
+<li><a href="../index.html">Home</a></li>
+<li><a href="../Tutorials/index.html">Tutorials</a></li>
+<li><a href="imagen-module.html">Reference Manual</a></li>
+<li><a href="http://github.com/ioam/imagen">Github Source Code</a></li>
+<li><a href="../site_map.html">Site Map</a></li>
+</ul>
+<h3><a href="../index.html">Table Of Contents</a></h3>
+
+<ul>
+<li><a class="reference internal" href="#">imagen.transferfn</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-imagen.transferfn">Module</a></li>
+</ul>
+</li>
+</ul>
+
+
+<h3>This Page</h3>
+<ul class="this-page-menu">
+	<li><a	href="https://github.com/ioam/imagen/edit/master/doc/Reference_Manual/imagen.transferfn-module.rst" rel="nofollow">Edit on GitHub</a></li>
+</ul>
+
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+
+<li><a href="../index.html">ImaGen Home</a></li>
+<li><a href="../Tutorials/index.html">Tutorials</a></li>
+<li><a href="imagen-module.html">Reference Manual</a></li>
+
+
+
+
+
+
+
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, IOAM.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

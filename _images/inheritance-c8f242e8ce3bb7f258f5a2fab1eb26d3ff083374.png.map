@@ -1,0 +1,13 @@
+<map id="inheritance25825c39b2" name="inheritance25825c39b2">
+<area shape="rect" id="node1" href="imagen-module.html#imagen.PowerSpectrum" title="Outputs the spectral density of a rolling interval of the input" alt="" coords="290,24,366,37"/>
+<area shape="rect" id="node4" href="imagen-module.html#imagen.Spectrogram" title="Extends PowerSpectrum to provide a temporal buffer, yielding" alt="" coords="406,2,475,14"/>
+<area shape="rect" id="node15" href="#imagen.audio.LyonsCochlearModel" title="Outputs a cochlear decomposition as a set of frequency responses of linear" alt="" coords="388,24,494,37"/>
+<area shape="rect" id="node2" href="imagen.patterngenerator-module.html#imagen.patterngenerator.PatternGenerator" title="A class hierarchy for callable objects that can generate 2D patterns." alt="" coords="137,24,268,37"/>
+<area shape="rect" id="node13" href="#imagen.audio.LogSpectrogram" title="Extends Spectrogram to provide a response over an octave scale." alt="" coords="519,2,615,14"/>
+<area shape="rect" id="node6" title="Generic class to return intervals of a discretized time series." alt="" coords="171,47,234,59"/>
+<area shape="rect" id="node9" href="#imagen.audio.AudioFile" title="Requires an audio file in any format accepted by audiolab (wav, aiff, flac)." alt="" coords="291,47,365,59"/>
+<area shape="rect" id="node7" title="Base class for named objects that support Parameters and message" alt="" coords="2,35,116,48"/>
+<area shape="rect" id="node11" href="#imagen.audio.AudioFolder" title="Returns a rolling spectrogram, i.e. the spectral density over time" alt="" coords="400,47,482,59"/>
+<area shape="rect" id="node19" href="#imagen.audio.ModulatedLogSpectrogram" title="Extends OctaveSpectrogram with a simple model of outer ear amplification." alt="" coords="640,2,765,14"/>
+<area shape="rect" id="node17" href="#imagen.audio.LyonsCochleogram" title="Employs Lyons Cochlear Model to return a Cochleoogram," alt="" coords="515,24,618,37"/>
+</map>

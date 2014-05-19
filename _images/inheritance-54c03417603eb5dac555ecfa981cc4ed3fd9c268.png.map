@@ -1,0 +1,5 @@
+<map id="inheritance5a1c78b06b" name="inheritance5a1c78b06b">
+<area shape="rect" id="node1" href="#imagen.patterngenerator.Constant" title="Constant pattern generator, i.e., a solid, uniform field of the same value." alt="" coords="556,4,763,28"/>
+<area shape="rect" id="node2" href="#imagen.patterngenerator.PatternGenerator" title="A class hierarchy for callable objects that can generate 2D patterns." alt="" coords="264,4,516,28"/>
+<area shape="rect" id="node4" title="Base class for named objects that support Parameters and message" alt="" coords="5,4,223,28"/>
+</map>

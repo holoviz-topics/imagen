@@ -1,0 +1,178 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>imagen.transferfn.sheet_tf &mdash; ImaGen 1.0-dev documentation</title>
+    
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0-dev',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/custom.js"></script>
+    <link rel="top" title="ImaGen 1.0-dev documentation" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+
+<li><a href="../index.html">ImaGen Home</a></li>
+<li><a href="../Tutorials/index.html">Tutorials</a></li>
+<li><a href="imagen-module.html">Reference Manual</a></li>
+
+
+
+
+
+
+
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="imagen-transferfn-sheet-tf">
+<h1>imagen.transferfn.sheet_tf<a class="headerlink" href="#imagen-transferfn-sheet-tf" title="Permalink to this headline">¶</a></h1>
+<p class="graphviz">
+<img src="../_images/inheritance-44c696b7ac716cad1ed8624358c404b414bdf972.png" alt="Inheritance diagram of imagen.transferfn.sheet_tf" usemap="#inheritanced7d49f6d9a" class="inheritance"/>
+<map id="inheritanced7d49f6d9a" name="inheritanced7d49f6d9a">
+<area shape="rect" id="node1" href="imagen.transferfn-module.html#imagen.transferfn.TransferFn" title="Function object to modify a matrix in place, e.g. for normalization." alt="" coords="291,4,482,30"/>
+<area shape="rect" id="node4" href="#imagen.transferfn.sheet_tf.Convolve" title="Transfer function that convolves the array data with the supplied" alt="" coords="527,4,763,30"/>
+<area shape="rect" id="node2" title="Base class for named objects that support Parameters and message" alt="" coords="5,4,246,30"/>
+</map>
+</p>
+<div class="section" id="module-imagen.transferfn.sheet_tf">
+<span id="module"></span><h2>Module<a class="headerlink" href="#module-imagen.transferfn.sheet_tf" title="Permalink to this headline">¶</a></h2>
+<p>A family of transfer functions that are aware of sheet coordinate
+systems.</p>
+<p>The transfer functions in this file are allowed to make used of Imagen
+patterns and are to be supplied with an appropriate
+SheetCoordinateSystem object via the initialize method.</p>
+<dl class="class">
+<dt id="imagen.transferfn.sheet_tf.Convolve">
+<em class="property">class </em><tt class="descclassname">imagen.transferfn.sheet_tf.</tt><tt class="descname">Convolve</tt><big>(</big><em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/imagen/transferfn/sheet_tf.html#Convolve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagen.transferfn.sheet_tf.Convolve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="imagen.transferfn-module.html#imagen.transferfn.TransferFn" title="imagen.transferfn.TransferFn"><tt class="xref py py-class docutils literal"><span class="pre">imagen.transferfn.TransferFn</span></tt></a></p>
+<p>Transfer function that convolves the array data with the supplied
+kernel pattern.</p>
+<p>The bounds and densities of the supplied kernel pattern do not
+affect the convolution operation. The spatial scale of the
+convolution is determined by the &#8216;size&#8217; parameter of the
+kernel. The resulting convolution is applied of a spatial scale
+relative to the overall size of the input, as expressed in
+sheetcoordinates.</p>
+<p><em>param Parameter</em> <tt class="docutils literal"><span class="pre">norm_value</span></tt> (<em>constant=False, default=None, instantiate=False, pickle_default_value=True, precedence=None, readonly=False</em>)</p>
+<dl class="docutils">
+<dt><em>param ClassSelector</em> <tt class="docutils literal"><span class="pre">kernel_pattern</span></tt> (<em>allow_None=False, constant=False, default=&lt;Gaussian Gaussian00025&gt;, instantiate=True, pickle_default_value=True, precedence=None, readonly=False</em>)</dt>
+<dd>The kernel pattern used in the convolution. The default kernel
+      results in an isotropic Gaussian blur.</dd>
+<dt><em>param List</em> <tt class="docutils literal"><span class="pre">init_keys</span></tt> (<em>bounds=(0, None), constant=True, default=[&#8216;SCS&#8217;], instantiate=True, pickle_default_value=True, precedence=None, readonly=False</em>)</dt>
+<dd>List of item key labels for metadata that that must be
+        supplied to the initialize method before the TransferFn may be
+        used.</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div align="center"><h1>ImaGen</h1></div>
+<ul class="global-toc">
+
+<li><a href="../index.html">Home</a></li>
+<li><a href="../Tutorials/index.html">Tutorials</a></li>
+<li><a href="imagen-module.html">Reference Manual</a></li>
+<li><a href="http://github.com/ioam/imagen">Github Source Code</a></li>
+<li><a href="../site_map.html">Site Map</a></li>
+</ul>
+<h3><a href="../index.html">Table Of Contents</a></h3>
+
+<ul>
+<li><a class="reference internal" href="#">imagen.transferfn.sheet_tf</a><ul>
+<li><a class="reference internal" href="#module-imagen.transferfn.sheet_tf">Module</a></li>
+</ul>
+</li>
+</ul>
+
+
+<h3>This Page</h3>
+<ul class="this-page-menu">
+	<li><a	href="https://github.com/ioam/imagen/edit/master/doc/Reference_Manual/imagen.transferfn.sheet_tf-module.rst" rel="nofollow">Edit on GitHub</a></li>
+</ul>
+
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+
+<li><a href="../index.html">ImaGen Home</a></li>
+<li><a href="../Tutorials/index.html">Tutorials</a></li>
+<li><a href="imagen-module.html">Reference Manual</a></li>
+
+
+
+
+
+
+
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, IOAM.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

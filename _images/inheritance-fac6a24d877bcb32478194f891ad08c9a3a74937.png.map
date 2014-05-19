@@ -1,0 +1,42 @@
+<map id="inheritance273a80740e" name="inheritance273a80740e">
+<area shape="rect" id="node1" title="A Stack is a stack of Views over some dimensions. The" alt="" coords="449,91,539,104"/>
+<area shape="rect" id="node8" title="A SheetStack is a stack of SheetLayers over some dimensions. The" alt="" coords="566,91,678,104"/>
+<area shape="rect" id="node2" title="NdMapping supports the same indexing semantics as NdIndexableMapping but" alt="" coords="310,91,422,104"/>
+<area shape="rect" id="node4" title="An NdIndexableMapping is a type of mapping (like a dictionary or array)" alt="" coords="147,157,287,170"/>
+<area shape="rect" id="node5" title="Base class for named objects that support Parameters and message" alt="" coords="3,365,124,379"/>
+<area shape="rect" id="node13" href="imagen.patterngenerator-module.html#imagen.patterngenerator.PatternGenerator" title="A class hierarchy for callable objects that can generate 2D patterns." alt="" coords="147,365,287,379"/>
+<area shape="rect" id="node65" title="Generic class to return intervals of a discretized time series." alt="" coords="183,389,251,403"/>
+<area shape="rect" id="node10" title="An Animation is a collection of SheetLayers associated with" alt="" coords="700,91,765,104"/>
+<area shape="rect" id="node12" href="#imagen.Arc" title="2D arc pattern generator." alt="" coords="344,115,388,128"/>
+<area shape="rect" id="node17" href="#imagen.Curve" title="2D curve pattern generator." alt="" coords="468,115,520,128"/>
+<area shape="rect" id="node15" href="#imagen.Composite" title="PatternGenerator that accepts a list of other PatternGenerators." alt="" coords="333,139,399,152"/>
+<area shape="rect" id="node19" href="#imagen.DifferenceOfGaussians" title="Two&#45;dimensional difference of gaussians pattern." alt="" coords="314,163,417,176"/>
+<area shape="rect" id="node21" href="#imagen.Disk" title="2D disk pattern generator." alt="" coords="342,187,390,200"/>
+<area shape="rect" id="node23" href="#imagen.ExponentialDecay" title="2D Exponential pattern generator." alt="" coords="322,211,410,224"/>
+<area shape="rect" id="node25" href="#imagen.Gabor" title="2D Gabor pattern generator." alt="" coords="339,234,392,248"/>
+<area shape="rect" id="node27" href="#imagen.Gaussian" title="2D Gaussian pattern generator." alt="" coords="334,258,397,271"/>
+<area shape="rect" id="node29" href="#imagen.GaussiansCorner" title="Two Gaussian pattern generators with a variable intersection point," alt="" coords="323,282,408,295"/>
+<area shape="rect" id="node31" href="#imagen.HalfPlane" title="Constant pattern on in half of the plane, and off in the rest," alt="" coords="334,306,397,319"/>
+<area shape="rect" id="node33" href="#imagen.Line" title="2D line pattern generator." alt="" coords="343,330,389,343"/>
+<area shape="rect" id="node35" href="#imagen.LogGaussian" title="2D Log Gaussian pattern generator allowing standard gaussian" alt="" coords="329,354,402,367"/>
+<area shape="rect" id="node38" href="#imagen.SineGrating" title="2D sine grating pattern generator." alt="" coords="331,377,401,391"/>
+<area shape="rect" id="node40" href="#imagen.PowerSpectrum" title="Outputs the spectral density of a rolling interval of the input" alt="" coords="325,401,407,414"/>
+<area shape="rect" id="node42" href="#imagen.RawRectangle" title="2D rectangle pattern generator with no smoothing, for use when drawing" alt="" coords="328,425,403,438"/>
+<area shape="rect" id="node44" href="#imagen.Rectangle" title="2D rectangle pattern, with Gaussian smoothing around the edges." alt="" coords="334,449,398,462"/>
+<area shape="rect" id="node46" href="#imagen.Ring" title="2D ring pattern generator." alt="" coords="342,473,390,486"/>
+<area shape="rect" id="node48" href="#imagen.Selector" title="PatternGenerator that selects from a list of other PatternGenerators." alt="" coords="336,497,395,510"/>
+<area shape="rect" id="node52" href="#imagen.Sigmoid" title="Two&#45;dimensional sigmoid pattern, dividing the plane into positive" alt="" coords="336,520,395,534"/>
+<area shape="rect" id="node54" href="#imagen.SigmoidedDoG" title="Sigmoid multiplicatively combined with a difference of Gaussians," alt="" coords="326,544,406,557"/>
+<area shape="rect" id="node56" href="#imagen.SigmoidedDoLG" title="Sigmoid multiplicatively combined with a difference of Log Gaussians, such that one part of the plane can be" alt="" coords="324,568,407,581"/>
+<area shape="rect" id="node61" href="#imagen.SquareGrating" title="2D squarewave grating pattern generator." alt="" coords="327,592,405,605"/>
+<area shape="rect" id="node63" href="#imagen.Sweeper" title="PatternGenerator that sweeps a supplied PatternGenerator in a direction" alt="" coords="336,616,396,629"/>
+<area shape="rect" id="node70" href="#imagen.Translator" title="PatternGenerator that translates another PatternGenerator over" alt="" coords="334,640,398,653"/>
+<area shape="rect" id="node50" href="#imagen.SeparatedComposite" title="Generalized version of the Composite PatternGenerator that enforces spacing constraints" alt="" coords="444,139,543,152"/>
+<area shape="rect" id="node37" href="#imagen.OrientationContrast" title="Circular pattern for testing responses to differences in contrast." alt="" coords="447,377,541,391"/>
+<area shape="rect" id="node59" href="#imagen.Spectrogram" title="Extends PowerSpectrum to provide a temporal buffer, yielding" alt="" coords="457,401,531,414"/>
+<area shape="rect" id="node72" href="#imagen.TwoRectangles" title="Two 2D rectangle pattern generator." alt="" coords="455,449,533,462"/>
+<area shape="rect" id="node67" title="Parameter whose value is a TimeSeries object." alt="" coords="450,2,538,15"/>
+<area shape="rect" id="node68" title="Parameter whose value is an instance of the specified class." alt="" coords="329,2,402,15"/>
+<area shape="rect" id="node75" title="Parameter whose value must be chosen from a list of possibilities." alt="" coords="189,2,245,15"/>
+<area shape="rect" id="node77" title="An attribute descriptor for declaring parameters." alt="" coords="9,2,118,15"/>
+</map>
