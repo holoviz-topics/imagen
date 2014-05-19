@@ -1,0 +1,15 @@
+[submodule "param"]
+	path = param
+	url = https://github.com/ioam/param.git
+[submodule "dataviews"]
+	path = dataviews
+	url = https://github.com/ioam/dataviews.git
+[submodule "doc/nbpublisher"]
+	path = doc/nbpublisher
+	url = https://github.com/ioam/ioam-builder.git
+[submodule "doc/reference_data"]
+	path = doc/reference_data
+	url = https://github.com/ioam/ioam.github.com.git
+[submodule "doc/builder"]
+	path = doc/builder
+	url = https://github.com/ioam/ioam-builder.git
