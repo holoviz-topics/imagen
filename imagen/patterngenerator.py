@@ -12,8 +12,7 @@ import param
 from param.parameterized import ParamOverrides
 
 from dataviews import SheetView
-from dataviews.boundingregion import BoundingBox, BoundingRegionParameter
-from dataviews.sheetcoords import SheetCoordinateSystem
+from dataviews.sheetviews import BoundingBox, BoundingRegionParameter, SheetCoordinateSystem
 from dataviews.options import options, StyleOpts
 
 from transferfn import TransferFn

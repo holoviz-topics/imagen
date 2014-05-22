@@ -27,7 +27,7 @@ from param import ClassSelector
 from patterngenerator import Constant, PatternGenerator
 
 from dataviews import SheetStack
-from dataviews.sheetcoords import SheetCoordinateSystem
+from dataviews.sheetviews import SheetCoordinateSystem
 from dataviews import boundingregion, sheetcoords # pyflakes:ignore (API import)
 
 from patternfn import gaussian,exponential,gabor,line,disk,ring,\

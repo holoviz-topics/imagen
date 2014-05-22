@@ -13,8 +13,7 @@ from numpy.oldnumeric import array, Float, sum, ravel, ones
 import param
 from param.parameterized import overridable_property
 
-from dataviews.boundingregion import BoundingBox
-from dataviews.sheetcoords import SheetCoordinateSystem
+from dataviews.sheetviews import BoundingBox, SheetCoordinateSystem
 from patterngenerator import PatternGenerator
 from transferfn import DivisiveNormalizeLinf, TransferFn
 
