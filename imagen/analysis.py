@@ -15,7 +15,7 @@ from numpy.fft.helper import fftshift
 
 import param
 from dataviews import SheetView
-from dataviews.sheetcoords import BoundingBox
+from dataviews.sheetviews import BoundingBox
 from dataviews.options import options, GrayNearest
 from dataviews.operation  import ViewOperation
 
