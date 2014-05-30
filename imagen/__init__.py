@@ -10,7 +10,10 @@ combined with the existing classes easily.
 
 from __future__ import with_statement
 
-__version__='$Revision$'
+import param
+from param.version import Version
+
+__version__ = Version(release=(1,0,0), fpath=__file__, commit="$Format:%h$")
 
 
 import numpy
@@ -19,7 +22,7 @@ from numpy import abs, add, alltrue, array, ceil, clip, cos, fft, flipud, \
         floor, fmod, exp, hstack, Infinity, linspace, multiply, nonzero, pi, \
         repeat, sin, sqrt, subtract, tile, zeros, sum, max
 
-import param
+
 from param.parameterized import ParamOverrides
 from param import ClassSelector
 
