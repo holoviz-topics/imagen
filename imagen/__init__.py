@@ -456,13 +456,19 @@ class TwoRectangles(Rectangle):
 
 
 class SquareGrating(PatternGenerator):
-    """2D squarewave grating pattern generator."""
+    """2D squarewave (symmetric or asymmetric) grating pattern generator."""
 
     frequency = param.Number(default=2.4,bounds=(0.0,None),softbounds=(0.0,10.0),
         precedence=0.50,doc="Frequency of the square grating.")
 
-    phase = param.Number(default=0.0,bounds=(0.0,None),softbounds=(0.0,2*pi),
+    phase     = param.Number(default=0.0,bounds=(0.0,None),softbounds=(0.0,2*pi),
         precedence=0.51,doc="Phase of the square grating.")
+    
+    duty_cycle = param.Number(default=0.5,bounds=(0.0,1.0),softbounds=(0.0,1.0),
+        precedence=0.51,doc="""
+        The duty cycle is the ratio between the pulse duration
+        and the period (1/frequency). 
+        The pulse is defined as the time during which the square wave signal is 1 (high).""")
 
     # We will probably want to add anti-aliasing to this,
     # and there might be an easier way to do it than by
@@ -470,9 +476,12 @@ class SquareGrating(PatternGenerator):
 
     def function(self,p):
         """
-	Return a square-wave grating (alternating black and white bars).
-	"""
-        return around(0.5 + 0.5*sin(p.frequency*2*pi*self.pattern_y + p.phase))
+        Return a square-wave grating (alternating black and white bars).
+        """
+        return around(
+	  0.5 + 
+	  0.5*sin(pi*(p.duty_cycle-0.5)) + 
+	  0.5*sin(p.frequency*2*pi*self.pattern_y + p.phase))
 
 # CB: I removed motion_sign from this class because I think it is
 # unnecessary. But maybe I misunderstood the original author's
