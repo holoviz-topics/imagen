@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from builder.shared_conf import *
+from builder.shared_conf import *  # pyflakes:ignore (API import)
 
 paths = ['../param/', '../dataviews/', '.', '..']
 add_paths(paths)
