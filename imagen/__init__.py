@@ -27,8 +27,8 @@ from param import ClassSelector
 from patterngenerator import Constant, PatternGenerator
 
 from dataviews import SheetStack
-from dataviews.sheetcoords import SheetCoordinateSystem
-from dataviews import boundingregion, sheetcoords # pyflakes:ignore (API import)
+from dataviews.sheetviews.sheetcoords import SheetCoordinateSystem
+from dataviews.sheetviews import boundingregion, sheetcoords # pyflakes:ignore (API import)
 
 from patternfn import gaussian,exponential,gabor,line,disk,ring,\
     sigmoid,arc_by_radian,arc_by_center,smooth_rectangle,float_error_ignore, \
@@ -461,7 +461,7 @@ class SquareGrating(PatternGenerator):
     frequency = param.Number(default=2.4,bounds=(0.0,None),softbounds=(0.0,10.0),
         precedence=0.50,doc="Frequency of the square grating.")
 
-    phase     = param.Number(default=0.0,bounds=(0.0,None),softbounds=(0.0,2*pi),
+    phase = param.Number(default=0.0,bounds=(0.0,None),softbounds=(0.0,2*pi),
         precedence=0.51,doc="Phase of the square grating.")
 
     # We will probably want to add anti-aliasing to this,
@@ -470,10 +470,9 @@ class SquareGrating(PatternGenerator):
 
     def function(self,p):
         """
-        Return a square-wave grating (alternating black and white bars).
-        """
+	Return a square-wave grating (alternating black and white bars).
+	"""
         return around(0.5 + 0.5*sin(p.frequency*2*pi*self.pattern_y + p.phase))
-
 
 # CB: I removed motion_sign from this class because I think it is
 # unnecessary. But maybe I misunderstood the original author's

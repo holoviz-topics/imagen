@@ -12,11 +12,11 @@ import param
 from param.parameterized import ParamOverrides
 
 from dataviews import SheetView
-from dataviews.boundingregion import BoundingBox, BoundingRegionParameter
-from dataviews.sheetcoords import SheetCoordinateSystem
+from dataviews.sheetviews.boundingregion import BoundingBox, BoundingRegionParameter
+from dataviews.sheetviews.sheetcoords import SheetCoordinateSystem
 from dataviews.options import options, StyleOpts
 
-from transferfn import TransferFn
+from imagen.transferfn import *
 
 
 # CEBALERT: PatternGenerator has become a bit of a monster abstract
