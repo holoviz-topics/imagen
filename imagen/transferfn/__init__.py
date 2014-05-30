@@ -1,7 +1,6 @@
 """
 TransferFns: accept and modify a 2d array
 """
-__version__='$Revision$'
 
 import numpy
 

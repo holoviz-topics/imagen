@@ -1,7 +1,6 @@
 """
 Two-dimensional pattern generators drawing from various random distributions.
 """
-__version__='$Revision$'
 
 import numpy as np
 

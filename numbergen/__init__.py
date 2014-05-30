@@ -1,7 +1,6 @@
 """
 Callable objects that generate numbers according to different distributions.
 """
-__version__='$Revision: 8943 $'
 
 import random
 import operator

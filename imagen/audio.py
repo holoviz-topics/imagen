@@ -1,7 +1,6 @@
 """
 Pattern generators for audio signals.
 """
-__version__='$Revision$'
 
 
 import param
