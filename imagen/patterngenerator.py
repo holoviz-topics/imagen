@@ -16,7 +16,7 @@ from dataviews.sheetviews.boundingregion import BoundingBox, BoundingRegionParam
 from dataviews.sheetviews.sheetcoords import SheetCoordinateSystem
 from dataviews.options import options, StyleOpts
 
-from imagen.transferfn import *
+from imagen.transferfn import TransferFn
 
 
 # CEBALERT: PatternGenerator has become a bit of a monster abstract
