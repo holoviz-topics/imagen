@@ -464,9 +464,9 @@ class SquareGrating(PatternGenerator):
     phase     = param.Number(default=0.0,bounds=(0.0,None),softbounds=(0.0,2*pi),
         precedence=0.51,doc="Phase of the square grating.")
     
-    duty_cycle = param.Number(default=0.5,bounds=(0.0,1.0),softbounds=(0.0,1.0),
+    duty_cycle = param.Number(default=0.5,bounds=(0.0,1.0),
         precedence=0.51,doc="""
-        The duty cycle is the ratio between the pulse duration
+        The duty cycle is the ratio between the pulse duration (width of the bright bar)
         and the period (1/frequency). 
         The pulse is defined as the time during which the square wave signal is 1 (high).""")
 
