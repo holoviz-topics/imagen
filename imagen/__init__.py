@@ -29,7 +29,7 @@ from param import ClassSelector
 # Imported here so that all PatternGenerators will be in the same package
 from patterngenerator import Constant, PatternGenerator
 
-from dataviews import SheetStack
+from dataviews import SheetStack, Dimension
 from dataviews.sheetviews import SheetCoordinateSystem
 from dataviews import boundingregion, sheetcoords # pyflakes:ignore (API import)
 
@@ -737,7 +737,7 @@ class Animation(SheetStack):
        must be an integer multiple of this timestep value (which may
        be a float or some other numeric type).""" )
 
-    dimensions = param.List(default=['frames'], constant=True, doc="""
+    dimensions = param.List(default=[Dimension('Frames')], constant=True, doc="""
        Animations are indexed by time. This may be by integer frame
        number or some continuous (e.g. floating point or rational)
        representation of time.""")
