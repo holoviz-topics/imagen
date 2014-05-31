@@ -1,7 +1,6 @@
 """
 PatternGenerator abstract class and basic example concrete class.
 """
-__version__='$Revision$'
 
 
 from math import pi
