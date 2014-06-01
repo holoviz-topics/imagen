@@ -54,7 +54,6 @@ class fft_power_spectrum(ViewOperation):
         bb = BoundingBox(radius=(density/2)/(r-l))
 
         return [SheetView(normalized_spectrum, bb,
-                          metadata=sheetview.metadata,
                           label=sheetview.label + ' ' + self.p.label)]
 
 
@@ -92,7 +91,6 @@ class gradient(ViewOperation):
             dy = 0.5 * cyclic_range - np.abs(dy - 0.5 * cyclic_range)
 
         return [SheetView(np.sqrt(dx*dx + dy*dy), sheetview.bounds,
-                          metadata=sheetview.metadata,
                           label=sheetview.label + ' ' + self.p.label)]
 
 
@@ -115,7 +113,6 @@ class autocorrelation(ViewOperation):
         data = sheetview.data
         autocorr_data = scipy.signal.correlate2d(data, data)
         return [SheetView(autocorr_data, sheetview.bounds,
-                          metadata=sheetview.metadata,
                           label=sheetview.label + ' ' + self.p.label)]
 
 
