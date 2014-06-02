@@ -26,7 +26,7 @@ exclude_patterns = ['_build', 'test_data', 'reference_data', 'nbpublisher',
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+html_static_path = ['_static', 'builder/_shared_static']
 
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'ImaGendoc'
@@ -73,9 +73,15 @@ intersphinx_mapping = {'http://docs.python.org/': None,
                        'http://ioam.github.io/dataviews/': None,
                        'http://ipython.org/ipython-doc/2/' : None}
 
+
 from builder.paramdoc import param_formatter
 from nbpublisher import nbbuild
 
 def setup(app):
     app.connect('autodoc-process-docstring', param_formatter)
-    nbbuild.setup(app)
+    try:
+        import runipy
+        nbbuild.setup(app)
+    except:
+        print('RunIPy could not be imported, pages including the '
+              'Notebook directive will not build correctly')
