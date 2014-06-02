@@ -1539,11 +1539,7 @@ class Spectrogram(PowerSpectrum):
 
         return super(Spectrogram, self).__call__()
 
-import os
 _public = list(set([_k for _k,_v in locals().items() if isinstance(_v,type) and issubclass(_v,PatternGenerator)]))
-__all__ = _public + ["image", "random","boundingregion", "sheetcoords"]
-__path__.append(os.path.abspath(os.path.dirname(boundingregion.__file__)))
-__path__.append(os.path.abspath(os.path.dirname(sheetcoords.__file__)))
-
+__all__ = _public + ["image", "random", "boundingregion", "sheetcoords"]
 # Avoids loading the audio and opencvcamera modules, which rely on external
 # libraries that might not be present on this system.
