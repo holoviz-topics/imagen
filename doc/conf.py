@@ -79,9 +79,9 @@ from nbpublisher import nbbuild
 
 def setup(app):
     app.connect('autodoc-process-docstring', param_formatter)
+    nbbuild.setup(app)
     try:
-        import runipy
-        nbbuild.setup(app)
+        import runipy # pyflakes:ignore (Warning import)
     except:
         print('RunIPy could not be imported, pages including the '
               'Notebook directive will not build correctly')
