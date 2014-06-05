@@ -29,15 +29,9 @@ from param import ClassSelector
 # Imported here so that all PatternGenerators will be in the same package
 from patterngenerator import Constant, PatternGenerator
 
-<<<<<<< HEAD
-from dataviews import SheetStack
+from dataviews import SheetStack, Dimension
 from dataviews.sheetviews.sheetcoords import SheetCoordinateSystem
 from dataviews.sheetviews import boundingregion, sheetcoords # pyflakes:ignore (API import)
-=======
-from dataviews import SheetStack, Dimension
-from dataviews.sheetviews import SheetCoordinateSystem
-from dataviews import boundingregion, sheetcoords # pyflakes:ignore (API import)
->>>>>>> upstream/master
 
 from patternfn import gaussian,exponential,gabor,line,disk,ring,\
     sigmoid,arc_by_radian,arc_by_center,smooth_rectangle,float_error_ignore, \
