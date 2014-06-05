@@ -20,7 +20,7 @@ import numpy
 from numpy.oldnumeric import around, bitwise_and, bitwise_or
 from numpy import abs, add, alltrue, array, ceil, clip, cos, fft, flipud, \
         floor, fmod, exp, hstack, Infinity, linspace, multiply, nonzero, pi, \
-        repeat, sin, sqrt, subtract, tile, zeros, sum, max
+        repeat, sin, sqrt, subtract, tile, zeros, sum, max, maximum
 
 
 from param.parameterized import ParamOverrides
@@ -182,7 +182,7 @@ class Line(PatternGenerator):
                        doc="Width of the Gaussian fall-off.")
 
     def function(self,p):
-        return line(self.pattern_y,p.thickness,p.smoothing)
+        return line(self.pattern_y,maximum(p.thickness,1/(float(p.xdensity))),p.smoothing)
 
 
 class Disk(PatternGenerator):
