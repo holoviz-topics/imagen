@@ -40,7 +40,6 @@ from patternfn import gaussian,exponential,gabor,line,disk,ring,\
 import numbergen
 from imagen.transferfn import DivisiveNormalizeL1
 
-
 # Could add a Gradient class, where the brightness varies as a
 # function of an equation for a plane.  This could be useful as a
 # background, or to see how sharp a gradient is needed to get a
@@ -1540,6 +1539,6 @@ class Spectrogram(PowerSpectrum):
         return super(Spectrogram, self).__call__()
 
 _public = list(set([_k for _k,_v in locals().items() if isinstance(_v,type) and issubclass(_v,PatternGenerator)]))
-__all__ = _public + ["image", "random", "boundingregion", "sheetcoords"]
+__all__ = _public + ["image", "random", "patterncoordinator", "boundingregion", "sheetcoords"]
 # Avoids loading the audio and opencvcamera modules, which rely on external
 # libraries that might not be present on this system.
