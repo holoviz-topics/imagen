@@ -120,7 +120,8 @@ def line(y, thickness, gaussian_width):
     """
     Infinite-length line with a solid central region, then Gaussian fall-off at the edges.
     """
-    distance_from_line = abs(y)
+    import sys
+    distance_from_line = abs(y+0.0000001*thickness)
     gaussian_y_coord = distance_from_line - thickness/2.0
     sigmasq = gaussian_width*gaussian_width
 
