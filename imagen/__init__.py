@@ -182,10 +182,11 @@ class Line(PatternGenerator):
                        doc="Width of the Gaussian fall-off.")
 
     def function(self,p):
-	xpixelsize = 1/float(p.xdensity)
-	ypixelsize = 1/float(p.ydensity)
-	effective_thickness = max([p.thickness,xpixelsize,ypixelsize])
-        return line(self.pattern_y,effective_thickness,p.smoothing)
+        xpixelsize = 1./float(p.xdensity)
+        ypixelsize = 1./float(p.ydensity)
+        print p.thickness, xpixelsize, ypixelsize, max([p.thickness,xpixelsize,ypixelsize])
+        effective_thickness = max([p.thickness,xpixelsize,ypixelsize])
+        return line(self.pattern_y+0.001*xpixelsize,effective_thickness,p.smoothing)
 
 
 class Disk(PatternGenerator):
@@ -485,9 +486,9 @@ class SquareGrating(PatternGenerator):
         Return a square-wave grating (alternating black and white bars).
         """
         return around(
-	  0.5 + 
-	  0.5*sin(pi*(p.duty_cycle-0.5)) + 
-	  0.5*sin(p.frequency*2*pi*self.pattern_y + p.phase))
+          0.5 + 
+          0.5*sin(pi*(p.duty_cycle-0.5)) + 
+          0.5*sin(p.frequency*2*pi*self.pattern_y + p.phase))
 
 # CB: I removed motion_sign from this class because I think it is
 # unnecessary. But maybe I misunderstood the original author's
