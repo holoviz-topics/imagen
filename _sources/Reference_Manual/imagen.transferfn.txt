@@ -1,0 +1,25 @@
+imagen.transferfn Package
+=========================
+
+:mod:`transferfn` Package
+-------------------------
+
+.. inheritance-diagram:: imagen.transferfn
+
+
+.. automodule:: imagen.transferfn
+    :members:
+    :inherited-members:
+    :show-inheritance:
+
+:mod:`sheet_tf` Module
+----------------------
+
+.. inheritance-diagram:: imagen.transferfn.sheet_tf
+
+
+.. automodule:: imagen.transferfn.sheet_tf
+    :members:
+    :inherited-members:
+    :show-inheritance:
+

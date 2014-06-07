@@ -1,0 +1,87 @@
+imagen.imagen Package
+=====================
+
+:mod:`imagen` Package
+---------------------
+
+.. inheritance-diagram:: imagen.__init__
+
+
+.. automodule:: imagen.__init__
+    :members:
+    :inherited-members:
+    :show-inheritance:
+
+:mod:`analysis` Module
+----------------------
+
+.. inheritance-diagram:: imagen.analysis
+
+
+.. automodule:: imagen.analysis
+    :members:
+    :inherited-members:
+    :show-inheritance:
+
+:mod:`audio` Module
+-------------------
+
+.. inheritance-diagram:: imagen.audio
+
+
+.. automodule:: imagen.audio
+    :members:
+    :inherited-members:
+    :show-inheritance:
+
+:mod:`image` Module
+-------------------
+
+.. inheritance-diagram:: imagen.image
+
+
+.. automodule:: imagen.image
+    :members:
+    :inherited-members:
+    :show-inheritance:
+
+:mod:`patternfn` Module
+-----------------------
+
+.. inheritance-diagram:: imagen.patternfn
+
+
+.. automodule:: imagen.patternfn
+    :members:
+    :inherited-members:
+    :show-inheritance:
+
+:mod:`patterngenerator` Module
+------------------------------
+
+.. inheritance-diagram:: imagen.patterngenerator
+
+
+.. automodule:: imagen.patterngenerator
+    :members:
+    :inherited-members:
+    :show-inheritance:
+
+:mod:`random` Module
+--------------------
+
+.. inheritance-diagram:: imagen.random
+
+
+.. automodule:: imagen.random
+    :members:
+    :inherited-members:
+    :show-inheritance:
+
+Subpackages
+-----------
+
+.. toctree::
+
+    imagen.transferfn
+
