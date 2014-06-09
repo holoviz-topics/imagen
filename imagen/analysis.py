@@ -54,7 +54,8 @@ class fft_power_spectrum(ViewOperation):
         bb = BoundingBox(radius=(density/2)/(r-l))
 
         return [SheetView(normalized_spectrum, bb,
-                          label=sheetview.label + ' ' + self.p.label)]
+                          label=sheetview.label + ' ' + self.p.label,
+                          value="FFT Power")]
 
 
 
@@ -91,7 +92,7 @@ class gradient(ViewOperation):
             dy = 0.5 * cyclic_range - np.abs(dy - 0.5 * cyclic_range)
 
         return [SheetView(np.sqrt(dx*dx + dy*dy), sheetview.bounds,
-                          label=sheetview.label + ' ' + self.p.label)]
+                          value=sheetview.label + ' ' + self.p.label)]
 
 
 
@@ -113,7 +114,7 @@ class autocorrelation(ViewOperation):
         data = sheetview.data
         autocorr_data = scipy.signal.correlate2d(data, data)
         return [SheetView(autocorr_data, sheetview.bounds,
-                          label=sheetview.label + ' ' + self.p.label)]
+                          value=sheetview.label + ' ' + self.p.label)]
 
 
 
@@ -159,7 +160,7 @@ class cyclic_similarity_index(ViewOperation):
         # As this is made into a unit metric, uncorrelated has value zero.
         similarity = (2 * (similarity - 0.5)) if self.p.unit_range else similarity
         return [SheetView(similarity, bounds=overlay.bounds,
-                          label=overlay[0].label + ' ' + self.p.label)]
+                          value=overlay[0].label + ' ' + self.p.label)]
 
 
 options.CyclicSimilarity_SheetView    = GrayNearest
