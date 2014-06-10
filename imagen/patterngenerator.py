@@ -1,7 +1,6 @@
 """
 PatternGenerator abstract class and basic example concrete class.
 """
-__version__='$Revision$'
 
 
 from math import pi
@@ -12,8 +11,8 @@ import param
 from param.parameterized import ParamOverrides
 
 from dataviews import SheetView
-from dataviews.sheetviews.boundingregion import BoundingBox, BoundingRegionParameter
-from dataviews.sheetviews.sheetcoords import SheetCoordinateSystem
+from dataviews.sheetviews import BoundingBox, BoundingRegionParameter, SheetCoordinateSystem
+
 from dataviews.options import options, StyleOpts
 
 from imagen.transferfn import TransferFn

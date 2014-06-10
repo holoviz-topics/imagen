@@ -10,7 +10,10 @@ combined with the existing classes easily.
 
 from __future__ import with_statement
 
-__version__='$Revision$'
+import param
+from param.version import Version
+
+__version__ = Version(release=(1,0,0), fpath=__file__, commit="$Format:%h$")
 
 
 import numpy
@@ -19,16 +22,16 @@ from numpy import abs, add, alltrue, array, ceil, clip, cos, fft, flipud, \
         floor, fmod, exp, hstack, Infinity, linspace, multiply, nonzero, pi, \
         repeat, sin, sqrt, subtract, tile, zeros, sum, max
 
-import param
+
 from param.parameterized import ParamOverrides
 from param import ClassSelector
 
 # Imported here so that all PatternGenerators will be in the same package
 from patterngenerator import Constant, PatternGenerator
 
-from dataviews import SheetStack
-from dataviews.sheetviews.sheetcoords import SheetCoordinateSystem
-from dataviews.sheetviews import boundingregion, sheetcoords # pyflakes:ignore (API import)
+from dataviews import SheetStack, Dimension
+from dataviews.sheetviews import SheetCoordinateSystem
+from dataviews import boundingregion, sheetcoords # pyflakes:ignore (API import)
 
 from patternfn import gaussian,exponential,gabor,line,disk,ring,\
     sigmoid,arc_by_radian,arc_by_center,smooth_rectangle,float_error_ignore, \
@@ -742,7 +745,7 @@ class Animation(SheetStack):
        must be an integer multiple of this timestep value (which may
        be a float or some other numeric type).""" )
 
-    dimensions = param.List(default=['frames'], constant=True, doc="""
+    dimensions = param.List(default=[Dimension('Frames')], constant=True, doc="""
        Animations are indexed by time. This may be by integer frame
        number or some continuous (e.g. floating point or rational)
        representation of time.""")
@@ -1544,11 +1547,7 @@ class Spectrogram(PowerSpectrum):
 
         return super(Spectrogram, self).__call__()
 
-import os
 _public = list(set([_k for _k,_v in locals().items() if isinstance(_v,type) and issubclass(_v,PatternGenerator)]))
-__all__ = _public + ["image", "random","boundingregion", "sheetcoords"]
-__path__.append(os.path.abspath(os.path.dirname(boundingregion.__file__)))
-__path__.append(os.path.abspath(os.path.dirname(sheetcoords.__file__)))
-
+__all__ = _public + ["image", "random", "boundingregion", "sheetcoords"]
 # Avoids loading the audio and opencvcamera modules, which rely on external
 # libraries that might not be present on this system.

@@ -8,9 +8,6 @@ the functions therefore have the same mathematical behaviour as numpy.
 
 from __future__ import with_statement
 
-__version__='$Revision$'
-
-
 
 from math import pi
 

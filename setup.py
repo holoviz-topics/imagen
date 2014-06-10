@@ -2,7 +2,7 @@
 
 import sys
 from distutils.core import setup
-
+import imagen
 
 setup_args = {}
 
@@ -39,7 +39,7 @@ for package_list in packages_to_state:
 
 setup_args.update(dict(
     name='imagen',
-    version='1.0',
+    version=str(imagen.__version__),
     description='Generic Python library for 0D, 1D, and 2D pattern distributions.',
     long_description=open('README.rst').read(),
     author= "IOAM",
@@ -49,7 +49,7 @@ setup_args.update(dict(
     platforms=['Windows', 'Mac OS X', 'Linux'],
     license='BSD',
     url='http://ioam.github.com/imagen/',
-    packages = ["imagen","numbergen"],
+    packages = ["imagen"],
     classifiers = [
         "License :: OSI Approved :: BSD License",
         "Development Status :: 5 - Production/Stable",
@@ -66,4 +66,8 @@ setup_args.update(dict(
 
 
 if __name__=="__main__":
+
+    if 'bdist_wininst' in sys.argv or 'upload' in sys.argv:
+        imagen.__version__.verify()
+
     setup(**setup_args)

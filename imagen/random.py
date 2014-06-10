@@ -1,7 +1,6 @@
 """
 Two-dimensional pattern generators drawing from various random distributions.
 """
-__version__='$Revision$'
 
 import numpy as np
 
@@ -10,7 +9,7 @@ from numpy.oldnumeric import zeros,floor,where,choose,less,greater,Int,random_ar
 import param
 from param.parameterized import ParamOverrides
 
-from dataviews.sheetviews.sheetcoords import SheetCoordinateSystem
+from dataviews.sheetviews import SheetCoordinateSystem
 
 from patterngenerator import PatternGenerator
 from imagen import Composite, Gaussian

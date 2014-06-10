@@ -2,5 +2,4 @@ include README.txt
 include LICENSE.txt
 include setup.py
 recursive-include imagen *.py
-recursive-include numbergen *.py
 
