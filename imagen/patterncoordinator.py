@@ -38,7 +38,7 @@ class FeatureCoordinator(param.ParameterizedFunction):
 
         
         
-class FC_x(FeatureCoordinator):
+class XCoordinator(FeatureCoordinator):
     """
     Chooses a random value for the x coordinate, subject to the provided position_bound_x.
     """
@@ -53,7 +53,7 @@ class FC_x(FeatureCoordinator):
         
         
         
-class FC_y(FeatureCoordinator):
+class YCoordinator(FeatureCoordinator):
     """
     Chooses a random value for the y coordinate, subject to the provided position_bound_y.
     """
@@ -68,7 +68,7 @@ class FC_y(FeatureCoordinator):
        
         
         
-class FC_orientation(FeatureCoordinator):
+class OrientationCoordinator(FeatureCoordinator):
     """
     Chooses a random orientation within the specified orientation_bound in each direction.
     """
@@ -136,8 +136,8 @@ class PatternCoordinator(param.Parameterized):
         These parameters are passed to the composite specified in composite_type.""")
     
     feature_coordinators = param.Dict(default={
-        'xy': [FC_x, FC_y],
-        'or': FC_orientation},doc="""
+        'xy': [XCoordinator,YCoordinator],
+        'or': OrientationCoordinator},doc="""
         Mapping from the feature name (key) to the method(s) which are applied to the pattern generators.
         The value can either be a single method or a list of methods.""")
     
@@ -179,24 +179,24 @@ class PatternCoordinator(param.Parameterized):
         if(len((set(self._inherent_features.keys()) - set(self.features_to_vary)) & set(self.feature_coordinators.keys()))):
             self.warning('Inherent feature present which is not requested in features!')
         
-        self.feature_coordinators_to_apply = []
+        self._feature_coordinators_to_apply = []
         for feature, feature_coordinator in self.feature_coordinators.iteritems():
             if feature in self.features_to_vary and feature not in self._inherent_features:
                 # if it is a list, append each list item individually
                 if isinstance(feature_coordinator,list):
                     for individual_feature_coordinator in feature_coordinator:
-                        self.feature_coordinators_to_apply.append(individual_feature_coordinator)
+                        self._feature_coordinators_to_apply.append(individual_feature_coordinator)
                 else:
-                    self.feature_coordinators_to_apply.append(feature_coordinator)
+                    self._feature_coordinators_to_apply.append(feature_coordinator)
                     
     def __call__(self):
         coordinated_pattern_generators={}
         for pattern_label in self.pattern_labels:
             patterns=self._create_patterns({'pattern_label': pattern_label})
             
-            # Apply feature_coordinators_to_apply
+            # Apply _feature_coordinators_to_apply
             for i in xrange(len(patterns)):
-                for fn in self.feature_coordinators_to_apply:
+                for fn in self._feature_coordinators_to_apply:
                     fn(patterns[i],pattern_label,i,self.master_seed,**self._feature_params)
                     
             combined_patterns=self.composite_type(generators=patterns,**self.composite_parameters)
