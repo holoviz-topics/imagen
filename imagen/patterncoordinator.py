@@ -1,10 +1,13 @@
 """
-The ImaGen patterncoordinator module provides the class PatternCoordinator, which contains a set of coordinated pattern generators.
-The values of the coordinated pattern generators are modified with subclasses of FeatureCoordinator.
+Provides the class PatternCoordinator and a family of FeatureCoordinator classes.
+
+PatternCoordinator creates a set of pattern generators whose parameters are 
+related in some way, as controlled by a subclass of FeatureCoordinator.
 """
 
 from os import listdir
 from os.path import isfile, join
+
 import math
 import json
 
@@ -17,22 +20,34 @@ from imagen import Gaussian, Composite, Selector, CompositeBase
 
 import numbergen
 
+
 class FeatureCoordinator(param.ParameterizedFunction):
     """ 
-    A FeatureCoordinator modifies a PatternGenerator. The modification can depend on the pattern_label. 
-    It supports having multiple pattern generators, by indexing the generators with pattern_number. 
-    To get new pattern generators, one can change the master_seed.
-    Subclasses of this class can use parameters given in params.
-    This superclass ensures a common interface across all FeatureCoordinator subclasses, which is necessary 
-    because they are usually stored in a list, and each item is called the same way."""
+    A FeatureCoordinator modifies a supplied PatternGenerator. 
+
+    The modification can depend on the string pattern_label and
+    pattern_number supplied, in order to coordinate a set of patterns
+    of the same type with systematic differences.
+    
+    FeatureCoordinators that introduce randomness should be seeded
+    with a value based on the supplied master_seed, so that an
+    entire set of patterns can be controlled with the one master_seed
+    value.
+
+    Subclasses of this class can accept parameters provided in params.
+
+    This superclass ensures a common interface across all
+    FeatureCoordinator subclasses, which is necessary because they are
+    usually stored in a list, with each item called the same way.
+    """
     
     def __call__(self, pattern, pattern_label, pattern_number, master_seed, **params):
         """
         'pattern' is the PatternGenerator to be modified
-        'pattern_label' is the name of the PatternGenerator, and this might be used to handle PatternGenerators differently depending on their name
-        'pattern_number' is an integer referring the PatternGenerator with index pattern_number in case the final pattern is composed of several generators
-        'master_seed' is a seed which can be changed to get completely new pattern generator properties
-        'params' is a parameter list of which a subset can be used in subclasses of this class
+        'pattern_label' is the name to be given to this PatternGenerator, used to select different behaviors
+        'pattern_number' is an integer value distinguishing between multiple patterns with the same pattern_label
+        'master_seed' is to be used for any random number generator seeds used for this pattern
+        'params' consists of optional keyword-value pairs to be provided for subclasses' parameters
         """
         raise NotImplementedError
 
@@ -48,7 +63,6 @@ class XCoordinator(FeatureCoordinator):
 
     def __call__(self, pattern, pattern_label, pattern_number, master_seed, **params):
         p = ParamOverrides(self,params,allow_extra_keywords=True)
-                
         pattern.x += numbergen.UniformRandom(lbound=-p.position_bound_x,ubound=p.position_bound_x,seed=master_seed+12+pattern_number)
         
         
@@ -63,7 +77,6 @@ class YCoordinator(FeatureCoordinator):
 
     def __call__(self, pattern, pattern_label, pattern_number, master_seed, **params):
         p = ParamOverrides(self,params,allow_extra_keywords=True)
-                
         pattern.y += numbergen.UniformRandom(lbound=-p.position_bound_y,ubound=p.position_bound_y,seed=master_seed+35+pattern_number)
        
         
@@ -78,106 +91,128 @@ class OrientationCoordinator(FeatureCoordinator):
     
     def __call__(self, pattern, pattern_label, pattern_number, master_seed, **params):
         p = ParamOverrides(self,params,allow_extra_keywords=True)
-
         pattern.orientation = numbergen.UniformRandom(lbound=-p.orientation_bound,ubound=p.orientation_bound,seed=master_seed+21+pattern_number)
         
         
         
 class PatternCoordinator(param.Parameterized):
     """
-    Returns a set of coordinated pattern generators. The pattern generators are named according to pattern_labels.
+    Returns a set of coordinated PatternGenerators, named according to pattern_labels.
     
-    The features to be returned are specified with the features_to_vary parameter. A feature is something coordinated between 
-    the PatternGenerators, either 
-        (a) one of the parameters of the PatternGenerators (such as size), 
-        (b) something that affects the parameters that is calculated by a metafeature_function (such as disparity), or 
-        (c) something that is inherent to the dataset.
+    The features to be modified are specified with the features_to_vary
+    parameter. A feature is something coordinated between the
+    PatternGenerators, either:
+
+    a. one of the existing parameters of the PatternGenerators   
+       (such as size), or
+    b. a variable from which values for one of the existing parameters
+       can be calculated (such as a position offset between two
+       PatternGenerators), or
+    c. a value inherent to a particular existing image dataset 
+       (due to how the dataset was collected or generated).
     
-    PatternGenerators are first instantiated with the parameters specified in pattern_parameters, 
-    and then subclasses of FeatureCoordinator are applied to modify the properties of these generators.
+    Each PatternGenerator is first instantiated with the supplied
+    pattern_parameters, and then subclasses of FeatureCoordinator are
+    applied sequentially to modify the specified or default parameter
+    values of each PatternGenerator.
     """
     
     pattern_type = param.ClassSelector(PatternGenerator,default=Gaussian,is_instance=False,doc="""
-        PatternGenerator to be used. Usually is one of those defined in imagen/__init__
-        Parameters passed to the pattern generator can be specified in pattern_parameters.""")
+        PatternGenerator type to be used.""")
     
     pattern_parameters = param.Dict(default={'size': 0.088388, 'aspect_ratio': 4.66667},doc="""
-        These parameters are passed to the PatternGenerator specified in pattern_type.""")
+        Parameter values to be passed to the PatternGenerator specified in pattern_type.""")
     
     patterns_per_label = param.Integer(default=2,doc="""
-        Number of patterns used to generate one pattern.""")
+        Number of patterns to generate and combine for a given label.""")
     
     features_to_vary = param.List(default=['xy','or'],class_=str,doc="""
-        Stimulus features to vary, such as:
+        Stimulus features that the caller wishes to be varied, such as:
           :'xy': Position in x and y coordinates
           :'or': Orientation
           
-        Subclasses and callers may extend this list to include any other features
-        for which a coordinator has been defined in feature_coordinators.""")
+        Subclasses and callers may extend this list to include any
+        other features for which a coordinator has been defined in
+        feature_coordinators.""")
     
-    pattern_labels = param.List(default=['Pattern1','Pattern2'],class_=str,bounds=(1,None),doc="""     
-        For each string in this list, a PatternGenerator of the requested type will be returned,
-        with parameters whose values may depend on the string supplied. For instance, if the 
-        list ["Pattern1","Pattern2"] is supplied, a metafeature function might inspect those
-        pattern_labels and set parameters differently for Pattern1 and Pattern2, returning two different
+    pattern_labels = param.List(default=['Input'],class_=str,bounds=(1,None),doc="""     
+        For each string in this list, a PatternGenerator of the
+        requested pattern_type will be returned, with parameters whose
+        values may depend on the string label supplied. For instance,
+        if the list ["Pattern1","Pattern2"] is supplied, a metafeature
+        function might inspect those pattern_labels and set parameters
+        differently for Pattern1 and Pattern2, returning two different
         PatternGenerators with those pattern_labels.""")
                     
     master_seed = param.Integer(default=0,doc="""
-        Base seed for the patterns. Each numbered pattern on each of the various pattern_labels will have a different 
-        random seed, but all of these seeds include this master seed value, and so changing it will alter the streams of 
-        all the random pattern parameters.""")
+        Base seed for all pattern parameter values. Each numbered
+        pattern on each of the various pattern_labels will normally
+        use a different random seed, but all of these seeds should
+        include this master_seed value, so that changing it will
+        change all of the random pattern parameter streams.""")
     
     composite_type = param.ClassSelector(CompositeBase,default=Composite,is_instance=False,doc="""
-        Class that combines the patterns_per_label individual patterns and creates a single pattern that it returns. 
-        For instance, Composite can merge the individual patterns into a single pattern using a variety of operators 
-        like add or maximum, while Selector can choose one out of a given set of patterns.""")
+        Class that combines the patterns_per_label individual patterns
+        and creates a single combined pattern that it returns for a
+        given label.  For instance, imagen.Composite can merge the
+        individual patterns into a single pattern using a variety of
+        operators like add or maximum, while imagen.Selector can
+        choose one out of a given set of patterns.""")
     
     composite_parameters = param.Dict(default={},doc="""
-        These parameters are passed to the composite specified in composite_type.""")
+        If present, these parameter values will be passed to the composite specified in composite_type.""")
     
     feature_coordinators = param.Dict(default={
         'xy': [XCoordinator,YCoordinator],
         'or': OrientationCoordinator},doc="""
-        Mapping from the feature name (key) to the method(s) which are applied to the pattern generators.
-        The value can either be a single method or a list of methods.""")
+        Mapping from the feature name (key) to the method(s) to be
+        applied to the pattern generators.  The value can either be a
+        single method or a list of methods.""")
     
     
     def _create_patterns(self, properties=None):
         """
-        _create_patterns returns a list of PatternGenerator instances. There must be patterns_per_label instances
-        in this list. To create the instances, pattern_type should be used (passing pattern_parameters).
+        Return a list (of length patterns_per_label) of PatternGenerator instances. 
+        Should use pattern_type and pattern_parameters to create each pattern.
         
-        properties is a dictionary {'pattern_label': pattern_label} which can be used to create PatternGenerators
+        properties is a dictionary, e.g. {'pattern_label':
+        pattern_label}, which can be used to create PatternGenerators
         depending on the requested pattern_label
         """
         return [self.pattern_type(**self.pattern_parameters) for i in xrange(self.patterns_per_label)]    
     
     
-    def __init__(self,_inherent_features={},**params):
+    def __init__(self,inherent_features={},**params):
+
         """
-        params can have extra keywords. They are passed down to the methods specified in
-        feature_coordinators, in case the corresponding feature is requested in features_to_vary.
+        If a dataset already and inherently includes certain features, a dictionary 
+        with feature-name:code-to-access-the-feature pairs should be supplied
+        specifying how to select (e.g. from a set of images) the appropriate 
+        feature value.  
+
+        Any extra parameter values supplied here will be passed down to the
+        feature_coordinators requested in features_to_vary.
         """
-        #_inherent_features can be used to declare that for the dataset in use, the specified features are inherently 
-        #forced to vary and need not be synthesized using the feature_coordinators.
         p=ParamOverrides(self,params,allow_extra_keywords=True)
      
         super(PatternCoordinator, self).__init__(**p.param_keywords())
         
         self._feature_params = p.extra_keywords()
         
-        self._inherent_features = _inherent_features
+        self._inherent_features = inherent_features
         
-        # This checks whether there are keys in _inherent_features which are not in features
         # And also, this key must be in feature_coordinators because _inherent_features
         # can have additional features such as i to support multiple images
         
-        # TFALERT: Once spatial frequency (sf) is added, this will cause warnings, because all image 
-        # datasets will have a spatial frequency inherent feature, but mostly we just ignore that by having 
-        # only a single size of DoG, which discards all but a narrow range of sf. 
-        # So the dataset will have sf inherently, but that won't be an error or even worthy of a warning.
+        # TFALERT: Once spatial frequency (sf) is added, this will
+        # cause warnings, because all image datasets will have a
+        # spatial frequency inherent feature, but mostly we just
+        # ignore that by having only a single size of DoG, which
+        # discards all but a narrow range of sf.  So the dataset will
+        # have sf inherently, but that won't be an error or even
+        # worthy of a warning.
         if(len((set(self._inherent_features.keys()) - set(self.features_to_vary)) & set(self.feature_coordinators.keys()))):
-            self.warning('Inherent feature present which is not requested in features!')
+            self.warning('Inherent feature present which is not requested in features')
         
         self._feature_coordinators_to_apply = []
         for feature, feature_coordinator in self.feature_coordinators.iteritems():
@@ -214,34 +249,50 @@ class PatternCoordinatorImages(PatternCoordinator):
         
     def __init__(self,dataset_name,**params):
         """
-        dataset_name is the path to a JSON file (https://docs.python.org/2/library/json.html) containing a description for a dataset
+        dataset_name is the path to a JSON file (https://docs.python.org/2/library/json.html) 
+        containing a description for a dataset.
+
+        Any extra parameter values supplied here will be passed down to the
+        feature_coordinators requested in features_to_vary.
+
         The JSON file should contain the following entries:
+
             :'name': Name of the dataset (string, default=basename(dataset_name))
             :'length': Number of images in the dataset (integer, default=number of files in directory of dataset_name minus 1)
             :'description': Description of the dataset (string, default="")
             :'source': Citation of paper for which the dataset was created (string, default=name)
             :'filename_template': Path to the images with placeholders ({placeholder_name})
             for inherent features and the image number, e.g. "filename_template": "images/image{i}.png"
-            default={current_image}.jpg
-            :'inherent_features': Dictionary specifying how to access inherent features, value is used in eval().
-            Currently the label of the pattern generator ('pattern_label') as well as the image number ('current_image') are given
-            as parameters, whereas current_image varies from 0 to length-1 and pattern_label is one of the items of
-            pattern_labels. Default={'i': lambda params: '%02d' % (params['current_image']+1)}
-            Example 1: Imagine having images without any inherent features named as follows: "images/image01.png",
-            "images/image02.png" and so on. Then, filename_template: "images/image{i}.png" and
-            "inherent_features": "{'i': lambda params: '%02d' % (params['current_image']+1)}"
+            (default={current_image}.jpg)
+            :'inherent_features': Dictionary specifying how to access inherent features; value is used in eval().
+
+            Currently, the label of the pattern generator
+            ('pattern_label') as well as the image number
+            ('current_image') are given as parameters to each callable
+            supplied in inherent_features, where current_image varies
+            from 0 to length-1 and pattern_label is one of the items
+            of pattern_labels. (python code, default={'i': lambda params: '%02d' % (params['current_image']+1)}
+
+            Example 1: Imagine having images without any inherent
+            features named as follows: "images/image01.png",
+            "images/image02.png" and so on. Then, filename_template:
+            "images/image{i}.png" and "inherent_features": 
+            "{'i': lambda params: '%02d' % (params['current_image']+1)}" 
             This replaces {i} in the template with the current image number + 1
+
             Example 2: Imagine having image pairs from a stereo webcam named as follows: "images/image01_left.png", 
             "images/image01_right.png" and so on. If pattern_labels=['Left','Right'], then
             filename_template: "images/image{i}_{dy}" and
             "inherent_features": "{'i': lambda params: '%02d' % (params['current_image']+1),
                                    'dy':lambda params: 'left' if params['pattern_label']=='Left' else 'right'}"
+
             Here, additionally {dy} gets replaced by either 'left' if the pattern_label is 'Left' or 'right' otherwise
         """
         
         filename=param.resolve_path(dataset_name)
         filepath=os.path.dirname(filename)
         dataset=json.loads(open(filename).read())
+
         self.dataset_name=dataset.get('name', os.path.basename(dataset_name))
         self.patterns_per_label=dataset.get('length', len([ f for f in listdir(filepath) if isfile(join(filepath,f)) ]) - 1)
         self.description=dataset.get('description', "")
