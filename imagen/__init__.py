@@ -13,7 +13,8 @@ from __future__ import with_statement
 import param
 from param.version import Version
 
-__version__ = Version(release=(1,0,0), fpath=__file__, commit="$Format:%h$")
+__version__ = Version(release=(1,0,0), fpath=__file__,
+                      commit="$Format:%h$", reponame='imagen')
 
 
 import numpy
