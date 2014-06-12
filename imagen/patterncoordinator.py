@@ -5,9 +5,7 @@ PatternCoordinator creates a set of pattern generators whose parameters are
 related in some way, as controlled by a subclass of FeatureCoordinator.
 """
 
-from os import listdir
-from os.path import isfile, join
-
+import os
 import math
 import json
 
@@ -294,7 +292,8 @@ class PatternCoordinatorImages(PatternCoordinator):
         dataset=json.loads(open(filename).read())
 
         self.dataset_name=dataset.get('name', os.path.basename(dataset_name))
-        self.patterns_per_label=dataset.get('length', len([ f for f in listdir(filepath) if isfile(join(filepath,f)) ]) - 1)
+        length = len([ f for f in os.listdir(filepath) if os.path.isfile(os.path.join(filepath,f)) ]) - 1
+        self.patterns_per_label=dataset.get('length', length)
         self.description=dataset.get('description', "")
         self.filename_template=dataset.get('filename_template', filepath+"/{i}.jpg")
         self.source=dataset.get('source', self.dataset_name)
