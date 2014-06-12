@@ -27,7 +27,7 @@
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../../_static/custom.js"></script>
     <link rel="top" title="ImaGen 1.0-dev documentation" href="../../index.html" />
-    <link rel="up" title="imagen" href="../imagen.html" /> 
+    <link rel="up" title="Module code" href="../index.html" /> 
   </head>
   <body>
     <div class="related">
@@ -42,7 +42,7 @@
 
 <li><a href="../../index.html">ImaGen Home</a></li>
 <li><a href="../../Tutorials/index.html">Tutorials</a></li>
-<li><a href="../../Reference_Manual/imagen-module.html">Reference Manual</a></li>
+<li><a href="../../Reference_Manual/imagen.html">Reference Manual</a></li>
 
 
 
@@ -50,8 +50,7 @@
 
 
 
-          <li><a href="../index.html" >Module code</a> &raquo;</li>
-          <li><a href="../imagen.html" accesskey="U">imagen</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li>
 
 </ul></li>
 
@@ -68,14 +67,13 @@
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">TransferFns: accept and modify a 2d array</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="n">__version__</span><span class="o">=</span><span class="s">&#39;$Revision$&#39;</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span>
 
 <span class="kn">import</span> <span class="nn">param</span>
 
 
-<div class="viewcode-block" id="TransferFn"><a class="viewcode-back" href="../../Reference_Manual/imagen.transferfn-module.html#imagen.transferfn.TransferFn">[docs]</a><span class="k">class</span> <span class="nc">TransferFn</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">Parameterized</span><span class="p">):</span>
+<div class="viewcode-block" id="TransferFn"><a class="viewcode-back" href="../../Reference_Manual/imagen.transferfn.html#imagen.transferfn.TransferFn">[docs]</a><span class="k">class</span> <span class="nc">TransferFn</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">Parameterized</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Function object to modify a matrix in place, e.g. for normalization.</span>
 
@@ -96,7 +94,7 @@
     <span class="c"># term for it, general to output functions?  JAB: Please do rename it!</span>
     <span class="n">norm_value</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
 
-<div class="viewcode-block" id="TransferFn.initialize"><a class="viewcode-back" href="../../Reference_Manual/imagen.transferfn-module.html#imagen.transferfn.TransferFn.initialize">[docs]</a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>  <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="TransferFn.initialize"><a class="viewcode-back" href="../../Reference_Manual/imagen.transferfn.html#imagen.transferfn.TransferFn.initialize">[docs]</a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>  <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Transfer functions may need additional information before the</span>
 <span class="sd">        supplied numpy array can be modified in place. For instance,</span>
@@ -116,7 +114,7 @@
 <span class="c"># Trivial example of a TransferFn, provided for when a default</span>
 <span class="c"># is needed.  The other concrete OutputFunction classes are stored</span>
 <span class="c"># in transferfn/, to be imported as needed.</span></div>
-<div class="viewcode-block" id="IdentityTF"><a class="viewcode-back" href="../../Reference_Manual/imagen.transferfn-module.html#imagen.transferfn.IdentityTF">[docs]</a><span class="k">class</span> <span class="nc">IdentityTF</span><span class="p">(</span><span class="n">TransferFn</span><span class="p">):</span>
+<div class="viewcode-block" id="IdentityTF"><a class="viewcode-back" href="../../Reference_Manual/imagen.transferfn.html#imagen.transferfn.IdentityTF">[docs]</a><span class="k">class</span> <span class="nc">IdentityTF</span><span class="p">(</span><span class="n">TransferFn</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Identity function, returning its argument as-is.</span>
 
@@ -130,7 +128,7 @@
         <span class="k">pass</span>
 
 </div>
-<div class="viewcode-block" id="Scale"><a class="viewcode-back" href="../../Reference_Manual/imagen.transferfn-module.html#imagen.transferfn.Scale">[docs]</a><span class="k">class</span> <span class="nc">Scale</span><span class="p">(</span><span class="n">TransferFn</span><span class="p">):</span>
+<div class="viewcode-block" id="Scale"><a class="viewcode-back" href="../../Reference_Manual/imagen.transferfn.html#imagen.transferfn.Scale">[docs]</a><span class="k">class</span> <span class="nc">Scale</span><span class="p">(</span><span class="n">TransferFn</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Multiply the input array by some constant factor.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -143,7 +141,7 @@
 
 
 </div>
-<div class="viewcode-block" id="Threshold"><a class="viewcode-back" href="../../Reference_Manual/imagen.transferfn-module.html#imagen.transferfn.Threshold">[docs]</a><span class="k">class</span> <span class="nc">Threshold</span><span class="p">(</span><span class="n">TransferFn</span><span class="p">):</span>
+<div class="viewcode-block" id="Threshold"><a class="viewcode-back" href="../../Reference_Manual/imagen.transferfn.html#imagen.transferfn.Threshold">[docs]</a><span class="k">class</span> <span class="nc">Threshold</span><span class="p">(</span><span class="n">TransferFn</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Forces all values below a threshold to zero, and leaves others unchanged.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -156,7 +154,7 @@
 
 
 </div>
-<div class="viewcode-block" id="BinaryThreshold"><a class="viewcode-back" href="../../Reference_Manual/imagen.transferfn-module.html#imagen.transferfn.BinaryThreshold">[docs]</a><span class="k">class</span> <span class="nc">BinaryThreshold</span><span class="p">(</span><span class="n">TransferFn</span><span class="p">):</span>
+<div class="viewcode-block" id="BinaryThreshold"><a class="viewcode-back" href="../../Reference_Manual/imagen.transferfn.html#imagen.transferfn.BinaryThreshold">[docs]</a><span class="k">class</span> <span class="nc">BinaryThreshold</span><span class="p">(</span><span class="n">TransferFn</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Forces all values below a threshold to zero, and above it to 1.0.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -171,7 +169,7 @@
 
 
 </div>
-<div class="viewcode-block" id="DivisiveNormalizeL1"><a class="viewcode-back" href="../../Reference_Manual/imagen.transferfn-module.html#imagen.transferfn.DivisiveNormalizeL1">[docs]</a><span class="k">class</span> <span class="nc">DivisiveNormalizeL1</span><span class="p">(</span><span class="n">TransferFn</span><span class="p">):</span>
+<div class="viewcode-block" id="DivisiveNormalizeL1"><a class="viewcode-back" href="../../Reference_Manual/imagen.transferfn.html#imagen.transferfn.DivisiveNormalizeL1">[docs]</a><span class="k">class</span> <span class="nc">DivisiveNormalizeL1</span><span class="p">(</span><span class="n">TransferFn</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    TransferFn that divides an array by its L1 norm.</span>
 
@@ -193,7 +191,7 @@
 
 
 </div>
-<div class="viewcode-block" id="DivisiveNormalizeL2"><a class="viewcode-back" href="../../Reference_Manual/imagen.transferfn-module.html#imagen.transferfn.DivisiveNormalizeL2">[docs]</a><span class="k">class</span> <span class="nc">DivisiveNormalizeL2</span><span class="p">(</span><span class="n">TransferFn</span><span class="p">):</span>
+<div class="viewcode-block" id="DivisiveNormalizeL2"><a class="viewcode-back" href="../../Reference_Manual/imagen.transferfn.html#imagen.transferfn.DivisiveNormalizeL2">[docs]</a><span class="k">class</span> <span class="nc">DivisiveNormalizeL2</span><span class="p">(</span><span class="n">TransferFn</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    TransferFn to divide an array by its Euclidean length (aka its L2 norm).</span>
 
@@ -211,7 +209,7 @@
 
 
 </div>
-<div class="viewcode-block" id="DivisiveNormalizeLinf"><a class="viewcode-back" href="../../Reference_Manual/imagen.transferfn-module.html#imagen.transferfn.DivisiveNormalizeLinf">[docs]</a><span class="k">class</span> <span class="nc">DivisiveNormalizeLinf</span><span class="p">(</span><span class="n">TransferFn</span><span class="p">):</span>
+<div class="viewcode-block" id="DivisiveNormalizeLinf"><a class="viewcode-back" href="../../Reference_Manual/imagen.transferfn.html#imagen.transferfn.DivisiveNormalizeLinf">[docs]</a><span class="k">class</span> <span class="nc">DivisiveNormalizeLinf</span><span class="p">(</span><span class="n">TransferFn</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    TransferFn to divide an array by its L-infinity norm</span>
 <span class="sd">    (i.e. the maximum absolute value of its elements).</span>
@@ -233,7 +231,7 @@
 
 
 </div>
-<div class="viewcode-block" id="norm"><a class="viewcode-back" href="../../Reference_Manual/imagen.transferfn-module.html#imagen.transferfn.norm">[docs]</a><span class="k">def</span> <span class="nf">norm</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="n">p</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+<div class="viewcode-block" id="norm"><a class="viewcode-back" href="../../Reference_Manual/imagen.transferfn.html#imagen.transferfn.norm">[docs]</a><span class="k">def</span> <span class="nf">norm</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="n">p</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns the Lp norm of v, where p is an arbitrary number defaulting to 2.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -241,7 +239,7 @@
 
 
 </div>
-<div class="viewcode-block" id="DivisiveNormalizeLp"><a class="viewcode-back" href="../../Reference_Manual/imagen.transferfn-module.html#imagen.transferfn.DivisiveNormalizeLp">[docs]</a><span class="k">class</span> <span class="nc">DivisiveNormalizeLp</span><span class="p">(</span><span class="n">TransferFn</span><span class="p">):</span>
+<div class="viewcode-block" id="DivisiveNormalizeLp"><a class="viewcode-back" href="../../Reference_Manual/imagen.transferfn.html#imagen.transferfn.DivisiveNormalizeLp">[docs]</a><span class="k">class</span> <span class="nc">DivisiveNormalizeLp</span><span class="p">(</span><span class="n">TransferFn</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    TransferFn to divide an array by its Lp-Norm, where p is specified.</span>
 
@@ -271,7 +269,7 @@
 
 <li><a href="../../index.html">Home</a></li>
 <li><a href="../../Tutorials/index.html">Tutorials</a></li>
-<li><a href="../../Reference_Manual/imagen-module.html">Reference Manual</a></li>
+<li><a href="../../Reference_Manual/imagen.html">Reference Manual</a></li>
 <li><a href="http://github.com/ioam/imagen">Github Source Code</a></li>
 <li><a href="../../site_map.html">Site Map</a></li>
 </ul>
@@ -313,7 +311,7 @@
 
 <li><a href="../../index.html">ImaGen Home</a></li>
 <li><a href="../../Tutorials/index.html">Tutorials</a></li>
-<li><a href="../../Reference_Manual/imagen-module.html">Reference Manual</a></li>
+<li><a href="../../Reference_Manual/imagen.html">Reference Manual</a></li>
 
 
 
@@ -322,7 +320,6 @@
 
 
           <li><a href="../index.html" >Module code</a> &raquo;</li>
-          <li><a href="../imagen.html" >imagen</a> &raquo;</li>
 
 </ul></li>
 

@@ -27,7 +27,7 @@
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../../_static/custom.js"></script>
     <link rel="top" title="ImaGen 1.0-dev documentation" href="../../index.html" />
-    <link rel="up" title="imagen" href="../imagen.html" /> 
+    <link rel="up" title="Module code" href="../index.html" /> 
   </head>
   <body>
     <div class="related">
@@ -42,7 +42,7 @@
 
 <li><a href="../../index.html">ImaGen Home</a></li>
 <li><a href="../../Tutorials/index.html">Tutorials</a></li>
-<li><a href="../../Reference_Manual/imagen-module.html">Reference Manual</a></li>
+<li><a href="../../Reference_Manual/imagen.html">Reference Manual</a></li>
 
 
 
@@ -50,8 +50,7 @@
 
 
 
-          <li><a href="../index.html" >Module code</a> &raquo;</li>
-          <li><a href="../imagen.html" accesskey="U">imagen</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li>
 
 </ul></li>
 
@@ -80,13 +79,12 @@
 <span class="kn">import</span> <span class="nn">param</span>
 <span class="kn">from</span> <span class="nn">param.parameterized</span> <span class="kn">import</span> <span class="n">overridable_property</span>
 
-<span class="kn">from</span> <span class="nn">dataviews.boundingregion</span> <span class="kn">import</span> <span class="n">BoundingBox</span>
-<span class="kn">from</span> <span class="nn">dataviews.sheetcoords</span> <span class="kn">import</span> <span class="n">SheetCoordinateSystem</span>
+<span class="kn">from</span> <span class="nn">dataviews.sheetviews</span> <span class="kn">import</span> <span class="n">BoundingBox</span><span class="p">,</span> <span class="n">SheetCoordinateSystem</span>
 <span class="kn">from</span> <span class="nn">patterngenerator</span> <span class="kn">import</span> <span class="n">PatternGenerator</span>
 <span class="kn">from</span> <span class="nn">transferfn</span> <span class="kn">import</span> <span class="n">DivisiveNormalizeLinf</span><span class="p">,</span> <span class="n">TransferFn</span>
 
 
-<div class="viewcode-block" id="ImageSampler"><a class="viewcode-back" href="../../Reference_Manual/imagen.image-module.html#imagen.image.ImageSampler">[docs]</a><span class="k">class</span> <span class="nc">ImageSampler</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">Parameterized</span><span class="p">):</span>
+<div class="viewcode-block" id="ImageSampler"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.image.ImageSampler">[docs]</a><span class="k">class</span> <span class="nc">ImageSampler</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">Parameterized</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A class of objects that, when called, sample an image.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -114,7 +112,7 @@
 
 
 <span class="c"># CEBALERT: ArraySampler?</span></div>
-<div class="viewcode-block" id="PatternSampler"><a class="viewcode-back" href="../../Reference_Manual/imagen.image-module.html#imagen.image.PatternSampler">[docs]</a><span class="k">class</span> <span class="nc">PatternSampler</span><span class="p">(</span><span class="n">ImageSampler</span><span class="p">):</span>
+<div class="viewcode-block" id="PatternSampler"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.image.PatternSampler">[docs]</a><span class="k">class</span> <span class="nc">PatternSampler</span><span class="p">(</span><span class="n">ImageSampler</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    When called, resamples - according to the size_normalization</span>
 <span class="sd">    parameter - an image at the supplied (x,y) sheet coordinates.</span>
@@ -257,7 +255,7 @@
 
 
 </div>
-<div class="viewcode-block" id="edge_average"><a class="viewcode-back" href="../../Reference_Manual/imagen.image-module.html#imagen.image.edge_average">[docs]</a><span class="k">def</span> <span class="nf">edge_average</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+<div class="viewcode-block" id="edge_average"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.image.edge_average">[docs]</a><span class="k">def</span> <span class="nf">edge_average</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
     <span class="s">&quot;Return the mean value around the edge of an array.&quot;</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ravel</span><span class="p">(</span><span class="n">a</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
@@ -275,7 +273,7 @@
 
 
 </div>
-<div class="viewcode-block" id="FastImageSampler"><a class="viewcode-back" href="../../Reference_Manual/imagen.image-module.html#imagen.image.FastImageSampler">[docs]</a><span class="k">class</span> <span class="nc">FastImageSampler</span><span class="p">(</span><span class="n">ImageSampler</span><span class="p">):</span>
+<div class="viewcode-block" id="FastImageSampler"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.image.FastImageSampler">[docs]</a><span class="k">class</span> <span class="nc">FastImageSampler</span><span class="p">(</span><span class="n">ImageSampler</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A fast-n-dirty image sampler using Python Imaging Library</span>
 <span class="sd">    routines.  Currently this sampler doesn&#39;t support user-specified</span>
@@ -308,7 +306,7 @@
 
 
 <span class="c"># Would be best called Image, but that causes confusion with Image&#39;s Image</span></div>
-<div class="viewcode-block" id="GenericImage"><a class="viewcode-back" href="../../Reference_Manual/imagen.image-module.html#imagen.image.GenericImage">[docs]</a><span class="k">class</span> <span class="nc">GenericImage</span><span class="p">(</span><span class="n">PatternGenerator</span><span class="p">):</span>
+<div class="viewcode-block" id="GenericImage"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.image.GenericImage">[docs]</a><span class="k">class</span> <span class="nc">GenericImage</span><span class="p">(</span><span class="n">PatternGenerator</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Generic 2D image generator.</span>
 
@@ -414,7 +412,7 @@
 
 
 </div>
-<div class="viewcode-block" id="FileImage"><a class="viewcode-back" href="../../Reference_Manual/imagen.image-module.html#imagen.image.FileImage">[docs]</a><span class="k">class</span> <span class="nc">FileImage</span><span class="p">(</span><span class="n">GenericImage</span><span class="p">):</span>
+<div class="viewcode-block" id="FileImage"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.image.FileImage">[docs]</a><span class="k">class</span> <span class="nc">FileImage</span><span class="p">(</span><span class="n">GenericImage</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    2D Image generator that reads the image from a file.</span>
 
@@ -443,7 +441,7 @@
 
 
 </div>
-<div class="viewcode-block" id="NumpyFile"><a class="viewcode-back" href="../../Reference_Manual/imagen.image-module.html#imagen.image.NumpyFile">[docs]</a><span class="k">class</span> <span class="nc">NumpyFile</span><span class="p">(</span><span class="n">GenericImage</span><span class="p">):</span>
+<div class="viewcode-block" id="NumpyFile"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.image.NumpyFile">[docs]</a><span class="k">class</span> <span class="nc">NumpyFile</span><span class="p">(</span><span class="n">GenericImage</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Read an array from a Numpy-format file.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -481,7 +479,7 @@
 
 <li><a href="../../index.html">Home</a></li>
 <li><a href="../../Tutorials/index.html">Tutorials</a></li>
-<li><a href="../../Reference_Manual/imagen-module.html">Reference Manual</a></li>
+<li><a href="../../Reference_Manual/imagen.html">Reference Manual</a></li>
 <li><a href="http://github.com/ioam/imagen">Github Source Code</a></li>
 <li><a href="../../site_map.html">Site Map</a></li>
 </ul>
@@ -523,7 +521,7 @@
 
 <li><a href="../../index.html">ImaGen Home</a></li>
 <li><a href="../../Tutorials/index.html">Tutorials</a></li>
-<li><a href="../../Reference_Manual/imagen-module.html">Reference Manual</a></li>
+<li><a href="../../Reference_Manual/imagen.html">Reference Manual</a></li>
 
 
 
@@ -532,7 +530,6 @@
 
 
           <li><a href="../index.html" >Module code</a> &raquo;</li>
-          <li><a href="../imagen.html" >imagen</a> &raquo;</li>
 
 </ul></li>
 

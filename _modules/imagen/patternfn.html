@@ -27,7 +27,7 @@
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../../_static/custom.js"></script>
     <link rel="top" title="ImaGen 1.0-dev documentation" href="../../index.html" />
-    <link rel="up" title="imagen" href="../imagen.html" /> 
+    <link rel="up" title="Module code" href="../index.html" /> 
   </head>
   <body>
     <div class="related">
@@ -42,7 +42,7 @@
 
 <li><a href="../../index.html">ImaGen Home</a></li>
 <li><a href="../../Tutorials/index.html">Tutorials</a></li>
-<li><a href="../../Reference_Manual/imagen-module.html">Reference Manual</a></li>
+<li><a href="../../Reference_Manual/imagen.html">Reference Manual</a></li>
 
 
 
@@ -50,8 +50,7 @@
 
 
 
-          <li><a href="../index.html" >Module code</a> &raquo;</li>
-          <li><a href="../imagen.html" accesskey="U">imagen</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li>
 
 </ul></li>
 
@@ -75,9 +74,6 @@
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">with_statement</span>
 
-<span class="n">__version__</span><span class="o">=</span><span class="s">&#39;$Revision$&#39;</span>
-
-
 
 <span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">pi</span>
 
@@ -92,7 +88,7 @@
 <span class="c"># using numpy&#39;s abs...</span>
 
 <span class="nd">@contextmanager</span>
-<div class="viewcode-block" id="float_error_ignore"><a class="viewcode-back" href="../../Reference_Manual/imagen.patternfn-module.html#imagen.patternfn.float_error_ignore">[docs]</a><span class="k">def</span> <span class="nf">float_error_ignore</span><span class="p">():</span>
+<div class="viewcode-block" id="float_error_ignore"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.patternfn.float_error_ignore">[docs]</a><span class="k">def</span> <span class="nf">float_error_ignore</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Many of the functions in this module use Gaussian smoothing, which</span>
 <span class="sd">    is based on a calculation like exp(divide(x*x,sigma)).  When sigma</span>
@@ -111,7 +107,7 @@
     <span class="n">seterr</span><span class="p">(</span><span class="o">**</span><span class="n">oldsettings</span><span class="p">)</span>
 
 </div>
-<div class="viewcode-block" id="gaussian"><a class="viewcode-back" href="../../Reference_Manual/imagen.patternfn-module.html#imagen.patternfn.gaussian">[docs]</a><span class="k">def</span> <span class="nf">gaussian</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">xsigma</span><span class="p">,</span> <span class="n">ysigma</span><span class="p">):</span>
+<div class="viewcode-block" id="gaussian"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.patternfn.gaussian">[docs]</a><span class="k">def</span> <span class="nf">gaussian</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">xsigma</span><span class="p">,</span> <span class="n">ysigma</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Two-dimensional oriented Gaussian pattern (i.e., 2D version of a</span>
 <span class="sd">    bell curve, like a normal distribution but not necessarily summing</span>
@@ -126,7 +122,7 @@
         <span class="k">return</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="n">x_w</span><span class="o">*</span><span class="n">x_w</span> <span class="o">+</span> <span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="n">y_h</span><span class="o">*</span><span class="n">y_h</span><span class="p">)</span>
 
 </div>
-<div class="viewcode-block" id="log_gaussian"><a class="viewcode-back" href="../../Reference_Manual/imagen.patternfn-module.html#imagen.patternfn.log_gaussian">[docs]</a><span class="k">def</span> <span class="nf">log_gaussian</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">x_sigma</span><span class="p">,</span> <span class="n">y_sigma</span><span class="p">,</span> <span class="n">mu</span><span class="p">):</span>
+<div class="viewcode-block" id="log_gaussian"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.patternfn.log_gaussian">[docs]</a><span class="k">def</span> <span class="nf">log_gaussian</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">x_sigma</span><span class="p">,</span> <span class="n">y_sigma</span><span class="p">,</span> <span class="n">mu</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Two-dimensional oriented Log Gaussian pattern (i.e., 2D version of a</span>
 <span class="sd">    bell curve with an independent, movable peak). Much like a normal</span>
@@ -143,7 +139,7 @@
         <span class="k">return</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="n">x_w</span><span class="o">*</span><span class="n">x_w</span> <span class="o">+</span> <span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="n">y_h</span><span class="o">*</span><span class="n">y_h</span><span class="p">)</span>
 
 </div>
-<div class="viewcode-block" id="sigmoid"><a class="viewcode-back" href="../../Reference_Manual/imagen.patternfn-module.html#imagen.patternfn.sigmoid">[docs]</a><span class="k">def</span> <span class="nf">sigmoid</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="n">slope</span><span class="p">):</span>
+<div class="viewcode-block" id="sigmoid"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.patternfn.sigmoid">[docs]</a><span class="k">def</span> <span class="nf">sigmoid</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="n">slope</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Sigmoid dividing axis into a positive and negative half,</span>
 <span class="sd">    with a smoothly sloping transition between them (controlled by the slope).</span>
@@ -154,7 +150,7 @@
         <span class="k">return</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">2.0</span><span class="o">*</span><span class="n">slope</span><span class="o">*</span><span class="n">axis</span><span class="p">)))</span> <span class="o">-</span> <span class="mf">1.0</span>
 
 </div>
-<div class="viewcode-block" id="exponential"><a class="viewcode-back" href="../../Reference_Manual/imagen.patternfn-module.html#imagen.patternfn.exponential">[docs]</a><span class="k">def</span> <span class="nf">exponential</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">xscale</span><span class="p">,</span> <span class="n">yscale</span><span class="p">):</span>
+<div class="viewcode-block" id="exponential"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.patternfn.exponential">[docs]</a><span class="k">def</span> <span class="nf">exponential</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">xscale</span><span class="p">,</span> <span class="n">yscale</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Two-dimensional oriented exponential decay pattern.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -167,7 +163,7 @@
         <span class="k">return</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x_w</span><span class="o">*</span><span class="n">x_w</span><span class="o">+</span><span class="n">y_h</span><span class="o">*</span><span class="n">y_h</span><span class="p">))</span>
 
 </div>
-<div class="viewcode-block" id="gabor"><a class="viewcode-back" href="../../Reference_Manual/imagen.patternfn-module.html#imagen.patternfn.gabor">[docs]</a><span class="k">def</span> <span class="nf">gabor</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">xsigma</span><span class="p">,</span> <span class="n">ysigma</span><span class="p">,</span> <span class="n">frequency</span><span class="p">,</span> <span class="n">phase</span><span class="p">):</span>
+<div class="viewcode-block" id="gabor"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.patternfn.gabor">[docs]</a><span class="k">def</span> <span class="nf">gabor</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">xsigma</span><span class="p">,</span> <span class="n">ysigma</span><span class="p">,</span> <span class="n">frequency</span><span class="p">,</span> <span class="n">phase</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Gabor pattern (sine grating multiplied by a circular Gaussian).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -186,7 +182,7 @@
 <span class="c"># size parameter and ignores it, which is very confusing.  I guess</span>
 <span class="c"># it&#39;s called thickness to match ring, but matching gaussian and disk</span>
 <span class="c"># is probably more important.</span></div>
-<div class="viewcode-block" id="line"><a class="viewcode-back" href="../../Reference_Manual/imagen.patternfn-module.html#imagen.patternfn.line">[docs]</a><span class="k">def</span> <span class="nf">line</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">thickness</span><span class="p">,</span> <span class="n">gaussian_width</span><span class="p">):</span>
+<div class="viewcode-block" id="line"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.patternfn.line">[docs]</a><span class="k">def</span> <span class="nf">line</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">thickness</span><span class="p">,</span> <span class="n">gaussian_width</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Infinite-length line with a solid central region, then Gaussian fall-off at the edges.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -203,7 +199,7 @@
     <span class="k">return</span> <span class="n">where</span><span class="p">(</span><span class="n">gaussian_y_coord</span><span class="o">&lt;=</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">falloff</span><span class="p">)</span>
 
 </div>
-<div class="viewcode-block" id="disk"><a class="viewcode-back" href="../../Reference_Manual/imagen.patternfn-module.html#imagen.patternfn.disk">[docs]</a><span class="k">def</span> <span class="nf">disk</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">gaussian_width</span><span class="p">):</span>
+<div class="viewcode-block" id="disk"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.patternfn.disk">[docs]</a><span class="k">def</span> <span class="nf">disk</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">gaussian_width</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Circular disk with Gaussian fall-off after the solid central region.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -223,7 +219,7 @@
     <span class="k">return</span> <span class="n">where</span><span class="p">(</span><span class="n">distance_outside_disk</span><span class="o">&lt;=</span><span class="mi">0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="n">falloff</span><span class="p">)</span>
 
 </div>
-<div class="viewcode-block" id="ring"><a class="viewcode-back" href="../../Reference_Manual/imagen.patternfn-module.html#imagen.patternfn.ring">[docs]</a><span class="k">def</span> <span class="nf">ring</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">thickness</span><span class="p">,</span> <span class="n">gaussian_width</span><span class="p">):</span>
+<div class="viewcode-block" id="ring"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.patternfn.ring">[docs]</a><span class="k">def</span> <span class="nf">ring</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">thickness</span><span class="p">,</span> <span class="n">gaussian_width</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Circular ring (annulus) with Gaussian fall-off after the solid ring-shaped region.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -249,7 +245,7 @@
     <span class="k">return</span> <span class="n">maximum</span><span class="p">(</span><span class="n">inner_falloff</span><span class="p">,</span><span class="n">maximum</span><span class="p">(</span><span class="n">outer_falloff</span><span class="p">,</span><span class="n">ring</span><span class="p">))</span>
 
 </div>
-<div class="viewcode-block" id="smooth_rectangle"><a class="viewcode-back" href="../../Reference_Manual/imagen.patternfn-module.html#imagen.patternfn.smooth_rectangle">[docs]</a><span class="k">def</span> <span class="nf">smooth_rectangle</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">rec_w</span><span class="p">,</span> <span class="n">rec_h</span><span class="p">,</span> <span class="n">gaussian_width_x</span><span class="p">,</span> <span class="n">gaussian_width_y</span><span class="p">):</span>
+<div class="viewcode-block" id="smooth_rectangle"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.patternfn.smooth_rectangle">[docs]</a><span class="k">def</span> <span class="nf">smooth_rectangle</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">rec_w</span><span class="p">,</span> <span class="n">rec_h</span><span class="p">,</span> <span class="n">gaussian_width_x</span><span class="p">,</span> <span class="n">gaussian_width_y</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Rectangle with a solid central region, then Gaussian fall-off at the edges.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -272,7 +268,7 @@
 
 
 </div>
-<div class="viewcode-block" id="arc_by_radian"><a class="viewcode-back" href="../../Reference_Manual/imagen.patternfn-module.html#imagen.patternfn.arc_by_radian">[docs]</a><span class="k">def</span> <span class="nf">arc_by_radian</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">radian_range</span><span class="p">,</span> <span class="n">thickness</span><span class="p">,</span> <span class="n">gaussian_width</span><span class="p">):</span>
+<div class="viewcode-block" id="arc_by_radian"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.patternfn.arc_by_radian">[docs]</a><span class="k">def</span> <span class="nf">arc_by_radian</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">radian_range</span><span class="p">,</span> <span class="n">thickness</span><span class="p">,</span> <span class="n">gaussian_width</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Radial arc with Gaussian fall-off after the solid ring-shaped</span>
 <span class="sd">    region with the given thickness, with shape specified by the</span>
@@ -332,7 +328,7 @@
                      <span class="n">output_ring</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
 
 </div>
-<div class="viewcode-block" id="arc_by_center"><a class="viewcode-back" href="../../Reference_Manual/imagen.patternfn-module.html#imagen.patternfn.arc_by_center">[docs]</a><span class="k">def</span> <span class="nf">arc_by_center</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">arc_box</span><span class="p">,</span> <span class="n">constant_length</span><span class="p">,</span> <span class="n">thickness</span><span class="p">,</span> <span class="n">gaussian_width</span><span class="p">):</span>
+<div class="viewcode-block" id="arc_by_center"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.patternfn.arc_by_center">[docs]</a><span class="k">def</span> <span class="nf">arc_by_center</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">arc_box</span><span class="p">,</span> <span class="n">constant_length</span><span class="p">,</span> <span class="n">thickness</span><span class="p">,</span> <span class="n">gaussian_width</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Arc with Gaussian fall-off after the solid ring-shaped region and specified</span>
 <span class="sd">    by point of tangency (x and y) and arc width and height.</span>
@@ -377,7 +373,7 @@
 
 <li><a href="../../index.html">Home</a></li>
 <li><a href="../../Tutorials/index.html">Tutorials</a></li>
-<li><a href="../../Reference_Manual/imagen-module.html">Reference Manual</a></li>
+<li><a href="../../Reference_Manual/imagen.html">Reference Manual</a></li>
 <li><a href="http://github.com/ioam/imagen">Github Source Code</a></li>
 <li><a href="../../site_map.html">Site Map</a></li>
 </ul>
@@ -419,7 +415,7 @@
 
 <li><a href="../../index.html">ImaGen Home</a></li>
 <li><a href="../../Tutorials/index.html">Tutorials</a></li>
-<li><a href="../../Reference_Manual/imagen-module.html">Reference Manual</a></li>
+<li><a href="../../Reference_Manual/imagen.html">Reference Manual</a></li>
 
 
 
@@ -428,7 +424,6 @@
 
 
           <li><a href="../index.html" >Module code</a> &raquo;</li>
-          <li><a href="../imagen.html" >imagen</a> &raquo;</li>
 
 </ul></li>
 

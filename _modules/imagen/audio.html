@@ -27,7 +27,7 @@
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../../_static/custom.js"></script>
     <link rel="top" title="ImaGen 1.0-dev documentation" href="../../index.html" />
-    <link rel="up" title="imagen" href="../imagen.html" /> 
+    <link rel="up" title="Module code" href="../index.html" /> 
   </head>
   <body>
     <div class="related">
@@ -42,7 +42,7 @@
 
 <li><a href="../../index.html">ImaGen Home</a></li>
 <li><a href="../../Tutorials/index.html">Tutorials</a></li>
-<li><a href="../../Reference_Manual/imagen-module.html">Reference Manual</a></li>
+<li><a href="../../Reference_Manual/imagen.html">Reference Manual</a></li>
 
 
 
@@ -50,8 +50,7 @@
 
 
 
-          <li><a href="../index.html" >Module code</a> &raquo;</li>
-          <li><a href="../imagen.html" accesskey="U">imagen</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li>
 
 </ul></li>
 
@@ -68,7 +67,6 @@
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Pattern generators for audio signals.</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="n">__version__</span><span class="o">=</span><span class="s">&#39;$Revision$&#39;</span>
 
 
 <span class="kn">import</span> <span class="nn">param</span>
@@ -88,7 +86,7 @@
 
 
 
-<div class="viewcode-block" id="AudioFile"><a class="viewcode-back" href="../../Reference_Manual/imagen.audio-module.html#imagen.audio.AudioFile">[docs]</a><span class="k">class</span> <span class="nc">AudioFile</span><span class="p">(</span><span class="n">TimeSeries</span><span class="p">):</span>
+<div class="viewcode-block" id="AudioFile"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.audio.AudioFile">[docs]</a><span class="k">class</span> <span class="nc">AudioFile</span><span class="p">(</span><span class="n">TimeSeries</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Requires an audio file in any format accepted by audiolab (wav, aiff, flac).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -119,7 +117,7 @@
 
 
 </div>
-<div class="viewcode-block" id="AudioFolder"><a class="viewcode-back" href="../../Reference_Manual/imagen.audio-module.html#imagen.audio.AudioFolder">[docs]</a><span class="k">class</span> <span class="nc">AudioFolder</span><span class="p">(</span><span class="n">AudioFile</span><span class="p">):</span>
+<div class="viewcode-block" id="AudioFolder"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.audio.AudioFolder">[docs]</a><span class="k">class</span> <span class="nc">AudioFolder</span><span class="p">(</span><span class="n">AudioFile</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns a rolling spectrogram, i.e. the spectral density over time</span>
 <span class="sd">    of a rolling window of the input audio signal, for all files in the</span>
@@ -155,7 +153,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">next_file</span> <span class="o">=</span> <span class="mi">1</span>
 
 
-<div class="viewcode-block" id="AudioFolder.extract_specific_interval"><a class="viewcode-back" href="../../Reference_Manual/imagen.audio-module.html#imagen.audio.AudioFolder.extract_specific_interval">[docs]</a>    <span class="k">def</span> <span class="nf">extract_specific_interval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">interval_start</span><span class="p">,</span> <span class="n">interval_end</span><span class="p">):</span>
+<div class="viewcode-block" id="AudioFolder.extract_specific_interval"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.audio.AudioFolder.extract_specific_interval">[docs]</a>    <span class="k">def</span> <span class="nf">extract_specific_interval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">interval_start</span><span class="p">,</span> <span class="n">interval_end</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Overload if special behaviour is required when a series ends.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -209,7 +207,7 @@
 
 
 </div></div>
-<div class="viewcode-block" id="LogSpectrogram"><a class="viewcode-back" href="../../Reference_Manual/imagen.audio-module.html#imagen.audio.LogSpectrogram">[docs]</a><span class="k">class</span> <span class="nc">LogSpectrogram</span><span class="p">(</span><span class="n">Spectrogram</span><span class="p">):</span>
+<div class="viewcode-block" id="LogSpectrogram"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.audio.LogSpectrogram">[docs]</a><span class="k">class</span> <span class="nc">LogSpectrogram</span><span class="p">(</span><span class="n">Spectrogram</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Extends Spectrogram to provide a response over an octave scale.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -254,7 +252,7 @@
 
 
 </div>
-<div class="viewcode-block" id="ModulatedLogSpectrogram"><a class="viewcode-back" href="../../Reference_Manual/imagen.audio-module.html#imagen.audio.ModulatedLogSpectrogram">[docs]</a><span class="k">class</span> <span class="nc">ModulatedLogSpectrogram</span><span class="p">(</span><span class="n">LogSpectrogram</span><span class="p">):</span>
+<div class="viewcode-block" id="ModulatedLogSpectrogram"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.audio.ModulatedLogSpectrogram">[docs]</a><span class="k">class</span> <span class="nc">ModulatedLogSpectrogram</span><span class="p">(</span><span class="n">LogSpectrogram</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Extends OctaveSpectrogram with a simple model of outer ear amplification.</span>
 <span class="sd">    One can set both the range to amplify and the amount.</span>
@@ -306,7 +304,7 @@
 
 
 </div>
-<div class="viewcode-block" id="LyonsCochlearModel"><a class="viewcode-back" href="../../Reference_Manual/imagen.audio-module.html#imagen.audio.LyonsCochlearModel">[docs]</a><span class="k">class</span> <span class="nc">LyonsCochlearModel</span><span class="p">(</span><span class="n">PowerSpectrum</span><span class="p">):</span>
+<div class="viewcode-block" id="LyonsCochlearModel"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.audio.LyonsCochlearModel">[docs]</a><span class="k">class</span> <span class="nc">LyonsCochlearModel</span><span class="p">(</span><span class="n">PowerSpectrum</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Outputs a cochlear decomposition as a set of frequency responses of linear</span>
 <span class="sd">    band-pass filters. Employs Lyons Cochlear Model to do so.</span>
@@ -570,7 +568,7 @@
 
 
 </div>
-<div class="viewcode-block" id="LyonsCochleogram"><a class="viewcode-back" href="../../Reference_Manual/imagen.audio-module.html#imagen.audio.LyonsCochleogram">[docs]</a><span class="k">class</span> <span class="nc">LyonsCochleogram</span><span class="p">(</span><span class="n">LyonsCochlearModel</span><span class="p">):</span>
+<div class="viewcode-block" id="LyonsCochleogram"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.audio.LyonsCochleogram">[docs]</a><span class="k">class</span> <span class="nc">LyonsCochleogram</span><span class="p">(</span><span class="n">LyonsCochlearModel</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Employs Lyons Cochlear Model to return a Cochleoogram,</span>
 <span class="sd">    i.e. the response over time along the cochlea.</span>
@@ -601,7 +599,7 @@
 
 <li><a href="../../index.html">Home</a></li>
 <li><a href="../../Tutorials/index.html">Tutorials</a></li>
-<li><a href="../../Reference_Manual/imagen-module.html">Reference Manual</a></li>
+<li><a href="../../Reference_Manual/imagen.html">Reference Manual</a></li>
 <li><a href="http://github.com/ioam/imagen">Github Source Code</a></li>
 <li><a href="../../site_map.html">Site Map</a></li>
 </ul>
@@ -643,7 +641,7 @@
 
 <li><a href="../../index.html">ImaGen Home</a></li>
 <li><a href="../../Tutorials/index.html">Tutorials</a></li>
-<li><a href="../../Reference_Manual/imagen-module.html">Reference Manual</a></li>
+<li><a href="../../Reference_Manual/imagen.html">Reference Manual</a></li>
 
 
 
@@ -652,7 +650,6 @@
 
 
           <li><a href="../index.html" >Module code</a> &raquo;</li>
-          <li><a href="../imagen.html" >imagen</a> &raquo;</li>
 
 </ul></li>
 

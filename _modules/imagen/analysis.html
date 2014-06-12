@@ -27,7 +27,7 @@
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../../_static/custom.js"></script>
     <link rel="top" title="ImaGen 1.0-dev documentation" href="../../index.html" />
-    <link rel="up" title="imagen" href="../imagen.html" /> 
+    <link rel="up" title="Module code" href="../index.html" /> 
   </head>
   <body>
     <div class="related">
@@ -42,7 +42,7 @@
 
 <li><a href="../../index.html">ImaGen Home</a></li>
 <li><a href="../../Tutorials/index.html">Tutorials</a></li>
-<li><a href="../../Reference_Manual/imagen-module.html">Reference Manual</a></li>
+<li><a href="../../Reference_Manual/imagen.html">Reference Manual</a></li>
 
 
 
@@ -50,8 +50,7 @@
 
 
 
-          <li><a href="../index.html" >Module code</a> &raquo;</li>
-          <li><a href="../imagen.html" accesskey="U">imagen</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li>
 
 </ul></li>
 
@@ -82,7 +81,7 @@
 
 <span class="kn">import</span> <span class="nn">param</span>
 <span class="kn">from</span> <span class="nn">dataviews</span> <span class="kn">import</span> <span class="n">SheetView</span>
-<span class="kn">from</span> <span class="nn">dataviews.sheetcoords</span> <span class="kn">import</span> <span class="n">BoundingBox</span>
+<span class="kn">from</span> <span class="nn">dataviews.sheetviews</span> <span class="kn">import</span> <span class="n">BoundingBox</span>
 <span class="kn">from</span> <span class="nn">dataviews.options</span> <span class="kn">import</span> <span class="n">options</span><span class="p">,</span> <span class="n">GrayNearest</span>
 <span class="kn">from</span> <span class="nn">dataviews.operation</span>  <span class="kn">import</span> <span class="n">ViewOperation</span>
 
@@ -91,7 +90,7 @@
 
 
 
-<div class="viewcode-block" id="fft_power_spectrum"><a class="viewcode-back" href="../../Reference_Manual/imagen.analysis-module.html#imagen.analysis.fft_power_spectrum">[docs]</a><span class="k">class</span> <span class="nc">fft_power_spectrum</span><span class="p">(</span><span class="n">ViewOperation</span><span class="p">):</span>
+<div class="viewcode-block" id="fft_power_spectrum"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.analysis.fft_power_spectrum">[docs]</a><span class="k">class</span> <span class="nc">fft_power_spectrum</span><span class="p">(</span><span class="n">ViewOperation</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute the 2D Fast Fourier Transform (FFT) of the supplied sheet view.</span>
 
@@ -100,6 +99,12 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">peak_val</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+
+
+    <span class="n">label</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s">&#39;FFT Power Spectrum&#39;</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">      The label suffix used for the output power spectrum as appended</span>
+<span class="s">      to the label of the input SheetView.&quot;&quot;&quot;</span><span class="p">)</span>
+
 
     <span class="k">def</span> <span class="nf">_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sheetview</span><span class="p">):</span>
         <span class="n">cr</span> <span class="o">=</span> <span class="n">sheetview</span><span class="o">.</span><span class="n">cyclic_range</span>
@@ -115,12 +120,12 @@
         <span class="n">bb</span> <span class="o">=</span> <span class="n">BoundingBox</span><span class="p">(</span><span class="n">radius</span><span class="o">=</span><span class="p">(</span><span class="n">density</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">r</span><span class="o">-</span><span class="n">l</span><span class="p">))</span>
 
         <span class="k">return</span> <span class="p">[</span><span class="n">SheetView</span><span class="p">(</span><span class="n">normalized_spectrum</span><span class="p">,</span> <span class="n">bb</span><span class="p">,</span>
-                          <span class="n">metadata</span><span class="o">=</span><span class="n">sheetview</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span>
-                          <span class="n">label</span><span class="o">=</span><span class="n">sheetview</span><span class="o">.</span><span class="n">label</span><span class="o">+</span><span class="s">&#39; FFT Power Spectrum&#39;</span><span class="p">)]</span>
+                          <span class="n">label</span><span class="o">=</span><span class="n">sheetview</span><span class="o">.</span><span class="n">label</span> <span class="o">+</span> <span class="s">&#39; &#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">label</span><span class="p">,</span>
+                          <span class="n">value</span><span class="o">=</span><span class="s">&quot;FFT Power&quot;</span><span class="p">)]</span>
 
 
 </div>
-<div class="viewcode-block" id="gradient"><a class="viewcode-back" href="../../Reference_Manual/imagen.analysis-module.html#imagen.analysis.gradient">[docs]</a><span class="k">class</span> <span class="nc">gradient</span><span class="p">(</span><span class="n">ViewOperation</span><span class="p">):</span>
+<div class="viewcode-block" id="gradient"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.analysis.gradient">[docs]</a><span class="k">class</span> <span class="nc">gradient</span><span class="p">(</span><span class="n">ViewOperation</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute the gradient plot of the supplied SheetView or SheetStack.</span>
 <span class="sd">    Translated from Octave code originally written by Yoonsuck Choe.</span>
@@ -130,6 +135,10 @@
 
 <span class="sd">    Example:: gradient(topo.sim.V1.views.maps.OrientationPreference)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">label</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s">&#39;Gradient&#39;</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">      The label suffix used for the output gradient as appended to the</span>
+<span class="s">      label of the input SheetView.&quot;&quot;&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sheetview</span><span class="p">):</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">sheetview</span><span class="o">.</span><span class="n">data</span>
@@ -149,12 +158,11 @@
             <span class="n">dy</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">cyclic_range</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">dy</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">cyclic_range</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="p">[</span><span class="n">SheetView</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">dx</span><span class="o">*</span><span class="n">dx</span> <span class="o">+</span> <span class="n">dy</span><span class="o">*</span><span class="n">dy</span><span class="p">),</span> <span class="n">sheetview</span><span class="o">.</span><span class="n">bounds</span><span class="p">,</span>
-                          <span class="n">metadata</span><span class="o">=</span><span class="n">sheetview</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span>
-                          <span class="n">label</span><span class="o">=</span><span class="n">sheetview</span><span class="o">.</span><span class="n">label</span><span class="o">+</span><span class="s">&#39; Gradient&#39;</span><span class="p">)]</span>
+                          <span class="n">value</span><span class="o">=</span><span class="n">sheetview</span><span class="o">.</span><span class="n">label</span> <span class="o">+</span> <span class="s">&#39; &#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">label</span><span class="p">)]</span>
 
 
 </div>
-<div class="viewcode-block" id="autocorrelation"><a class="viewcode-back" href="../../Reference_Manual/imagen.analysis-module.html#imagen.analysis.autocorrelation">[docs]</a><span class="k">class</span> <span class="nc">autocorrelation</span><span class="p">(</span><span class="n">ViewOperation</span><span class="p">):</span>
+<div class="viewcode-block" id="autocorrelation"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.analysis.autocorrelation">[docs]</a><span class="k">class</span> <span class="nc">autocorrelation</span><span class="p">(</span><span class="n">ViewOperation</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute the 2D autocorrelation of the supplied data. Requires the</span>
 <span class="sd">    external SciPy package.</span>
@@ -163,19 +171,22 @@
 <span class="sd">    autocorrelation(topo.sim.V1.views.maps.OrientationPreference)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="n">label</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s">&#39;AutoCorrelation&#39;</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">      The label suffix used for the output autocorrelation as appended</span>
+<span class="s">      to the label of the input SheetView.&quot;&quot;&quot;</span><span class="p">)</span>
+
     <span class="k">def</span> <span class="nf">_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sheetview</span><span class="p">):</span>
         <span class="kn">import</span> <span class="nn">scipy.signal</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">sheetview</span><span class="o">.</span><span class="n">data</span>
         <span class="n">autocorr_data</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">signal</span><span class="o">.</span><span class="n">correlate2d</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">SheetView</span><span class="p">(</span><span class="n">autocorr_data</span><span class="p">,</span> <span class="n">sheetview</span><span class="o">.</span><span class="n">bounds</span><span class="p">,</span>
-                          <span class="n">metadata</span><span class="o">=</span><span class="n">sheetview</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span>
-                          <span class="n">label</span><span class="o">=</span><span class="n">sheetview</span><span class="o">.</span><span class="n">label</span><span class="o">+</span><span class="s">&#39; AutoCorrelation&#39;</span><span class="p">)]</span>
+                          <span class="n">value</span><span class="o">=</span><span class="n">sheetview</span><span class="o">.</span><span class="n">label</span> <span class="o">+</span> <span class="s">&#39; &#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">label</span><span class="p">)]</span>
 
 
 
 
 </div>
-<div class="viewcode-block" id="cyclic_similarity_index"><a class="viewcode-back" href="../../Reference_Manual/imagen.analysis-module.html#imagen.analysis.cyclic_similarity_index">[docs]</a><span class="k">class</span> <span class="nc">cyclic_similarity_index</span><span class="p">(</span><span class="n">ViewOperation</span><span class="p">):</span>
+<div class="viewcode-block" id="cyclic_similarity_index"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.analysis.cyclic_similarity_index">[docs]</a><span class="k">class</span> <span class="nc">cyclic_similarity_index</span><span class="p">(</span><span class="n">ViewOperation</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The similarity index between any two cyclic maps. By default, a</span>
 <span class="sd">    zero value indicates uncorrelated SheetView data. The similarity</span>
@@ -189,6 +200,11 @@
 <span class="s">        uncorrelated values have a value of zero and exactly matching</span>
 <span class="s">        elements are indicated with a value of 1.0. Negative values</span>
 <span class="s">        are then used to indicate anticorrelation.&quot;&quot;&quot;</span><span class="p">)</span>
+
+
+    <span class="n">label</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s">&#39;Cyclic Similarity&#39;</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">      The label suffix used for the output similarity index as</span>
+<span class="s">      appended to the label of the input SheetView.&quot;&quot;&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">overlay</span><span class="p">):</span>
 
@@ -210,7 +226,7 @@
         <span class="c"># As this is made into a unit metric, uncorrelated has value zero.</span>
         <span class="n">similarity</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">similarity</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">))</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">unit_range</span> <span class="k">else</span> <span class="n">similarity</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">SheetView</span><span class="p">(</span><span class="n">similarity</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="n">overlay</span><span class="o">.</span><span class="n">bounds</span><span class="p">,</span>
-                          <span class="n">label</span><span class="o">=</span><span class="n">overlay</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">label</span><span class="o">+</span><span class="s">&#39; Cyclic Similarity&#39;</span><span class="p">)]</span>
+                          <span class="n">value</span><span class="o">=</span><span class="n">overlay</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">label</span> <span class="o">+</span> <span class="s">&#39; &#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">label</span><span class="p">)]</span>
 
 </div>
 <span class="n">options</span><span class="o">.</span><span class="n">CyclicSimilarity_SheetView</span>    <span class="o">=</span> <span class="n">GrayNearest</span>
@@ -229,7 +245,7 @@
 
 <li><a href="../../index.html">Home</a></li>
 <li><a href="../../Tutorials/index.html">Tutorials</a></li>
-<li><a href="../../Reference_Manual/imagen-module.html">Reference Manual</a></li>
+<li><a href="../../Reference_Manual/imagen.html">Reference Manual</a></li>
 <li><a href="http://github.com/ioam/imagen">Github Source Code</a></li>
 <li><a href="../../site_map.html">Site Map</a></li>
 </ul>
@@ -271,7 +287,7 @@
 
 <li><a href="../../index.html">ImaGen Home</a></li>
 <li><a href="../../Tutorials/index.html">Tutorials</a></li>
-<li><a href="../../Reference_Manual/imagen-module.html">Reference Manual</a></li>
+<li><a href="../../Reference_Manual/imagen.html">Reference Manual</a></li>
 
 
 
@@ -280,7 +296,6 @@
 
 
           <li><a href="../index.html" >Module code</a> &raquo;</li>
-          <li><a href="../imagen.html" >imagen</a> &raquo;</li>
 
 </ul></li>
 

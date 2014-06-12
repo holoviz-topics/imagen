@@ -1,0 +1,10 @@
+<map id="inheritanced74a500e8c" name="inheritanced74a500e8c">
+<area shape="rect" id="node1" href="#imagen.image.FastImageSampler" title="A fast&#45;n&#45;dirty image sampler using Python Imaging Library" alt="" coords="659,5,898,30"/>
+<area shape="rect" id="node2" href="#imagen.image.ImageSampler" title="A class of objects that, when called, sample an image." alt="" coords="355,54,567,79"/>
+<area shape="rect" id="node8" href="#imagen.image.PatternSampler" title="When called, resamples &#45; according to the size_normalization" alt="" coords="669,54,888,79"/>
+<area shape="rect" id="node3" href="#imagen.image.FileImage" title="2D Image generator that reads the image from a file." alt="" coords="949,78,1128,103"/>
+<area shape="rect" id="node4" href="#imagen.image.GenericImage" title="Generic 2D image generator." alt="" coords="675,103,882,129"/>
+<area shape="rect" id="node7" href="#imagen.image.NumpyFile" title="Read an array from a Numpy&#45;format file." alt="" coords="947,127,1131,153"/>
+<area shape="rect" id="node5" href="#imagen.patterngenerator.PatternGenerator" title="A class hierarchy for callable objects that can generate 2D patterns." alt="" coords="312,103,611,129"/>
+<area shape="rect" id="node6" title="Base class for named objects that support Parameters and message" alt="" coords="5,79,264,105"/>
+</map>

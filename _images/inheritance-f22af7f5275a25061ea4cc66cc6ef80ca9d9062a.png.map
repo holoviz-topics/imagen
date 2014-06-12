@@ -1,0 +1,9 @@
+<map id="inheritance0c1492928d" name="inheritance0c1492928d">
+<area shape="rect" id="node1" href="#imagen.patterncoordinator.FeatureCoordinator" title="A FeatureCoordinator modifies a supplied PatternGenerator." alt="" coords="561,43,817,63"/>
+<area shape="rect" id="node3" href="#imagen.patterncoordinator.OrientationCoordinator" title="Chooses a random orientation within the specified orientation_bound in each direction." alt="" coords="874,4,1147,24"/>
+<area shape="rect" id="node7" href="#imagen.patterncoordinator.XCoordinator" title="Chooses a random value for the x coordinate, subject to the provided position_bound_x." alt="" coords="899,43,1122,63"/>
+<area shape="rect" id="node8" href="#imagen.patterncoordinator.YCoordinator" title="Chooses a random value for the y coordinate, subject to the provided position_bound_y." alt="" coords="899,83,1122,103"/>
+<area shape="rect" id="node2" title="Acts like a Python function, but with arguments that are Parameters." alt="" coords="252,43,501,63"/>
+<area shape="rect" id="node4" href="#imagen.patterncoordinator.PatternCoordinator" title="Returns a set of coordinated PatternGenerators, named according to pattern_labels." alt="" coords="250,83,504,103"/>
+<area shape="rect" id="node5" title="Base class for named objects that support Parameters and message" alt="" coords="4,63,211,84"/>
+</map>

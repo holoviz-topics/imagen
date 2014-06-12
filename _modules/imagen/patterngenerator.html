@@ -27,7 +27,7 @@
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../../_static/custom.js"></script>
     <link rel="top" title="ImaGen 1.0-dev documentation" href="../../index.html" />
-    <link rel="up" title="imagen" href="../imagen.html" /> 
+    <link rel="up" title="Module code" href="../index.html" /> 
   </head>
   <body>
     <div class="related">
@@ -42,7 +42,7 @@
 
 <li><a href="../../index.html">ImaGen Home</a></li>
 <li><a href="../../Tutorials/index.html">Tutorials</a></li>
-<li><a href="../../Reference_Manual/imagen-module.html">Reference Manual</a></li>
+<li><a href="../../Reference_Manual/imagen.html">Reference Manual</a></li>
 
 
 
@@ -50,8 +50,7 @@
 
 
 
-          <li><a href="../index.html" >Module code</a> &raquo;</li>
-          <li><a href="../imagen.html" accesskey="U">imagen</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li>
 
 </ul></li>
 
@@ -68,7 +67,6 @@
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">PatternGenerator abstract class and basic example concrete class.</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="n">__version__</span><span class="o">=</span><span class="s">&#39;$Revision$&#39;</span>
 
 
 <span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">pi</span>
@@ -79,8 +77,7 @@
 <span class="kn">from</span> <span class="nn">param.parameterized</span> <span class="kn">import</span> <span class="n">ParamOverrides</span>
 
 <span class="kn">from</span> <span class="nn">dataviews</span> <span class="kn">import</span> <span class="n">SheetView</span>
-<span class="kn">from</span> <span class="nn">dataviews.boundingregion</span> <span class="kn">import</span> <span class="n">BoundingBox</span><span class="p">,</span> <span class="n">BoundingRegionParameter</span>
-<span class="kn">from</span> <span class="nn">dataviews.sheetcoords</span> <span class="kn">import</span> <span class="n">SheetCoordinateSystem</span>
+<span class="kn">from</span> <span class="nn">dataviews.sheetviews</span> <span class="kn">import</span> <span class="n">BoundingBox</span><span class="p">,</span> <span class="n">BoundingRegionParameter</span><span class="p">,</span> <span class="n">SheetCoordinateSystem</span>
 <span class="kn">from</span> <span class="nn">dataviews.options</span> <span class="kn">import</span> <span class="n">options</span><span class="p">,</span> <span class="n">StyleOpts</span>
 
 <span class="kn">from</span> <span class="nn">transferfn</span> <span class="kn">import</span> <span class="n">TransferFn</span>
@@ -103,7 +100,7 @@
 <span class="c"># need to support Composite patterns.</span>
 
 
-<div class="viewcode-block" id="PatternGenerator"><a class="viewcode-back" href="../../Reference_Manual/imagen.patterngenerator-module.html#imagen.patterngenerator.PatternGenerator">[docs]</a><span class="k">class</span> <span class="nc">PatternGenerator</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">Parameterized</span><span class="p">):</span>
+<div class="viewcode-block" id="PatternGenerator"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.patterngenerator.PatternGenerator">[docs]</a><span class="k">class</span> <span class="nc">PatternGenerator</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">Parameterized</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A class hierarchy for callable objects that can generate 2D patterns.</span>
 
@@ -242,7 +239,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">pattern_x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pattern_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_and_rotate_coordinate_arrays</span><span class="p">(</span><span class="n">x_points</span><span class="o">-</span><span class="n">x</span><span class="p">,</span><span class="n">y_points</span><span class="o">-</span><span class="n">y</span><span class="p">,</span><span class="n">orientation</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="PatternGenerator.function"><a class="viewcode-back" href="../../Reference_Manual/imagen.patterngenerator-module.html#imagen.patterngenerator.PatternGenerator.function">[docs]</a>    <span class="k">def</span> <span class="nf">function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span><span class="p">):</span>
+<div class="viewcode-block" id="PatternGenerator.function"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.patterngenerator.PatternGenerator.function">[docs]</a>    <span class="k">def</span> <span class="nf">function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Function to draw a pattern that will then be scaled and rotated.</span>
 
@@ -284,7 +281,7 @@
             <span class="n">mat</span><span class="o">*=</span><span class="n">mask</span>
 
 
-<div class="viewcode-block" id="PatternGenerator.set_matrix_dimensions"><a class="viewcode-back" href="../../Reference_Manual/imagen.patterngenerator-module.html#imagen.patterngenerator.PatternGenerator.set_matrix_dimensions">[docs]</a>    <span class="k">def</span> <span class="nf">set_matrix_dimensions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="n">xdensity</span><span class="p">,</span> <span class="n">ydensity</span><span class="p">):</span>
+<div class="viewcode-block" id="PatternGenerator.set_matrix_dimensions"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.patterngenerator.PatternGenerator.set_matrix_dimensions">[docs]</a>    <span class="k">def</span> <span class="nf">set_matrix_dimensions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="n">xdensity</span><span class="p">,</span> <span class="n">ydensity</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Change the dimensions of the matrix into which the pattern will be drawn.</span>
 <span class="sd">        Users of this class should call this method rather than changing</span>
@@ -299,7 +296,7 @@
         <span class="k">for</span> <span class="n">of</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_fns</span><span class="p">:</span>
             <span class="n">of</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">SCS</span><span class="o">=</span><span class="n">scs</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">scs</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 </div>
-<div class="viewcode-block" id="PatternGenerator.state_push"><a class="viewcode-back" href="../../Reference_Manual/imagen.patterngenerator-module.html#imagen.patterngenerator.PatternGenerator.state_push">[docs]</a>    <span class="k">def</span> <span class="nf">state_push</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="PatternGenerator.state_push"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.patterngenerator.PatternGenerator.state_push">[docs]</a>    <span class="k">def</span> <span class="nf">state_push</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="s">&quot;Save the state of the output functions, to be restored with state_pop.&quot;</span>
         <span class="k">for</span> <span class="n">of</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_fns</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">of</span><span class="p">,</span><span class="s">&#39;state_push&#39;</span><span class="p">):</span>
@@ -307,7 +304,7 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">PatternGenerator</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">state_push</span><span class="p">()</span>
 
 </div>
-<div class="viewcode-block" id="PatternGenerator.state_pop"><a class="viewcode-back" href="../../Reference_Manual/imagen.patterngenerator-module.html#imagen.patterngenerator.PatternGenerator.state_pop">[docs]</a>    <span class="k">def</span> <span class="nf">state_pop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="PatternGenerator.state_pop"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.patterngenerator.PatternGenerator.state_pop">[docs]</a>    <span class="k">def</span> <span class="nf">state_pop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="s">&quot;Restore the state of the output functions saved by state_push.&quot;</span>
         <span class="k">for</span> <span class="n">of</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_fns</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">of</span><span class="p">,</span><span class="s">&#39;state_pop&#39;</span><span class="p">):</span>
@@ -329,7 +326,7 @@
 <span class="c"># elsewhere, to be imported as needed.</span>
 <span class="kn">from</span> <span class="nn">numpy.oldnumeric</span> <span class="kn">import</span> <span class="n">ones</span><span class="p">,</span> <span class="n">Float</span>
 
-<div class="viewcode-block" id="Constant"><a class="viewcode-back" href="../../Reference_Manual/imagen.patterngenerator-module.html#imagen.patterngenerator.Constant">[docs]</a><span class="k">class</span> <span class="nc">Constant</span><span class="p">(</span><span class="n">PatternGenerator</span><span class="p">):</span>
+<div class="viewcode-block" id="Constant"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.patterngenerator.Constant">[docs]</a><span class="k">class</span> <span class="nc">Constant</span><span class="p">(</span><span class="n">PatternGenerator</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Constant pattern generator, i.e., a solid, uniform field of the same value.&quot;&quot;&quot;</span>
 
     <span class="c"># The orientation is ignored, so we don&#39;t show it in</span>
@@ -365,7 +362,7 @@
 
 <li><a href="../../index.html">Home</a></li>
 <li><a href="../../Tutorials/index.html">Tutorials</a></li>
-<li><a href="../../Reference_Manual/imagen-module.html">Reference Manual</a></li>
+<li><a href="../../Reference_Manual/imagen.html">Reference Manual</a></li>
 <li><a href="http://github.com/ioam/imagen">Github Source Code</a></li>
 <li><a href="../../site_map.html">Site Map</a></li>
 </ul>
@@ -407,7 +404,7 @@
 
 <li><a href="../../index.html">ImaGen Home</a></li>
 <li><a href="../../Tutorials/index.html">Tutorials</a></li>
-<li><a href="../../Reference_Manual/imagen-module.html">Reference Manual</a></li>
+<li><a href="../../Reference_Manual/imagen.html">Reference Manual</a></li>
 
 
 
@@ -416,7 +413,6 @@
 
 
           <li><a href="../index.html" >Module code</a> &raquo;</li>
-          <li><a href="../imagen.html" >imagen</a> &raquo;</li>
 
 </ul></li>
 

@@ -45,6 +45,17 @@ imagen.imagen Package
     :inherited-members:
     :show-inheritance:
 
+:mod:`patterncoordinator` Module
+--------------------------------
+
+.. inheritance-diagram:: imagen.patterncoordinator
+
+
+.. automodule:: imagen.patterncoordinator
+    :members:
+    :inherited-members:
+    :show-inheritance:
+
 :mod:`patternfn` Module
 -----------------------
 

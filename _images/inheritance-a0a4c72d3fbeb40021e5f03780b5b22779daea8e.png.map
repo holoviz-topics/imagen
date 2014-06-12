@@ -1,0 +1,13 @@
+<map id="inheritanceb299c4dd19" name="inheritanceb299c4dd19">
+<area shape="rect" id="node1" title="PatternGenerator that accepts a list of other PatternGenerators." alt="" coords="789,4,896,23"/>
+<area shape="rect" id="node7" href="#imagen.random.GaussianCloud" title="Uniform random noise masked by a circular Gaussian." alt="" coords="981,4,1148,23"/>
+<area shape="rect" id="node2" title="PatternGenerator that combines or selects from a list of other PatternGenerators." alt="" coords="534,23,664,42"/>
+<area shape="rect" id="node3" href="#imagen.patterngenerator.PatternGenerator" title="A class hierarchy for callable objects that can generate 2D patterns." alt="" coords="234,78,457,97"/>
+<area shape="rect" id="node6" href="#imagen.random.RandomGenerator" title="2D random noise pattern generator abstract class." alt="" coords="507,78,691,97"/>
+<area shape="rect" id="node9" href="#imagen.random.RandomDotStereogram" title="Random dot stereogram using rectangular black and white patches." alt="" coords="494,115,704,134"/>
+<area shape="rect" id="node4" title="Base class for named objects that support Parameters and message" alt="" coords="4,78,198,97"/>
+<area shape="rect" id="node5" href="#imagen.random.BinaryUniformRandom" title="2D binary uniform random noise pattern generator." alt="" coords="741,41,944,60"/>
+<area shape="rect" id="node8" href="#imagen.random.GaussianRandom" title="2D Gaussian random noise pattern generator." alt="" coords="753,78,932,97"/>
+<area shape="rect" id="node10" href="#imagen.random.UniformRandom" title="2D uniform random noise pattern generator." alt="" coords="756,115,929,134"/>
+<area shape="rect" id="node11" href="#imagen.random.UniformRandomInt" title="2D distribution of integer values from low to high in the in the" alt="" coords="750,152,935,171"/>
+</map>
