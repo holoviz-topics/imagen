@@ -934,8 +934,8 @@ class Translator(PatternGenerator):
         Explicitly generate new values for these parameters only
         when appropriate.
         """
-        for param in ['x','y','direction']:
-            self.force_new_dynamic_value(param)
+        for p in ['x','y','direction']:
+            self.force_new_dynamic_value(p)
         self.last_time = self.time_fn()
 
 
