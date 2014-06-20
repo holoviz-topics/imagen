@@ -1670,6 +1670,41 @@ In&nbsp;[2]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
+<div class="highlight"><pre><span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="k">print</span><span class="p">(</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">get_backend</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;MPLCONFIGDIR&#39;</span><span class="p">,</span> <span class="s">&#39;Not found&#39;</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+Qt4Agg
+Not found
+
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">
+In&nbsp;[3]:
+</div>
+<div class="inner_cell">
+    <div class="input_area">
 <div class="highlight"><pre><span class="n">gaussian</span><span class="o">=</span><span class="n">imagen</span><span class="o">.</span><span class="n">Gaussian</span><span class="p">(</span><span class="n">xdensity</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span><span class="n">ydensity</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span><span class="n">size</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span><span class="n">aspect_ratio</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)[:]</span>
 <span class="n">gaussian</span>
 </pre></div>
@@ -1686,13 +1721,13 @@ In&nbsp;[2]:
 <div class="output_subarea output_stream output_stderr output_text">
 <pre>
 Traceback (most recent call last):
-  File &quot;/var/lib/buildbot/slaves/imagen_docs/build/dataviews/dataviews/ipython/display_hooks.py&quot;, line 129, in wrapped
+  File &quot;/var/lib/buildbot/slaves/imagen_docs/build/dataviews/dataviews/ipython/display_hooks.py&quot;, line 128, in wrapped
     return fn(view, **kwargs)
-  File &quot;/var/lib/buildbot/slaves/imagen_docs/build/dataviews/dataviews/ipython/display_hooks.py&quot;, line 206, in view_display
+  File &quot;/var/lib/buildbot/slaves/imagen_docs/build/dataviews/dataviews/ipython/display_hooks.py&quot;, line 205, in view_display
     fig = Plot.defaults[view.__class__](view, **opts)()
-  File &quot;/var/lib/buildbot/slaves/imagen_docs/build/dataviews/dataviews/plots.py&quot;, line 551, in __call__
+  File &quot;/var/lib/buildbot/slaves/imagen_docs/build/dataviews/dataviews/plots.py&quot;, line 554, in __call__
     ax = self._axis(axis, title, &apos;x&apos;, &apos;y&apos;, (l, b, r, t))
-  File &quot;/var/lib/buildbot/slaves/imagen_docs/build/dataviews/dataviews/plots.py&quot;, line 187, in _axis
+  File &quot;/var/lib/buildbot/slaves/imagen_docs/build/dataviews/dataviews/plots.py&quot;, line 188, in _axis
     fig = plt.figure()
   File &quot;/usr/local/lib/python2.7/dist-packages/matplotlib/pyplot.py&quot;, line 423, in figure
     **kwargs)
@@ -1713,7 +1748,7 @@ RuntimeError: Invalid DISPLAY variable
 </div>
 
 <div class="output_area"><div class="prompt output_prompt">
-    Out[2]:</div>
+    Out[3]:</div>
 
 
 <div class="output_text output_subarea output_pyout">
@@ -1743,7 +1778,7 @@ SheetView(array([[  2.15781968e-05,   3.08676308e-05,   4.36143882e-05, ...,
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[3]:
+In&nbsp;[4]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -1763,13 +1798,13 @@ In&nbsp;[3]:
 <div class="output_subarea output_stream output_stderr output_text">
 <pre>
 Traceback (most recent call last):
-  File &quot;/var/lib/buildbot/slaves/imagen_docs/build/dataviews/dataviews/ipython/display_hooks.py&quot;, line 129, in wrapped
+  File &quot;/var/lib/buildbot/slaves/imagen_docs/build/dataviews/dataviews/ipython/display_hooks.py&quot;, line 128, in wrapped
     return fn(view, **kwargs)
-  File &quot;/var/lib/buildbot/slaves/imagen_docs/build/dataviews/dataviews/ipython/display_hooks.py&quot;, line 206, in view_display
+  File &quot;/var/lib/buildbot/slaves/imagen_docs/build/dataviews/dataviews/ipython/display_hooks.py&quot;, line 205, in view_display
     fig = Plot.defaults[view.__class__](view, **opts)()
-  File &quot;/var/lib/buildbot/slaves/imagen_docs/build/dataviews/dataviews/plots.py&quot;, line 551, in __call__
+  File &quot;/var/lib/buildbot/slaves/imagen_docs/build/dataviews/dataviews/plots.py&quot;, line 554, in __call__
     ax = self._axis(axis, title, &apos;x&apos;, &apos;y&apos;, (l, b, r, t))
-  File &quot;/var/lib/buildbot/slaves/imagen_docs/build/dataviews/dataviews/plots.py&quot;, line 187, in _axis
+  File &quot;/var/lib/buildbot/slaves/imagen_docs/build/dataviews/dataviews/plots.py&quot;, line 188, in _axis
     fig = plt.figure()
   File &quot;/usr/local/lib/python2.7/dist-packages/matplotlib/pyplot.py&quot;, line 423, in figure
     **kwargs)
@@ -1790,7 +1825,7 @@ RuntimeError: Invalid DISPLAY variable
 </div>
 
 <div class="output_area"><div class="prompt output_prompt">
-    Out[3]:</div>
+    Out[4]:</div>
 
 
 <div class="output_text output_subarea output_pyout">
