@@ -306,7 +306,7 @@ class PatternCoordinatorImages(PatternCoordinator):
             self.filename_template=dataset.get('filename_template', filepath+"/{i}.png")
             self.source=dataset.get('source', self.dataset_name)
             self.placeholder_mapping=eval(dataset['placeholder_mapping']) if 'placeholder_mapping' in dataset else {'i': lambda params: '%02d' % (params['current_image']+1)}
-            inherent_features=dataset.get('inherent_features', [])
+            inherent_features=dataset.get('inherent_features', ['sf','or','cr'])
         except IOError:
             filepath=param.resolve_path(dataset_name,path_to_file=False)
             self.dataset_name=filepath
@@ -315,7 +315,7 @@ class PatternCoordinatorImages(PatternCoordinator):
             self.description=""
             self.source=filepath
             self.placeholder_mapping={}
-            inherent_features=[]
+            inherent_features=['sf','or','cr']
 
         super(PatternCoordinatorImages, self).__init__(inherent_features,**params)
 
