@@ -258,9 +258,10 @@ class PatternCoordinatorImages(PatternCoordinator):
             :'source': Citation of paper for which the dataset was created (string, default=name)
             :'filename_template': Path to the images with placeholders ({placeholder_name})
             for inherent features and the image number, e.g. "filename_template": "images/image{i}.png".
+            The placeholders are replaced according to placeholder_mapping.
             Alternatively, glob patterns such as * or ? can be used, e.g. "filename_template": "images/*.png"
-            (default={current_image}.jpg)
-            :'placeholder_mapping': Dictionary specifying how to replace the placeholders in filename_template; value is used in eval().
+            (default=path_to_dataset_name/{i}.png if dataset_name is a JSON file, path_to_dataset_name/*.png otherwise)
+            :'placeholder_mapping': Dictionary specifying the replacement of placeholders in filename_template; value is used in eval().
             :'inherent_features': Features for which the corresponding feature_coordinators should not be applied
 
             Currently, the label of the pattern generator
@@ -302,7 +303,7 @@ class PatternCoordinatorImages(PatternCoordinator):
             length = len([ f for f in os.listdir(filepath) if os.path.isfile(os.path.join(filepath,f)) ]) - 1
             self.patterns_per_label=dataset.get('length', length)
             self.description=dataset.get('description', "")
-            self.filename_template=dataset.get('filename_template', filepath+"/{i}.jpg")
+            self.filename_template=dataset.get('filename_template', filepath+"/{i}.png")
             self.source=dataset.get('source', self.dataset_name)
             self.placeholder_mapping=eval(dataset['placeholder_mapping']) if 'placeholder_mapping' in dataset else {'i': lambda params: '%02d' % (params['current_image']+1)}
             inherent_features=dataset.get('inherent_features', [])
