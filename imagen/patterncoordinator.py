@@ -8,6 +8,7 @@ related in some way, as controlled by a subclass of FeatureCoordinator.
 import os
 import math
 import json
+import glob
 
 import param
 from param.parameterized import ParamOverrides
@@ -180,13 +181,11 @@ class PatternCoordinator(param.Parameterized):
         return [self.pattern_type(**self.pattern_parameters) for i in range(self.patterns_per_label)]
 
 
-    def __init__(self,inherent_features={},**params):
+    def __init__(self,inherent_features=[],**params):
 
         """
-        If a dataset already and inherently includes certain features, a dictionary
-        with feature-name:code-to-access-the-feature pairs should be supplied
-        specifying how to select (e.g. from a set of images) the appropriate
-        feature value.
+        If a dataset already and inherently includes certain features, a list
+        with the inherent feature names should be supplied.
 
         Any extra parameter values supplied here will be passed down to the
         feature_coordinators requested in features_to_vary.
@@ -199,9 +198,6 @@ class PatternCoordinator(param.Parameterized):
 
         self._inherent_features = inherent_features
 
-        # And also, this key must be in feature_coordinators because _inherent_features
-        # can have additional features such as i to support multiple images
-
         # TFALERT: Once spatial frequency (sf) is added, this will
         # cause warnings, because all image datasets will have a
         # spatial frequency inherent feature, but mostly we just
@@ -209,7 +205,7 @@ class PatternCoordinator(param.Parameterized):
         # discards all but a narrow range of sf.  So the dataset will
         # have sf inherently, but that won't be an error or even
         # worthy of a warning.
-        if(len((set(self._inherent_features.keys()) - set(self.features_to_vary)) & set(self.feature_coordinators.keys()))):
+        if(len(set(self._inherent_features) - set(self.features_to_vary))):
             self.warning('Inherent feature present which is not requested in features')
 
         self._feature_coordinators_to_apply = []
@@ -248,7 +244,8 @@ class PatternCoordinatorImages(PatternCoordinator):
     def __init__(self,dataset_name,**params):
         """
         dataset_name is the path to a JSON file (https://docs.python.org/2/library/json.html)
-        containing a description for a dataset.
+        containing a description for a dataset. Alternatively, it can be a path to a folder
+        containing image files.
 
         Any extra parameter values supplied here will be passed down to the
         feature_coordinators requested in features_to_vary.
@@ -260,53 +257,78 @@ class PatternCoordinatorImages(PatternCoordinator):
             :'description': Description of the dataset (string, default="")
             :'source': Citation of paper for which the dataset was created (string, default=name)
             :'filename_template': Path to the images with placeholders ({placeholder_name})
-            for inherent features and the image number, e.g. "filename_template": "images/image{i}.png"
+            for inherent features and the image number, e.g. "filename_template": "images/image{i}.png".
+            Alternatively, glob patterns such as * or ? can be used, e.g. "filename_template": "images/*.png"
             (default={current_image}.jpg)
-            :'inherent_features': Dictionary specifying how to access inherent features; value is used in eval().
+            :'placeholder_mapping': Dictionary specifying how to replace the placeholders in filename_template; value is used in eval().
+            :'inherent_features': Features for which the corresponding feature_coordinators should not be applied
 
             Currently, the label of the pattern generator
             ('pattern_label') as well as the image number
             ('current_image') are given as parameters to each callable
-            supplied in inherent_features, where current_image varies
+            supplied in placeholder_mapping, where current_image varies
             from 0 to length-1 and pattern_label is one of the items
             of pattern_labels. (python code, default={'i': lambda params: '%02d' % (params['current_image']+1)}
 
             Example 1: Imagine having images without any inherent
             features named as follows: "images/image01.png",
             "images/image02.png" and so on. Then, filename_template:
-            "images/image{i}.png" and "inherent_features":
+            "images/image{i}.png" and "placeholder_mapping":
             "{'i': lambda params: '%02d' % (params['current_image']+1)}"
             This replaces {i} in the template with the current image number + 1
 
             Example 2: Imagine having image pairs from a stereo webcam named as follows: "images/image01_left.png",
             "images/image01_right.png" and so on. If pattern_labels=['Left','Right'], then
             filename_template: "images/image{i}_{dy}" and
-            "inherent_features": "{'i': lambda params: '%02d' % (params['current_image']+1),
+            "placeholder_mapping": "{'i': lambda params: '%02d' % (params['current_image']+1),
                                    'dy':lambda params: 'left' if params['pattern_label']=='Left' else 'right'}"
 
             Here, additionally {dy} gets replaced by either 'left' if the pattern_label is 'Left' or 'right' otherwise
+
+        If a directory to image files rather than a JSON file is given in dataset_name,
+        the defaults are as follows:
+            :'filename_template': filepath/*.png, whereas filepath is the path given in dataset_name
+            :'patterns_per_label': Number of png files in filepath, whereas filepath is the path given in dataset_name
+            :'inherent_features': []
+            :'placeholder_mapping': {}
         """
 
-        filename=param.resolve_path(dataset_name)
-        filepath=os.path.dirname(filename)
-        dataset=json.loads(open(filename).read())
+        try:
+            filename=param.resolve_path(dataset_name)
+            filepath=os.path.dirname(filename)
+            dataset=json.loads(open(filename).read())
 
-        self.dataset_name=dataset.get('name', os.path.basename(dataset_name))
-        length = len([ f for f in os.listdir(filepath) if os.path.isfile(os.path.join(filepath,f)) ]) - 1
-        self.patterns_per_label=dataset.get('length', length)
-        self.description=dataset.get('description', "")
-        self.filename_template=dataset.get('filename_template', filepath+"/{i}.jpg")
-        self.source=dataset.get('source', self.dataset_name)
-        inherent_features=eval(dataset['inherent_features']) if 'inherent_features' in dataset else {'i': lambda params: '%02d' % (params['current_image']+1)}
+            self.dataset_name=dataset.get('name', os.path.basename(dataset_name))
+            length = len([ f for f in os.listdir(filepath) if os.path.isfile(os.path.join(filepath,f)) ]) - 1
+            self.patterns_per_label=dataset.get('length', length)
+            self.description=dataset.get('description', "")
+            self.filename_template=dataset.get('filename_template', filepath+"/{i}.jpg")
+            self.source=dataset.get('source', self.dataset_name)
+            self.placeholder_mapping=eval(dataset['placeholder_mapping']) if 'placeholder_mapping' in dataset else {'i': lambda params: '%02d' % (params['current_image']+1)}
+            inherent_features=dataset.get('inherent_features', [])
+        except IOError:
+            filepath=param.resolve_path(dataset_name,path_to_file=False)
+            self.dataset_name=filepath
+            self.filename_template=filepath+"/*.png"
+            self.patterns_per_label = len(glob.glob(self.filename_template))
+            self.description=""
+            self.source=filepath
+            self.placeholder_mapping={}
+            inherent_features=[]
 
         super(PatternCoordinatorImages, self).__init__(inherent_features,**params)
 
 
     def _generate_filenames(self, params):
-        filenames = [self.filename_template]*self.patterns_per_label
-        for feature in self._inherent_features:
-            filenames = [filename.replace('{'+feature+'}', self._inherent_features[feature](params))
+        if(len(self.placeholder_mapping)>0):
+            filenames = [self.filename_template]*self.patterns_per_label
+
+            for placeholder in self.placeholder_mapping:
+                filenames = [filename.replace('{'+placeholder+'}', self.placeholder_mapping[placeholder](params))
                                 for filename,params['current_image'] in zip(filenames,range(self.patterns_per_label))]
+        else:
+            filenames = sorted(glob.glob(self.filename_template))
+
         return filenames
 
 
