@@ -40,7 +40,7 @@ class fft_power_spectrum(ViewOperation):
       to the label of the input SheetView.""")
 
 
-    def _process(self, sheetview):
+    def _process(self, sheetview, key=None):
         cr = sheetview.cyclic_range
         data = sheetview.data if cr is None else sheetview.data/cr
         fft_spectrum = abs(fftshift(fft2(data - 0.5, s=None, axes=(-2, -1))))
@@ -74,7 +74,7 @@ class gradient(ViewOperation):
       The label suffix used for the output gradient as appended to the
       label of the input SheetView.""")
 
-    def _process(self, sheetview):
+    def _process(self, sheetview, key=None):
         data = sheetview.data
         r, c = data.shape
         dx = np.diff(data, 1, axis=1)[0:r-1, 0:c-1]
@@ -109,7 +109,7 @@ class autocorrelation(ViewOperation):
       The label suffix used for the output autocorrelation as appended
       to the label of the input SheetView.""")
 
-    def _process(self, sheetview):
+    def _process(self, sheetview, key=None):
         import scipy.signal
         data = sheetview.data
         autocorr_data = scipy.signal.correlate2d(data, data)
@@ -140,7 +140,7 @@ class cyclic_similarity_index(ViewOperation):
       The label suffix used for the output similarity index as
       appended to the label of the input SheetView.""")
 
-    def _process(self, overlay):
+    def _process(self, overlay, key=None):
 
         if len(overlay) != 2:
              raise Exception("The similarity index may only be computed using overlays of SheetViews.")
