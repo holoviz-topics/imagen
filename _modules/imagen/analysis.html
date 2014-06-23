@@ -106,7 +106,7 @@
 <span class="s">      to the label of the input SheetView.&quot;&quot;&quot;</span><span class="p">)</span>
 
 
-    <span class="k">def</span> <span class="nf">_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sheetview</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sheetview</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="n">cr</span> <span class="o">=</span> <span class="n">sheetview</span><span class="o">.</span><span class="n">cyclic_range</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">sheetview</span><span class="o">.</span><span class="n">data</span> <span class="k">if</span> <span class="n">cr</span> <span class="ow">is</span> <span class="bp">None</span> <span class="k">else</span> <span class="n">sheetview</span><span class="o">.</span><span class="n">data</span><span class="o">/</span><span class="n">cr</span>
         <span class="n">fft_spectrum</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">fftshift</span><span class="p">(</span><span class="n">fft2</span><span class="p">(</span><span class="n">data</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))))</span>
@@ -140,7 +140,7 @@
 <span class="s">      The label suffix used for the output gradient as appended to the</span>
 <span class="s">      label of the input SheetView.&quot;&quot;&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sheetview</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sheetview</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">sheetview</span><span class="o">.</span><span class="n">data</span>
         <span class="n">r</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span>
         <span class="n">dx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">:</span><span class="n">r</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="n">c</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
@@ -175,7 +175,7 @@
 <span class="s">      The label suffix used for the output autocorrelation as appended</span>
 <span class="s">      to the label of the input SheetView.&quot;&quot;&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sheetview</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sheetview</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="kn">import</span> <span class="nn">scipy.signal</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">sheetview</span><span class="o">.</span><span class="n">data</span>
         <span class="n">autocorr_data</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">signal</span><span class="o">.</span><span class="n">correlate2d</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
@@ -206,7 +206,7 @@
 <span class="s">      The label suffix used for the output similarity index as</span>
 <span class="s">      appended to the label of the input SheetView.&quot;&quot;&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">overlay</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">overlay</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">overlay</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
              <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;The similarity index may only be computed using overlays of SheetViews.&quot;</span><span class="p">)</span>
