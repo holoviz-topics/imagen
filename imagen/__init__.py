@@ -177,17 +177,27 @@ class Line(PatternGenerator):
     thickness   = param.Number(default=0.006,bounds=(0.0,None),softbounds=(0.0,1.0),
                          precedence=0.60,
                          doc="Thickness (width) of the solid central part of the line.")
+    
+    authorize_zero_thickness = param.Boolean(default=True, 
+                         precedence=0.60,
+                         doc=
+                         """If True, the line thickness can be 0 pixel if the parameter thickness is smaller than the pixel size.
+                         If False, the smallest line thickness is one pixel: it can't be 0 pixel.
+                         """)
+    
     smoothing = param.Number(default=0.05,bounds=(0.0,None),softbounds=(0.0,0.5),
                        precedence=0.61,
                        doc="Width of the Gaussian fall-off.")
 
     def function(self,p):
-        xpixelsize = 1./float(p.xdensity)
-        ypixelsize = 1./float(p.ydensity)
-        print p.thickness, xpixelsize, ypixelsize, max([p.thickness,xpixelsize,ypixelsize])
-        effective_thickness = max([p.thickness,xpixelsize,ypixelsize])
-        return line(self.pattern_y+0.001*xpixelsize,effective_thickness,p.smoothing)
-
+        if p.authorize_zero_thickness:
+            return line(self.pattern_y,p.thickness,p.smoothing)
+        else:
+            xpixelsize = 1./float(p.xdensity)
+            ypixelsize = 1./float(p.ydensity)
+            effective_thickness = max([p.thickness,xpixelsize,ypixelsize])
+            max_pixelsize=max([xpixelsize,ypixelsize])
+            return line(self.pattern_y+0.001*max_pixelsize,effective_thickness,p.smoothing)          
 
 class Disk(PatternGenerator):
     """

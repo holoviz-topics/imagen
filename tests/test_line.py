@@ -30,6 +30,7 @@ class LineTest(unittest.TestCase):
             c['orientation'] = orientation
             im = imagen.Line(
                 scale=1,offset=0,orientation=orientation,
+                authorize_zero_thickness=False,
                 thickness=0.0,x=x, y=0., 
                 smoothing=0.0, 
                 xdensity=xdensity, ydensity=ydensity,
@@ -51,36 +52,16 @@ class LineTest(unittest.TestCase):
                 )
         
     def test_minimal_line_thickness_density20_x0(self):
-        c = {
-            'radius':5,
-            'density': 20,
-            'x': 0.
-            }
-        self.minimal_line_thickness(c)
+        c = {'radius':5,  'density': 20,  'x': 0.}; self.minimal_line_thickness(c)
         
     def test_minimal_line_thickness_density100_x0(self):
-        c = {
-            'radius':1,
-            'density': 100,
-            'x': 0.
-            }
-        self.minimal_line_thickness(c) 
+        c = {'radius':1,  'density': 100, 'x': 0.}; self.minimal_line_thickness(c) 
         
     def test_minimal_line_thickness_density1000_x0(self):
-        c = {
-            'radius':0.1,
-            'density': 1000,
-            'x': 0.
-            }
-        self.minimal_line_thickness(c)
+        c = {'radius':0.1,'density': 1000,'x': 0.}; self.minimal_line_thickness(c)
         
     def test_minimal_line_thickness_density20_x2(self):
-        c = {
-            'radius':5,
-            'density': 20,
-            'x': 2.
-            }
-        self.minimal_line_thickness(c)
+        c = {'radius':5,  'density': 20,  'x': 2.}; self.minimal_line_thickness(c)
 
 if __name__ == '__main__':
     unittest.main()
