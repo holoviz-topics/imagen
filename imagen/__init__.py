@@ -13,7 +13,8 @@ from __future__ import with_statement
 import param
 from param.version import Version
 
-__version__ = Version(release=(1,0,0), fpath=__file__, commit="$Format:%h$")
+__version__ = Version(release=(1,0,0), fpath=__file__,
+                      commit="$Format:%h$", reponame='imagen')
 
 
 import numpy
@@ -30,8 +31,8 @@ from param import ClassSelector
 from patterngenerator import Constant, PatternGenerator
 
 from dataviews import SheetStack, Dimension
-from dataviews.sheetviews.sheetcoords import SheetCoordinateSystem
-from dataviews.sheetviews import boundingregion, sheetcoords # pyflakes:ignore (API import)
+from dataviews.sheetviews import SheetCoordinateSystem
+from dataviews import boundingregion, sheetcoords # pyflakes:ignore (API import)
 
 from patternfn import gaussian,exponential,gabor,line,disk,ring,\
     sigmoid,arc_by_radian,arc_by_center,smooth_rectangle,float_error_ignore, \
@@ -39,7 +40,6 @@ from patternfn import gaussian,exponential,gabor,line,disk,ring,\
 
 import numbergen
 from imagen.transferfn import DivisiveNormalizeL1
-
 
 # Could add a Gradient class, where the brightness varies as a
 # function of an equation for a plane.  This could be useful as a
@@ -540,7 +540,24 @@ class Sweeper(PatternGenerator):
         return image_array
 
 
-class Composite(PatternGenerator):
+
+class CompositeBase(PatternGenerator):
+    """                                                                                                                                                
+    PatternGenerator that combines or selects from a list of other PatternGenerators.                                                                  
+    """
+
+    __abstract=True
+
+    generators = param.List(class_=PatternGenerator,default=[Constant(scale=0.0)],
+                            bounds=(1,None),precedence=0.97, doc="""                                                                                   
+        List of patterns to combine or select from. The default pattern is a blank pattern,
+        and thus should be overridden for any useful work.""")
+
+    size = param.Number(default=1.0,doc="""Scaling factor applied to all sub-patterns.""")
+
+
+
+class Composite(CompositeBase):
     """
     PatternGenerator that accepts a list of other PatternGenerators.
     To create a new pattern, asks each of the PatternGenerators in the
@@ -584,13 +601,6 @@ class Composite(PatternGenerator):
                   return x[0]
 
         """)
-
-    generators = param.List(default=[Constant(scale=0.0)],precedence=0.97,
-        class_=PatternGenerator,doc="""
-        List of patterns to use in the composite pattern.  The default is
-        a blank pattern, and should thus be overridden for any useful work.""")
-
-    size  = param.Number(default=1.0,doc="Scaling factor applied to all sub-patterns.")
 
 
     def _advance_pattern_generators(self,p):
@@ -793,16 +803,10 @@ def wrap(lower, upper, x):
 
 
 
-class Selector(PatternGenerator):
+class Selector(CompositeBase):
     """
     PatternGenerator that selects from a list of other PatternGenerators.
     """
-
-    generators = param.List(precedence=0.97,class_=PatternGenerator,bounds=(1,None),
-        default=[Disk(x=-0.3,aspect_ratio=0.5), Rectangle(x=0.3,aspect_ratio=0.5)],
-        doc="List of patterns from which to select.")
-
-    size = param.Number(default=1.0,doc="Scaling factor applied to all sub-patterns.")
 
     # CB: needs to have time_fn=None
     index = param.Number(default=numbergen.UniformRandom(lbound=0,ubound=1.0,seed=76),
@@ -830,7 +834,6 @@ class Selector(PatternGenerator):
         """Return the current generator (as specified by self.index)."""
         int_index=int(len(self.generators)*wrap(0,1.0,self.inspect_value('index')))
         return self.generators[int_index]
-
 
 
 
@@ -935,8 +938,8 @@ class Translator(PatternGenerator):
         Explicitly generate new values for these parameters only
         when appropriate.
         """
-        for param in ['x','y','direction']:
-            self.force_new_dynamic_value(param)
+        for p in ['x','y','direction']:
+            self.force_new_dynamic_value(p)
         self.last_time = self.time_fn()
 
 
@@ -1552,6 +1555,6 @@ class Spectrogram(PowerSpectrum):
         return super(Spectrogram, self).__call__()
 
 _public = list(set([_k for _k,_v in locals().items() if isinstance(_v,type) and issubclass(_v,PatternGenerator)]))
-__all__ = _public + ["image", "random", "boundingregion", "sheetcoords"]
+__all__ = _public + ["image", "random", "patterncoordinator", "boundingregion", "sheetcoords"]
 # Avoids loading the audio and opencvcamera modules, which rely on external
 # libraries that might not be present on this system.

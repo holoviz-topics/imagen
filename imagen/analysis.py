@@ -40,7 +40,7 @@ class fft_power_spectrum(ViewOperation):
       to the label of the input SheetView.""")
 
 
-    def _process(self, sheetview):
+    def _process(self, sheetview, key=None):
         cr = sheetview.cyclic_range
         data = sheetview.data if cr is None else sheetview.data/cr
         fft_spectrum = abs(fftshift(fft2(data - 0.5, s=None, axes=(-2, -1))))
@@ -54,7 +54,8 @@ class fft_power_spectrum(ViewOperation):
         bb = BoundingBox(radius=(density/2)/(r-l))
 
         return [SheetView(normalized_spectrum, bb,
-                          label=sheetview.label + ' ' + self.p.label)]
+                          label=sheetview.label + ' ' + self.p.label,
+                          value="FFT Power")]
 
 
 
@@ -73,7 +74,7 @@ class gradient(ViewOperation):
       The label suffix used for the output gradient as appended to the
       label of the input SheetView.""")
 
-    def _process(self, sheetview):
+    def _process(self, sheetview, key=None):
         data = sheetview.data
         r, c = data.shape
         dx = np.diff(data, 1, axis=1)[0:r-1, 0:c-1]
@@ -91,7 +92,7 @@ class gradient(ViewOperation):
             dy = 0.5 * cyclic_range - np.abs(dy - 0.5 * cyclic_range)
 
         return [SheetView(np.sqrt(dx*dx + dy*dy), sheetview.bounds,
-                          label=sheetview.label + ' ' + self.p.label)]
+                          value=sheetview.label + ' ' + self.p.label)]
 
 
 
@@ -108,12 +109,12 @@ class autocorrelation(ViewOperation):
       The label suffix used for the output autocorrelation as appended
       to the label of the input SheetView.""")
 
-    def _process(self, sheetview):
+    def _process(self, sheetview, key=None):
         import scipy.signal
         data = sheetview.data
         autocorr_data = scipy.signal.correlate2d(data, data)
         return [SheetView(autocorr_data, sheetview.bounds,
-                          label=sheetview.label + ' ' + self.p.label)]
+                          value=sheetview.label + ' ' + self.p.label)]
 
 
 
@@ -139,7 +140,7 @@ class cyclic_similarity_index(ViewOperation):
       The label suffix used for the output similarity index as
       appended to the label of the input SheetView.""")
 
-    def _process(self, overlay):
+    def _process(self, overlay, key=None):
 
         if len(overlay) != 2:
              raise Exception("The similarity index may only be computed using overlays of SheetViews.")
@@ -159,7 +160,7 @@ class cyclic_similarity_index(ViewOperation):
         # As this is made into a unit metric, uncorrelated has value zero.
         similarity = (2 * (similarity - 0.5)) if self.p.unit_range else similarity
         return [SheetView(similarity, bounds=overlay.bounds,
-                          label=overlay[0].label + ' ' + self.p.label)]
+                          value=overlay[0].label + ' ' + self.p.label)]
 
 
 options.CyclicSimilarity_SheetView    = GrayNearest
