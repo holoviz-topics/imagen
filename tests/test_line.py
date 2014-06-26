@@ -54,6 +54,9 @@ class LineTest(unittest.TestCase):
     def test_minimal_line_thickness_density20_x0(self):
         c = {'radius':5,  'density': 20,  'x': 0.}; self.minimal_line_thickness(c)
         
+    def test_minimal_line_thickness_density20_x0(self):
+        c = {'radius':5,  'density': 20,  'x': 0.02}; self.minimal_line_thickness(c)
+        
     def test_minimal_line_thickness_density100_x0(self):
         c = {'radius':1,  'density': 100, 'x': 0.}; self.minimal_line_thickness(c) 
         
