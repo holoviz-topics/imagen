@@ -30,7 +30,7 @@ class LineTest(unittest.TestCase):
             c['orientation'] = orientation
             im = imagen.Line(
                 scale=1,offset=0,orientation=orientation,
-                authorize_zero_thickness=False,
+                enforce_minimal_thickness=True,
                 thickness=0.0,x=x, y=0., 
                 smoothing=0.0, 
                 xdensity=xdensity, ydensity=ydensity,

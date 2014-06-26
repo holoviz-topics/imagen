@@ -178,11 +178,11 @@ class Line(PatternGenerator):
                          precedence=0.60,
                          doc="Thickness (width) of the solid central part of the line.")
     
-    authorize_zero_thickness = param.Boolean(default=True, 
+    enforce_minimal_thickness = param.Boolean(default=False, 
                          precedence=0.60,
                          doc=
-                         """If True, the line thickness can be 0 pixel if the parameter thickness is smaller than the pixel size.
-                         If False, the smallest line thickness is one pixel: it can't be 0 pixel.
+                         """If False, the line thickness can be of 0 pixel if the parameter thickness is smaller than the pixel size.
+                         If True, the smallest line thickness is one pixel: it can't be 0 pixel.
                          """)
     
     smoothing = param.Number(default=0.05,bounds=(0.0,None),softbounds=(0.0,0.5),
@@ -190,14 +190,15 @@ class Line(PatternGenerator):
                        doc="Width of the Gaussian fall-off.")
 
     def function(self,p):
-        if p.authorize_zero_thickness:
-            return line(self.pattern_y,p.thickness,p.smoothing)
-        else:
+        if p.enforce_minimal_thickness:
             xpixelsize = 1./float(p.xdensity)
             ypixelsize = 1./float(p.ydensity)
             effective_thickness = max([p.thickness,xpixelsize,ypixelsize])
             max_pixelsize=max([xpixelsize,ypixelsize])
-            return line(self.pattern_y+0.001*max_pixelsize,effective_thickness,p.smoothing)          
+            return line(self.pattern_y+0.001*max_pixelsize,effective_thickness,p.smoothing) 
+        else:
+            return line(self.pattern_y,p.thickness,p.smoothing)
+
 
 class Disk(PatternGenerator):
     """
@@ -496,9 +497,9 @@ class SquareGrating(PatternGenerator):
         Return a square-wave grating (alternating black and white bars).
         """
         return around(
-          0.5 + 
-          0.5*sin(pi*(p.duty_cycle-0.5)) + 
-          0.5*sin(p.frequency*2*pi*self.pattern_y + p.phase))
+	  0.5 + 
+	  0.5*sin(pi*(p.duty_cycle-0.5)) + 
+	  0.5*sin(p.frequency*2*pi*self.pattern_y + p.phase))
 
 # CB: I removed motion_sign from this class because I think it is
 # unnecessary. But maybe I misunderstood the original author's
