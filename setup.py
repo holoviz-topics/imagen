@@ -68,7 +68,6 @@ if __name__=="__main__":
 
     if 'upload' in sys.argv:
         import imagen
-        imagen.__version__.verify()
-        assert str(imagen.__version__) == setup_args['version']
+        imagen.__version__.verify(setup_args['version'])
 
     setup(**setup_args)
