@@ -132,13 +132,13 @@ def line(y, thickness, gaussian_width):
 
     return where(gaussian_y_coord<=0, 1.0, falloff)
 
-def line_one_pixel(y, jitter, thickness, gaussian_width):
+def line_one_pixel(y, pixelsize, thickness, gaussian_width):
     """
     Infinite-length line with a solid central region, then Gaussian fall-off at the edges.
     """
     d=[]; g=[]; number_of_negative=[]
-    d.append(abs(y+jitter))
-    d.append(abs(y+jitter))
+    d.append(abs(y))
+    d.append(abs(y+pixelsize/2.))
     for i in xrange(2):
         g.append(d[i] - thickness/2.0)
         number_of_negative.append((g[i]<=0.).sum())
