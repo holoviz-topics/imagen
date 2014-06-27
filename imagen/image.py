@@ -4,8 +4,12 @@ PatternGenerators based on bitmap images stored in files.
 Requires the Python Imaging Library (PIL).
 """
 
-import Image
-import ImageOps
+try:
+    import Image
+    import ImageOps
+except:
+    from PIL import Image   # For pillow installs
+    from PIL import ImageOps
 
 import numpy
 from numpy.oldnumeric import array, Float, sum, ravel, ones
