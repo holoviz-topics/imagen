@@ -1,3 +1,5 @@
+|BuildStatus|_ |PyPIVersion|_
+
 ImaGen
 ======
 
@@ -15,3 +17,9 @@ ImaGen requires `NumPy <http://numpy.scipy.org/>`_, `PIL <http://www.pythonware.
 
 Official releases of ImaGen are available at `PyPI <http://pypi.python.org/pypi/imagen>`_, and can be installed along with
 dependencies via ``pip install --user imagen``.  More recent changes can be obtained by cloning the git repository.
+
+.. |BuildStatus| image:: https://travis-ci.org/ioam/imagen.svg?branch=master
+.. _BuildStatus: https://travis-ci.org/ioam/imagen
+
+.. |PyPIVersion| image:: http://img.shields.io/pypi/v/imagen.svg
+.. _PyPIVersion: https://pypi.python.org/pypi/imagen
