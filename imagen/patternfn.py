@@ -132,6 +132,29 @@ def line(y, thickness, gaussian_width):
 
     return where(gaussian_y_coord<=0, 1.0, falloff)
 
+def line_one_pixel(y, jitter, thickness, gaussian_width):
+    """
+    Infinite-length line with a solid central region, then Gaussian fall-off at the edges.
+    """
+    d=[]; g=[]; number_of_negative=[]
+    d.append(abs(y+jitter))
+    d.append(abs(y+jitter))
+    for i in xrange(2):
+        g.append(d[i] - thickness/2.0)
+        number_of_negative.append((g[i]<=0.).sum())
+    h=g[number_of_negative.index(min(number_of_negative))]
+    
+    gaussian_y_coord = h
+    sigmasq = gaussian_width*gaussian_width
+
+    if sigmasq==0.0:
+        falloff = y*0.0
+    else:
+        with float_error_ignore():
+            falloff = exp(divide(-gaussian_y_coord*gaussian_y_coord,2*sigmasq))
+
+    return where(gaussian_y_coord<=0., 1.0, falloff)
+
 
 def disk(x, y, height, gaussian_width):
     """

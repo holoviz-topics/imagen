@@ -49,13 +49,13 @@ class LineTest(unittest.TestCase):
             self.assertEqual(
                 number_of_ones, width_in_pixels, 
                 msg=msg
-                )
+                )     
+
+    def test_minimal_line_thickness_density20_x_jitter(self):
+        c = {'radius':5,  'density': 20,  'x': -0.001/20}; self.minimal_line_thickness(c)  
         
     def test_minimal_line_thickness_density20_x0(self):
-        c = {'radius':5,  'density': 20,  'x': 0.}; self.minimal_line_thickness(c)
-        
-    def test_minimal_line_thickness_density20_x0(self):
-        c = {'radius':5,  'density': 20,  'x': 0.02}; self.minimal_line_thickness(c)
+        c = {'radius':5,  'density': 20,  'x': 0.}; self.minimal_line_thickness(c) 
         
     def test_minimal_line_thickness_density100_x0(self):
         c = {'radius':1,  'density': 100, 'x': 0.}; self.minimal_line_thickness(c) 

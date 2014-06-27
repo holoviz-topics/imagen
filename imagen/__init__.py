@@ -36,7 +36,7 @@ from dataviews import boundingregion, sheetcoords # pyflakes:ignore (API import)
 
 from patternfn import gaussian,exponential,gabor,line,disk,ring,\
     sigmoid,arc_by_radian,arc_by_center,smooth_rectangle,float_error_ignore, \
-    log_gaussian
+    log_gaussian, line_one_pixel
 
 import numbergen
 from imagen.transferfn import DivisiveNormalizeL1
@@ -195,7 +195,7 @@ class Line(PatternGenerator):
             ypixelsize = 1./float(p.ydensity)
             effective_thickness = max([p.thickness,xpixelsize,ypixelsize])
             max_pixelsize=max([xpixelsize,ypixelsize])
-            return line(self.pattern_y+0.001*max_pixelsize,effective_thickness,p.smoothing) 
+            return line_one_pixel(self.pattern_y,0.001*max_pixelsize,effective_thickness,p.smoothing) 
         else:
             return line(self.pattern_y,p.thickness,p.smoothing)
 
