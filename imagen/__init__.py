@@ -8,6 +8,13 @@ PatternGenerator classes can be derived from these, and can then be
 combined with the existing classes easily.
 """
 
+import sys, os
+
+# Add param submodule to sys.path
+cwd = os.path.abspath(os.path.split(__file__)[0])
+sys.path.insert(0, os.path.join(cwd, '..', 'param'))
+sys.path.insert(0, os.path.join(cwd, '..', 'dataviews'))
+
 import param
 from param.version import Version
 
