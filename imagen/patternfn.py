@@ -6,7 +6,7 @@ numpy arrays of x and y (in which case the result is also an array);
 the functions therefore have the same mathematical behaviour as numpy.
 """
 
-from __future__ import with_statement
+
 
 
 from math import pi

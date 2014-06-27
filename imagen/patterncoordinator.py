@@ -177,7 +177,7 @@ class PatternCoordinator(param.Parameterized):
         pattern_label}, which can be used to create PatternGenerators
         depending on the requested pattern_label
         """
-        return [self.pattern_type(**self.pattern_parameters) for i in xrange(self.patterns_per_label)]
+        return [self.pattern_type(**self.pattern_parameters) for i in range(self.patterns_per_label)]
 
 
     def __init__(self,inherent_features={},**params):
@@ -213,7 +213,7 @@ class PatternCoordinator(param.Parameterized):
             self.warning('Inherent feature present which is not requested in features')
 
         self._feature_coordinators_to_apply = []
-        for feature, feature_coordinator in self.feature_coordinators.iteritems():
+        for feature, feature_coordinator in self.feature_coordinators.items():
             if feature in self.features_to_vary and feature not in self._inherent_features:
                 # if it is a list, append each list item individually
                 if isinstance(feature_coordinator,list):
@@ -228,7 +228,7 @@ class PatternCoordinator(param.Parameterized):
             patterns=self._create_patterns({'pattern_label': pattern_label})
 
             # Apply _feature_coordinators_to_apply
-            for i in xrange(len(patterns)):
+            for i in range(len(patterns)):
                 for fn in self._feature_coordinators_to_apply:
                     fn(patterns[i],pattern_label,i,self.master_seed,**self._feature_params)
 

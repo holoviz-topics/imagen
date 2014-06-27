@@ -8,8 +8,6 @@ PatternGenerator classes can be derived from these, and can then be
 combined with the existing classes easily.
 """
 
-from __future__ import with_statement
-
 import param
 from param.version import Version
 
@@ -28,13 +26,13 @@ from param.parameterized import ParamOverrides
 from param import ClassSelector
 
 # Imported here so that all PatternGenerators will be in the same package
-from patterngenerator import Constant, PatternGenerator
+from .patterngenerator import Constant, PatternGenerator
 
 from dataviews import SheetStack, Dimension
 from dataviews.sheetviews import SheetCoordinateSystem
 from dataviews import boundingregion, sheetcoords # pyflakes:ignore (API import)
 
-from patternfn import gaussian,exponential,gabor,line,disk,ring,\
+from .patternfn import gaussian,exponential,gabor,line,disk,ring,\
     sigmoid,arc_by_radian,arc_by_center,smooth_rectangle,float_error_ignore, \
     log_gaussian
 
@@ -705,7 +703,7 @@ class SeparatedComposite(Composite):
         valid_generators = []
         for g in p.generators:
 
-            for trial in xrange(self.max_trials):
+            for trial in range(self.max_trials):
                 # Generate a new position and add generator if it's ok
 
                 if alltrue([self.__distance_valid(g,v,p) for v in valid_generators]):

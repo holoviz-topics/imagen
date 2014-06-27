@@ -11,7 +11,7 @@ from param.parameterized import ParamOverrides
 
 from dataviews.sheetviews import SheetCoordinateSystem
 
-from patterngenerator import PatternGenerator
+from .patterngenerator import PatternGenerator
 from imagen import Composite, Gaussian
 
 
