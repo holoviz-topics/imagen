@@ -224,7 +224,7 @@ class TestPatternGenerator(unittest.TestCase):
 
 
 
-# CB: does not test most featurs of Selector!
+# CB: does not test most features of Selector!
 class TestSelector(unittest.TestCase):
 
     def setUp(self):
