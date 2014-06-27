@@ -14,8 +14,8 @@ import param
 from param.parameterized import overridable_property
 
 from dataviews.sheetviews import BoundingBox, SheetCoordinateSystem
-from patterngenerator import PatternGenerator
-from transferfn import DivisiveNormalizeLinf, TransferFn
+from .patterngenerator import PatternGenerator
+from .transferfn import DivisiveNormalizeLinf, TransferFn
 
 
 class ImageSampler(param.Parameterized):
@@ -322,8 +322,8 @@ class GenericImage(PatternGenerator):
         state = super(GenericImage,self).__getstate__()
 
         if '_image' in state and state['_image'] is not None:
-            import StringIO
-            f = StringIO.StringIO()
+            import io
+            f = io.StringIO()
             image = state['_image']
             image.save(f,format=image.format or 'TIFF') # format could be None (we should probably just not save in that case)
             state['_image'] = f.getvalue()
@@ -340,8 +340,8 @@ class GenericImage(PatternGenerator):
         # actually be None; apparently it is sometimes (see SF
         # #2276819).
         if '_image' in state and state['_image'] is not None:
-            import StringIO
-            state['_image'] = Image.open(StringIO.StringIO(state['_image']))
+            import io
+            state['_image'] = Image.open(io.StringIO(state['_image']))
         super(GenericImage,self).__setstate__(state)
 
 

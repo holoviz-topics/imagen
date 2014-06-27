@@ -23,14 +23,14 @@ if 'setuptools' in sys.modules:
     # support easy_install without depending on setuptools
     install_requires = []
     for package_list in packages_to_install:
-        install_requires+=["%s%s"%(package,version) for package,version in package_list.items()]
+        install_requires+=["%s%s"%(package,version) for package,version in list(package_list.items())]
     setup_args['install_requires']=install_requires
     setup_args['dependency_links']=["http://pypi.python.org/simple/"]
     setup_args['zip_safe']=False # CEBALERT: probably ok for imagen; haven't checked
 
 for package_list in packages_to_state:
     requires = []
-    requires+=["%s (%s)"%(package,version) for package,version in package_list.items()]
+    requires+=["%s (%s)"%(package,version) for package,version in list(package_list.items())]
     setup_args['requires']=requires
 
 #############################################################################################
