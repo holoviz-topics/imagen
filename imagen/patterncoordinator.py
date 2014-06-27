@@ -306,7 +306,7 @@ class PatternCoordinatorImages(PatternCoordinator):
         filenames = [self.filename_template]*self.patterns_per_label
         for feature in self._inherent_features:
             filenames = [filename.replace('{'+feature+'}', self._inherent_features[feature](params))
-                                for filename,params['current_image'] in zip(filenames,list(range(self.patterns_per_label)))]
+                                for filename,params['current_image'] in zip(filenames,range(self.patterns_per_label))]
         return filenames
 
 
@@ -315,4 +315,4 @@ class PatternCoordinatorImages(PatternCoordinator):
                     filename=f,
                     cache_image=False,
                     **self.pattern_parameters)
-                for f,i in zip(self._generate_filenames(properties),list(range(self.patterns_per_label)))]
+                for f,i in zip(self._generate_filenames(properties),range(self.patterns_per_label))]

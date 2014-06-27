@@ -322,8 +322,11 @@ class GenericImage(PatternGenerator):
         state = super(GenericImage,self).__getstate__()
 
         if '_image' in state and state['_image'] is not None:
-            import io
-            f = io.StringIO()
+            try:
+                from io import StringIO
+            except:
+                from StringIO import StringIO
+            f = StringIO()
             image = state['_image']
             image.save(f,format=image.format or 'TIFF') # format could be None (we should probably just not save in that case)
             state['_image'] = f.getvalue()
@@ -340,8 +343,11 @@ class GenericImage(PatternGenerator):
         # actually be None; apparently it is sometimes (see SF
         # #2276819).
         if '_image' in state and state['_image'] is not None:
-            import io
-            state['_image'] = Image.open(io.StringIO(state['_image']))
+            try:
+                from io import StringIO
+            except:
+                from StringIO import StringIO
+            state['_image'] = Image.open(StringIO(state['_image']))
         super(GenericImage,self).__setstate__(state)
 
 

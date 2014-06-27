@@ -8,8 +8,6 @@ PatternGenerator classes can be derived from these, and can then be
 combined with the existing classes easily.
 """
 
-
-
 import param
 from param.version import Version
 
@@ -1550,7 +1548,7 @@ class Spectrogram(PowerSpectrum):
 
         return super(Spectrogram, self).__call__()
 
-_public = list(set([_k for _k,_v in list(locals().items()) if isinstance(_v,type) and issubclass(_v,PatternGenerator)]))
+_public = list(set([_k for _k,_v in locals().items() if isinstance(_v,type) and issubclass(_v,PatternGenerator)]))
 __all__ = _public + ["image", "random", "patterncoordinator", "boundingregion", "sheetcoords"]
 # Avoids loading the audio and opencvcamera modules, which rely on external
 # libraries that might not be present on this system.
