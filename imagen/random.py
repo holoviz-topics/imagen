@@ -2,6 +2,7 @@
 Two-dimensional pattern generators drawing from various random distributions.
 """
 
+import warnings
 import numpy as np
 import param
 from param.parameterized import ParamOverrides
@@ -17,9 +18,8 @@ from numbergen import TimeAware, Hash
 def seed(seed=None):
     """
     Set the seed on the shared RandomState instance.
-
-    Convenience function: shortcut to RandomGenerator.random_generator.seed().
     """
+    warnings.warn("Use param.seed instead. To be deprecated.", FutureWarning)
     RandomGenerator.random_generator.seed(seed)
 
 
