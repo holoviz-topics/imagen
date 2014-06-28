@@ -87,7 +87,7 @@ class UniformRandomInt(RandomGenerator):
         The highest integer to be drawn from the distribution.""")
 
     def _distrib(self,shape,p):
-        return np.random.randint(p.low, p.high, shape)
+        return  p.random_generator.randint(p.low, p.high, shape)
 
 
 
