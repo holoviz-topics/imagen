@@ -3,9 +3,6 @@ Two-dimensional pattern generators drawing from various random distributions.
 """
 
 import numpy as np
-
-from numpy.oldnumeric import zeros,floor,where,choose,less,greater,Int,random_array
-
 import param
 from param.parameterized import ParamOverrides
 
@@ -205,6 +202,7 @@ class RandomDotStereogram(PatternGenerator):
 
 
     def __call__(self,**params_to_override):
+        from numpy.oldnumeric import random_array
         p = ParamOverrides(self,params_to_override)
 
         xsize,ysize = SheetCoordinateSystem(p.bounds,p.xdensity,p.ydensity).shape
@@ -218,29 +216,29 @@ class RandomDotStereogram(PatternGenerator):
         bigysize = 2*ysize
         ndots=int(round(p.dotdensity * (bigxsize+2*dotsize) * (bigysize+2*dotsize) /
                         min(dotsize,xsize) / min(dotsize,ysize)))
-        halfdot = floor(dotsize/2)
+        halfdot = np.floor(dotsize/2)
 
         # Choose random colors and locations of square dots
         random_seed = p.random_seed
 
         random_array.seed(random_seed*12,random_seed*99)
-        col=where(random_array.random((ndots))>=0.5, 1.0, -1.0)
+        col=np.where(random_array.random((ndots))>=0.5, 1.0, -1.0)
 
         random_array.seed(random_seed*122,random_seed*799)
-        xpos=floor(random_array.random((ndots))*(bigxsize+2*dotsize)) - halfdot
+        xpos=np.floor(random_array.random((ndots))*(bigxsize+2*dotsize)) - halfdot
 
         random_array.seed(random_seed*1243,random_seed*9349)
-        ypos=floor(random_array.random((ndots))*(bigysize+2*dotsize)) - halfdot
+        ypos=np.floor(random_array.random((ndots))*(bigysize+2*dotsize)) - halfdot
 
         # Construct arrays of points specifying the boundaries of each
         # dot, cropping them by the big image size (0,0) to (bigxsize,bigysize)
-        x1=xpos.astype(Int) ; x1=choose(less(x1,0),(x1,0))
-        y1=ypos.astype(Int) ; y1=choose(less(y1,0),(y1,0))
-        x2=(xpos+(dotsize-1)).astype(Int) ; x2=choose(greater(x2,bigxsize),(x2,bigxsize))
-        y2=(ypos+(dotsize-1)).astype(Int) ; y2=choose(greater(y2,bigysize),(y2,bigysize))
+        x1=xpos.astype('l') ; x1=np.choose(np.less(x1,0),(x1,0))
+        y1=ypos.astype('l') ; y1=np.choose(np.less(y1,0),(y1,0))
+        x2=(xpos+(dotsize-1)).astype('l') ; x2=np.choose(np.greater(x2,bigxsize),(x2,bigxsize))
+        y2=(ypos+(dotsize-1)).astype('l') ; y2=np.choose(np.greater(y2,bigysize),(y2,bigysize))
 
         # Draw each dot in the big image, on a blank background
-        bigimage = zeros((bigysize,bigxsize))
+        bigimage = np.zeros((bigysize,bigxsize))
         for i in range(ndots):
             bigimage[y1[i]:y2[i]+1,x1[i]:x2[i]+1] = col[i]
 
