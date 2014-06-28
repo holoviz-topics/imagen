@@ -10,6 +10,7 @@ from dataviews.sheetviews import SheetCoordinateSystem
 
 from .patterngenerator import PatternGenerator
 from imagen import Composite, Gaussian
+from numbergen import TimeAware, Hash
 
 
 
@@ -22,8 +23,37 @@ def seed(seed=None):
     RandomGenerator.random_generator.seed(seed)
 
 
-class RandomGenerator(PatternGenerator):
-    """2D random noise pattern generator abstract class."""
+class RandomGenerator(PatternGenerator, TimeAware):
+    """
+    2D random noise pattern generator abstract class.
+
+    This class generalizes the model of time-controlled randomness
+    used in the numbergen package (to generate random scalars) to
+    higher-dimensional imagen patterngenerator objects.
+
+    In particular, a time_fn parameter (inherited from TimeAware) is
+    used to define a notion of time. Together with the time_dependent
+    parameter for toggling time-dependent behaviour, it is possible to
+    generate new random numbers per call or make the pattern a
+    function of time.
+
+    By default, RandomGenerators use a global time_fn also used by
+    numbergen objects, namely param.Dynamic.time_fn. This means that
+    when time_dependent, the time management facilities of the shared
+    param.Time object can be used to jump around the timeline, e.g to
+    reproduce a random pattern from an earlier time.
+
+    If declared time_dependent, the random state is determined by a
+    hash value per call. The hash is initialized once with the object
+    name and then per call using a tuple consisting of the time (via
+    time_fn) and the global param.random_seed.  As a consequence, for
+    a given name and fixed value of param.random_seed, the pattern
+    values generated will be a fixed function of time.
+
+    For more information, consult the docstring of the TimeAware class
+    and the numbergen.RandomDistribution class as they make use of the
+    same model of time-dependent random number streams.
+    """
 
     __abstract = True
 
@@ -38,9 +68,39 @@ class RandomGenerator(PatternGenerator):
         numbers (see RandomState's help for more information).
 
         Note that all instances will share this RandomState object,
-        and hence its state. To create a RandomGenerator that has its
-        own state, set this parameter to a new RandomState instance.
+        and hence its state. If time_dependent is True, this sharing
+        has no side-effects, otherwise you may create a
+        RandomGenerator that has its own state by setting this
+        parameter to a new RandomState instance.
         """)
+
+
+    def __init__(self, **params):
+        super(RandomGenerator, self).__init__(**params)
+        self._hashfn = Hash(self.name, input_count=2)
+        self._verify_constrained_hash()
+        if self.time_dependent:
+            # If time_dependent, independent state required as
+            # otherwise the seeding via hash affects the shared state
+            # (affecting patterns where time_dependent=False)
+
+            # Note - Can switch back to shared random state if
+            # time_dependent is guaranteed to always be True!
+            self.random_generator = np.random.RandomState(seed=(500,500))
+            self._hash_and_seed()
+
+
+    def _verify_constrained_hash(self):
+        changed_params = dict(self.get_param_values(onlychanged=True))
+        if self.time_dependent and ('name' not in changed_params):
+            self.warning("Default object name used to set the seed: "
+                         "random values conditional on object instantiation order.")
+
+
+    def _hash_and_seed(self):
+        # Assumes param.random_seed is an integer or rational type
+        hashval = self._hashfn(self.time_fn(), param.random_seed)
+        self.random_generator.seed(hashval)
 
 
     def _distrib(self,shape,p):
@@ -51,6 +111,9 @@ class RandomGenerator(PatternGenerator):
     # coordinate transformations (which would have no effect anyway)
     def __call__(self,**params_to_override):
         p = ParamOverrides(self,params_to_override)
+
+        if self.time_dependent:
+            self._hash_and_seed()
 
         shape = SheetCoordinateSystem(p.bounds,p.xdensity,p.ydensity).shape
 
@@ -136,7 +199,7 @@ class GaussianRandom(RandomGenerator):
 # a warning if someone ever sets a hidden parameter, so that having it
 # revert to the default value would always be ok.
 
-class GaussianCloud(Composite):
+class GaussianCloud(Composite, TimeAware):
     """Uniform random noise masked by a circular Gaussian."""
 
     operator = param.Parameter(np.multiply)
@@ -150,7 +213,9 @@ class GaussianCloud(Composite):
     def __call__(self,**params_to_override):
         p = ParamOverrides(self,params_to_override)
         p.generators=[Gaussian(aspect_ratio=p.aspect_ratio,size=p.gaussian_size),
-                      UniformRandom()]
+                      UniformRandom(name=p.name,
+                                    time_dependent=p.time_dependent,
+                                    time_fn = p.time_fn)]
         return super(GaussianCloud,self).__call__(**p)
 
 
@@ -162,6 +227,8 @@ class GaussianCloud(Composite):
 ### rectangular shapes), matching between the eyes (instead of the
 ### actual two different rectangles), and with dot sizes that don't
 ### match between the eyes.  It's not clear why this happens.
+
+### JLALERT: Not implementing time_dependent=True
 
 class RandomDotStereogram(PatternGenerator):
     """
