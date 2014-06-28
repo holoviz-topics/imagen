@@ -74,7 +74,12 @@
 <span class="sd">combined with the existing classes easily.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">with_statement</span>
+<span class="kn">import</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">os</span>
+
+<span class="c"># Add param submodule to sys.path</span>
+<span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">__file__</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cwd</span><span class="p">,</span> <span class="s">&#39;..&#39;</span><span class="p">,</span> <span class="s">&#39;param&#39;</span><span class="p">))</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cwd</span><span class="p">,</span> <span class="s">&#39;..&#39;</span><span class="p">,</span> <span class="s">&#39;dataviews&#39;</span><span class="p">))</span>
 
 <span class="kn">import</span> <span class="nn">param</span>
 <span class="kn">from</span> <span class="nn">param.version</span> <span class="kn">import</span> <span class="n">Version</span>
@@ -94,13 +99,13 @@
 <span class="kn">from</span> <span class="nn">param</span> <span class="kn">import</span> <span class="n">ClassSelector</span>
 
 <span class="c"># Imported here so that all PatternGenerators will be in the same package</span>
-<span class="kn">from</span> <span class="nn">patterngenerator</span> <span class="kn">import</span> <span class="n">Constant</span><span class="p">,</span> <span class="n">PatternGenerator</span>
+<span class="kn">from</span> <span class="nn">.patterngenerator</span> <span class="kn">import</span> <span class="n">Constant</span><span class="p">,</span> <span class="n">PatternGenerator</span>
 
 <span class="kn">from</span> <span class="nn">dataviews</span> <span class="kn">import</span> <span class="n">SheetStack</span><span class="p">,</span> <span class="n">Dimension</span>
 <span class="kn">from</span> <span class="nn">dataviews.sheetviews</span> <span class="kn">import</span> <span class="n">SheetCoordinateSystem</span>
 <span class="kn">from</span> <span class="nn">dataviews</span> <span class="kn">import</span> <span class="n">boundingregion</span><span class="p">,</span> <span class="n">sheetcoords</span> <span class="c"># pyflakes:ignore (API import)</span>
 
-<span class="kn">from</span> <span class="nn">patternfn</span> <span class="kn">import</span> <span class="n">gaussian</span><span class="p">,</span><span class="n">exponential</span><span class="p">,</span><span class="n">gabor</span><span class="p">,</span><span class="n">line</span><span class="p">,</span><span class="n">disk</span><span class="p">,</span><span class="n">ring</span><span class="p">,</span>\
+<span class="kn">from</span> <span class="nn">.patternfn</span> <span class="kn">import</span> <span class="n">gaussian</span><span class="p">,</span><span class="n">exponential</span><span class="p">,</span><span class="n">gabor</span><span class="p">,</span><span class="n">line</span><span class="p">,</span><span class="n">disk</span><span class="p">,</span><span class="n">ring</span><span class="p">,</span>\
     <span class="n">sigmoid</span><span class="p">,</span><span class="n">arc_by_radian</span><span class="p">,</span><span class="n">arc_by_center</span><span class="p">,</span><span class="n">smooth_rectangle</span><span class="p">,</span><span class="n">float_error_ignore</span><span class="p">,</span> \
     <span class="n">log_gaussian</span>
 
@@ -771,7 +776,7 @@
         <span class="n">valid_generators</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">p</span><span class="o">.</span><span class="n">generators</span><span class="p">:</span>
 
-            <span class="k">for</span> <span class="n">trial</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_trials</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">trial</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_trials</span><span class="p">):</span>
                 <span class="c"># Generate a new position and add generator if it&#39;s ok</span>
 
                 <span class="k">if</span> <span class="n">alltrue</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">__distance_valid</span><span class="p">(</span><span class="n">g</span><span class="p">,</span><span class="n">v</span><span class="p">,</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">valid_generators</span><span class="p">]):</span>
