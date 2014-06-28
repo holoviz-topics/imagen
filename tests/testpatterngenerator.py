@@ -5,12 +5,11 @@ basic patterns.
 Original written as a unit test as part of the Topographica project.
 """
 
-import os, sys
+import os
 import unittest
 
 
 cwd = os.path.abspath(os.path.split(__file__)[0])
-import imagen
 
 import param
 import numpy as np
