@@ -1,16 +1,24 @@
 """
 PatternGenerators based on bitmap images stored in files.
 
-Requires the Python Imaging Library (PIL).
+Requires the Python Imaging Library (PIL). In general, the pillow fork
+of PIL is recommended as it is being actively maintained and works
+with Python 3.
 """
 
-import io
+# StringIO.StringIO is *not* the same as io.StringIO:
+# https://mail.python.org/pipermail/python-list/2013-May/648080.html
+
+# In short, the former accepts bytes whereas the latter only accepts
+# unicode. In Python 3, BytesIO may be used with pillow safely.
+
 try:
-    import Image
-    import ImageOps
+    from StringIO import StringIO as BytesIO
 except:
-    from PIL import Image   # For pillow installs
-    from PIL import ImageOps
+    from io import BytesIO
+
+from PIL import Image
+from PIL import ImageOps
 
 import numpy
 from numpy.oldnumeric import array, Float, sum, ravel, ones
@@ -327,7 +335,7 @@ class GenericImage(PatternGenerator):
         state = super(GenericImage,self).__getstate__()
 
         if '_image' in state and state['_image'] is not None:
-            f = io.StringIO()
+            f = BytesIO()
             image = state['_image']
             image.save(f,format=image.format or 'TIFF') # format could be None (we should probably just not save in that case)
             state['_image'] = f.getvalue()
@@ -344,7 +352,7 @@ class GenericImage(PatternGenerator):
         # actually be None; apparently it is sometimes (see SF
         # #2276819).
         if '_image' in state and state['_image'] is not None:
-            state['_image'] = Image.open(io.StringIO(state['_image']))
+            state['_image'] = Image.open(BytesIO(state['_image']))
         super(GenericImage,self).__setstate__(state)
 
 
