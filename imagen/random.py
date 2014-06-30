@@ -11,7 +11,7 @@ from dataviews.sheetviews import SheetCoordinateSystem
 
 from .patterngenerator import PatternGenerator
 from imagen import Composite, Gaussian
-from numbergen import TimeAware, Hash
+from numbergen import TimeAwareRandomState, TimeAware
 
 
 
@@ -23,36 +23,30 @@ def seed(seed=None):
     RandomGenerator.random_generator.seed(seed)
 
 
-class RandomGenerator(PatternGenerator, TimeAware):
+class RandomGenerator(PatternGenerator, TimeAwareRandomState):
     """
     2D random noise pattern generator abstract class.
 
-    This class generalizes the model of time-controlled randomness
-    used in the numbergen package (to generate random scalars) to
-    higher-dimensional imagen patterngenerator objects.
+    This class generalizes time-controlled randomness as defined by
+    the numbergen.TimeAwareRandomState to imagen
+    patterns. Time-controlled randomness allows random scalars to be
+    generated as a function of time in numbergen, whereas in imagen it
+    allows time-dependent random patterns with higer dimensionality.
 
-    In particular, a time_fn parameter (inherited from TimeAware) is
-    used to define a notion of time. Together with the time_dependent
-    parameter for toggling time-dependent behaviour, it is possible to
-    generate new random numbers per call or make the pattern a
-    function of time.
+    The notion of time is defined by time_fn (inherited from
+    TimeAwareRandomState) which outputs the time value. The
+    time_dependent parameter then toggles between behaviour where a
+    new random pattern is generated per call and where any randomness
+    in the pattern is controlled as a function of time.
 
-    By default, RandomGenerators use a global time_fn also used by
+    By default, RandomGenerators use the same global time_fn as
     numbergen objects, namely param.Dynamic.time_fn. This means that
-    when time_dependent, the time management facilities of the shared
-    param.Time object can be used to jump around the timeline, e.g to
-    reproduce a random pattern from an earlier time.
+    when set to time_dependent, the facilities of param.Time can be
+    used. This allows the timeline to be explored non-linearly, e.g to
+    reproduce a pattern from an earlier time.
 
-    If declared time_dependent, the random state is determined by a
-    hash value per call. The hash is initialized once with the object
-    name and then per call using a tuple consisting of the time (via
-    time_fn) and the global param.random_seed.  As a consequence, for
-    a given name and fixed value of param.random_seed, the pattern
-    values generated will be a fixed function of time.
-
-    For more information, consult the docstring of the TimeAware class
-    and the numbergen.RandomDistribution class as they make use of the
-    same model of time-dependent random number streams.
+    For more information about time-dependent random number streams,
+    consult the docstring of the TimeAwareRandomState class.
     """
 
     __abstract = True
@@ -64,44 +58,15 @@ class RandomGenerator(PatternGenerator, TimeAware):
     random_generator = param.Parameter(
         default=np.random.RandomState(seed=(500,500)),precedence=-1,doc=
         """
-        numpy's RandomState provides methods for generating random
-        numbers (see RandomState's help for more information).
-
-        Note that all instances will share this RandomState object,
-        and hence its state. If time_dependent is True, this sharing
-        has no side-effects, otherwise you may create a
-        RandomGenerator that has its own state by setting this
-        parameter to a new RandomState instance.
+        Using Numpy's RandomState class instead of random.Random as
+        the former can generate random arrays from more random
+        distributions. See RandomState's help for more information.
         """)
 
 
     def __init__(self, **params):
         super(RandomGenerator, self).__init__(**params)
-        self._hashfn = Hash(self.name, input_count=2)
-        self._verify_constrained_hash()
-        if self.time_dependent:
-            # If time_dependent, independent state required as
-            # otherwise the seeding via hash affects the shared state
-            # (affecting patterns where time_dependent=False)
-
-            # Note - Can switch back to shared random state if
-            # time_dependent is guaranteed to always be True!
-            self.random_generator = np.random.RandomState(seed=(500,500))
-            self._hash_and_seed()
-
-
-    def _verify_constrained_hash(self):
-        changed_params = dict(self.get_param_values(onlychanged=True))
-        if self.time_dependent and ('name' not in changed_params):
-            self.warning("Default object name used to set the seed: "
-                         "random values conditional on object instantiation order.")
-
-
-    def _hash_and_seed(self):
-        # Assumes param.random_seed is an integer or rational type
-        hashval = self._hashfn(self.time_fn(), param.random_seed)
-        self.random_generator.seed(hashval)
-
+        self._initialize_random_state(seed=(500,500), shared=True)
 
     def _distrib(self,shape,p):
         """Method for subclasses to override with a particular random distribution."""
