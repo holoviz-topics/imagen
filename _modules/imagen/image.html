@@ -67,16 +67,24 @@
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">PatternGenerators based on bitmap images stored in files.</span>
 
-<span class="sd">Requires the Python Imaging Library (PIL).</span>
+<span class="sd">Requires the Python Imaging Library (PIL). In general, the pillow fork</span>
+<span class="sd">of PIL is recommended as it is being actively maintained and works</span>
+<span class="sd">with Python 3.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">io</span>
+<span class="c"># StringIO.StringIO is *not* the same as io.StringIO:</span>
+<span class="c"># https://mail.python.org/pipermail/python-list/2013-May/648080.html</span>
+
+<span class="c"># In short, the former accepts bytes whereas the latter only accepts</span>
+<span class="c"># unicode. In Python 3, BytesIO may be used with pillow safely.</span>
+
 <span class="k">try</span><span class="p">:</span>
-    <span class="kn">import</span> <span class="nn">Image</span>
-    <span class="kn">import</span> <span class="nn">ImageOps</span>
+    <span class="kn">from</span> <span class="nn">StringIO</span> <span class="kn">import</span> <span class="n">StringIO</span> <span class="k">as</span> <span class="n">BytesIO</span>
 <span class="k">except</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>   <span class="c"># For pillow installs</span>
-    <span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">ImageOps</span>
+    <span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">BytesIO</span>
+
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">ImageOps</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">from</span> <span class="nn">numpy.oldnumeric</span> <span class="kn">import</span> <span class="n">array</span><span class="p">,</span> <span class="n">Float</span><span class="p">,</span> <span class="nb">sum</span><span class="p">,</span> <span class="n">ravel</span><span class="p">,</span> <span class="n">ones</span>
@@ -393,7 +401,7 @@
         <span class="n">state</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">GenericImage</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__getstate__</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="s">&#39;_image&#39;</span> <span class="ow">in</span> <span class="n">state</span> <span class="ow">and</span> <span class="n">state</span><span class="p">[</span><span class="s">&#39;_image&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="n">f</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">()</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="n">BytesIO</span><span class="p">()</span>
             <span class="n">image</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s">&#39;_image&#39;</span><span class="p">]</span>
             <span class="n">image</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="n">format</span><span class="o">=</span><span class="n">image</span><span class="o">.</span><span class="n">format</span> <span class="ow">or</span> <span class="s">&#39;TIFF&#39;</span><span class="p">)</span> <span class="c"># format could be None (we should probably just not save in that case)</span>
             <span class="n">state</span><span class="p">[</span><span class="s">&#39;_image&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span>
@@ -410,7 +418,7 @@
         <span class="c"># actually be None; apparently it is sometimes (see SF</span>
         <span class="c"># #2276819).</span>
         <span class="k">if</span> <span class="s">&#39;_image&#39;</span> <span class="ow">in</span> <span class="n">state</span> <span class="ow">and</span> <span class="n">state</span><span class="p">[</span><span class="s">&#39;_image&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="n">state</span><span class="p">[</span><span class="s">&#39;_image&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="s">&#39;_image&#39;</span><span class="p">]))</span>
+            <span class="n">state</span><span class="p">[</span><span class="s">&#39;_image&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="s">&#39;_image&#39;</span><span class="p">]))</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">GenericImage</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__setstate__</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
 
 
