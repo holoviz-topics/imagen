@@ -36,7 +36,7 @@ from dataviews import boundingregion, sheetcoords # pyflakes:ignore (API import)
 
 from patternfn import gaussian,exponential,gabor,line,disk,ring,\
     sigmoid,arc_by_radian,arc_by_center,smooth_rectangle,float_error_ignore, \
-    log_gaussian, line_one_pixel
+    log_gaussian
 
 import numbergen
 from imagen.transferfn import DivisiveNormalizeL1
@@ -188,16 +188,34 @@ class Line(PatternGenerator):
     smoothing = param.Number(default=0.05,bounds=(0.0,None),softbounds=(0.0,0.5),
                        precedence=0.61,
                        doc="Width of the Gaussian fall-off.")
+        
+    def effective_thickness(self, p):
+        xpixelsize = 1./float(p.xdensity)
+        ypixelsize = 1./float(p.ydensity)
+        return max([p.thickness,xpixelsize,ypixelsize])
+        
+    def shift_distances(self,y, p):
+        return abs(y) - self.effective_thickness(p)/2.0
+    
+    def count_negative_distances(self, y):
+        return (y<=0.).sum()
+    
+    def minimal_y(self, p):
+        y = self.pattern_y
+        xpixelsize = 1./float(p.xdensity)
+        ypixelsize = 1./float(p.ydensity)
+        pixelsize=max([xpixelsize,ypixelsize])
+        h1 = self.shift_distances(y, p)
+        h2 = self.shift_distances(y+pixelsize/2., p)
+        return  y if self.count_negative_distances(h1) < self.count_negative_distances(h2) else y+pixelsize/2.
+
 
     def function(self,p):
-        if p.enforce_minimal_thickness:
-            xpixelsize = 1./float(p.xdensity)
-            ypixelsize = 1./float(p.ydensity)
-            effective_thickness = max([p.thickness,xpixelsize,ypixelsize])
-            max_pixelsize=max([xpixelsize,ypixelsize])
-            return line_one_pixel(self.pattern_y,max_pixelsize,effective_thickness,p.smoothing) 
-        else:
-            return line(self.pattern_y,p.thickness,p.smoothing)
+        return line(
+            self.pattern_y if not p.enforce_minimal_thickness else self.minimal_y(p),
+            p.thickness    if not p.enforce_minimal_thickness else self.effective_thickness(p),
+            p.smoothing
+            )
 
 
 class Disk(PatternGenerator):
