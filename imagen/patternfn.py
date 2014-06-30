@@ -132,6 +132,7 @@ def line(y, thickness, gaussian_width):
 
     return where(gaussian_y_coord<=0, 1.0, falloff)
 
+
 def disk(x, y, height, gaussian_width):
     """
     Circular disk with Gaussian fall-off after the solid central region.

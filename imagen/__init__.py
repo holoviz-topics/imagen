@@ -205,6 +205,10 @@ class Line(PatternGenerator):
         return h.sum()
     
     def minimal_y(self, p):
+        """minimal_y defines a second pattern_y by shifting the original pattern_y by half a pixel
+        We compute the line in both cases. The function returns the line with the smallest width.
+        This step, together with a change in the effective thickness, is necessary to guarantee that 
+        the smallest width is one pixel"""
         y0 = self.pattern_y
         y1 = y0 + self.pixelsize(p)/2.
         return y0 if self.count_pixels_on_line(y0, p) < self.count_pixels_on_line(y1, p) else y1
