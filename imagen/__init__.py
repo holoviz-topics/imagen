@@ -181,33 +181,33 @@ class Line(PatternGenerator):
     enforce_minimal_thickness = param.Boolean(default=False, 
                          precedence=0.60,
                          doc=
-                         """If False, the line thickness can be of 0 pixel if the parameter thickness is smaller than the pixel size.
+                         """If False, the line thickness can be zero pixel if the parameter thickness is smaller than the pixel size.
                          If True, the smallest line thickness is one pixel: it can't be 0 pixel.
                          """)
     
     smoothing = param.Number(default=0.05,bounds=(0.0,None),softbounds=(0.0,0.5),
                        precedence=0.61,
                        doc="Width of the Gaussian fall-off.")
+    
+    def pixelsize(self, p):
+        """The pixel size if the max of the pixel size on the x- and y-axis"""
+        xpixelsize = 1./float(p.xdensity)
+        ypixelsize = 1./float(p.ydensity)
+        return max([xpixelsize,ypixelsize])
         
     def effective_thickness(self, p):
-        xpixelsize = 1./float(p.xdensity)
-        ypixelsize = 1./float(p.ydensity)
-        return max([p.thickness,xpixelsize,ypixelsize])
-        
-    def shift_distances(self,y, p):
-        return abs(y) - self.effective_thickness(p)/2.0
+        """The effective thickness is the max between teh desired thickness and the pixelsize"""
+        return max([p.thickness,self.pixelsize(p)])
     
-    def count_negative_distances(self, y):
-        return (y<=0.).sum()
+    def count_pixels_on_line(self, y, p):
+        """It counts the number of pixels on the line"""
+        h = line(y, self.effective_thickness(p), 0.0)
+        return h.sum()
     
     def minimal_y(self, p):
-        y = self.pattern_y
-        xpixelsize = 1./float(p.xdensity)
-        ypixelsize = 1./float(p.ydensity)
-        pixelsize=max([xpixelsize,ypixelsize])
-        h1 = self.shift_distances(y, p)
-        h2 = self.shift_distances(y+pixelsize/2., p)
-        return  y if self.count_negative_distances(h1) < self.count_negative_distances(h2) else y+pixelsize/2.
+        y0 = self.pattern_y
+        y1 = y0 + self.pixelsize(p)/2.
+        return y0 if self.count_pixels_on_line(y0, p) < self.count_pixels_on_line(y1, p) else y1
 
 
     def function(self,p):
