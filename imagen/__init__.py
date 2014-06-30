@@ -736,7 +736,6 @@ class Animation(SheetStack):
     timestep parameter and therefore Animations assume regular
     sampling of data over time.
     """
-
     time_fn = param.ClassSelector(default=param.Dynamic.time_fn,
                                class_=param.Time, instantiate=False, doc="""
         The time object shared across the time-varying objects
@@ -766,16 +765,17 @@ class Animation(SheetStack):
        representation of time.""")
 
 
-    def __init__(self, initial_items=None, **kwargs):
-        super(Animation, self).__init__(initial_items, **kwargs)
-        if (initial_items is None) and self.frames:
-            self.pattern.state_push()
-            with self.time_fn as t:
-                t(self.offset)
-                for i in range(self.frames):
-                    self[t()] = self.pattern[:]
-                    t += self.timestep
-            self.pattern.state_pop()
+    def __init__(self, pattern, frames, **kwargs):
+        super(Animation, self).__init__(pattern=pattern,
+                                        frames=frames,
+                                        **kwargs)
+        self.pattern.state_push()
+        with self.time_fn as t:
+            t(self.offset)
+            for i in range(self.frames):
+                self[t()] = self.pattern[:]
+                t += self.timestep
+        self.pattern.state_pop()
 
     def map(self, map_fn, **kwargs):
         return super(Animation,self).map(map_fn, **dict(kwargs, frames=None))
