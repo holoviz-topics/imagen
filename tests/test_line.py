@@ -11,9 +11,6 @@ except ImportError:
 class LineTest(unittest.TestCase):
     """Tests the behavior of the line pattern, 
     particularly for small thicknesses"""
-    
-    def setUp(self):
-        print "setup"
         
     def minimal_line_thickness(self,c):
         """
