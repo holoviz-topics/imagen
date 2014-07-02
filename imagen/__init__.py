@@ -22,12 +22,8 @@ __version__ = Version(release=(1,0,0), fpath=__file__,
                       commit="$Format:%h$", reponame='imagen')
 
 
-import numpy
-from numpy.oldnumeric import around, bitwise_and, bitwise_or
-from numpy import abs, add, alltrue, array, ceil, clip, cos, fft, flipud, \
-        floor, fmod, exp, hstack, Infinity, linspace, multiply, nonzero, pi, \
-        repeat, sin, sqrt, subtract, tile, zeros, sum, max
-
+import numpy as np
+from numpy import pi  # Don't pollute the namespace!
 
 from param.parameterized import ParamOverrides
 from param import ClassSelector
@@ -66,10 +62,10 @@ class HalfPlane(PatternGenerator):
             falloff=self.pattern_y*0.0
         else:
             with float_error_ignore():
-                falloff=numpy.exp(numpy.divide(-self.pattern_y*self.pattern_y,
+                falloff=np.exp(np.divide(-self.pattern_y*self.pattern_y,
                                                 2*p.smoothing*p.smoothing))
 
-        return numpy.where(self.pattern_y>0.0,1.0,falloff)
+        return np.where(self.pattern_y>0.0,1.0,falloff)
 
 
 class Gaussian(PatternGenerator):
@@ -145,7 +141,7 @@ class SineGrating(PatternGenerator):
 
     def function(self,p):
         """Return a sine grating pattern (two-dimensional sine wave)."""
-        return 0.5 + 0.5*sin(p.frequency*2*pi*self.pattern_y + p.phase)
+        return 0.5 + 0.5*np.sin(p.frequency*2*pi*self.pattern_y + p.phase)
 
 
 
@@ -290,7 +286,7 @@ class OrientationContrast(SineGrating):
         patterns = [input_1(xdensity=p.xdensity,ydensity=p.ydensity,bounds=p.bounds),
                     input_2(xdensity=p.xdensity,ydensity=p.ydensity,bounds=p.bounds)]
 
-        image_array = numpy.add.reduce(patterns)
+        image_array = np.add.reduce(patterns)
         return image_array
 
 
@@ -310,8 +306,8 @@ class RawRectangle(PatternGenerator):
     def function(self,p):
         height = p.size
         width = p.aspect_ratio*height
-        return bitwise_and(abs(self.pattern_x)<=width/2.0,
-                           abs(self.pattern_y)<=height/2.0)
+        return np.bitwise_and(np.abs(self.pattern_x)<=width/2.0,
+                           np.abs(self.pattern_y)<=height/2.0)
 
 
 
@@ -448,17 +444,17 @@ class TwoRectangles(Rectangle):
         height = p.size
         width = p.aspect_ratio*height
 
-        return bitwise_or(
-               bitwise_and(bitwise_and(
+        return np.bitwise_or(
+               np.bitwise_and(np.bitwise_and(
                         (self.pattern_x-p.x1)<=p.x1+width/4.0,
                         (self.pattern_x-p.x1)>=p.x1-width/4.0),
-                      bitwise_and(
+                      np.bitwise_and(
                         (self.pattern_y-p.y1)<=p.y1+height/4.0,
                         (self.pattern_y-p.y1)>=p.y1-height/4.0)),
-               bitwise_and(bitwise_and(
+               np.bitwise_and(np.bitwise_and(
                         (self.pattern_x-p.x2)<=p.x2+width/4.0,
                         (self.pattern_x-p.x2)>=p.x2-width/4.0),
-                      bitwise_and(
+                      np.bitwise_and(
                         (self.pattern_y-p.y2)<=p.y2+height/4.0,
                         (self.pattern_y-p.y2)>=p.y2-height/4.0)))
 
@@ -486,10 +482,10 @@ class SquareGrating(PatternGenerator):
         """
         Return a square-wave grating (alternating black and white bars).
         """
-        return around(
+        return np.around(
 	  0.5 + 
-	  0.5*sin(pi*(p.duty_cycle-0.5)) + 
-	  0.5*sin(p.frequency*2*pi*self.pattern_y + p.phase))
+	  0.5*np.sin(pi*(p.duty_cycle-0.5)) + 
+	  0.5*np.sin(p.frequency*2*pi*self.pattern_y + p.phase))
 
 # CB: I removed motion_sign from this class because I think it is
 # unnecessary. But maybe I misunderstood the original author's
@@ -533,8 +529,8 @@ class Sweeper(PatternGenerator):
         new_y = p.y+p.size*pg.y
 
         image_array = pg(xdensity=p.xdensity,ydensity=p.ydensity,bounds=p.bounds,
-                         x=new_x + p.speed*p.step*cos(motion_orientation),
-                         y=new_y + p.speed*p.step*sin(motion_orientation),
+                         x=new_x + p.speed*p.step*np.cos(motion_orientation),
+                         y=new_y + p.speed*p.step*np.sin(motion_orientation),
                          orientation=p.orientation,
                          scale=pg.scale*p.scale,offset=pg.offset+p.offset)
 
@@ -569,7 +565,7 @@ class Composite(CompositeBase):
     # The Accum_Replace operator from LISSOM is not yet supported,
     # but it should be added once PatternGenerator bounding boxes
     # are respected and/or GenericImage patterns support transparency.
-    operator = param.Parameter(numpy.maximum,precedence=0.98,doc="""
+    operator = param.Parameter(np.maximum,precedence=0.98,doc="""
         Binary Numpy function used to combine the individual patterns.
 
         Any binary Numpy array "ufunc" returning the same
@@ -642,8 +638,8 @@ class Composite(CompositeBase):
         # will lead to problems/limitations in the future).
         patterns = [pg(xdensity=p.xdensity,ydensity=p.ydensity,
                        bounds=p.bounds,mask=p.mask,
-                       x=p.x+p.size*(pg.x*cos(p.orientation)- pg.y*sin(p.orientation)),
-                       y=p.y+p.size*(pg.x*sin(p.orientation)+ pg.y*cos(p.orientation)),
+                       x=p.x+p.size*(pg.x*np.cos(p.orientation)- pg.y*np.sin(p.orientation)),
+                       y=p.y+p.size*(pg.x*np.sin(p.orientation)+ pg.y*np.cos(p.orientation)),
                        orientation=pg.orientation+p.orientation,
                        size=pg.size*p.size)
                     for pg in generators]
@@ -693,7 +689,7 @@ class SeparatedComposite(Composite):
 
         Can be extended easily to support other criteria.
         """
-        dist = sqrt((g1.x - g0.x) ** 2 +
+        dist = np.sqrt((g1.x - g0.x) ** 2 +
                     (g1.y - g0.y) ** 2)
         return dist >= p.min_separation
 
@@ -713,7 +709,7 @@ class SeparatedComposite(Composite):
             for trial in range(self.max_trials):
                 # Generate a new position and add generator if it's ok
 
-                if alltrue([self.__distance_valid(g,v,p) for v in valid_generators]):
+                if np.alltrue([self.__distance_valid(g,v,p) for v in valid_generators]):
                     valid_generators.append(g)
                     break
 
@@ -800,7 +796,7 @@ def wrap(lower, upper, x):
     # usually one can simply use that instead.  E.g. to wrap array or
     # scalar x into 0,2*pi, just use "x % (2*pi)".
     range_=upper-lower
-    return lower + fmod(x-lower + 2*range_*(1-floor(x/(2*range_))), range_)
+    return lower + np.fmod(x-lower + 2*range_*(1-np.floor(x/(2*range_))), range_)
 
 
 
@@ -824,8 +820,8 @@ class Selector(CompositeBase):
         pg=p.generators[int_index]
 
         image_array = pg(xdensity=p.xdensity,ydensity=p.ydensity,bounds=p.bounds,
-                         x=p.x+p.size*(pg.x*cos(p.orientation)-pg.y*sin(p.orientation)),
-                         y=p.y+p.size*(pg.x*sin(p.orientation)+pg.y*cos(p.orientation)),
+                         x=p.x+p.size*(pg.x*np.cos(p.orientation)-pg.y*np.sin(p.orientation)),
+                         y=p.y+p.size*(pg.x*np.sin(p.orientation)+pg.y*np.cos(p.orientation)),
                          orientation=pg.orientation+p.orientation,size=pg.size*p.size,
                          scale=pg.scale*p.scale,offset=pg.offset+p.offset)
 
@@ -875,15 +871,15 @@ class GaussiansCorner(PatternGenerator):
         x_1 = g_1(orientation = p.orientation, bounds = p.bounds, xdensity = p.xdensity,
                             ydensity = p.ydensity, offset = p.offset, size = p.size,
                             aspect_ratio = p.aspect_ratio,
-                            x = p.x + 0.7 * cos(p.orientation) * p.cross * p.size * p.aspect_ratio,
-                            y = p.y + 0.7 * sin(p.orientation) * p.cross * p.size * p.aspect_ratio)
+                            x = p.x + 0.7 * np.cos(p.orientation) * p.cross * p.size * p.aspect_ratio,
+                            y = p.y + 0.7 * np.sin(p.orientation) * p.cross * p.size * p.aspect_ratio)
         x_2 = g_2(orientation = p.orientation+p.angle, bounds = p.bounds, xdensity = p.xdensity,
                             ydensity = p.ydensity, offset = p.offset, size = p.size,
                             aspect_ratio = p.aspect_ratio,
-                            x = p.x + 0.7 * cos(p.orientation+p.angle) * p.cross * p.size * p.aspect_ratio,
-                            y = p.y + 0.7 * sin(p.orientation+p.angle) * p.cross * p.size * p.aspect_ratio)
+                            x = p.x + 0.7 * np.cos(p.orientation+p.angle) * p.cross * p.size * p.aspect_ratio,
+                            y = p.y + 0.7 * np.sin(p.orientation+p.angle) * p.cross * p.size * p.aspect_ratio)
 
-        return numpy.maximum( x_1, x_2 )
+        return np.maximum( x_1, x_2 )
 
 
 
@@ -984,8 +980,8 @@ class Translator(PatternGenerator):
         ## to problems/limitations in the future).
         return p.generator(
             xdensity=p.xdensity,ydensity=p.ydensity,bounds=p.bounds,
-            x=x+t*cos(direction)*p.speed+p.generator.x,
-            y=y+t*sin(direction)*p.speed+p.generator.y,
+            x=x+t*np.cos(direction)*p.speed+p.generator.x,
+            y=y+t*np.sin(direction)*p.speed+p.generator.y,
             orientation=(direction-pi/2)+p.generator.orientation)
 
 
@@ -1030,7 +1026,7 @@ class DifferenceOfGaussians(PatternGenerator):
             size=p.negative_size*p.size, aspect_ratio=p.negative_aspect_ratio,
             orientation=p.orientation, output_fns=[DivisiveNormalizeL1()])
 
-        return Composite(generators=[positive,negative], operator=numpy.subtract,
+        return Composite(generators=[positive,negative], operator=np.subtract,
             xdensity=p.xdensity, ydensity=p.ydensity, bounds=p.bounds)()
 
 
@@ -1087,7 +1083,7 @@ class SigmoidedDoG(PatternGenerator):
         sigmoid = Sigmoid(slope=p.sigmoid_slope, orientation=p.orientation+pi/2, x=p.x+p.sigmoid_position)
 
         return Composite(generators=[diff_of_gaussians, sigmoid], bounds=p.bounds,
-            operator=numpy.multiply, xdensity=p.xdensity, ydensity=p.ydensity)()
+            operator=np.multiply, xdensity=p.xdensity, ydensity=p.ydensity)()
 
 
 
@@ -1128,7 +1124,7 @@ class LogGaussian(PatternGenerator):
         fn_result = self.function(p)
         self._apply_mask(p, fn_result)
 
-        scale_factor = p.scale / max(fn_result)
+        scale_factor = p.scale / np.max(fn_result)
         result = scale_factor*fn_result + p.offset
 
         for of in p.output_fns:
@@ -1163,12 +1159,12 @@ class LogGaussian(PatternGenerator):
             x = (x*10.0) / (p.size*p.aspect_ratio)
             y = (y*10.0) / p.size
 
-        offset = exp(p.size)
-        pattern_x = add.outer(sin(p.orientation)*y, cos(p.orientation)*x) + offset
-        pattern_y = subtract.outer(cos(p.orientation)*y, sin(p.orientation)*x) + offset
+        offset = np.exp(p.size)
+        pattern_x = np.add.outer(np.sin(p.orientation)*y, np.cos(p.orientation)*x) + offset
+        pattern_y = np.subtract.outer(np.cos(p.orientation)*y, np.sin(p.orientation)*x) + offset
 
-        clip(pattern_x, 0, Infinity, out=pattern_x)
-        clip(pattern_y, 0, Infinity, out=pattern_y)
+        np.clip(pattern_x, 0, np.Infinity, out=pattern_x)
+        np.clip(pattern_y, 0, np.Infinity, out=pattern_y)
 
         return pattern_x, pattern_y
 
@@ -1236,13 +1232,13 @@ class SigmoidedDoLG(PatternGenerator):
             y_shape=p.negative_y_shape, scale=p.negative_scale*p.scale, orientation=p.orientation, x=p.x, y=p.y,
             output_fns=[])
 
-        diff_of_log_gaussians = Composite(generators=[positive, negative], operator=subtract,
+        diff_of_log_gaussians = Composite(generators=[positive, negative], operator=np.subtract,
             xdensity=p.xdensity, ydensity=p.ydensity, bounds=p.bounds)
 
         sigmoid = Sigmoid(x=p.x+p.sigmoid_position, slope=p.sigmoid_slope, orientation=p.orientation+pi/2.0)
 
         return Composite(generators=[diff_of_log_gaussians, sigmoid], bounds=p.bounds,
-            operator=multiply, xdensity=p.xdensity, ydensity=p.ydensity, output_fns=[DivisiveNormalizeL1()])()
+            operator=np.multiply, xdensity=p.xdensity, ydensity=p.ydensity, output_fns=[DivisiveNormalizeL1()])()
 
 
 
@@ -1251,7 +1247,7 @@ class TimeSeries(param.Parameterized):
     Generic class to return intervals of a discretized time series.
     """
 
-    time_series = param.Array(default=repeat(array([0,1]),50),
+    time_series = param.Array(default=np.repeat(np.array([0,1]),50),
         doc="""An array of numbers that form a series.""")
 
     sample_rate = param.Integer(default=50, allow_None=True, bounds=(0,None), inclusive_bounds=(False,False), softbounds=(0,44100),
@@ -1276,7 +1272,7 @@ class TimeSeries(param.Parameterized):
 
 
     def append_signal(self, new_signal):
-        self.time_series = hstack((self.time_series, new_signal))
+        self.time_series = np.hstack((self.time_series, new_signal))
 
 
     def extract_specific_interval(self, interval_start, interval_end):
@@ -1307,36 +1303,36 @@ class TimeSeries(param.Parameterized):
             if self.repeat:
                 if requested_interval_size < self.time_series.size:
                     self._next_interval_start = requested_interval_size-remaining_signal.size
-                    interval = hstack((remaining_signal, self.time_series[0:self._next_interval_start]))
+                    interval = np.hstack((remaining_signal, self.time_series[0:self._next_interval_start]))
 
                 else:
-                    repeated_signal = repeat(self.time_series, floor(requested_interval_size/self.time_series.size))
+                    repeated_signal = np.repeat(self.time_series, np.floor(requested_interval_size/self.time_series.size))
                     self._next_interval_start = requested_interval_size % self.time_series.size
 
-                    interval = (hstack((remaining_signal, repeated_signal)))[0:requested_interval_size]
+                    interval = (np.hstack((remaining_signal, repeated_signal)))[0:requested_interval_size]
 
             else:
                 self.warning("Returning last interval of the time series.")
                 self._next_interval_start = self.time_series.size + 1
 
                 samples_per_interval = self.interval_length*self.sample_rate
-                interval = hstack((remaining_signal, zeros(samples_per_interval-remaining_signal.size)))
+                interval = np.hstack((remaining_signal, np.zeros(samples_per_interval-remaining_signal.size)))
 
         return interval
 
 
     def __call__(self):
         interval_start = self._next_interval_start
-        interval_end = int(floor(interval_start + self.interval_length*self.sample_rate))
+        interval_end = int(np.floor(interval_start + self.interval_length*self.sample_rate))
 
-        self._next_interval_start += int(floor(self.seconds_per_iteration*self.sample_rate))
+        self._next_interval_start += int(np.floor(self.seconds_per_iteration*self.sample_rate))
         return self.extract_specific_interval(interval_start, interval_end)
 
 
 
 def generate_sine_wave(duration, frequency, sample_rate):
-    time_axis = linspace(0.0, duration, duration*sample_rate)
-    return sin(2.0*pi*frequency * time_axis)
+    time_axis = np.linspace(0.0, duration, duration*sample_rate)
+    return np.sin(2.0*pi*frequency * time_axis)
 
 
 
@@ -1404,13 +1400,13 @@ class PowerSpectrum(PatternGenerator):
 
         # calculate the discrete frequencies possible for the given sample rate.
         sample_rate = self.signal.sample_rate
-        available_frequency_range = fft.fftfreq(sample_rate, d=1.0/sample_rate)[0:sample_rate/2]
+        available_frequency_range = np.fft.fftfreq(sample_rate, d=1.0/sample_rate)[0:sample_rate/2]
 
         if not available_frequency_range.min() <= self.min_frequency or not available_frequency_range.max() >= self.max_frequency:
             raise ValueError("Specified frequency interval [%s:%s] is unavailable, available range is [%s:%s]. Adjust to these frequencies or modify the sample rate of the TimeSeries object." %(self.min_frequency, self.max_frequency, available_frequency_range.min(), available_frequency_range.max()))
 
-        min_freq = nonzero(available_frequency_range >= self.min_frequency)[0][0]
-        max_freq = nonzero(available_frequency_range <= self.max_frequency)[0][-1]
+        min_freq = np.nonzero(available_frequency_range >= self.min_frequency)[0][0]
+        max_freq = np.nonzero(available_frequency_range <= self.max_frequency)[0][-1]
 
         self._set_frequency_spacing(min_freq, max_freq)
 
@@ -1425,7 +1421,7 @@ class PowerSpectrum(PatternGenerator):
         This method is here solely to provide a minimal overload if custom spacing is required.
         """
 
-        self.frequency_spacing = linspace(min_freq, max_freq, num=self._sheet_dimensions[0]+1, endpoint=True)
+        self.frequency_spacing = np.linspace(min_freq, max_freq, num=self._sheet_dimensions[0]+1, endpoint=True)
 
 
     def _get_row_amplitudes(self):
@@ -1440,14 +1436,14 @@ class PowerSpectrum(PatternGenerator):
         sample_rate = self.signal.sample_rate
 
         # A signal window *must* span one sample rate
-        signal_window = tile(signal_interval, ceil(1.0/self.signal.interval_length))
+        signal_window = np.tile(signal_interval, np.ceil(1.0/self.signal.interval_length))
 
         if self.windowing_function:
             smoothed_window = signal_window[0:sample_rate] * self.windowing_function(sample_rate)
         else:
             smoothed_window = signal_window[0:sample_rate]
 
-        amplitudes = (abs(fft.rfft(smoothed_window))[0:sample_rate/2] + self.offset) * self.scale
+        amplitudes = (np.abs(np.fft.rfft(smoothed_window))[0:sample_rate/2] + self.offset) * self.scale
 
         for index in range(0, self._sheet_dimensions[0]-2):
             start_frequency = self.frequency_spacing[index]
@@ -1457,9 +1453,9 @@ class PowerSpectrum(PatternGenerator):
             if normalisation_factor == 0:
                 amplitudes[index] = amplitudes[start_frequency]
             else:
-                amplitudes[index] = sum(amplitudes[start_frequency:end_frequency]) / normalisation_factor
+                amplitudes[index] = np.sum(amplitudes[start_frequency:end_frequency]) / normalisation_factor
 
-        return flipud(amplitudes[0:self._sheet_dimensions[0]].reshape(-1,1))
+        return np.flipud(amplitudes[0:self._sheet_dimensions[0]].reshape(-1,1))
 
 
     def set_matrix_dimensions(self, bounds, xdensity, ydensity):
@@ -1471,7 +1467,7 @@ class PowerSpectrum(PatternGenerator):
 
     def _shape_response(self, row_amplitudes):
         if self._sheet_dimensions[1] > 1:
-            row_amplitudes = repeat(row_amplitudes, self._sheet_dimensions[1], axis=1)
+            row_amplitudes = np.repeat(row_amplitudes, self._sheet_dimensions[1], axis=1)
 
         return row_amplitudes
 
@@ -1519,7 +1515,7 @@ class Spectrogram(PowerSpectrum):
             self._spectrogram[0:, millisecs_per_iteration:] = self._spectrogram[0:, 0:self._spectrogram.shape[1]-millisecs_per_iteration]
             self._spectrogram[0:, 0:millisecs_per_iteration] = new_column
 
-        sheet_representation = zeros(self._sheet_dimensions)
+        sheet_representation = np.zeros(self._sheet_dimensions)
 
         for column in range(0,self._sheet_dimensions[1]):
             start_latency = self._latency_spacing[column]
@@ -1527,7 +1523,7 @@ class Spectrogram(PowerSpectrum):
 
             normalisation_factor = end_latency - start_latency
             if normalisation_factor > 1:
-                sheet_representation[0:, column] = sum(self._spectrogram[0:, start_latency:end_latency], axis=1) / normalisation_factor
+                sheet_representation[0:, column] = np.sum(self._spectrogram[0:, start_latency:end_latency], axis=1) / normalisation_factor
             else:
                 sheet_representation[0:, column] = self._spectrogram[0:, start_latency]
 
@@ -1543,8 +1539,8 @@ class Spectrogram(PowerSpectrum):
         if self.min_latency >= self.max_latency:
             raise ValueError("Spectrogram: min latency must be lower than max latency.")
 
-        self._latency_spacing = floor(linspace(self.min_latency, self.max_latency, num=self._sheet_dimensions[1]+1, endpoint=True))
-        self._spectrogram = zeros([self._sheet_dimensions[0],self.max_latency])
+        self._latency_spacing = np.floor(np.linspace(self.min_latency, self.max_latency, num=self._sheet_dimensions[1]+1, endpoint=True))
+        self._spectrogram = np.zeros([self._sheet_dimensions[0],self.max_latency])
 
 
     def __call__(self):
