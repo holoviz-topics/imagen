@@ -20,8 +20,7 @@ except:
 from PIL import Image
 from PIL import ImageOps
 
-import numpy
-from numpy.oldnumeric import array, Float, sum, ravel, ones
+import numpy as np
 
 import param
 from param.parameterized import overridable_property
@@ -105,8 +104,8 @@ class PatternSampler(ImageSampler):
     def _set_image(self,image):
         # Stores a SheetCoordinateSystem with an activity matrix
         # representing the image
-        if not isinstance(image,numpy.ndarray):
-            image = array(image,Float)
+        if not isinstance(image,np.ndarray):
+            image = np.array(image,np.float)
 
         rows,cols = image.shape
         self.scs = SheetCoordinateSystem(xdensity=1.0,ydensity=1.0,
@@ -149,7 +148,7 @@ class PatternSampler(ImageSampler):
         pattern_rows,pattern_cols = self.image.shape
 
         if width==0 or height==0 or pattern_cols==0 or pattern_rows==0:
-            return ones(x.shape, Float)*self.background_value
+            return np.ones(x.shape)*self.background_value
 
         # scale the supplied coordinates to match the pattern being at density=1
         x=x*sheet_xdensity # deliberately don't operate in place (so as not to change supplied x & y)
@@ -168,7 +167,7 @@ class PatternSampler(ImageSampler):
         r.clip(0,pattern_rows-1,out=r)
         c.clip(0,pattern_cols-1,out=c)
         left,bottom,right,top = self.scs.bounds.lbrt()
-        return numpy.where((x>=left) & (x<right) & (y>bottom) & (y<=top),
+        return np.where((x>=left) & (x<right) & (y>bottom) & (y<=top),
                            self.image[r,c],
                            self.background_value)
 
@@ -205,7 +204,7 @@ class PatternSampler(ImageSampler):
 def edge_average(a):
     "Return the mean value around the edge of an array."
 
-    if len(ravel(a)) < 2:
+    if len(np.ravel(a)) < 2:
         return float(a[0])
     else:
         top_edge = a[0]
@@ -213,7 +212,7 @@ def edge_average(a):
         left_edge = a[1:-1,0]
         right_edge = a[1:-1,-1]
 
-        edge_sum = sum(top_edge) + sum(bottom_edge) + sum(left_edge) + sum(right_edge)
+        edge_sum = np.sum(top_edge) + np.sum(bottom_edge) + np.sum(left_edge) + np.sum(right_edge)
         num_values = len(top_edge)+len(bottom_edge)+len(left_edge)+len(right_edge)
 
         return float(edge_sum)/num_values
@@ -248,7 +247,7 @@ class FastImageSampler(ImageSampler):
         # image given the options. (maybe this class needs to be
         # redesigned?  The interface to this function is pretty inscrutable.)
         im = ImageOps.fit(self.image,x.shape,self.sampling_method)
-        return array(im,dtype=Float)
+        return np.array(im,dtype=np.float)
 
 
 
@@ -410,5 +409,5 @@ class NumpyFile(GenericImage):
     def _get_image(self,p):
         if p.filename!=self.last_filename or self._image is None:
             self.last_filename=p.filename
-            self._image = numpy.load((p.filename))
+            self._image = np.load((p.filename))
         return self._image
