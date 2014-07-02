@@ -3,9 +3,8 @@ PatternGenerator abstract class and basic example concrete class.
 """
 
 
-from math import pi
-
-from numpy import add, subtract, cos, sin
+import numpy as np
+from numpy import pi
 
 import param
 from param.parameterized import ParamOverrides
@@ -197,8 +196,8 @@ class PatternGenerator(param.Parameterized):
         # right and y decrease from left to right; I don't think it
         # can be rewritten in so little code otherwise - but please
         # prove me wrong.
-        pattern_y = subtract.outer(cos(orientation)*y, sin(orientation)*x)
-        pattern_x = add.outer(sin(orientation)*y, cos(orientation)*x)
+        pattern_y = np.subtract.outer(np.cos(orientation)*y, np.sin(orientation)*x)
+        pattern_x = np.add.outer(np.sin(orientation)*y, np.cos(orientation)*x)
         return pattern_x, pattern_y
 
 
@@ -207,8 +206,8 @@ class PatternGenerator(param.Parameterized):
         mask = p.mask
         ms=p.mask_shape
         if ms is not None:
-            mask = ms(x=p.x+p.size*(ms.x*cos(p.orientation)-ms.y*sin(p.orientation)),
-                      y=p.y+p.size*(ms.x*sin(p.orientation)+ms.y*cos(p.orientation)),
+            mask = ms(x=p.x+p.size*(ms.x*np.cos(p.orientation)-ms.y*np.sin(p.orientation)),
+                      y=p.y+p.size*(ms.x*np.sin(p.orientation)+ms.y*np.cos(p.orientation)),
                       orientation=ms.orientation+p.orientation,size=ms.size*p.size,
                       bounds=p.bounds,ydensity=p.ydensity,xdensity=p.xdensity)
         if mask is not None:
@@ -258,7 +257,6 @@ PatternGenerator.params('mask_shape').class_=PatternGenerator
 # Trivial example of a PatternGenerator, provided for when a default is
 # needed.  The other concrete PatternGenerator classes are stored
 # elsewhere, to be imported as needed.
-from numpy.oldnumeric import ones, Float
 
 class Constant(PatternGenerator):
     """Constant pattern generator, i.e., a solid, uniform field of the same value."""
@@ -274,7 +272,7 @@ class Constant(PatternGenerator):
 
         shape = SheetCoordinateSystem(p.bounds,p.xdensity,p.ydensity).shape
 
-        result = p.scale*ones(shape, Float)+p.offset
+        result = p.scale*np.ones(shape, Float)+p.offset
         self._apply_mask(p,result)
 
         for of in p.output_fns:
