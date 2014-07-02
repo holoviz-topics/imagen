@@ -272,7 +272,7 @@ class Constant(PatternGenerator):
 
         shape = SheetCoordinateSystem(p.bounds,p.xdensity,p.ydensity).shape
 
-        result = p.scale*np.ones(shape, Float)+p.offset
+        result = p.scale*np.ones(shape, np.float)+p.offset
         self._apply_mask(p,result)
 
         for of in p.output_fns:
