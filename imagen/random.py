@@ -234,7 +234,6 @@ class RandomDotStereogram(PatternGenerator):
 
 
     def __call__(self,**params_to_override):
-        from numpy.oldnumeric import random_array
         p = ParamOverrides(self,params_to_override)
 
         xsize,ysize = SheetCoordinateSystem(p.bounds,p.xdensity,p.ydensity).shape
@@ -253,14 +252,14 @@ class RandomDotStereogram(PatternGenerator):
         # Choose random colors and locations of square dots
         random_seed = p.random_seed
 
-        random_array.seed(random_seed*12,random_seed*99)
-        col=np.where(random_array.random((ndots))>=0.5, 1.0, -1.0)
+        np.random.seed(random_seed*12,random_seed*99)
+        col=np.where(np.random.random((ndots))>=0.5, 1.0, -1.0)
 
-        random_array.seed(random_seed*122,random_seed*799)
-        xpos=np.floor(random_array.random((ndots))*(bigxsize+2*dotsize)) - halfdot
+        np.random.seed(random_seed*122,random_seed*799)
+        xpos=np.floor(np.random.random((ndots))*(bigxsize+2*dotsize)) - halfdot
 
-        random_array.seed(random_seed*1243,random_seed*9349)
-        ypos=np.floor(random_array.random((ndots))*(bigysize+2*dotsize)) - halfdot
+        np.random.seed(random_seed*1243,random_seed*9349)
+        ypos=np.floor(np.random.random((ndots))*(bigysize+2*dotsize)) - halfdot
 
         # Construct arrays of points specifying the boundaries of each
         # dot, cropping them by the big image size (0,0) to (bigxsize,bigysize)
