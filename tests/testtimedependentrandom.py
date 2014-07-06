@@ -5,7 +5,6 @@ Unit tests for time-dependent random imagen patterns.
 from imagen.random import UniformRandom, RandomGenerator
 import unittest
 import param
-import numbergen
 
 import numpy as np
 from numpy.testing import assert_almost_equal
