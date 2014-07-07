@@ -9,6 +9,8 @@ import os
 import math
 import json
 import glob
+import collections
+import copy
 
 import param
 from param.parameterized import ParamOverrides
@@ -62,7 +64,12 @@ class XCoordinator(FeatureCoordinator):
 
     def __call__(self, pattern, pattern_label, pattern_number, master_seed, **params):
         p = ParamOverrides(self,params,allow_extra_keywords=True)
-        pattern.x += numbergen.UniformRandom(lbound=-p.position_bound_x,ubound=p.position_bound_x,seed=master_seed+12+pattern_number)
+        new_pattern=copy.copy(pattern)
+        new_pattern.x += numbergen.UniformRandom(lbound=-p.position_bound_x,
+                                                 ubound=p.position_bound_x,
+                                                 seed=master_seed+12+pattern_number,
+                                                 name="XCoordinator"+str(pattern_number))
+        return new_pattern
 
 
 
@@ -76,7 +83,12 @@ class YCoordinator(FeatureCoordinator):
 
     def __call__(self, pattern, pattern_label, pattern_number, master_seed, **params):
         p = ParamOverrides(self,params,allow_extra_keywords=True)
-        pattern.y += numbergen.UniformRandom(lbound=-p.position_bound_y,ubound=p.position_bound_y,seed=master_seed+35+pattern_number)
+        new_pattern=copy.copy(pattern)
+        new_pattern.y += numbergen.UniformRandom(lbound=-p.position_bound_y,
+                                                 ubound=p.position_bound_y,
+                                                 seed=master_seed+35+pattern_number,
+                                                 name="YCoordinator"+str(pattern_number))
+        return new_pattern
 
 
 
@@ -90,8 +102,12 @@ class OrientationCoordinator(FeatureCoordinator):
 
     def __call__(self, pattern, pattern_label, pattern_number, master_seed, **params):
         p = ParamOverrides(self,params,allow_extra_keywords=True)
-        pattern.orientation = numbergen.UniformRandom(lbound=-p.orientation_bound,ubound=p.orientation_bound,seed=master_seed+21+pattern_number)
-
+        new_pattern=copy.copy(pattern)
+        new_pattern.orientation += numbergen.UniformRandom(lbound=-p.orientation_bound,
+                                                           ubound=p.orientation_bound,
+                                                           seed=master_seed+21+pattern_number,
+                                                           name="OrientationCoordinator"+str(pattern_number))
+        return new_pattern
 
 
 class PatternCoordinator(param.Parameterized):
@@ -161,9 +177,9 @@ class PatternCoordinator(param.Parameterized):
     composite_parameters = param.Dict(default={},doc="""
         If present, these parameter values will be passed to the composite specified in composite_type.""")
 
-    feature_coordinators = param.Dict(default={
+    feature_coordinators = param.Dict(default=collections.OrderedDict({
         'xy': [XCoordinator,YCoordinator],
-        'or': OrientationCoordinator},doc="""
+        'or': OrientationCoordinator}),doc="""
         Mapping from the feature name (key) to the method(s) to be
         applied to the pattern generators.  The value can either be a
         single method or a list of methods.""")
@@ -226,7 +242,7 @@ class PatternCoordinator(param.Parameterized):
             # Apply _feature_coordinators_to_apply
             for i in range(len(patterns)):
                 for fn in self._feature_coordinators_to_apply:
-                    fn(patterns[i],pattern_label,i,self.master_seed,**self._feature_params)
+                    patterns[i]=fn(patterns[i],pattern_label,i,self.master_seed,**self._feature_params)
 
             combined_patterns=self.composite_type(generators=patterns,**self.composite_parameters)
             coordinated_pattern_generators.update({pattern_label:combined_patterns})
