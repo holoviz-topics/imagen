@@ -1028,6 +1028,48 @@ class Translator(PatternGenerator):
 
 
 
+class SmartSweeper(PatternGenerator):
+    generator = param.ClassSelector(PatternGenerator,default=Gaussian(),precedence=0.97, 
+                                    doc="Pattern to sweep.")
+
+    reset_period = param.Number(default=4,bounds=(0.0,None),doc="""
+        Period between generating each new translation episode.""")
+
+    speed = param.Number(default=2.0/24.0,bounds=(0.0,None),doc="""
+        The speed with which the pattern should move,
+        in sheet coordinates per time_fn unit.""")
+
+    time_fn = param.Callable(default=param.Dynamic.time_fn,doc="""
+        Function to generate the time used as a base for translation.""")
+
+    def make_time_fn(self,p,offset):
+        def offset_time_fn():
+            time = p.time_fn()
+            return p.time_fn.time_type((time // p.reset_period) + offset)
+        return offset_time_fn
+
+
+    def function(self,p):
+        motion_time_fn = self.make_time_fn(p,0)
+        pg = p.generator
+        pg.set_dynamic_time_fn(motion_time_fn)
+        motion_orientation=pg.orientation+pi/2.0
+
+        step = int(p.time_fn()%p.reset_period)
+
+        new_x = p.x+p.size*pg.x
+        new_y = p.y+p.size*pg.y
+
+        image_array = pg(xdensity=p.xdensity,ydensity=p.ydensity,bounds=p.bounds,
+                         x=new_x+p.speed*step*cos(motion_orientation),
+                         y=new_y+p.speed*step*sin(motion_orientation),
+                         orientation=pg.orientation+p.orientation,
+                         scale=pg.scale*p.scale,offset=pg.offset+p.offset)
+
+        return image_array
+
+
+
 class DifferenceOfGaussians(PatternGenerator):
     """
     Two-dimensional difference of gaussians pattern.
