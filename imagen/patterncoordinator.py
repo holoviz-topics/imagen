@@ -65,10 +65,11 @@ class XCoordinator(FeatureCoordinator):
     def __call__(self, pattern, pattern_label, pattern_number, master_seed, **params):
         p = ParamOverrides(self,params,allow_extra_keywords=True)
         new_pattern=copy.copy(pattern)
-        new_pattern.x += numbergen.UniformRandom(lbound=-p.position_bound_x,
-                                                 ubound=p.position_bound_x,
-                                                 seed=master_seed+12+pattern_number,
-                                                 name="XCoordinator"+str(pattern_number))
+        new_pattern.x = pattern.get_value_generator('x')+\
+        numbergen.UniformRandom(lbound=-p.position_bound_x,
+                                ubound=p.position_bound_x,
+                                seed=master_seed+12+pattern_number,
+                                name="XCoordinator"+str(pattern_number))
         return new_pattern
 
 
@@ -84,10 +85,11 @@ class YCoordinator(FeatureCoordinator):
     def __call__(self, pattern, pattern_label, pattern_number, master_seed, **params):
         p = ParamOverrides(self,params,allow_extra_keywords=True)
         new_pattern=copy.copy(pattern)
-        new_pattern.y += numbergen.UniformRandom(lbound=-p.position_bound_y,
-                                                 ubound=p.position_bound_y,
-                                                 seed=master_seed+35+pattern_number,
-                                                 name="YCoordinator"+str(pattern_number))
+        new_pattern.y = pattern.get_value_generator('y')+\
+            numbergen.UniformRandom(lbound=-p.position_bound_y,
+                                    ubound=p.position_bound_y,
+                                    seed=master_seed+35+pattern_number,
+                                    name="YCoordinator"+str(pattern_number))
         return new_pattern
 
 
@@ -103,10 +105,11 @@ class OrientationCoordinator(FeatureCoordinator):
     def __call__(self, pattern, pattern_label, pattern_number, master_seed, **params):
         p = ParamOverrides(self,params,allow_extra_keywords=True)
         new_pattern=copy.copy(pattern)
-        new_pattern.orientation += numbergen.UniformRandom(lbound=-p.orientation_bound,
-                                                           ubound=p.orientation_bound,
-                                                           seed=master_seed+21+pattern_number,
-                                                           name="OrientationCoordinator"+str(pattern_number))
+        new_pattern.orientation = pattern.get_value_generator('orientation')+\
+            numbergen.UniformRandom(lbound=-p.orientation_bound,
+                                    ubound=p.orientation_bound,
+                                    seed=master_seed+21+pattern_number,
+                                    name="OrientationCoordinator"+str(pattern_number))
         return new_pattern
 
 
