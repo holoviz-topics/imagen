@@ -175,6 +175,9 @@ class Gabor(PatternGenerator):
 class Line(PatternGenerator):
     """2D line pattern generator."""
 
+    # Hide unused parameters
+    size = param.Number(precedence=-1.0)
+
     thickness = param.Number(default=0.006,bounds=(0.0,None),softbounds=(0.0,1.0),
                              precedence=0.60,doc="""
         Thickness (width) of the solid central part of the line.""")
