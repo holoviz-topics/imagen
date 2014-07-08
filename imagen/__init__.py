@@ -175,52 +175,53 @@ class Gabor(PatternGenerator):
 class Line(PatternGenerator):
     """2D line pattern generator."""
 
-    thickness   = param.Number(default=0.006,bounds=(0.0,None),softbounds=(0.0,1.0),
-                         precedence=0.60,
-                         doc="Thickness (width) of the solid central part of the line.")
+    thickness = param.Number(default=0.006,bounds=(0.0,None),softbounds=(0.0,1.0),
+                             precedence=0.60,doc="""
+        Thickness (width) of the solid central part of the line.""")
     
-    enforce_minimal_thickness = param.Boolean(default=False, 
-                         precedence=0.60,
-                         doc=
-                         """If False, the line thickness can be zero pixel if the parameter thickness is smaller than the pixel size.
-                         If True, the smallest line thickness is one pixel: it can't be 0 pixel.
-                         """)
+    enforce_minimal_thickness = param.Boolean(default=False,precedence=0.60, doc="""
+        If True, ensure that the line is at least one pixel in width even for 
+        small thicknesses where the line could otherwise fall in between pixel
+        centers and thus disappear at some orientations.""")
     
     smoothing = param.Number(default=0.05,bounds=(0.0,None),softbounds=(0.0,0.5),
-                       precedence=0.61,
-                       doc="Width of the Gaussian fall-off.")
+                             precedence=0.61, doc="""
+        Width of the Gaussian fall-off.""")
+
     
-    def pixelsize(self, p):
-        """The pixel size if the max of the pixel size on the x- and y-axis"""
+    def _pixelsize(self, p):
+        """Calculate line width necessary to cover at least one pixel on all axes."""
         xpixelsize = 1./float(p.xdensity)
         ypixelsize = 1./float(p.ydensity)
         return max([xpixelsize,ypixelsize])
         
-    def effective_thickness(self, p):
-        """The effective thickness is the max between teh desired thickness and the pixelsize"""
-        return max([p.thickness,self.pixelsize(p)])
+    def _effective_thickness(self, p):
+        """Enforce minimum thickness based on the minimum pixel size."""
+        return max([p.thickness,self._pixelsize(p)])
     
-    def count_pixels_on_line(self, y, p):
-        """It counts the number of pixels on the line"""
-        h = line(y, self.effective_thickness(p), 0.0)
+    def _count_pixels_on_line(self, y, p):
+        """Count the number of pixels rendered on this line."""
+        h = line(y, self._effective_thickness(p), 0.0)
         return h.sum()
     
-    def minimal_y(self, p):
-        """minimal_y defines a second pattern_y by shifting the original pattern_y by half a pixel
-        We compute the line in both cases. The function returns the line with the smallest width.
-        This step, together with a change in the effective thickness, is necessary to guarantee that 
-        the smallest width is one pixel"""
+    def _minimal_y(self, p):
+        """
+        For the specified y and one offset by half a pixel, return the
+        one that results in the fewest pixels turned on, so that when
+        the thickness has been enforced to be at least one pixel, no
+        extra pixels are needlessly included (which would cause
+        double-width lines).
+        """
         y0 = self.pattern_y
-        y1 = y0 + self.pixelsize(p)/2.
-        return y0 if self.count_pixels_on_line(y0, p) < self.count_pixels_on_line(y1, p) else y1
-
+        y1 = y0 + self._pixelsize(p)/2.
+        return y0 if self._count_pixels_on_line(y0, p) < self._count_pixels_on_line(y1, p) else y1
 
     def function(self,p):
         return line(
-            self.pattern_y if not p.enforce_minimal_thickness else self.minimal_y(p),
-            p.thickness    if not p.enforce_minimal_thickness else self.effective_thickness(p),
-            p.smoothing
-            )
+            self.pattern_y if not p.enforce_minimal_thickness else self._minimal_y(p),
+            p.thickness    if not p.enforce_minimal_thickness else self._effective_thickness(p),
+            p.smoothing)
+
 
 
 class Disk(PatternGenerator):
