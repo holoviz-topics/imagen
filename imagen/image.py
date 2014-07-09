@@ -1,4 +1,4 @@
-"""
+	"""
 PatternGenerators based on bitmap images stored in files.
 
 Requires the Python Imaging Library (PIL). In general, the pillow fork
@@ -28,9 +28,6 @@ from param.parameterized import overridable_property
 from dataviews.sheetviews import BoundingBox, SheetCoordinateSystem
 from .patterngenerator import PatternGenerator
 from .transferfn import DivisiveNormalizeLinf, TransferFn
-
-from os.path import splitext
-
 
 
 class ImageSampler(param.Parameterized):
