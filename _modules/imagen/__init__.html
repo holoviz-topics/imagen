@@ -241,15 +241,56 @@
 <div class="viewcode-block" id="Line"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.__init__.Line">[docs]</a><span class="k">class</span> <span class="nc">Line</span><span class="p">(</span><span class="n">PatternGenerator</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;2D line pattern generator.&quot;&quot;&quot;</span>
 
-    <span class="n">thickness</span>   <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.006</span><span class="p">,</span><span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span><span class="n">softbounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">),</span>
-                         <span class="n">precedence</span><span class="o">=</span><span class="mf">0.60</span><span class="p">,</span>
-                         <span class="n">doc</span><span class="o">=</span><span class="s">&quot;Thickness (width) of the solid central part of the line.&quot;</span><span class="p">)</span>
+    <span class="c"># Hide unused parameters</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">precedence</span><span class="o">=-</span><span class="mf">1.0</span><span class="p">)</span>
+
+    <span class="n">thickness</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.006</span><span class="p">,</span><span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span><span class="n">softbounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">),</span>
+                             <span class="n">precedence</span><span class="o">=</span><span class="mf">0.60</span><span class="p">,</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">        Thickness (width) of the solid central part of the line.&quot;&quot;&quot;</span><span class="p">)</span>
+    
+    <span class="n">enforce_minimal_thickness</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Boolean</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">precedence</span><span class="o">=</span><span class="mf">0.60</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">        If True, ensure that the line is at least one pixel in width even for </span>
+<span class="s">        small thicknesses where the line could otherwise fall in between pixel</span>
+<span class="s">        centers and thus disappear at some orientations.&quot;&quot;&quot;</span><span class="p">)</span>
+    
     <span class="n">smoothing</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span><span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span><span class="n">softbounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.5</span><span class="p">),</span>
-                       <span class="n">precedence</span><span class="o">=</span><span class="mf">0.61</span><span class="p">,</span>
-                       <span class="n">doc</span><span class="o">=</span><span class="s">&quot;Width of the Gaussian fall-off.&quot;</span><span class="p">)</span>
+                             <span class="n">precedence</span><span class="o">=</span><span class="mf">0.61</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">        Width of the Gaussian fall-off.&quot;&quot;&quot;</span><span class="p">)</span>
+
+    
+    <span class="k">def</span> <span class="nf">_pixelsize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calculate line width necessary to cover at least one pixel on all axes.&quot;&quot;&quot;</span>
+        <span class="n">xpixelsize</span> <span class="o">=</span> <span class="mf">1.</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">xdensity</span><span class="p">)</span>
+        <span class="n">ypixelsize</span> <span class="o">=</span> <span class="mf">1.</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">ydensity</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">max</span><span class="p">([</span><span class="n">xpixelsize</span><span class="p">,</span><span class="n">ypixelsize</span><span class="p">])</span>
+        
+    <span class="k">def</span> <span class="nf">_effective_thickness</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Enforce minimum thickness based on the minimum pixel size.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">max</span><span class="p">([</span><span class="n">p</span><span class="o">.</span><span class="n">thickness</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_pixelsize</span><span class="p">(</span><span class="n">p</span><span class="p">)])</span>
+    
+    <span class="k">def</span> <span class="nf">_count_pixels_on_line</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Count the number of pixels rendered on this line.&quot;&quot;&quot;</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="n">line</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_effective_thickness</span><span class="p">(</span><span class="n">p</span><span class="p">),</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">h</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    
+    <span class="k">def</span> <span class="nf">_minimal_y</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        For the specified y and one offset by half a pixel, return the</span>
+<span class="sd">        one that results in the fewest pixels turned on, so that when</span>
+<span class="sd">        the thickness has been enforced to be at least one pixel, no</span>
+<span class="sd">        extra pixels are needlessly included (which would cause</span>
+<span class="sd">        double-width lines).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">y0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pattern_y</span>
+        <span class="n">y1</span> <span class="o">=</span> <span class="n">y0</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pixelsize</span><span class="p">(</span><span class="n">p</span><span class="p">)</span><span class="o">/</span><span class="mf">2.</span>
+        <span class="k">return</span> <span class="n">y0</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_count_pixels_on_line</span><span class="p">(</span><span class="n">y0</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_count_pixels_on_line</span><span class="p">(</span><span class="n">y1</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span> <span class="k">else</span> <span class="n">y1</span>
 
     <span class="k">def</span> <span class="nf">function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">line</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pattern_y</span><span class="p">,</span><span class="n">p</span><span class="o">.</span><span class="n">thickness</span><span class="p">,</span><span class="n">p</span><span class="o">.</span><span class="n">smoothing</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">line</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pattern_y</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">p</span><span class="o">.</span><span class="n">enforce_minimal_thickness</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_minimal_y</span><span class="p">(</span><span class="n">p</span><span class="p">),</span>
+            <span class="n">p</span><span class="o">.</span><span class="n">thickness</span>    <span class="k">if</span> <span class="ow">not</span> <span class="n">p</span><span class="o">.</span><span class="n">enforce_minimal_thickness</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_effective_thickness</span><span class="p">(</span><span class="n">p</span><span class="p">),</span>
+            <span class="n">p</span><span class="o">.</span><span class="n">smoothing</span><span class="p">)</span>
+
 
 </div>
 <div class="viewcode-block" id="Disk"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.__init__.Disk">[docs]</a><span class="k">class</span> <span class="nc">Disk</span><span class="p">(</span><span class="n">PatternGenerator</span><span class="p">):</span>
