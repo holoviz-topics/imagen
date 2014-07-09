@@ -385,29 +385,107 @@ class FileImage(GenericImage):
 
 
 
-class NumpyFile(GenericImage):
+class NChannelImage(FileImage):
     """
-    Read an array from a Numpy-format file.
+    Basic support for NPY N-channel files.
     """
 
-    filename = param.Filename(default='images/numpy_array_feret_photo.npy',precedence=0.9,doc="""
-        File path (can be relative to Param's base path) to the Numpy file.""")
+    random_generator = param.Callable(
+        default=numbergen.UniformRandom(lbound=0,ubound=1,seed=1048921))
 
-    # Inherits from GenericImage, overriding defaults to disable rescaling
     pattern_sampler = param.ClassSelector(class_=ImageSampler,
-        default=PatternSampler(background_value_fn=edge_average,
-                               size_normalization='original',
-                               whole_pattern_output_fns=[]))
+        default=PatternSampler(size_normalization='fit_shortest'))
 
 
-    def __init__(self, **params):
-        super(NumpyFile,self).__init__(**params)
-        # Saves the last filename loaded, to avoid unnecessary reloading
-        self.last_filename = None
+    def __init__(self,**params):
+        self.channel_data = []
+        super(NChannelImage,self).__init__(**params)
+        #self.red=self.green=self.blue=None
 
 
+    def _reduced_call(self,**params_to_override):
+        # PatternGenerator.__call__ but skipping stuff we don't need
+        # to repeat.  Might be better to make each of red,green,blue
+        # actually be some form of reduced patterngenerator and appear
+        # in a generators list
+        p=param.ParamOverrides(self,params_to_override)
+
+        # This is what's skipped:
+        #self._setup_xy(p.bounds,p.xdensity,p.ydensity,p.x,p.y,p.orientation)
+
+        fn_result = self.function(p)
+
+        self._apply_mask(p,fn_result)
+        result = p.scale*fn_result+p.offset
+
+        assert len(p.output_fns)==0
+
+        return result
+
+    # Could move all opening stuff to an open_fn so that it
+    # can be swapped out for simply reading an array, or
+    # whatever.
     def _get_image(self,p):
         if p.filename!=self.last_filename or self._image is None:
-            self.last_filename=p.filename
-            self._image = np.load((p.filename))
+            self.load_npy(p.filename)
+
         return self._image
+
+    def load_npy(self, filename):
+        self.last_filename=filename
+
+        self.channel_data = []
+        file_channel_data = numpy.load(filename)
+
+        file_channel_data = file_channel_data / file_channel_data.max() # SPG: left from CB. Not sure why we want this, though
+
+        for i in range(file_channel_data.shape[2]):
+            self.channel_data.append(file_channel_data[:,:,i])
+
+        #self._image_red = file_channel_data[:,:,0]
+        #self._image_green = file_channel_data[:,:,1]
+        #self._image_blue = file_channel_data[:,:,2]
+
+        self._image = file_channel_data.sum(2) / file_channel_data.shape[2]
+
+
+    def _again(self,p,**params_to_override):
+        orig_image = self._image
+
+        for i in range(len(self.channel_data)):
+            self._image = self.channel_data[i]
+
+            self.channel_data[i] = self._reduced_call(**params_to_override) # originally this set  self.'col'=_reduced_call etc etc
+
+
+        self._image = orig_image
+
+
+    def post_process_channels(self,p,gray):
+        pass
+
+    def __call__(self,**params_to_override):
+
+        p = param.ParamOverrides(self,params_to_override)
+        
+        # HACKALERT
+        params_to_override['cache_image']=True
+        gray = super(NChannelImage,self).__call__(**params_to_override)
+        
+        self._again(p,**params_to_override)
+
+        self.post_process_channels(p,gray)
+                           
+        if p.cache_image is False:
+            self._image = None
+            #self.channel_data = []
+            #self._image_red=self._image_green=self._image_blue=self._image=None
+
+        return gray
+
+
+
+NumpyFile = NChannelImage
+
+
+
