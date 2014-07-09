@@ -285,7 +285,7 @@ options.Pattern_SheetView = StyleOpts(cmap='gray')
 
 
 
-class ExtendToNChannel(pattern.PatternGenerator):
+class ExtendToNChannel(PatternGenerator):
     """
     Wrapper for any PatternGenerator to support multiple
     channels, e.g. for use with NChannelGeneratorSheet.
