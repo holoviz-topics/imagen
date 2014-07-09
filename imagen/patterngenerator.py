@@ -282,3 +282,113 @@ class Constant(PatternGenerator):
 
 
 options.Pattern_SheetView = StyleOpts(cmap='gray')
+
+
+
+class ExtendToNChannel(pattern.PatternGenerator):
+    """
+    Wrapper for any PatternGenerator to support multiple
+    channels, e.g. for use with NChannelGeneratorSheet.
+
+    If the specified generator itself has a 'generator' attribute,
+    ExtendToNChannel will attempt to get the channels' data from
+    generator.generator (e.g. ColorImage inside a Selector);
+    otherwise, ExtendToNChannel will attempt to get channel_data
+    from generator. If no channel_data is found in this
+    ways, ExtendToNChannel will synthesize the channels from the traditional
+    single channel generator.
+
+    After finding or synthesizing the channels, they are
+    scaled according to relative_channel_strengths.
+    """
+
+    generator = param.ClassSelector(class_=pattern.PatternGenerator,
+                                    default=pattern.Constant(),
+                                    doc="""PatternGenerator to be converted to N-Channels.""")
+
+    channel_factors = param.Dynamic(default=[1.,1.,1],
+                                    doc="""Channel scaling factors. The length of this list sets the number of channels to be created, unless the input_generator is alreay NChannel (in which case the number of its channels is used).""")
+
+    # hack_rg_grating = param.Boolean(default=False)  # SPG: deprecated? (from CB)
+
+    correlate = param.Parameter(default=None)
+
+
+    def __init__(self,**params):
+        super(ExtendToNChannel,self).__init__(**params)
+        self.channel_data = []
+
+        for i in range(len(self.channel_factors)):
+            self.channel_data.append( None )
+
+
+    def post_process(self):  # old hack_hook1
+        pass
+
+    def pre_process_generator(self,generator):  # old hack_hook0
+        pass
+
+    def set_channel_values(self,p,params,gray,generator):
+        # if the generator has the channels, take those values -
+        # otherwise use gray*channel factors
+        if(hasattr(generator, 'channel_data')):
+            for i in range(len(self.channel_factors)):
+                self.channel_data[i] = generator.channel_data[i]*self.channel_factors[i]
+        else:
+            for i in range(len(self.channel_factors)):
+                self.channel_data[i] = gray*self.channel_factors[i]
+
+    def __call__(self,**params):
+        p = param.ParamOverrides(self,params)
+
+        ########
+        # as for Selector etc, hack pass through certain parameters to
+        # generator
+        params['xdensity']=p.xdensity
+        params['ydensity']=p.ydensity
+        params['bounds']=p.bounds
+        ########
+
+        # (not **p)
+        gray = p.generator(**params)
+
+        #### GET GENERATOR ####
+        # Got to get the generator that's actually making the pattern
+        #
+        # CEB: very hacky. maybe if
+        # the various selector pattern generators had a way of
+        # accessing the current generator's parameters, it could be
+        # simpler?
+        if hasattr(p.generator,'get_current_generator'):
+            # access the generator without causing any index to be advanced
+            generator = p.generator.get_current_generator()
+        elif hasattr(p.generator,'generator'):
+            generator = p.generator.generator
+        else:
+            generator = p.generator
+        #######################
+
+        # CEBALERT: used to support non color patterns, too.        
+        # (promoted red, green, blue from actual generator if it had
+        # them, otherwise set to something based on gray)
+
+        self.pre_process_generator(generator)
+
+
+        self.set_channel_values(p,params,gray,generator)
+
+        # hacked correlation support
+        if self.correlate is not None:
+            corr_to,corr_from,corr_amt = self.correlate
+            setattr(
+                self,
+                corr_to,
+                corr_amt*getattr(self,corr_from)+(1-corr_amt)*getattr(self,corr_to))
+
+
+        self.post_process()
+        
+        return gray
+
+
+
