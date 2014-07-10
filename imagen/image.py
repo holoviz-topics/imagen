@@ -402,7 +402,6 @@ class NChannelImage(FileImage):
     def __init__(self,**params):
         self.channel_data = []
         super(NChannelImage,self).__init__(**params)
-        #self.red=self.green=self.blue=None
 
 
     def _reduced_call(self,**params_to_override):
@@ -439,19 +438,15 @@ class NChannelImage(FileImage):
         self.channel_data = []
         file_channel_data = numpy.load(filename)
 
-        file_channel_data = file_channel_data / file_channel_data.max() # SPG: left from CB. Not sure why we want this, though
+        file_channel_data = file_channel_data / file_channel_data.max()
 
         for i in range(file_channel_data.shape[2]):
             self.channel_data.append(file_channel_data[:,:,i])
 
-        #self._image_red = file_channel_data[:,:,0]
-        #self._image_green = file_channel_data[:,:,1]
-        #self._image_blue = file_channel_data[:,:,2]
-
         self._image = file_channel_data.sum(2) / file_channel_data.shape[2]
 
 
-    def _again(self,p,**params_to_override):
+    def _process_channels(self,p,**params_to_override):
         orig_image = self._image
 
         for i in range(len(self.channel_data)):
@@ -474,17 +469,14 @@ class NChannelImage(FileImage):
         params_to_override['cache_image']=True
         gray = super(NChannelImage,self).__call__(**params_to_override)
         
-        self._again(p,**params_to_override)
+        self._process_channels(p,**params_to_override)
 
         self.post_process_channels(p,gray)
                            
         if p.cache_image is False:
             self._image = None
-            #self.channel_data = []
-            #self._image_red=self._image_green=self._image_blue=self._image=None
 
         return gray
-
 
 
 NumpyFile = NChannelImage
