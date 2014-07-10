@@ -302,12 +302,13 @@ class ExtendToNChannel(pattern.PatternGenerator):
     scaled according to relative_channel_strengths.
     """
 
-    generator = param.ClassSelector(class_=pattern.PatternGenerator,
-                                    default=pattern.Constant(),
-                                    doc="""PatternGenerator to be converted to N-Channels.""")
+    generator = param.ClassSelector(class_=pattern.PatternGenerator,default=pattern.Constant(),doc="""
+                      PatternGenerator to be converted to N-Channels.""")
 
-    channel_factors = param.Dynamic(default=[1.,1.,1],
-                                    doc="""Channel scaling factors. The length of this list sets the number of channels to be created, unless the input_generator is alreay NChannel (in which case the number of its channels is used).""")
+    channel_factors = param.Dynamic(default=[1.,1.,1],doc="""
+                      Channel scaling factors. The length of this list sets the number of channels to be
+                      created, unless the input_generator is alreay NChannel (in which case the number of
+                      its channels is used).""")
 
     correlate = param.Parameter(default=None)
 
