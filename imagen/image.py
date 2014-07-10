@@ -392,9 +392,6 @@ class NChannelImage(FileImage):
     Basic support for NPY N-channel files.
     """
 
-    random_generator = param.Callable(
-        default=numbergen.UniformRandom(lbound=0,ubound=1,seed=1048921))
-
     pattern_sampler = param.ClassSelector(class_=ImageSampler,
         default=PatternSampler(size_normalization='fit_shortest'))
 
@@ -475,6 +472,7 @@ class NChannelImage(FileImage):
             self._image = None
 
         return gray
+
 
 
 
