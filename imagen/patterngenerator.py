@@ -285,7 +285,7 @@ options.Pattern_SheetView = StyleOpts(cmap='gray')
 
 
 
-class ExtendToNChannel(PatternGenerator):
+class ExtendToNChannel(pattern.PatternGenerator):
     """
     Wrapper for any PatternGenerator to support multiple
     channels, e.g. for use with NChannelGeneratorSheet.
@@ -302,14 +302,12 @@ class ExtendToNChannel(PatternGenerator):
     scaled according to relative_channel_strengths.
     """
 
-    generator = param.ClassSelector(class_=PatternGenerator,
-                                    default=Constant(),
+    generator = param.ClassSelector(class_=pattern.PatternGenerator,
+                                    default=pattern.Constant(),
                                     doc="""PatternGenerator to be converted to N-Channels.""")
 
     channel_factors = param.Dynamic(default=[1.,1.,1],
                                     doc="""Channel scaling factors. The length of this list sets the number of channels to be created, unless the input_generator is alreay NChannel (in which case the number of its channels is used).""")
-
-    # hack_rg_grating = param.Boolean(default=False)  # SPG: deprecated? (from CB)
 
     correlate = param.Parameter(default=None)
 
@@ -329,6 +327,11 @@ class ExtendToNChannel(PatternGenerator):
         pass
 
     def set_channel_values(self,p,params,gray,generator):
+        """
+        Given an input generator, ExtendToNChannel's channels are synthesized to match the Class scope:
+        -if monochrome generators are used, each channel is a copy of the generated input, scaled by channel_factors;
+        -if NChannel generators are used, their channels are copied and scaled by channel_factors.
+        """
         # if the generator has the channels, take those values -
         # otherwise use gray*channel factors
         if(hasattr(generator, 'channel_data')):
@@ -339,15 +342,14 @@ class ExtendToNChannel(PatternGenerator):
                 self.channel_data[i] = gray*self.channel_factors[i]
 
     def __call__(self,**params):
+        """
+        Generate NChannel patterns, eventually synthesizing them.
+        """
         p = param.ParamOverrides(self,params)
 
-        ########
-        # as for Selector etc, hack pass through certain parameters to
-        # generator
         params['xdensity']=p.xdensity
         params['ydensity']=p.ydensity
         params['bounds']=p.bounds
-        ########
 
         # (not **p)
         gray = p.generator(**params)
@@ -377,7 +379,7 @@ class ExtendToNChannel(PatternGenerator):
 
         self.set_channel_values(p,params,gray,generator)
 
-        # hacked correlation support
+
         if self.correlate is not None:
             corr_to,corr_from,corr_amt = self.correlate
             setattr(

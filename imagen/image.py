@@ -416,7 +416,8 @@ class NChannelImage(FileImage):
         self._apply_mask(p,fn_result)
         result = p.scale*fn_result+p.offset
 
-        assert len(p.output_fns)==0
+        if( len(p.output_fns)==0 ):
+            raise Exception("No output functions are supported in NChannelImage.")
 
         return result
 
