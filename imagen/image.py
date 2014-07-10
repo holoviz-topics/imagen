@@ -411,9 +411,6 @@ class NChannelImage(FileImage):
         # in a generators list
         p=param.ParamOverrides(self,params_to_override)
 
-        # This is what's skipped:
-        #self._setup_xy(p.bounds,p.xdensity,p.ydensity,p.x,p.y,p.orientation)
-
         fn_result = self.function(p)
 
         self._apply_mask(p,fn_result)
@@ -477,6 +474,7 @@ class NChannelImage(FileImage):
             self._image = None
 
         return gray
+
 
 
 NumpyFile = NChannelImage
