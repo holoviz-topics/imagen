@@ -33,7 +33,7 @@ from os.path import splitext
 
 import numbergen
 
-from colorspaces import color_conversion
+from .colorspaces import color_conversion
 
 
 class ImageSampler(param.Parameterized):
