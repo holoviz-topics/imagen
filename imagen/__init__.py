@@ -524,9 +524,9 @@ class SquareGrating(PatternGenerator):
         Return a square-wave grating (alternating black and white bars).
         """
         return np.around(
-	  0.5 +
-	  0.5*np.sin(pi*(p.duty_cycle-0.5)) +
-	  0.5*np.sin(p.frequency*2*pi*self.pattern_y + p.phase))
+            0.5 +
+            0.5*np.sin(pi*(p.duty_cycle-0.5)) +
+            0.5*np.sin(p.frequency*2*pi*self.pattern_y + p.phase))
 
 # CB: I removed motion_sign from this class because I think it is
 # unnecessary. But maybe I misunderstood the original author's
