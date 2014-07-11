@@ -46,7 +46,7 @@ import numpy
 import param
 
 
-def _threeDdot_dumb(M,a):
+def _threeDdot_simple(M,a):
     """Return Ma, where M is a 3x3 transformation matrix, for each pixel"""
 
     result = numpy.empty(a.shape,dtype=a.dtype)
@@ -62,7 +62,7 @@ def _threeDdot_dumb(M,a):
     return result
 
 
-def _threeDdot_faster(M,a):
+def _threeDdot_opt(M,a):
     swapped = a.swapaxes(0,2)
     shape = swapped.shape
     result = numpy.dot(M,swapped.reshape((3,-1)))
@@ -77,7 +77,7 @@ def _threeDdot_faster(M,a):
 #    result.shape = shape
 #    return result
 
-threeDdot = _threeDdot_faster
+threeDdot = _threeDdot_opt
 
 
 def _abc_to_def_array(ABC,fn):
