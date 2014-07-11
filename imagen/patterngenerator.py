@@ -289,7 +289,7 @@ options.Pattern_SheetView = StyleOpts(cmap='gray')
 class ExtendToNChannel(PatternGenerator):
     """
     Wrapper for any PatternGenerator to support multiple
-    channels, e.g. for use with NChannelGeneratorSheet.
+    channels.
 
     If the specified generator itself has a 'generator' attribute,
     ExtendToNChannel will attempt to get the channels' data from
@@ -393,7 +393,5 @@ class ExtendToNChannel(PatternGenerator):
         self.post_process()
         
         return gray
-
-
 
 

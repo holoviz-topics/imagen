@@ -29,7 +29,11 @@ from dataviews.sheetviews import BoundingBox, SheetCoordinateSystem
 from .patterngenerator import PatternGenerator
 from .transferfn import DivisiveNormalizeLinf, TransferFn
 
+from os.path import splitext
+
 import numbergen
+
+from colorspaces import color_conversion
 
 
 class ImageSampler(param.Parameterized):
@@ -387,6 +391,7 @@ class FileImage(GenericImage):
 
 
 
+# Ex-CB's BaseColorImage
 class NChannelImage(FileImage):
     """
     Basic support for NPY N-channel files.
@@ -403,9 +408,7 @@ class NChannelImage(FileImage):
 
     def _reduced_call(self,**params_to_override):
         # PatternGenerator.__call__ but skipping stuff we don't need
-        # to repeat.  Might be better to make each of red,green,blue
-        # actually be some form of reduced patterngenerator and appear
-        # in a generators list
+        # to repeat.
         p=param.ParamOverrides(self,params_to_override)
 
         fn_result = self.function(p)
@@ -413,7 +416,7 @@ class NChannelImage(FileImage):
         self._apply_mask(p,fn_result)
         result = p.scale*fn_result+p.offset
 
-        if( len(p.output_fns)==0 ):
+        if( len(p.output_fns)!=0 ):
             raise Exception("No output functions are supported in NChannelImage.")
 
         return result
@@ -460,7 +463,7 @@ class NChannelImage(FileImage):
 
         p = param.ParamOverrides(self,params_to_override)
         
-        # HACKALERT
+        # Cache image to prevent channel_data to be deleted before channel specific processing has been finished.
         params_to_override['cache_image']=True
         gray = super(NChannelImage,self).__call__(**params_to_override)
         
@@ -473,6 +476,88 @@ class NChannelImage(FileImage):
 
         return gray
 
+
+
+
+class RGBImage(NChannelImage):
+    """
+    Extension of NChannelImage for the specific case of 3-channel (RED/GREEN/BLUE) color images.
+    RGBImage also adds support for loading normal images instead of raw npy files as in NChannelImage
+    Color-specific processing is applied, in particular to rotate the hue of each image at random, thus
+    achieving a balanced color input across many pattern presentations.
+    """
+
+    saturation = param.Number(default=1.0)
+
+    apply_hue_jitter = param.Boolean(default=True, doc="""
+                           Whether to apply a random uniform jitter to the image,
+                           eg, to perform random hue rotation.""")
+
+    random_hue_jitter = param.ClassSelector(numbergen.RandomDistribution,
+        default=numbergen.UniformRandom(name='hue_jitter',lbound=0,ubound=1,seed=1048921), doc="""
+                     Numbergen random generator to be used to create a distribution in hue jitter,
+                     ie, to perform hue rotation on the images.""")
+
+    _hack_recording = param.Parameter(default=None) # SPG: what do we need this for?
+
+    def _get_image(self,p):
+        if p.filename!=self.last_filename or self._image is None:
+            self.last_filename=p.filename
+
+
+            file_, ext = splitext(p.filename)
+
+            if( ext.lower() == ".npy" ):
+                self.load_npy(p.filename)
+            else:
+                # Load image using PIL
+                self.channel_data = []
+                im = Image.open(p.filename)
+                self._image = ImageOps.grayscale( im )
+                im.load()
+
+                file_data = numpy.asarray( im, float ) # im.split()
+                file_data = file_data / file_data.max()  ## do we have to do it? CB did it because the original datasets had crazy values. Here it's mostly that we have [0,255] ranges instead of [0,1]
+
+                num_channels = file_data.shape[2]
+
+                # Remove the alpha channel
+                if( im.mode[-1] == 'A' ):
+                    num_channels = num_channels - 1
+
+                for i in range(num_channels):
+                    self.channel_data.append( file_data[:, :, i] )
+
+
+        return self._image
+
+
+    def post_process_channels(self,p,gray):      
+        if( self.apply_hue_jitter ):
+            im2pg = color_conversion.image2receptors
+            pg2analysis = color_conversion.receptors2analysis
+            analysis2pg = color_conversion.analysis2receptors
+            jitterfn = color_conversion.jitter_hue
+            satfn = color_conversion.multiply_sat
+
+
+            channs_in  = numpy.dstack(self.channel_data) #numpy.dstack((self.red,self.green,self.blue))
+            channs_out = im2pg(channs_in)
+            analysis_space = pg2analysis(channs_out)
+
+            if self._hack_recording is not None:            
+                self._hack_recording(self,channs=channs_in,extra=analysis_space)
+
+            jitterfn(analysis_space,self.random_hue_jitter())
+            satfn(analysis_space,self.saturation)
+        
+            channs_out = analysis2pg(analysis_space)
+            #self.red,self.green,self.blue = dsplit_3D_to_2Ds(channs_out)
+            #self.channel_data = dsplit_3D_to_2Ds(channs_out)
+
+            self.channel_data = numpy.dsplit(channs_out, 3) # must be RGB!
+            for a in self.channel_data:
+                a.shape = a.shape[0:2]
 
 
 
