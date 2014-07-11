@@ -181,32 +181,32 @@ class Line(PatternGenerator):
     thickness = param.Number(default=0.006,bounds=(0.0,None),softbounds=(0.0,1.0),
                              precedence=0.60,doc="""
         Thickness (width) of the solid central part of the line.""")
-    
+
     enforce_minimal_thickness = param.Boolean(default=False,precedence=0.60, doc="""
-        If True, ensure that the line is at least one pixel in width even for 
+        If True, ensure that the line is at least one pixel in width even for
         small thicknesses where the line could otherwise fall in between pixel
         centers and thus disappear at some orientations.""")
-    
+
     smoothing = param.Number(default=0.05,bounds=(0.0,None),softbounds=(0.0,0.5),
                              precedence=0.61, doc="""
         Width of the Gaussian fall-off.""")
 
-    
+
     def _pixelsize(self, p):
         """Calculate line width necessary to cover at least one pixel on all axes."""
         xpixelsize = 1./float(p.xdensity)
         ypixelsize = 1./float(p.ydensity)
         return max([xpixelsize,ypixelsize])
-        
+
     def _effective_thickness(self, p):
         """Enforce minimum thickness based on the minimum pixel size."""
         return max([p.thickness,self._pixelsize(p)])
-    
+
     def _count_pixels_on_line(self, y, p):
         """Count the number of pixels rendered on this line."""
         h = line(y, self._effective_thickness(p), 0.0)
         return h.sum()
-    
+
     def _minimal_y(self, p):
         """
         For the specified y and one offset by half a pixel, return the
@@ -508,11 +508,11 @@ class SquareGrating(PatternGenerator):
 
     phase     = param.Number(default=0.0,bounds=(0.0,None),softbounds=(0.0,2*pi),
         precedence=0.51,doc="Phase of the square grating.")
-    
+
     duty_cycle = param.Number(default=0.5,bounds=(0.0,1.0),
         precedence=0.51,doc="""
         The duty cycle is the ratio between the pulse duration (width of the bright bar)
-        and the period (1/frequency). 
+        and the period (1/frequency).
         The pulse is defined as the time during which the square wave signal is 1 (high).""")
 
     # We will probably want to add anti-aliasing to this,
@@ -524,8 +524,8 @@ class SquareGrating(PatternGenerator):
         Return a square-wave grating (alternating black and white bars).
         """
         return np.around(
-	  0.5 + 
-	  0.5*np.sin(pi*(p.duty_cycle-0.5)) + 
+	  0.5 +
+	  0.5*np.sin(pi*(p.duty_cycle-0.5)) +
 	  0.5*np.sin(p.frequency*2*pi*self.pattern_y + p.phase))
 
 # CB: I removed motion_sign from this class because I think it is
@@ -580,14 +580,15 @@ class Sweeper(PatternGenerator):
 
 
 class CompositeBase(PatternGenerator):
-    """                                                                                                                                                
-    PatternGenerator that combines or selects from a list of other PatternGenerators.                                                                  
+    """
+    PatternGenerator that combines or selects from a list of other
+    PatternGenerators.
     """
 
     __abstract=True
 
     generators = param.List(class_=PatternGenerator,default=[Constant(scale=0.0)],
-                            bounds=(1,None),precedence=0.97, doc="""                                                                                   
+                            bounds=(1,None),precedence=0.97, doc="""
         List of patterns to combine or select from. The default pattern is a blank pattern,
         and thus should be overridden for any useful work.""")
 
