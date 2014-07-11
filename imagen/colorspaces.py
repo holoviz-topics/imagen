@@ -446,7 +446,7 @@ def _swaplch(LCH):
 
 
 
-class FeatureColorConverter(param.Parameterized):
+class ColorConverter(param.Parameterized):
     """
     High-level color conversion class designed to support color space
     transformations along a pipeline common in color vision modelling:
@@ -512,7 +512,7 @@ class FeatureColorConverter(param.Parameterized):
 
 
 # Provide a shared color_conversion object of type FeatureColorConverter
-color_conversion = FeatureColorConverter()
+color_conversion = ColorConverter()
 
 
 __all__ = ["ColorSpace","FeatureColorConverter"]
