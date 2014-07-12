@@ -247,32 +247,32 @@
     <span class="n">thickness</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.006</span><span class="p">,</span><span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span><span class="n">softbounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">),</span>
                              <span class="n">precedence</span><span class="o">=</span><span class="mf">0.60</span><span class="p">,</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
 <span class="s">        Thickness (width) of the solid central part of the line.&quot;&quot;&quot;</span><span class="p">)</span>
-    
+
     <span class="n">enforce_minimal_thickness</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Boolean</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">precedence</span><span class="o">=</span><span class="mf">0.60</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
-<span class="s">        If True, ensure that the line is at least one pixel in width even for </span>
+<span class="s">        If True, ensure that the line is at least one pixel in width even for</span>
 <span class="s">        small thicknesses where the line could otherwise fall in between pixel</span>
 <span class="s">        centers and thus disappear at some orientations.&quot;&quot;&quot;</span><span class="p">)</span>
-    
+
     <span class="n">smoothing</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span><span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span><span class="n">softbounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.5</span><span class="p">),</span>
                              <span class="n">precedence</span><span class="o">=</span><span class="mf">0.61</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
 <span class="s">        Width of the Gaussian fall-off.&quot;&quot;&quot;</span><span class="p">)</span>
 
-    
+
     <span class="k">def</span> <span class="nf">_pixelsize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Calculate line width necessary to cover at least one pixel on all axes.&quot;&quot;&quot;</span>
         <span class="n">xpixelsize</span> <span class="o">=</span> <span class="mf">1.</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">xdensity</span><span class="p">)</span>
         <span class="n">ypixelsize</span> <span class="o">=</span> <span class="mf">1.</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">ydensity</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">max</span><span class="p">([</span><span class="n">xpixelsize</span><span class="p">,</span><span class="n">ypixelsize</span><span class="p">])</span>
-        
+
     <span class="k">def</span> <span class="nf">_effective_thickness</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Enforce minimum thickness based on the minimum pixel size.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">max</span><span class="p">([</span><span class="n">p</span><span class="o">.</span><span class="n">thickness</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_pixelsize</span><span class="p">(</span><span class="n">p</span><span class="p">)])</span>
-    
+
     <span class="k">def</span> <span class="nf">_count_pixels_on_line</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Count the number of pixels rendered on this line.&quot;&quot;&quot;</span>
         <span class="n">h</span> <span class="o">=</span> <span class="n">line</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_effective_thickness</span><span class="p">(</span><span class="n">p</span><span class="p">),</span> <span class="mf">0.0</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">h</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
-    
+
     <span class="k">def</span> <span class="nf">_minimal_y</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        For the specified y and one offset by half a pixel, return the</span>
@@ -574,11 +574,11 @@
 
     <span class="n">phase</span>     <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span><span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span><span class="n">softbounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mi">2</span><span class="o">*</span><span class="n">pi</span><span class="p">),</span>
         <span class="n">precedence</span><span class="o">=</span><span class="mf">0.51</span><span class="p">,</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;Phase of the square grating.&quot;</span><span class="p">)</span>
-    
+
     <span class="n">duty_cycle</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">),</span>
         <span class="n">precedence</span><span class="o">=</span><span class="mf">0.51</span><span class="p">,</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
 <span class="s">        The duty cycle is the ratio between the pulse duration (width of the bright bar)</span>
-<span class="s">        and the period (1/frequency). </span>
+<span class="s">        and the period (1/frequency).</span>
 <span class="s">        The pulse is defined as the time during which the square wave signal is 1 (high).&quot;&quot;&quot;</span><span class="p">)</span>
 
     <span class="c"># We will probably want to add anti-aliasing to this,</span>
@@ -590,9 +590,9 @@
 <span class="sd">        Return a square-wave grating (alternating black and white bars).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span>
-	  <span class="mf">0.5</span> <span class="o">+</span> 
-	  <span class="mf">0.5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">pi</span><span class="o">*</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">duty_cycle</span><span class="o">-</span><span class="mf">0.5</span><span class="p">))</span> <span class="o">+</span> 
-	  <span class="mf">0.5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">frequency</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">pi</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">pattern_y</span> <span class="o">+</span> <span class="n">p</span><span class="o">.</span><span class="n">phase</span><span class="p">))</span>
+            <span class="mf">0.5</span> <span class="o">+</span>
+            <span class="mf">0.5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">pi</span><span class="o">*</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">duty_cycle</span><span class="o">-</span><span class="mf">0.5</span><span class="p">))</span> <span class="o">+</span>
+            <span class="mf">0.5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">frequency</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">pi</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">pattern_y</span> <span class="o">+</span> <span class="n">p</span><span class="o">.</span><span class="n">phase</span><span class="p">))</span>
 
 <span class="c"># CB: I removed motion_sign from this class because I think it is</span>
 <span class="c"># unnecessary. But maybe I misunderstood the original author&#39;s</span>
@@ -646,14 +646,15 @@
 
 </div></div>
 <div class="viewcode-block" id="CompositeBase"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.__init__.CompositeBase">[docs]</a><span class="k">class</span> <span class="nc">CompositeBase</span><span class="p">(</span><span class="n">PatternGenerator</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;                                                                                                                                                </span>
-<span class="sd">    PatternGenerator that combines or selects from a list of other PatternGenerators.                                                                  </span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    PatternGenerator that combines or selects from a list of other</span>
+<span class="sd">    PatternGenerators.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">__abstract</span><span class="o">=</span><span class="bp">True</span>
 
     <span class="n">generators</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">class_</span><span class="o">=</span><span class="n">PatternGenerator</span><span class="p">,</span><span class="n">default</span><span class="o">=</span><span class="p">[</span><span class="n">Constant</span><span class="p">(</span><span class="n">scale</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)],</span>
-                            <span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span><span class="n">precedence</span><span class="o">=</span><span class="mf">0.97</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;                                                                                   </span>
+                            <span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span><span class="n">precedence</span><span class="o">=</span><span class="mf">0.97</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
 <span class="s">        List of patterns to combine or select from. The default pattern is a blank pattern,</span>
 <span class="s">        and thus should be overridden for any useful work.&quot;&quot;&quot;</span><span class="p">)</span>
 
