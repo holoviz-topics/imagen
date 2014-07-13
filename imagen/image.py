@@ -434,7 +434,7 @@ class NChannelImage(FileImage):
         self.last_filename=filename
 
         self.channel_data = []
-        file_channel_data = numpy.load(filename)
+        file_channel_data = np.load(filename)
 
         file_channel_data = file_channel_data / file_channel_data.max()
 
@@ -516,7 +516,7 @@ class RGBImage(NChannelImage):
                 self._image = ImageOps.grayscale( im )
                 im.load()
 
-                file_data = numpy.asarray( im, float ) # im.split()
+                file_data = np.asarray( im, float ) # im.split()
                 file_data = file_data / file_data.max()  ## do we have to do it? CB did it because the original datasets had crazy values. Here it's mostly that we have [0,255] ranges instead of [0,1]
 
                 num_channels = file_data.shape[2]
@@ -541,7 +541,7 @@ class RGBImage(NChannelImage):
             satfn = color_conversion.multiply_sat
 
 
-            channs_in  = numpy.dstack(self.channel_data) #numpy.dstack((self.red,self.green,self.blue))
+            channs_in  = np.dstack(self.channel_data) #numpy.dstack((self.red,self.green,self.blue))
             channs_out = im2pg(channs_in)
             analysis_space = pg2analysis(channs_out)
 
@@ -555,7 +555,7 @@ class RGBImage(NChannelImage):
             #self.red,self.green,self.blue = dsplit_3D_to_2Ds(channs_out)
             #self.channel_data = dsplit_3D_to_2Ds(channs_out)
 
-            self.channel_data = numpy.dsplit(channs_out, 3) # must be RGB!
+            self.channel_data = np.dsplit(channs_out, 3) # must be RGB!
             for a in self.channel_data:
                 a.shape = a.shape[0:2]
 
