@@ -17,7 +17,7 @@ ColorSpace
     between colorspaces, e.g.  ``convert("rgb", "hsv", X)``, where ``X`` 
     is assumed to be a numpy.dstack() object with three matching arrays.
 
-FeatureColorConverter
+ColorConverter
     Declare a set of color spaces to allow external code to work the
     same for any combination of color spaces.  Specifically, declares:
 
@@ -511,10 +511,10 @@ class ColorConverter(param.Parameterized):
         a[:,:,1] *= factor
 
 
-# Provide a shared color_conversion object of type FeatureColorConverter
+# Provide a shared color_conversion object of type ColorConverter
 color_conversion = ColorConverter()
 
 
-__all__ = ["ColorSpace","FeatureColorConverter"]
+__all__ = ["ColorSpace","ColorConverter"]
 
 
