@@ -397,10 +397,6 @@ class NChannelImage(FileImage):
     Basic support for NPY N-channel files.
     """
 
-    pattern_sampler = param.ClassSelector(class_=ImageSampler,
-        default=PatternSampler(size_normalization='fit_shortest'))
-
-
     def __init__(self,**params):
         self.channel_data = []
         super(NChannelImage,self).__init__(**params)
@@ -561,7 +557,18 @@ class RGBImage(NChannelImage):
 
 
 
-NumpyFile = NChannelImage
+class NumpyFile(NChannelImage):
+    """
+    Backwards compatibility Class.
+    """
+
+    pattern_sampler = param.ClassSelector(class_=ImageSampler,
+        default=PatternSampler(background_value_fn=edge_average,
+                               size_normalization='original',
+                               whole_pattern_output_fns=[]),doc="""
+        The PatternSampler to use to resample/resize the image.""")
+    saturation = param.Number(default=1.0)
+
 
 
 
