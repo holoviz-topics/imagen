@@ -304,14 +304,16 @@ class ExtendToNChannel(PatternGenerator):
     """
 
     generator = param.ClassSelector(class_=PatternGenerator,default=Constant(),doc="""
-                      PatternGenerator to be converted to N-Channels.""")
+        PatternGenerator to be converted to N-Channels.""")
 
     channel_factors = param.Dynamic(default=[1.,1.,1],doc="""
-                      Channel scaling factors. The length of this list sets the number of channels to be
-                      created, unless the input_generator is alreay NChannel (in which case the number of
-                      its channels is used).""")
+        Channel scaling factors. The length of this list sets the number of channels to be
+        created, unless the input_generator is alreay NChannel (in which case the number of
+        its channels is used).""")
 
-    correlate = param.Parameter(default=None)
+    correlate_channels = param.Parameter(default=None, doc="""
+        List which contains 3 values:
+          correlate_channels = ( dest_channel_to_correlate, channel_to_correlate_to, correlation_strength )""")
 
 
     def __init__(self,**params):
@@ -358,11 +360,6 @@ class ExtendToNChannel(PatternGenerator):
 
         #### GET GENERATOR ####
         # Got to get the generator that's actually making the pattern
-        #
-        # CEB: very hacky. maybe if
-        # the various selector pattern generators had a way of
-        # accessing the current generator's parameters, it could be
-        # simpler?
         if hasattr(p.generator,'get_current_generator'):
             # access the generator without causing any index to be advanced
             generator = p.generator.get_current_generator()
@@ -372,22 +369,15 @@ class ExtendToNChannel(PatternGenerator):
             generator = p.generator
         #######################
 
-        # CEBALERT: used to support non color patterns, too.        
-        # (promoted red, green, blue from actual generator if it had
-        # them, otherwise set to something based on gray)
 
         self.pre_process_generator(generator)
-
 
         self.set_channel_values(p,params,gray,generator)
 
 
         if self.correlate is not None:
-            corr_to,corr_from,corr_amt = self.correlate
-            setattr(
-                self,
-                corr_to,
-                corr_amt*getattr(self,corr_from)+(1-corr_amt)*getattr(self,corr_to))
+            corr_to,corr_from,corr_amt = self.correlate_channels
+            self.channel_data[corr_to] = corr_amt*self.channel_data[corr_from]+(1-corr_amt)*self.channel_data[corr_to]
 
 
         self.post_process()
