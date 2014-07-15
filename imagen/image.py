@@ -26,7 +26,7 @@ import param
 from param.parameterized import overridable_property
 
 from dataviews.sheetviews import BoundingBox, SheetCoordinateSystem
-from .patterngenerator import PatternGenerator
+from .patterngenerator import PatternGenerator, Constant
 from .transferfn import DivisiveNormalizeLinf, TransferFn
 
 from os.path import splitext
@@ -514,7 +514,7 @@ class RGBChannelTransform(ChannelTransform):
 
 
     def __call__(self,p, channel_data):
-        if(p.apply_hue_jitter):
+        if(self.apply_hue_jitter):
             im2pg = color_conversion.image2receptors
             pg2analysis = color_conversion.receptors2analysis
             analysis2pg = color_conversion.analysis2receptors
@@ -525,11 +525,11 @@ class RGBChannelTransform(ChannelTransform):
             channs_out = im2pg(channs_in)
             analysis_space = pg2analysis(channs_out)
 
-            if p._hack_recording is not None:
-                p._hack_recording(self,channs=channs_in,extra=analysis_space)
+            if self._hack_recording is not None:
+                self._hack_recording(self,channs=channs_in,extra=analysis_space)
 
-            jitterfn(analysis_space,p.random_hue_jitter())
-            satfn(analysis_space,p.saturation)
+            jitterfn(analysis_space,self.random_hue_jitter())
+            satfn(analysis_space,self.saturation)
 
             channs_out = analysis2pg(analysis_space)
 
@@ -558,6 +558,108 @@ class NumpyFile(FileImage):
                                size_normalization='original',
                                whole_pattern_output_fns=[]),doc="""
         The PatternSampler to use to resample/resize the image.""")
+
+
+
+
+class CompositeImage(GenericImage):
+    """
+    Wrapper for any PatternGenerator to support multiple
+    channels.
+
+    If the specified generator itself has a 'generator' attribute,
+    ExtendToNChannel will attempt to get the channels' data from
+    generator.generator (e.g. ColorImage inside a Selector);
+    otherwise, ExtendToNChannel will attempt to get channel_data
+    from generator. If no channel_data is found in this
+    ways, ExtendToNChannel will synthesize the channels from the traditional
+    single channel generator.
+
+    After finding or synthesizing the channels, they are
+    scaled according to relative_channel_strengths.
+    """
+
+    generator = param.ClassSelector(class_=PatternGenerator,default=Constant(),doc="""
+        PatternGenerator to be converted to N-Channels.""")
+
+    channel_factors = param.Dynamic(default=[1.,1.,1],doc="""
+        Channel scaling factors. The length of this list sets the number of channels to be
+        created, unless the input_generator is alreay NChannel (in which case the number of
+        its channels is used).""")
+
+    correlate_channels = param.Parameter(default=None, doc="""
+        List which contains 3 values:
+          correlate_channels = ( dest_channel_to_correlate, channel_to_correlate_to, correlation_strength )""")
+
+
+    def __init__(self,**params):
+        super(ExtendToNChannel,self).__init__(**params)
+        self.channels = []
+
+        for i in range(len(self.channel_factors)):
+            self.channels.append( None )
+
+
+    def post_process(self):  # old hack_hook1
+        pass
+
+    def pre_process_generator(self,generator):  # old hack_hook0
+        pass
+
+    def set_channel_values(self,p,params,gray,generator):
+        """
+        Given an input generator, ExtendToNChannel's channels are synthesized to match the Class scope:
+        -if monochrome generators are used, each channel is a copy of the generated input, scaled by channel_factors;
+        -if NChannel generators are used, their channels are copied and scaled by channel_factors.
+        """
+        # if the generator has the channels, take those values -
+        # otherwise use gray*channel factors
+
+        if(hasattr(generator, 'channels')):
+            for i in range(len(self.channel_factors)):
+                self.channels[i] = generator.channels[i]*self.channel_factors[i]
+        else:
+            for i in range(len(self.channel_factors)):
+                self.channels[i] = gray*self.channel_factors[i]
+
+    def __call__(self,**params):
+        """
+        Generate NChannel patterns, eventually synthesizing them.
+        """
+        p = param.ParamOverrides(self,params)
+
+        params['xdensity']=p.xdensity
+        params['ydensity']=p.ydensity
+        params['bounds']=p.bounds
+
+        # (not **p)
+        gray = p.generator(**params)
+
+        #### GET GENERATOR ####
+        # Got to get the generator that's actually making the pattern
+        if hasattr(p.generator,'get_current_generator'):
+            # access the generator without causing any index to be advanced
+            generator = p.generator.get_current_generator()
+        elif hasattr(p.generator,'generator'):
+            generator = p.generator.generator
+        else:
+            generator = p.generator
+        #######################
+
+
+        self.pre_process_generator(generator)
+
+        self.set_channel_values(p,params,gray,generator)
+
+
+        if self.correlate is not None:
+            corr_to,corr_from,corr_amt = self.correlate_channels
+            self.channels[corr_to] = corr_amt*self.channels[corr_from]+(1-corr_amt)*self.channels[corr_to]
+
+
+        self.post_process()
+        
+        return gray
 
 
 
