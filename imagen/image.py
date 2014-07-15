@@ -471,9 +471,12 @@ class FileImage(GenericImage):
 
         file_data = np.asarray(im, float)
         file_data = file_data / file_data.max()
-        num_channels = file_data.shape[2]
-        for i in range(num_channels):
-            self._channel_data.append( file_data[:, :, i])
+
+        # if the image has more than one channel, load it
+        if( len(file_data.shape) == 3 ):
+            num_channels = file_data.shape[2]
+            for i in range(num_channels):
+                self._channel_data.append( file_data[:, :, i])
 
 
     def _load_npy(self, filename):
