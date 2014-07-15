@@ -318,10 +318,10 @@ class ExtendToNChannel(PatternGenerator):
 
     def __init__(self,**params):
         super(ExtendToNChannel,self).__init__(**params)
-        self.channel_data = []
+        self._channel_data = []
 
         for i in range(len(self.channel_factors)):
-            self.channel_data.append( None )
+            self._channel_data.append( None )
 
 
     def post_process(self):  # old hack_hook1
@@ -338,12 +338,12 @@ class ExtendToNChannel(PatternGenerator):
         """
         # if the generator has the channels, take those values -
         # otherwise use gray*channel factors
-        if(hasattr(generator, 'channel_data')):
+        if(hasattr(generator, '_channel_data')):
             for i in range(len(self.channel_factors)):
-                self.channel_data[i] = generator.channel_data[i]*self.channel_factors[i]
+                self._channel_data[i] = generator._channel_data[i]*self.channel_factors[i]
         else:
             for i in range(len(self.channel_factors)):
-                self.channel_data[i] = gray*self.channel_factors[i]
+                self._channel_data[i] = gray*self.channel_factors[i]
 
     def __call__(self,**params):
         """
@@ -377,7 +377,7 @@ class ExtendToNChannel(PatternGenerator):
 
         if self.correlate is not None:
             corr_to,corr_from,corr_amt = self.correlate_channels
-            self.channel_data[corr_to] = corr_amt*self.channel_data[corr_from]+(1-corr_amt)*self.channel_data[corr_to]
+            self._channel_data[corr_to] = corr_amt*self._channel_data[corr_from]+(1-corr_amt)*self._channel_data[corr_to]
 
 
         self.post_process()
