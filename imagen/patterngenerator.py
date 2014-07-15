@@ -282,3 +282,6 @@ class Constant(PatternGenerator):
 
 
 options.Pattern_SheetView = StyleOpts(cmap='gray')
+
+
+
