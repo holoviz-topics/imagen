@@ -427,13 +427,13 @@ class FileImage(GenericImage):
 
 
     def __call__(self,**params_to_override):
-
         p = param.ParamOverrides(self,params_to_override)
         # Cache image to prevent channel_data to be deleted before channel specific processing has been finished.
         params_to_override['cache_image']=True
         gray = super(FileImage,self).__call__(**params_to_override)
 
         self._channel_data = self._process_channels(p,**params_to_override)
+
         if self.channel_transform:
             self._channel_data = self.channel_transform(p, self._channel_data)
 
@@ -455,6 +455,7 @@ class FileImage(GenericImage):
                 self._load_npy(p.filename)
             else:
                 self._load_pil_image(p.filename)
+
 
         return self._image
 
@@ -537,7 +538,8 @@ class RGBChannelTransform(ChannelTransform):
             for a in channel_data:
                 a.shape = a.shape[0:2]
 
-            return channel_data
+
+        return channel_data
 
 
 
@@ -593,11 +595,11 @@ class CompositeImage(GenericImage):
 
 
     def __init__(self,**params):
-        super(ExtendToNChannel,self).__init__(**params)
-        self.channels = []
+        super(CompositeImage,self).__init__(**params)
+        self._channel_data = []
 
         for i in range(len(self.channel_factors)):
-            self.channels.append( None )
+            self._channel_data.append( None )
 
 
     def post_process(self):  # old hack_hook1
@@ -615,12 +617,12 @@ class CompositeImage(GenericImage):
         # if the generator has the channels, take those values -
         # otherwise use gray*channel factors
 
-        if(hasattr(generator, 'channels')):
+        if(hasattr(generator, '_channel_data')):
             for i in range(len(self.channel_factors)):
-                self.channels[i] = generator.channels[i]*self.channel_factors[i]
+                self._channel_data[i] = generator._channel_data[i]*self.channel_factors[i]
         else:
             for i in range(len(self.channel_factors)):
-                self.channels[i] = gray*self.channel_factors[i]
+                self._channel_data[i] = gray*self.channel_factors[i]
 
     def __call__(self,**params):
         """
@@ -652,9 +654,9 @@ class CompositeImage(GenericImage):
         self.set_channel_values(p,params,gray,generator)
 
 
-        if self.correlate is not None:
+        if self.correlate_channels is not None:
             corr_to,corr_from,corr_amt = self.correlate_channels
-            self.channels[corr_to] = corr_amt*self.channels[corr_from]+(1-corr_amt)*self.channels[corr_to]
+            self._channel_data[corr_to] = corr_amt*self._channel_data[corr_from]+(1-corr_amt)*self._channel_data[corr_to]
 
 
         self.post_process()
