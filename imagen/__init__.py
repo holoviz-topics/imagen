@@ -1061,8 +1061,8 @@ class SmartSweeper(PatternGenerator):
         new_y = p.y+p.size*pg.y
 
         image_array = pg(xdensity=p.xdensity,ydensity=p.ydensity,bounds=p.bounds,
-                         x=new_x+p.speed*step*cos(motion_orientation),
-                         y=new_y+p.speed*step*sin(motion_orientation),
+                         x=new_x+p.speed*step*np.cos(motion_orientation),
+                         y=new_y+p.speed*step*np.sin(motion_orientation),
                          orientation=pg.orientation+p.orientation,
                          scale=pg.scale*p.scale,offset=pg.offset+p.offset)
 
