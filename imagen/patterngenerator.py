@@ -155,6 +155,11 @@ class PatternGenerator(param.Parameterized):
 
 
     def channels(self):
+        """
+        Channels() adds a shared interface for monochrome (1-channel) and multichannel (NChannel) structures.
+        In the general case, it returns a list with a single element, the array of data of the single channel.
+        In the extended case, it returns a list with the array data of each channel.
+        """
         return [self.__call__()]
 
 
