@@ -1027,6 +1027,60 @@ class Sweeper(PatternGenerator):
 
 
 
+# Legacy Sweeper class which is used in lissom.ty, should be deleted
+# once lissom.ty is deprecated
+#
+# CB: I removed motion_sign from this class because I think it is
+# unnecessary. But maybe I misunderstood the original author's
+# intention?
+#
+# In any case, the original implementation was incorrect - it was not
+# possible to get some motion directions (directions in one whole
+# quadrant were missed out).
+#
+# Note that to get a 2pi range of directions, one must use a 2pi range
+# of orientations (there are two directions for any given
+# orientation).  Alternatively, we could generate a random sign, and
+# use an orientation restricted to a pi range.
+
+class OldSweeper(PatternGenerator):
+    """
+    PatternGenerator that sweeps a supplied PatternGenerator in a direction
+    perpendicular to its orientation.
+    """
+
+    generator = param.Parameter(default=Gaussian(),precedence=0.97, doc="Pattern to sweep.")
+
+    speed = param.Number(default=0.25,bounds=(0.0,None),doc="""
+        Sweep speed: number of sheet coordinate units per unit time.""")
+
+    step = param.Number(default=1,doc="""
+        Number of steps at the given speed to move in the sweep direction.
+        The distance moved is speed*step.""")
+
+    # Provide access to value needed for measuring maps
+    def __get_phase(self): return self.generator.phase
+    def __set_phase(self,new_val): self.generator.phase = new_val
+    phase = property(__get_phase,__set_phase)
+
+    def function(self,p):
+        """Selects and returns one of the patterns in the list."""
+        pg = p.generator
+        motion_orientation=p.orientation+pi/2.0
+
+        new_x = p.x+p.size*pg.x
+        new_y = p.y+p.size*pg.y
+
+        image_array = pg(xdensity=p.xdensity,ydensity=p.ydensity,bounds=p.bounds,
+                         x=new_x + p.speed*p.step*numpy.cos(motion_orientation),
+                         y=new_y + p.speed*p.step*numpy.sin(motion_orientation),
+                         orientation=p.orientation,
+                         scale=pg.scale*p.scale,offset=pg.offset+p.offset)
+
+        return image_array
+
+
+
 class DifferenceOfGaussians(PatternGenerator):
     """
     Two-dimensional difference of gaussians pattern.
