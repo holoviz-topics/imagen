@@ -154,6 +154,10 @@ class PatternGenerator(param.Parameterized):
         return result
 
 
+    def channels(self):
+        return [self.__call__()]
+
+
     def _setup_xy(self,bounds,xdensity,ydensity,x,y,orientation):
         """
         Produce pattern coordinate matrices from the bounds and
@@ -282,3 +286,6 @@ class Constant(PatternGenerator):
 
 
 options.Pattern_SheetView = StyleOpts(cmap='gray')
+
+
+

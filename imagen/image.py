@@ -26,8 +26,14 @@ import param
 from param.parameterized import overridable_property
 
 from dataviews.sheetviews import BoundingBox, SheetCoordinateSystem
-from .patterngenerator import PatternGenerator
+from .patterngenerator import PatternGenerator, Constant
 from .transferfn import DivisiveNormalizeLinf, TransferFn
+
+from os.path import splitext
+
+import numbergen
+
+from .colorspaces import color_conversion
 
 
 class ImageSampler(param.Parameterized):
@@ -251,12 +257,23 @@ class FastImageSampler(ImageSampler):
 
 
 
-# Would be best called Image, but that causes confusion with Image's Image
+class ChannelTransform(param.ParameterizedFunction):
+    """
+    A ChannelTransform is a parameterized function that takes channels
+    as input (a list of arrays) and transforms their contents in some way.
+    """
+
+    __abstract = True
+
+    def __call__(self, p, channels):
+        raise NotImplementedError
+
+
+
 class GenericImage(PatternGenerator):
     """
-    Generic 2D image generator.
+    Generic 2D image generator with support for multiple channels.
 
-    Generates a pattern from a Python Imaging Library image object.
     Subclasses should override the _get_image method to produce the
     image object.
 
@@ -291,6 +308,22 @@ class GenericImage(PatternGenerator):
         to make it possible to use very large databases of images without
         running out of memory.""")
 
+    channel_transform = param.Callable( doc="""
+       An optional ChannelTransform to apply any post processing to the image channels (eg, channel-specific
+       scaling).""")
+
+    def __init__(self, **params):
+        self._channel_data = []
+        self._image = None
+        super(GenericImage, self).__init__(**params)
+
+
+    def channels(self):
+        if self._image is None:
+            self()
+
+        return self._channel_data
+
 
     def _get_image(self,p):
         """
@@ -300,32 +333,47 @@ class GenericImage(PatternGenerator):
         """
         raise NotImplementedError
 
-    # CEB: not currently possible, because _get_image needs access to p
-    #image = property(_get_image,_set_image,_del_image,doc=" ")
+
+    def _reduced_call(self, **params_to_override):
+        """
+        Simplified version of PatternGenerator's __call__ method.
+        """
+        p=param.ParamOverrides(self,params_to_override)
+
+        fn_result = self.function(p)
+        self._apply_mask(p,fn_result)
+        result = p.scale*fn_result+p.offset
+        return result
+
+
+    def _process_channels(self,p,**params_to_override):
+        """
+        Method to add the channel information to the channel_data
+        attribute.
+        """
+        orig_image = self._image
+
+        for i in range(len(self._channel_data)):
+            self._image = self._channel_data[i]
+            self._channel_data[i] = self._reduced_call(**params_to_override)
+        self._image = orig_image
+        return self._channel_data
+
 
     def function(self,p):
         height   = p.size
         width    = p.aspect_ratio*height
 
-        result = p.pattern_sampler(self._get_image(p),p.pattern_x,p.pattern_y,float(p.xdensity),float(p.ydensity),
+        result = p.pattern_sampler(self._get_image(p),p.pattern_x,p.pattern_y,
+                                   float(p.xdensity),float(p.ydensity),
                                    float(width),float(height))
-
         if p.cache_image is False:
             self._image = None
             del self.pattern_sampler.image
 
         return result
 
-    ### support pickling of Image.Image
 
-    # CEBALERT: almost identical code to that in topo.plotting.bitmap.Bitmap.
-    # Can we instead patch PIL? (Note that we can't use copy_reg as we do for
-    # e.g. numpy ufuncs because Image's Image is not a new-style class. So patching
-    # PIL is probably the only option to handle this problem in one place.)
-
-    # CEB: by converting to string and back, we probably incur some speed
-    # penalty on copy()ing GenericImages (since __getstate__ and __setstate__ are
-    # used for copying, unless __copy__ and __deepcopy__ are defined instead).
     def __getstate__(self):
         """
         Return the object's state (as in the superclass), but replace
@@ -336,7 +384,8 @@ class GenericImage(PatternGenerator):
         if '_image' in state and state['_image'] is not None:
             f = BytesIO()
             image = state['_image']
-            image.save(f,format=image.format or 'TIFF') # format could be None (we should probably just not save in that case)
+            # format could be None (we should probably just not save in that case)
+            image.save(f,format=image.format or 'TIFF')
             state['_image'] = f.getvalue()
             f.close()
 
@@ -347,9 +396,7 @@ class GenericImage(PatternGenerator):
         Load the object's state (as in the superclass), but replace
         the '_image' string with an actual Image object.
         """
-        # CEBALERT: Need to figure out how state['_image'] could ever
-        # actually be None; apparently it is sometimes (see SF
-        # #2276819).
+        # state['_image'] is apparently sometimes None (see SF #2276819).
         if '_image' in state and state['_image'] is not None:
             state['_image'] = Image.open(BytesIO(state['_image']))
         super(GenericImage,self).__setstate__(state)
@@ -365,49 +412,257 @@ class FileImage(GenericImage):
     details of supported image file formats.
     """
 
-    filename = param.Filename(default='images/ellen_arthur.pgm',precedence=0.9,doc="""
-        File path (can be relative to Param's base path) to a bitmap image.
-        The image can be in any format accepted by PIL, e.g. PNG, JPG, TIFF, or PGM.
+    filename = param.Filename(default='images/ellen_arthur.pgm', precedence=0.9,doc="""
+        File path (can be relative to Param's base path) to a bitmap
+        image.  The image can be in any format accepted by PIL,
+        e.g. PNG, JPG, TIFF, or PGM as well or numpy save files (.npy
+        or .npz) containing 2D or 3D arrays (where the third dimension
+        is used for each channel).
         """)
 
 
     def __init__(self, **params):
         super(FileImage,self).__init__(**params)
-        # Saves the last filename loaded, to avoid unnecessary reloading
-        self.last_filename = None
+        self.last_filename = None  # Cached to avoid unnecessary reloading for each channel
+
+
+    def __call__(self,**params_to_override):
+        params_to_override['cache_image']=True
+        p = param.ParamOverrides(self,params_to_override)
+        # Cache image to prevent channel_data to be deleted before channel specific processing has been finished.
+        gray = super(FileImage,self).__call__(**params_to_override)
+
+        self._channel_data = self._process_channels(p,**params_to_override)
+
+        if self.channel_transform:
+            self._channel_data = self.channel_transform(p, self._channel_data)
+
+        if p.cache_image is False:
+            self._image = None
+
+        return gray
 
 
     def _get_image(self,p):
-        if p.filename!=self.last_filename or self._image is None:
-            self.last_filename=p.filename
-            self._image = ImageOps.grayscale(Image.open(p.filename))
+        file_, ext = splitext(p.filename)
+        npy = (ext.lower() == ".npy")
+        reload_image = (p.filename!=self.last_filename or self._image is None)
+
+        self.last_filename = p.filename
+
+        if reload_image:
+            if npy:
+                self._load_npy(p.filename)
+            else:
+                self._load_pil_image(p.filename)
+
         return self._image
 
 
+    def _load_pil_image(self, filename):
+        """
+        Load image using PIL.
+        """
+        self._channel_data = []
+        im = Image.open(filename)
+        self._image = ImageOps.grayscale(im)
+        im.load()
 
-class NumpyFile(GenericImage):
+        file_data = np.asarray(im, float)
+        file_data = file_data / file_data.max()
+
+        # if the image has more than one channel, load it
+        if( len(file_data.shape) == 3 ):
+            num_channels = file_data.shape[2]
+            for i in range(num_channels):
+                self._channel_data.append( file_data[:, :, i])
+
+
+    def _load_npy(self, filename):
+        """
+        Load image using Numpy.
+        """
+        self._channel_data = []
+        file_channel_data = np.load(filename)
+        file_channel_data = file_channel_data / file_channel_data.max()
+
+        for i in range(file_channel_data.shape[2]):
+            self._channel_data.append(file_channel_data[:, :, i])
+
+        self._image = file_channel_data.sum(2) / file_channel_data.shape[2]
+
+
+
+
+class RGBChannelTransform(ChannelTransform):
     """
-    Read an array from a Numpy-format file.
+    PostProcessor for the specific case of 3-channel (RED/GREEN/BLUE)
+    color images.  Color-specific processing is applied, in particular
+    to rotate the hue of each image at random, thus achieving a
+    balanced color input across many pattern presentations.
     """
 
-    filename = param.Filename(default='images/numpy_array_feret_photo.npy',precedence=0.9,doc="""
-        File path (can be relative to Param's base path) to the Numpy file.""")
+    saturation = param.Number(default=1.0)
 
-    # Inherits from GenericImage, overriding defaults to disable rescaling
+    apply_hue_jitter = param.Boolean(default=True, doc="""
+        Whether to apply a random uniform jitter to the image,
+        eg, to perform random hue rotation.""")
+
+    random_hue_jitter = param.ClassSelector(numbergen.RandomDistribution,
+        default=numbergen.UniformRandom(name='hue_jitter',lbound=0,ubound=1,seed=1048921), doc="""
+        Numbergen random generator to be used to create a distribution in hue jitter,
+        ie, to perform hue rotation on the images.""")
+
+    _hack_recording = param.Parameter(default=None)
+
+
+    def __call__(self,p, channel_data):
+        if(self.apply_hue_jitter):
+            im2pg = color_conversion.image2receptors
+            pg2analysis = color_conversion.receptors2analysis
+            analysis2pg = color_conversion.analysis2receptors
+            jitterfn = color_conversion.jitter_hue
+            satfn = color_conversion.multiply_sat
+
+            channs_in  = np.dstack(channel_data)
+            channs_out = im2pg(channs_in)
+            analysis_space = pg2analysis(channs_out)
+
+            if self._hack_recording is not None:
+                self._hack_recording(self,channs=channs_in,extra=analysis_space)
+
+            jitterfn(analysis_space,self.random_hue_jitter())
+            satfn(analysis_space,self.saturation)
+
+            channs_out = analysis2pg(analysis_space)
+
+            channel_data = np.dsplit(channs_out, 3) # must be RGB!
+            for a in channel_data:
+                a.shape = a.shape[0:2]
+
+
+        return channel_data
+
+
+
+class RGBImage(FileImage):
+    """
+    For backwards compatibility.
+    """
+    channel_transform = param.Callable(default=RGBChannelTransform)
+
+
+class NumpyFile(FileImage):
+    """
+    For backwards compatibility.
+    """
+
     pattern_sampler = param.ClassSelector(class_=ImageSampler,
         default=PatternSampler(background_value_fn=edge_average,
                                size_normalization='original',
-                               whole_pattern_output_fns=[]))
+                               whole_pattern_output_fns=[]),doc="""
+        The PatternSampler to use to resample/resize the image.""")
 
 
-    def __init__(self, **params):
-        super(NumpyFile,self).__init__(**params)
-        # Saves the last filename loaded, to avoid unnecessary reloading
-        self.last_filename = None
 
 
-    def _get_image(self,p):
-        if p.filename!=self.last_filename or self._image is None:
-            self.last_filename=p.filename
-            self._image = np.load((p.filename))
-        return self._image
+class CompositeImage(GenericImage):
+    """
+    Wrapper for any PatternGenerator to support multiple
+    channels.
+
+    If the specified generator itself has a 'generator' attribute,
+    ExtendToNChannel will attempt to get the channels' data from
+    generator.generator (e.g. ColorImage inside a Selector);
+    otherwise, ExtendToNChannel will attempt to get channel_data
+    from generator. If no channel_data is found in this
+    ways, ExtendToNChannel will synthesize the channels from the traditional
+    single channel generator.
+
+    After finding or synthesizing the channels, they are
+    scaled according to relative_channel_strengths.
+    """
+
+    generator = param.ClassSelector(class_=PatternGenerator,default=Constant(),doc="""
+        PatternGenerator to be converted to N-Channels.""")
+
+    channel_factors = param.Dynamic(default=[1.,1.,1],doc="""
+        Channel scaling factors. The length of this list sets the number of channels to be
+        created, unless the input_generator is alreay NChannel (in which case the number of
+        its channels is used).""")
+
+    correlate_channels = param.Parameter(default=None, doc="""
+        List which contains 3 values:
+          correlate_channels = ( dest_channel_to_correlate, channel_to_correlate_to, correlation_strength )""")
+
+
+    def __init__(self,**params):
+        super(CompositeImage,self).__init__(**params)
+        self._channel_data = []
+
+        for i in range(len(self.channel_factors)):
+            self._channel_data.append( None )
+
+
+    def channels(self):
+        if(len(self._channel_data)>0):
+            if(self._channel_data[0] is None):
+                self()
+
+        return self._channel_data
+
+
+
+    def post_process(self):  # old hack_hook1
+        pass
+
+    def pre_process_generator(self,generator):  # old hack_hook0
+        pass
+
+    def set_channel_values(self,p,params,gray,generator):
+        """
+        Given an input generator, ExtendToNChannel's channels are synthesized to match the Class scope:
+        -if monochrome generators are used, each channel is a copy of the generated input, scaled by channel_factors;
+        -if NChannel generators are used, their channels are copied and scaled by channel_factors.
+        """
+        # if the generator has the channels, take those values -
+        # otherwise use gray*channel factors
+
+        channels = generator.channels()
+
+        if( len(channels)>1 ):
+            for i in range(len(channels)):
+                self._channel_data[i] = channels[i]*self.channel_factors[i]
+        else:
+            for i in range(len(self.channel_factors)):
+                self._channel_data[i] = gray*self.channel_factors[i]
+
+    def __call__(self,**params):
+        """
+        Generate NChannel patterns, eventually synthesizing them.
+        """
+        p = param.ParamOverrides(self,params)
+
+        params['xdensity']=p.xdensity
+        params['ydensity']=p.ydensity
+        params['bounds']=p.bounds
+
+        # (not **p)
+        gray = p.generator(**params)
+
+        self.pre_process_generator(p.generator)
+
+        self.set_channel_values(p,params,gray,p.generator)
+
+
+        if self.correlate_channels is not None:
+            corr_to,corr_from,corr_amt = self.correlate_channels
+            self._channel_data[corr_to] = corr_amt*self._channel_data[corr_from]+(1-corr_amt)*self._channel_data[corr_to]
+
+
+        self.post_process()
+        
+        return gray
+
+
+
