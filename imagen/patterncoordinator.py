@@ -180,9 +180,9 @@ class PatternCoordinator(param.Parameterized):
     composite_parameters = param.Dict(default={},doc="""
         If present, these parameter values will be passed to the composite specified in composite_type.""")
 
-    feature_coordinators = param.Dict(default=collections.OrderedDict({
-        'xy': [XCoordinator,YCoordinator],
-        'or': OrientationCoordinator}),doc="""
+    feature_coordinators = param.Dict(default=collections.OrderedDict([
+        ('xy', [XCoordinator,YCoordinator]),
+        ('or', OrientationCoordinator)]),doc="""
         Mapping from the feature name (key) to the method(s) to be
         applied to the pattern generators.  The value can either be a
         single method or a list of methods.""")
@@ -262,26 +262,28 @@ class PatternCoordinatorImages(PatternCoordinator):
 
     def __init__(self,dataset_name,**params):
         """
-        dataset_name is the path to a JSON file (https://docs.python.org/2/library/json.html)
-        containing a description for a dataset. Alternatively, it can be a path to a folder
-        containing image files.
+        dataset_name is the path to a folder containing a MANIFEST_json
+        (https://docs.python.org/2/library/json.html), which contains a description for a dataset.
+        If no MANIFEST_json is present, all image files in the specified folder are used.
 
         Any extra parameter values supplied here will be passed down to the
         feature_coordinators requested in features_to_vary.
 
-        The JSON file should contain the following entries:
-
-            :'name': Name of the dataset (string, default=basename(dataset_name))
-            :'length': Number of images in the dataset (integer, default=number of files in directory of dataset_name minus 1)
+        The JSON file can contain any of the following entries, if an entry is not present, the default is used:
+            :'dataset_name': Name of the dataset (string, default=filepath)
+            :'length': Number of images in the dataset (integer,
+            default=number of files in directory matching filename_template)
             :'description': Description of the dataset (string, default="")
             :'source': Citation of paper for which the dataset was created (string, default=name)
             :'filename_template': Path to the images with placeholders ({placeholder_name})
             for inherent features and the image number, e.g. "filename_template": "images/image{i}.png".
             The placeholders are replaced according to placeholder_mapping.
             Alternatively, glob patterns such as * or ? can be used, e.g. "filename_template": "images/*.png"
-            (default=path_to_dataset_name/{i}.png if dataset_name is a JSON file, path_to_dataset_name/*.png otherwise)
-            :'placeholder_mapping': Dictionary specifying the replacement of placeholders in filename_template; value is used in eval().
+            (default=path_to_dataset_name/*.*)
+            :'placeholder_mapping': Dictionary specifying the replacement of placeholders in filename_template;
+            value is used in eval() (default={}).
             :'inherent_features': Features for which the corresponding feature_coordinators should not be applied
+            (default=['sf','or','cr'])
 
             Currently, the label of the pattern generator
             ('pattern_label') as well as the image number
@@ -305,36 +307,36 @@ class PatternCoordinatorImages(PatternCoordinator):
 
             Here, additionally {dy} gets replaced by either 'left' if the pattern_label is 'Left' or 'right' otherwise
 
-        If a directory to image files rather than a JSON file is given in dataset_name,
+        If the directory does not contain a MANIFEST_json file,
         the defaults are as follows:
-            :'filename_template': filepath/*.png, whereas filepath is the path given in dataset_name
-            :'patterns_per_label': Number of png files in filepath, whereas filepath is the path given in dataset_name
+            :'filename_template': filepath/*.*, whereas filepath is the path given in dataset_name
+            :'patterns_per_label': Number of image files in filepath, whereas filepath is the path given in dataset_name
             :'inherent_features': []
             :'placeholder_mapping': {}
         """
 
+        filepath=param.resolve_path(dataset_name,path_to_file=False)
+        self.dataset_name=filepath
+        self.filename_template=filepath+"/*.*"
+        self.patterns_per_label = len(glob.glob(self.filename_template))
+        self.description=""
+        self.source=self.dataset_name
+        self.placeholder_mapping={}
+        inherent_features=['sf','or','cr']
         try:
-            filename=param.resolve_path(dataset_name)
+            filename=param.resolve_path(dataset_name+'/MANIFEST_json')
             filepath=os.path.dirname(filename)
             dataset=json.loads(open(filename).read())
 
-            self.dataset_name=dataset.get('name', os.path.basename(dataset_name))
-            length = len([ f for f in os.listdir(filepath) if os.path.isfile(os.path.join(filepath,f)) ]) - 1
-            self.patterns_per_label=dataset.get('length', length)
-            self.description=dataset.get('description', "")
-            self.filename_template=dataset.get('filename_template', filepath+"/{i}.png")
-            self.source=dataset.get('source', self.dataset_name)
-            self.placeholder_mapping=eval(dataset['placeholder_mapping']) if 'placeholder_mapping' in dataset else {'i': lambda params: '%02d' % (params['current_image']+1)}
-            inherent_features=dataset.get('inherent_features', ['sf','or','cr'])
+            self.dataset_name=dataset.get('dataset_name', self.dataset_name)
+            self.patterns_per_label=dataset.get('length', len(glob.glob(self.filename_template)))
+            self.description=dataset.get('description', self.description)
+            self.filename_template=dataset.get('filename_template', self.filename_template)
+            self.source=dataset.get('source', self.source)
+            self.placeholder_mapping=eval(dataset['placeholder_mapping']) if 'placeholder_mapping' in dataset else self.placeholder_mapping
+            inherent_features=dataset.get('inherent_features', inherent_features)
         except IOError:
-            filepath=param.resolve_path(dataset_name,path_to_file=False)
-            self.dataset_name=filepath
-            self.filename_template=filepath+"/*.png"
-            self.patterns_per_label = len(glob.glob(self.filename_template))
-            self.description=""
-            self.source=filepath
-            self.placeholder_mapping={}
-            inherent_features=['sf','or','cr']
+            pass
 
         super(PatternCoordinatorImages, self).__init__(inherent_features,**params)
 
