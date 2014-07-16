@@ -30,6 +30,7 @@ from .patterngenerator import PatternGenerator, Constant
 from .transferfn import DivisiveNormalizeLinf, TransferFn
 
 from os.path import splitext
+import copy
 
 import numbergen
 
@@ -607,7 +608,11 @@ class CompositeImage(GenericImage):
     def channels(self):
         if(len(self._channel_data)>0):
             if(self._channel_data[0] is None):
-                self()
+                fake = copy.deepcopy(self)
+                fake()
+                return fake._channel_data
+
+                #self()
 
         return self._channel_data
 
