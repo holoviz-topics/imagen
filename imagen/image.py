@@ -588,7 +588,7 @@ class CompositeImage(GenericImage):
     CompositeImage will use its channels' data; otherwise, GenericImage will
     synthesize the channels from the single channel of the generator.
 
-    After finding or synthesizing the channels, they are scaled according to 
+    After finding or synthesizing the channels, they are scaled according to
     the corresponding channel_factors.
     """
 
@@ -651,7 +651,4 @@ class CompositeImage(GenericImage):
 
 
         # default channel or channel average, depending on the single vs multi channel nature of the generator
-        return channels_dict.items()[0][1] 
-
-
-
+        return channels_dict.items()[0][1]

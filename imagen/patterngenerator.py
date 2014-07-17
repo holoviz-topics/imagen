@@ -160,7 +160,7 @@ class PatternGenerator(param.Parameterized):
         """
         Channels() adds a shared interface for single channel and multichannel structures.
         It will always return an ordered dict: its first element is the single channel of the pattern
-        (if single-channel) or the channel average (if multichannel); the successive elements are the 
+        (if single-channel) or the channel average (if multichannel); the successive elements are the
         individual channels' arrays (key: 0,1,..N-1).
         """
         return collections.OrderedDict({ 'default':self.__call__(**params_to_override) })
@@ -303,6 +303,3 @@ class Constant(PatternGenerator):
 
 
 options.Pattern_SheetView = StyleOpts(cmap='gray')
-
-
-

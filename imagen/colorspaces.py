@@ -2,8 +2,8 @@
 Utilities for converting images between various color spaces, such as:
 
   * RGB (for display on computer monitor red, green, and blue channels)
-  * HSV (allowing manipulation of the hue, saturation, and value), 
-  * LMS (estimates of human long, medium, and short cone responses), 
+  * HSV (allowing manipulation of the hue, saturation, and value),
+  * LMS (estimates of human long, medium, and short cone responses),
   * LCH (CIE perceptually uniform luminance, chroma (saturation), and hue)
   * LAB (CIE opponent black/white, red/green, blue/yellow axes)
   * XYZ (CIE interchange format)
@@ -14,7 +14,7 @@ To use these utilities, users should instantiate one of these two classes:
 
 ColorSpace
     Provides a convert(from, to, what) method to perform conversion
-    between colorspaces, e.g.  ``convert("rgb", "hsv", X)``, where ``X`` 
+    between colorspaces, e.g.  ``convert("rgb", "hsv", X)``, where ``X``
     is assumed to be a numpy.dstack() object with three matching arrays.
 
 FeatureColorConverter
@@ -84,7 +84,7 @@ threeDdot = _threeDdot_opt
 def _abc_to_def_array(ABC,fn):
     shape = ABC[:,:,0].shape
     dtype = ABC.dtype
-    
+
     DEF = numpy.zeros(ABC.shape,dtype=dtype)
 
     for i in range(shape[0]):
@@ -121,13 +121,13 @@ def xyz_to_lab(XYZ,wp):
     xn,yn,zn = X/wp[0], Y/wp[1], Z/wp[2]
 
     def f(t):
-        t = t.copy() # probably unnecessary! 
+        t = t.copy() # probably unnecessary!
         t_eps = t>EPS
         t_not_eps = t<=EPS
         t[t_eps] = numpy.power(t[t_eps], 1.0/3)
         t[t_not_eps] = (KAP*t[t_not_eps]+16.0)/116.
         return t
-            
+
     fx,fy,fz = f(xn), f(yn), f(zn)
     L = 116*fy - 16
     a = 500*(fx - fy)
@@ -145,7 +145,7 @@ def lab_to_xyz(LAB,wp):
 
     def finv(y):
         y =copy.copy(y) # CEBALERT: why copy?
-        eps3 = EPS**3 
+        eps3 = EPS**3
         return numpy.where(y > eps3,
                            numpy.power(y,3),
                            (116*y-16)/KAP)
@@ -177,7 +177,7 @@ def lch_to_xyz(LCH,whitepoint):
 
 
 # Preceding functions started from ceball's colorfns.py file
-# the rest started from 
+# the rest started from
 # http://projects.scipy.org/scipy/browser/trunk/Lib/sandbox/image/color.py?rev=1698
 
 whitepoints = {'CIE A': ['Normal incandescent', 0.4476, 0.4074],
@@ -241,7 +241,7 @@ def xyz_to_lch01(XYZ, whitepoint):
     C/=Cmax
     H/=Hmax
     return numpy.dstack((L,C,H))
-    
+
 def lch01_to_xyz(LCH, whitepoint):
     L,C,H = numpy.dsplit(LCH,3)
     L*=Lmax
@@ -275,7 +275,7 @@ class ColorSpace(param.Parameterized):
 
     def convert(self, from_, to, what):
         """
-        Convert image or color "what" from "from_" colorpace to "to" colorspace. 
+        Convert image or color "what" from "from_" colorpace to "to" colorspace.
         E.g.: ``convert("rgb", "hsv", X)``, where X is a numpy dstack or a color tuple.
         """
 
@@ -298,7 +298,7 @@ class ColorSpace(param.Parameterized):
         return whitepoints[self.whitepoint][3]
 
 
-    def _get_shape(self,a):        
+    def _get_shape(self,a):
         if hasattr(a,'shape') and a.ndim>0: # i.e. really an array
             return a.shape
         else:
@@ -306,7 +306,7 @@ class ColorSpace(param.Parameterized):
             try:
                 length = len(a)
                 return (length,)
-            except TypeError:            
+            except TypeError:
                 return None
 
 
@@ -316,7 +316,7 @@ class ColorSpace(param.Parameterized):
         else:
             a.shape = shape
             return a
-    
+
     def _prepare_input(self,a,min_,max_):
         in_shape = self._get_shape(a)
         a = numpy.array(a,copy=False,ndmin=3,dtype=self.dtype)
@@ -324,23 +324,23 @@ class ColorSpace(param.Parameterized):
             raise ValueError('Input out of limits')
         return a, in_shape
 
-        
+
     def _clip(self,a,min_limit,max_limit,action='silent'):
         if action=='none':
             return
-        
+
         if action=='error':
             if a.min()<min_limit or a.max()>max_limit:
                 raise ValueError('(%s,%s) outside limits (%s,%s)'%(a.min(),a.max(),min_limit,max_limit))
         elif action=='warn':
-            if a.min()<min_limit or a.max()>max_limit:                
+            if a.min()<min_limit or a.max()>max_limit:
                 self.warning('(%s,%s) outside limits (%s,%s)'%(a.min(),a.max(),min_limit,max_limit))
 
         a.clip(min_limit,max_limit,out=a)
 
-                    
+
     def _threeDdot(self,M,a):
-        # b = Ma        
+        # b = Ma
         a, in_shape = self._prepare_input(a,*self.input_limits)
         b = threeDdot(M,a)
         self._clip(b,*self.output_limits,action=self.output_clip)
@@ -377,7 +377,7 @@ class ColorSpace(param.Parameterized):
 
 
     ##  XYZ TO:     RGB, LCH, LMS, HSV(passing through RGB)
-        
+
     def xyz_to_rgb(self,XYZ):
         return self._threeDdot(
             self.transforms[self.whitepoint]['rgb_from_xyz'], XYZ)
@@ -393,7 +393,7 @@ class ColorSpace(param.Parameterized):
 
 
     def xyz_to_hsv(self, XYZ):
-        return self.rgb_to_hsv( self.xyz_to_rgb(XYZ) ) 
+        return self.rgb_to_hsv( self.xyz_to_rgb(XYZ) )
 
 
 
@@ -472,7 +472,7 @@ class ColorConverter(param.Parameterized):
     swap_polar_HSVorder = {
         'HSV': lambda HSV: HSV,
         'LCH': _swaplch }
-    
+
 
     def image2working(self,i):
         """Transform images i provided into the specified working color space."""
@@ -487,7 +487,7 @@ class ColorConverter(param.Parameterized):
 
     def analysis2working(self,a):
         """Convert back from the analysis color space to the working space."""
-        a = self.swap_polar_HSVorder[self.analysis_space](a)        
+        a = self.swap_polar_HSVorder[self.analysis_space](a)
         return self.colorspace.convert(self.analysis_space, self.working_space, a)
 
 
@@ -499,7 +499,7 @@ class ColorConverter(param.Parameterized):
         """
         a = self.swap_polar_HSVorder[self.analysis_space](a)
         return self.colorspace.convert(self.analysis_space.lower(), 'gammargb', a)
-    
+
 
     def jitter_hue(self,a,amount):
         """Rotate the hue component of a by the given amount."""
@@ -517,5 +517,3 @@ color_conversion = ColorConverter()
 
 
 __all__ = ["ColorSpace","FeatureColorConverter"]
-
-
