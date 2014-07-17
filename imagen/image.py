@@ -258,19 +258,44 @@ class FastImageSampler(ImageSampler):
 
 
 
-class ChannelTransform(param.ParameterizedFunction):
+class ChannelTransform(param.Parameterized):
     """
-    A ChannelTransform is a parameterized function that takes channels
-    as input (a list of arrays) and transforms their contents in some way.
+    A ChannelTransform is a callable object that takes channels as
+    input (an ordered dictionary of arrays) and transforms their
+    contents in some way before returning them.
     """
 
     __abstract = True
 
-    def __call__(self, p, channels):
+    def __call__(self, channels):
         raise NotImplementedError
 
 
 
+class CorrelateChannels(ChannelTransform):
+    """
+    Correlate channels by mixing a fraction of one channel into another.
+    """
+
+    from_channel = param.Number(default=1, doc="""
+        Name of the channel to take data from.""")
+
+    to_channel = param.Number(default=2, doc="""
+        Name of the channel to change data of.""")
+
+    strength = param.Number(default=0, doc="""
+        Strength of the correlation to add, with 0 being no change,
+        and 1.0 overwriting to_channel with from_channel.""")
+
+    def __call__(self, p, channel_data):
+        channel_data[self.to_channel] = \
+            self.strength*channel_data[self.from_channel] + \
+            (1-self.strength)*channel_data[self.to_channel]
+
+        return channel_data
+
+
+    
 class GenericImage(PatternGenerator):
     """
     Generic 2D image generator with support for multiple channels.
@@ -446,7 +471,7 @@ class FileImage(GenericImage):
             self._channel_data = self._process_channels(p,**params_to_override)
 
             for c in self.channel_transforms:
-                self._channel_data = c(p, self._channel_data)
+                self._channel_data = c(self._channel_data)
 
             if p.cache_image is False:
                 self._image = None
@@ -560,7 +585,7 @@ class RGBImage(FileImage):
     """
     For backwards compatibility.
     """
-    channel_transforms = param.HookList(default=RGBChannelTransform)
+    channel_transforms = param.HookList(default=[RGBChannelTransform()])
 
 
 class NumpyFile(FileImage):
@@ -573,7 +598,6 @@ class NumpyFile(FileImage):
                                size_normalization='original',
                                whole_pattern_output_fns=[]),doc="""
         The PatternSampler to use to resample/resize the image.""")
-
 
 
 
@@ -597,10 +621,6 @@ class CompositeImage(GenericImage):
         number of channels to be created, unless the input_generator
         already supports multiple channels (in which case the number
         of its channels is used).""")
-
-    correlate_channels = param.Parameter(default=None, doc="""
-        List which contains 3 values: ( dest_channel_to_correlate, 
-        channel_to_correlate_to, correlation_strength )""")
 
 
     def __init__(self,**params):
@@ -641,8 +661,7 @@ class CompositeImage(GenericImage):
 
         self.set_channel_values(p,params,channels_dict)
 
-        if self.correlate_channels is not None:
-            corr_to,corr_from,corr_amt = self.correlate_channels
-            self._channel_data[corr_to] = corr_amt*self._channel_data[corr_from]+(1-corr_amt)*self._channel_data[corr_to]
+        for c in self.channel_transforms:
+            self._channel_data = c(self._channel_data)
 
         return channels_dict.items()[0][1]
