@@ -594,55 +594,6 @@
             <span class="mf">0.5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">pi</span><span class="o">*</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">duty_cycle</span><span class="o">-</span><span class="mf">0.5</span><span class="p">))</span> <span class="o">+</span>
             <span class="mf">0.5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">frequency</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">pi</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">pattern_y</span> <span class="o">+</span> <span class="n">p</span><span class="o">.</span><span class="n">phase</span><span class="p">))</span>
 
-<span class="c"># CB: I removed motion_sign from this class because I think it is</span>
-<span class="c"># unnecessary. But maybe I misunderstood the original author&#39;s</span>
-<span class="c"># intention?</span>
-<span class="c">#</span>
-<span class="c"># In any case, the original implementation was incorrect - it was not</span>
-<span class="c"># possible to get some motion directions (directions in one whole</span>
-<span class="c"># quadrant were missed out).</span>
-<span class="c">#</span>
-<span class="c"># Note that to get a 2pi range of directions, one must use a 2pi range</span>
-<span class="c"># of orientations (there are two directions for any given</span>
-<span class="c"># orientation).  Alternatively, we could generate a random sign, and</span>
-<span class="c"># use an orientation restricted to a pi range.</span>
-</div></div>
-<div class="viewcode-block" id="Sweeper"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.__init__.Sweeper">[docs]</a><span class="k">class</span> <span class="nc">Sweeper</span><span class="p">(</span><span class="n">PatternGenerator</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    PatternGenerator that sweeps a supplied PatternGenerator in a direction</span>
-<span class="sd">    perpendicular to its orientation.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">generator</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">Gaussian</span><span class="p">(),</span><span class="n">precedence</span><span class="o">=</span><span class="mf">0.97</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="s">&quot;Pattern to sweep.&quot;</span><span class="p">)</span>
-
-    <span class="n">speed</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span><span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
-<span class="s">        Sweep speed: number of sheet coordinate units per unit time.&quot;&quot;&quot;</span><span class="p">)</span>
-
-    <span class="n">step</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
-<span class="s">        Number of steps at the given speed to move in the sweep direction.</span>
-<span class="s">        The distance moved is speed*step.&quot;&quot;&quot;</span><span class="p">)</span>
-
-    <span class="c"># Provide access to value needed for measuring maps</span>
-    <span class="k">def</span> <span class="nf">__get_phase</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">generator</span><span class="o">.</span><span class="n">phase</span>
-    <span class="k">def</span> <span class="nf">__set_phase</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">new_val</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">generator</span><span class="o">.</span><span class="n">phase</span> <span class="o">=</span> <span class="n">new_val</span>
-    <span class="n">phase</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">__get_phase</span><span class="p">,</span><span class="n">__set_phase</span><span class="p">)</span>
-
-<div class="viewcode-block" id="Sweeper.function"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.__init__.Sweeper.function">[docs]</a>    <span class="k">def</span> <span class="nf">function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Selects and returns one of the patterns in the list.&quot;&quot;&quot;</span>
-        <span class="n">pg</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">generator</span>
-        <span class="n">motion_orientation</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">orientation</span><span class="o">+</span><span class="n">pi</span><span class="o">/</span><span class="mf">2.0</span>
-
-        <span class="n">new_x</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">x</span><span class="o">+</span><span class="n">p</span><span class="o">.</span><span class="n">size</span><span class="o">*</span><span class="n">pg</span><span class="o">.</span><span class="n">x</span>
-        <span class="n">new_y</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">y</span><span class="o">+</span><span class="n">p</span><span class="o">.</span><span class="n">size</span><span class="o">*</span><span class="n">pg</span><span class="o">.</span><span class="n">y</span>
-
-        <span class="n">image_array</span> <span class="o">=</span> <span class="n">pg</span><span class="p">(</span><span class="n">xdensity</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">xdensity</span><span class="p">,</span><span class="n">ydensity</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">ydensity</span><span class="p">,</span><span class="n">bounds</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">bounds</span><span class="p">,</span>
-                         <span class="n">x</span><span class="o">=</span><span class="n">new_x</span> <span class="o">+</span> <span class="n">p</span><span class="o">.</span><span class="n">speed</span><span class="o">*</span><span class="n">p</span><span class="o">.</span><span class="n">step</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">motion_orientation</span><span class="p">),</span>
-                         <span class="n">y</span><span class="o">=</span><span class="n">new_y</span> <span class="o">+</span> <span class="n">p</span><span class="o">.</span><span class="n">speed</span><span class="o">*</span><span class="n">p</span><span class="o">.</span><span class="n">step</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">motion_orientation</span><span class="p">),</span>
-                         <span class="n">orientation</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">orientation</span><span class="p">,</span>
-                         <span class="n">scale</span><span class="o">=</span><span class="n">pg</span><span class="o">.</span><span class="n">scale</span><span class="o">*</span><span class="n">p</span><span class="o">.</span><span class="n">scale</span><span class="p">,</span><span class="n">offset</span><span class="o">=</span><span class="n">pg</span><span class="o">.</span><span class="n">offset</span><span class="o">+</span><span class="n">p</span><span class="o">.</span><span class="n">offset</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">image_array</span>
-
 
 </div></div>
 <div class="viewcode-block" id="CompositeBase"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.__init__.CompositeBase">[docs]</a><span class="k">class</span> <span class="nc">CompositeBase</span><span class="p">(</span><span class="n">PatternGenerator</span><span class="p">):</span>
@@ -1094,6 +1045,108 @@
 
 
 </div>
+<div class="viewcode-block" id="Sweeper"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.__init__.Sweeper">[docs]</a><span class="k">class</span> <span class="nc">Sweeper</span><span class="p">(</span><span class="n">PatternGenerator</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    PatternGenerator that sweeps a supplied PatternGenerator in a direction</span>
+<span class="sd">    perpendicular to its orientation. Each time step, the supplied</span>
+<span class="sd">    PatternGenerator is sweeped further at a fixed speed, and after reset_period</span>
+<span class="sd">    time steps a new pattern is drawn.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">generator</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">ClassSelector</span><span class="p">(</span><span class="n">PatternGenerator</span><span class="p">,</span><span class="n">default</span><span class="o">=</span><span class="n">Gaussian</span><span class="p">(),</span><span class="n">precedence</span><span class="o">=</span><span class="mf">0.97</span><span class="p">,</span> 
+                                    <span class="n">doc</span><span class="o">=</span><span class="s">&quot;Pattern to sweep.&quot;</span><span class="p">)</span>
+
+    <span class="n">reset_period</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Integer</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span><span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">        Period between generating each new translation episode.&quot;&quot;&quot;</span><span class="p">)</span>
+
+    <span class="n">speed</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">2.0</span><span class="o">/</span><span class="mf">24.0</span><span class="p">,</span><span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">        The speed with which the pattern should move,</span>
+<span class="s">        in sheet coordinates per time_fn unit.&quot;&quot;&quot;</span><span class="p">)</span>
+
+    <span class="n">time_fn</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Callable</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">param</span><span class="o">.</span><span class="n">Dynamic</span><span class="o">.</span><span class="n">time_fn</span><span class="p">,</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">        Function to generate the time used as a base for translation.&quot;&quot;&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">make_time_fn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">offset</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">offset_time_fn</span><span class="p">():</span>
+            <span class="n">time</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">time_fn</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">p</span><span class="o">.</span><span class="n">time_fn</span><span class="o">.</span><span class="n">time_type</span><span class="p">((</span><span class="n">time</span> <span class="o">//</span> <span class="n">p</span><span class="o">.</span><span class="n">reset_period</span><span class="p">)</span> <span class="o">+</span> <span class="n">offset</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">offset_time_fn</span>
+
+
+    <span class="k">def</span> <span class="nf">function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span><span class="p">):</span>
+        <span class="n">motion_time_fn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_time_fn</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">pg</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">generator</span>
+        <span class="n">pg</span><span class="o">.</span><span class="n">set_dynamic_time_fn</span><span class="p">(</span><span class="n">motion_time_fn</span><span class="p">)</span>
+        <span class="n">motion_orientation</span><span class="o">=</span><span class="n">pg</span><span class="o">.</span><span class="n">orientation</span><span class="o">+</span><span class="n">pi</span><span class="o">/</span><span class="mf">2.0</span>
+
+        <span class="n">step</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">time_fn</span><span class="p">()</span><span class="o">%</span><span class="n">p</span><span class="o">.</span><span class="n">reset_period</span><span class="p">)</span>
+
+        <span class="n">new_x</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">x</span><span class="o">+</span><span class="n">p</span><span class="o">.</span><span class="n">size</span><span class="o">*</span><span class="n">pg</span><span class="o">.</span><span class="n">x</span>
+        <span class="n">new_y</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">y</span><span class="o">+</span><span class="n">p</span><span class="o">.</span><span class="n">size</span><span class="o">*</span><span class="n">pg</span><span class="o">.</span><span class="n">y</span>
+
+        <span class="n">image_array</span> <span class="o">=</span> <span class="n">pg</span><span class="p">(</span><span class="n">xdensity</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">xdensity</span><span class="p">,</span><span class="n">ydensity</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">ydensity</span><span class="p">,</span><span class="n">bounds</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">bounds</span><span class="p">,</span>
+                         <span class="n">x</span><span class="o">=</span><span class="n">new_x</span><span class="o">+</span><span class="n">p</span><span class="o">.</span><span class="n">speed</span><span class="o">*</span><span class="n">step</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">motion_orientation</span><span class="p">),</span>
+                         <span class="n">y</span><span class="o">=</span><span class="n">new_y</span><span class="o">+</span><span class="n">p</span><span class="o">.</span><span class="n">speed</span><span class="o">*</span><span class="n">step</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">motion_orientation</span><span class="p">),</span>
+                         <span class="n">orientation</span><span class="o">=</span><span class="n">pg</span><span class="o">.</span><span class="n">orientation</span><span class="o">+</span><span class="n">p</span><span class="o">.</span><span class="n">orientation</span><span class="p">,</span>
+                         <span class="n">scale</span><span class="o">=</span><span class="n">pg</span><span class="o">.</span><span class="n">scale</span><span class="o">*</span><span class="n">p</span><span class="o">.</span><span class="n">scale</span><span class="p">,</span><span class="n">offset</span><span class="o">=</span><span class="n">pg</span><span class="o">.</span><span class="n">offset</span><span class="o">+</span><span class="n">p</span><span class="o">.</span><span class="n">offset</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">image_array</span>
+
+
+
+<span class="c"># Legacy Sweeper class which is used in lissom.ty, should be deleted</span>
+<span class="c"># once lissom.ty is deprecated</span>
+<span class="c">#</span>
+<span class="c"># CB: I removed motion_sign from this class because I think it is</span>
+<span class="c"># unnecessary. But maybe I misunderstood the original author&#39;s</span>
+<span class="c"># intention?</span>
+<span class="c">#</span>
+<span class="c"># In any case, the original implementation was incorrect - it was not</span>
+<span class="c"># possible to get some motion directions (directions in one whole</span>
+<span class="c"># quadrant were missed out).</span>
+<span class="c">#</span>
+<span class="c"># Note that to get a 2pi range of directions, one must use a 2pi range</span>
+<span class="c"># of orientations (there are two directions for any given</span>
+<span class="c"># orientation).  Alternatively, we could generate a random sign, and</span>
+<span class="c"># use an orientation restricted to a pi range.</span>
+</div>
+<div class="viewcode-block" id="OldSweeper"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.__init__.OldSweeper">[docs]</a><span class="k">class</span> <span class="nc">OldSweeper</span><span class="p">(</span><span class="n">PatternGenerator</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    PatternGenerator that sweeps a supplied PatternGenerator in a direction</span>
+<span class="sd">    perpendicular to its orientation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">generator</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">Gaussian</span><span class="p">(),</span><span class="n">precedence</span><span class="o">=</span><span class="mf">0.97</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="s">&quot;Pattern to sweep.&quot;</span><span class="p">)</span>
+
+    <span class="n">speed</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span><span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">        Sweep speed: number of sheet coordinate units per unit time.&quot;&quot;&quot;</span><span class="p">)</span>
+
+    <span class="n">step</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">        Number of steps at the given speed to move in the sweep direction.</span>
+<span class="s">        The distance moved is speed*step.&quot;&quot;&quot;</span><span class="p">)</span>
+
+    <span class="c"># Provide access to value needed for measuring maps</span>
+    <span class="k">def</span> <span class="nf">__get_phase</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">generator</span><span class="o">.</span><span class="n">phase</span>
+    <span class="k">def</span> <span class="nf">__set_phase</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">new_val</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">generator</span><span class="o">.</span><span class="n">phase</span> <span class="o">=</span> <span class="n">new_val</span>
+    <span class="n">phase</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">__get_phase</span><span class="p">,</span><span class="n">__set_phase</span><span class="p">)</span>
+
+<div class="viewcode-block" id="OldSweeper.function"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.__init__.OldSweeper.function">[docs]</a>    <span class="k">def</span> <span class="nf">function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Selects and returns one of the patterns in the list.&quot;&quot;&quot;</span>
+        <span class="n">pg</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">generator</span>
+        <span class="n">motion_orientation</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">orientation</span><span class="o">+</span><span class="n">pi</span><span class="o">/</span><span class="mf">2.0</span>
+
+        <span class="n">new_x</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">x</span><span class="o">+</span><span class="n">p</span><span class="o">.</span><span class="n">size</span><span class="o">*</span><span class="n">pg</span><span class="o">.</span><span class="n">x</span>
+        <span class="n">new_y</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">y</span><span class="o">+</span><span class="n">p</span><span class="o">.</span><span class="n">size</span><span class="o">*</span><span class="n">pg</span><span class="o">.</span><span class="n">y</span>
+
+        <span class="n">image_array</span> <span class="o">=</span> <span class="n">pg</span><span class="p">(</span><span class="n">xdensity</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">xdensity</span><span class="p">,</span><span class="n">ydensity</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">ydensity</span><span class="p">,</span><span class="n">bounds</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">bounds</span><span class="p">,</span>
+                         <span class="n">x</span><span class="o">=</span><span class="n">new_x</span> <span class="o">+</span> <span class="n">p</span><span class="o">.</span><span class="n">speed</span><span class="o">*</span><span class="n">p</span><span class="o">.</span><span class="n">step</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">motion_orientation</span><span class="p">),</span>
+                         <span class="n">y</span><span class="o">=</span><span class="n">new_y</span> <span class="o">+</span> <span class="n">p</span><span class="o">.</span><span class="n">speed</span><span class="o">*</span><span class="n">p</span><span class="o">.</span><span class="n">step</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">motion_orientation</span><span class="p">),</span>
+                         <span class="n">orientation</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">orientation</span><span class="p">,</span>
+                         <span class="n">scale</span><span class="o">=</span><span class="n">pg</span><span class="o">.</span><span class="n">scale</span><span class="o">*</span><span class="n">p</span><span class="o">.</span><span class="n">scale</span><span class="p">,</span><span class="n">offset</span><span class="o">=</span><span class="n">pg</span><span class="o">.</span><span class="n">offset</span><span class="o">+</span><span class="n">p</span><span class="o">.</span><span class="n">offset</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">image_array</span>
+
+
+</div></div>
 <div class="viewcode-block" id="DifferenceOfGaussians"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.__init__.DifferenceOfGaussians">[docs]</a><span class="k">class</span> <span class="nc">DifferenceOfGaussians</span><span class="p">(</span><span class="n">PatternGenerator</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Two-dimensional difference of gaussians pattern.</span>

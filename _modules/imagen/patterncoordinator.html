@@ -74,6 +74,9 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">collections</span>
+<span class="kn">import</span> <span class="nn">copy</span>
 
 <span class="kn">import</span> <span class="nn">param</span>
 <span class="kn">from</span> <span class="nn">param.parameterized</span> <span class="kn">import</span> <span class="n">ParamOverrides</span>
@@ -127,7 +130,13 @@
 
     <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">pattern_label</span><span class="p">,</span> <span class="n">pattern_number</span><span class="p">,</span> <span class="n">master_seed</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">):</span>
         <span class="n">p</span> <span class="o">=</span> <span class="n">ParamOverrides</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">params</span><span class="p">,</span><span class="n">allow_extra_keywords</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-        <span class="n">pattern</span><span class="o">.</span><span class="n">x</span> <span class="o">+=</span> <span class="n">numbergen</span><span class="o">.</span><span class="n">UniformRandom</span><span class="p">(</span><span class="n">lbound</span><span class="o">=-</span><span class="n">p</span><span class="o">.</span><span class="n">position_bound_x</span><span class="p">,</span><span class="n">ubound</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">position_bound_x</span><span class="p">,</span><span class="n">seed</span><span class="o">=</span><span class="n">master_seed</span><span class="o">+</span><span class="mi">12</span><span class="o">+</span><span class="n">pattern_number</span><span class="p">)</span>
+        <span class="n">new_pattern</span><span class="o">=</span><span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
+        <span class="n">new_pattern</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">pattern</span><span class="o">.</span><span class="n">get_value_generator</span><span class="p">(</span><span class="s">&#39;x&#39;</span><span class="p">)</span><span class="o">+</span>\
+        <span class="n">numbergen</span><span class="o">.</span><span class="n">UniformRandom</span><span class="p">(</span><span class="n">lbound</span><span class="o">=-</span><span class="n">p</span><span class="o">.</span><span class="n">position_bound_x</span><span class="p">,</span>
+                                <span class="n">ubound</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">position_bound_x</span><span class="p">,</span>
+                                <span class="n">seed</span><span class="o">=</span><span class="n">master_seed</span><span class="o">+</span><span class="mi">12</span><span class="o">+</span><span class="n">pattern_number</span><span class="p">,</span>
+                                <span class="n">name</span><span class="o">=</span><span class="s">&quot;XCoordinator&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">pattern_number</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">new_pattern</span>
 
 
 </div>
@@ -141,7 +150,13 @@
 
     <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">pattern_label</span><span class="p">,</span> <span class="n">pattern_number</span><span class="p">,</span> <span class="n">master_seed</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">):</span>
         <span class="n">p</span> <span class="o">=</span> <span class="n">ParamOverrides</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">params</span><span class="p">,</span><span class="n">allow_extra_keywords</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-        <span class="n">pattern</span><span class="o">.</span><span class="n">y</span> <span class="o">+=</span> <span class="n">numbergen</span><span class="o">.</span><span class="n">UniformRandom</span><span class="p">(</span><span class="n">lbound</span><span class="o">=-</span><span class="n">p</span><span class="o">.</span><span class="n">position_bound_y</span><span class="p">,</span><span class="n">ubound</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">position_bound_y</span><span class="p">,</span><span class="n">seed</span><span class="o">=</span><span class="n">master_seed</span><span class="o">+</span><span class="mi">35</span><span class="o">+</span><span class="n">pattern_number</span><span class="p">)</span>
+        <span class="n">new_pattern</span><span class="o">=</span><span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
+        <span class="n">new_pattern</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">pattern</span><span class="o">.</span><span class="n">get_value_generator</span><span class="p">(</span><span class="s">&#39;y&#39;</span><span class="p">)</span><span class="o">+</span>\
+            <span class="n">numbergen</span><span class="o">.</span><span class="n">UniformRandom</span><span class="p">(</span><span class="n">lbound</span><span class="o">=-</span><span class="n">p</span><span class="o">.</span><span class="n">position_bound_y</span><span class="p">,</span>
+                                    <span class="n">ubound</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">position_bound_y</span><span class="p">,</span>
+                                    <span class="n">seed</span><span class="o">=</span><span class="n">master_seed</span><span class="o">+</span><span class="mi">35</span><span class="o">+</span><span class="n">pattern_number</span><span class="p">,</span>
+                                    <span class="n">name</span><span class="o">=</span><span class="s">&quot;YCoordinator&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">pattern_number</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">new_pattern</span>
 
 
 </div>
@@ -155,8 +170,13 @@
 
     <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">pattern_label</span><span class="p">,</span> <span class="n">pattern_number</span><span class="p">,</span> <span class="n">master_seed</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">):</span>
         <span class="n">p</span> <span class="o">=</span> <span class="n">ParamOverrides</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">params</span><span class="p">,</span><span class="n">allow_extra_keywords</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-        <span class="n">pattern</span><span class="o">.</span><span class="n">orientation</span> <span class="o">=</span> <span class="n">numbergen</span><span class="o">.</span><span class="n">UniformRandom</span><span class="p">(</span><span class="n">lbound</span><span class="o">=-</span><span class="n">p</span><span class="o">.</span><span class="n">orientation_bound</span><span class="p">,</span><span class="n">ubound</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">orientation_bound</span><span class="p">,</span><span class="n">seed</span><span class="o">=</span><span class="n">master_seed</span><span class="o">+</span><span class="mi">21</span><span class="o">+</span><span class="n">pattern_number</span><span class="p">)</span>
-
+        <span class="n">new_pattern</span><span class="o">=</span><span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
+        <span class="n">new_pattern</span><span class="o">.</span><span class="n">orientation</span> <span class="o">=</span> <span class="n">pattern</span><span class="o">.</span><span class="n">get_value_generator</span><span class="p">(</span><span class="s">&#39;orientation&#39;</span><span class="p">)</span><span class="o">+</span>\
+            <span class="n">numbergen</span><span class="o">.</span><span class="n">UniformRandom</span><span class="p">(</span><span class="n">lbound</span><span class="o">=-</span><span class="n">p</span><span class="o">.</span><span class="n">orientation_bound</span><span class="p">,</span>
+                                    <span class="n">ubound</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">orientation_bound</span><span class="p">,</span>
+                                    <span class="n">seed</span><span class="o">=</span><span class="n">master_seed</span><span class="o">+</span><span class="mi">21</span><span class="o">+</span><span class="n">pattern_number</span><span class="p">,</span>
+                                    <span class="n">name</span><span class="o">=</span><span class="s">&quot;OrientationCoordinator&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">pattern_number</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">new_pattern</span>
 
 </div>
 <div class="viewcode-block" id="PatternCoordinator"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.patterncoordinator.PatternCoordinator">[docs]</a><span class="k">class</span> <span class="nc">PatternCoordinator</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">Parameterized</span><span class="p">):</span>
@@ -226,9 +246,9 @@
     <span class="n">composite_parameters</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Dict</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="p">{},</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
 <span class="s">        If present, these parameter values will be passed to the composite specified in composite_type.&quot;&quot;&quot;</span><span class="p">)</span>
 
-    <span class="n">feature_coordinators</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Dict</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="p">{</span>
-        <span class="s">&#39;xy&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">XCoordinator</span><span class="p">,</span><span class="n">YCoordinator</span><span class="p">],</span>
-        <span class="s">&#39;or&#39;</span><span class="p">:</span> <span class="n">OrientationCoordinator</span><span class="p">},</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
+    <span class="n">feature_coordinators</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Dict</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">collections</span><span class="o">.</span><span class="n">OrderedDict</span><span class="p">([</span>
+        <span class="p">(</span><span class="s">&#39;xy&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">XCoordinator</span><span class="p">,</span><span class="n">YCoordinator</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s">&#39;or&#39;</span><span class="p">,</span> <span class="n">OrientationCoordinator</span><span class="p">)]),</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
 <span class="s">        Mapping from the feature name (key) to the method(s) to be</span>
 <span class="s">        applied to the pattern generators.  The value can either be a</span>
 <span class="s">        single method or a list of methods.&quot;&quot;&quot;</span><span class="p">)</span>
@@ -246,13 +266,11 @@
         <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">pattern_type</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">pattern_parameters</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">patterns_per_label</span><span class="p">)]</span>
 
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">inherent_features</span><span class="o">=</span><span class="p">{},</span><span class="o">**</span><span class="n">params</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">inherent_features</span><span class="o">=</span><span class="p">[],</span><span class="o">**</span><span class="n">params</span><span class="p">):</span>
 
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        If a dataset already and inherently includes certain features, a dictionary</span>
-<span class="sd">        with feature-name:code-to-access-the-feature pairs should be supplied</span>
-<span class="sd">        specifying how to select (e.g. from a set of images) the appropriate</span>
-<span class="sd">        feature value.</span>
+<span class="sd">        If a dataset already and inherently includes certain features, a list</span>
+<span class="sd">        with the inherent feature names should be supplied.</span>
 
 <span class="sd">        Any extra parameter values supplied here will be passed down to the</span>
 <span class="sd">        feature_coordinators requested in features_to_vary.</span>
@@ -265,9 +283,6 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_inherent_features</span> <span class="o">=</span> <span class="n">inherent_features</span>
 
-        <span class="c"># And also, this key must be in feature_coordinators because _inherent_features</span>
-        <span class="c"># can have additional features such as i to support multiple images</span>
-
         <span class="c"># TFALERT: Once spatial frequency (sf) is added, this will</span>
         <span class="c"># cause warnings, because all image datasets will have a</span>
         <span class="c"># spatial frequency inherent feature, but mostly we just</span>
@@ -275,7 +290,7 @@
         <span class="c"># discards all but a narrow range of sf.  So the dataset will</span>
         <span class="c"># have sf inherently, but that won&#39;t be an error or even</span>
         <span class="c"># worthy of a warning.</span>
-        <span class="k">if</span><span class="p">(</span><span class="nb">len</span><span class="p">((</span><span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_inherent_features</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">features_to_vary</span><span class="p">))</span> <span class="o">&amp;</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">feature_coordinators</span><span class="o">.</span><span class="n">keys</span><span class="p">()))):</span>
+        <span class="k">if</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_inherent_features</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">features_to_vary</span><span class="p">))):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s">&#39;Inherent feature present which is not requested in features&#39;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_feature_coordinators_to_apply</span> <span class="o">=</span> <span class="p">[]</span>
@@ -296,7 +311,7 @@
             <span class="c"># Apply _feature_coordinators_to_apply</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">patterns</span><span class="p">)):</span>
                 <span class="k">for</span> <span class="n">fn</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_feature_coordinators_to_apply</span><span class="p">:</span>
-                    <span class="n">fn</span><span class="p">(</span><span class="n">patterns</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">pattern_label</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">master_seed</span><span class="p">,</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_feature_params</span><span class="p">)</span>
+                    <span class="n">patterns</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="n">fn</span><span class="p">(</span><span class="n">patterns</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">pattern_label</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">master_seed</span><span class="p">,</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_feature_params</span><span class="p">)</span>
 
             <span class="n">combined_patterns</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">composite_type</span><span class="p">(</span><span class="n">generators</span><span class="o">=</span><span class="n">patterns</span><span class="p">,</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">composite_parameters</span><span class="p">)</span>
             <span class="n">coordinated_pattern_generators</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">pattern_label</span><span class="p">:</span><span class="n">combined_patterns</span><span class="p">})</span>
@@ -313,66 +328,95 @@
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dataset_name</span><span class="p">,</span><span class="o">**</span><span class="n">params</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        dataset_name is the path to a JSON file (https://docs.python.org/2/library/json.html)</span>
-<span class="sd">        containing a description for a dataset.</span>
+<span class="sd">        dataset_name is the path to a folder containing a MANIFEST_json</span>
+<span class="sd">        (https://docs.python.org/2/library/json.html), which contains a description for a dataset.</span>
+<span class="sd">        If no MANIFEST_json is present, all image files in the specified folder are used.</span>
 
 <span class="sd">        Any extra parameter values supplied here will be passed down to the</span>
 <span class="sd">        feature_coordinators requested in features_to_vary.</span>
 
-<span class="sd">        The JSON file should contain the following entries:</span>
-
-<span class="sd">            :&#39;name&#39;: Name of the dataset (string, default=basename(dataset_name))</span>
-<span class="sd">            :&#39;length&#39;: Number of images in the dataset (integer, default=number of files in directory of dataset_name minus 1)</span>
+<span class="sd">        The JSON file can contain any of the following entries, if an entry is not present, the default is used:</span>
+<span class="sd">            :&#39;dataset_name&#39;: Name of the dataset (string, default=filepath)</span>
+<span class="sd">            :&#39;length&#39;: Number of images in the dataset (integer,</span>
+<span class="sd">            default=number of files in directory matching filename_template)</span>
 <span class="sd">            :&#39;description&#39;: Description of the dataset (string, default=&quot;&quot;)</span>
 <span class="sd">            :&#39;source&#39;: Citation of paper for which the dataset was created (string, default=name)</span>
 <span class="sd">            :&#39;filename_template&#39;: Path to the images with placeholders ({placeholder_name})</span>
-<span class="sd">            for inherent features and the image number, e.g. &quot;filename_template&quot;: &quot;images/image{i}.png&quot;</span>
-<span class="sd">            (default={current_image}.jpg)</span>
-<span class="sd">            :&#39;inherent_features&#39;: Dictionary specifying how to access inherent features; value is used in eval().</span>
+<span class="sd">            for inherent features and the image number, e.g. &quot;filename_template&quot;: &quot;images/image{i}.png&quot;.</span>
+<span class="sd">            The placeholders are replaced according to placeholder_mapping.</span>
+<span class="sd">            Alternatively, glob patterns such as * or ? can be used, e.g. &quot;filename_template&quot;: &quot;images/*.png&quot;</span>
+<span class="sd">            (default=path_to_dataset_name/*.*)</span>
+<span class="sd">            :&#39;placeholder_mapping&#39;: Dictionary specifying the replacement of placeholders in filename_template;</span>
+<span class="sd">            value is used in eval() (default={}).</span>
+<span class="sd">            :&#39;inherent_features&#39;: Features for which the corresponding feature_coordinators should not be applied</span>
+<span class="sd">            (default=[&#39;sf&#39;,&#39;or&#39;,&#39;cr&#39;])</span>
 
 <span class="sd">            Currently, the label of the pattern generator</span>
 <span class="sd">            (&#39;pattern_label&#39;) as well as the image number</span>
 <span class="sd">            (&#39;current_image&#39;) are given as parameters to each callable</span>
-<span class="sd">            supplied in inherent_features, where current_image varies</span>
+<span class="sd">            supplied in placeholder_mapping, where current_image varies</span>
 <span class="sd">            from 0 to length-1 and pattern_label is one of the items</span>
 <span class="sd">            of pattern_labels. (python code, default={&#39;i&#39;: lambda params: &#39;%02d&#39; % (params[&#39;current_image&#39;]+1)}</span>
 
 <span class="sd">            Example 1: Imagine having images without any inherent</span>
 <span class="sd">            features named as follows: &quot;images/image01.png&quot;,</span>
 <span class="sd">            &quot;images/image02.png&quot; and so on. Then, filename_template:</span>
-<span class="sd">            &quot;images/image{i}.png&quot; and &quot;inherent_features&quot;:</span>
+<span class="sd">            &quot;images/image{i}.png&quot; and &quot;placeholder_mapping&quot;:</span>
 <span class="sd">            &quot;{&#39;i&#39;: lambda params: &#39;%02d&#39; % (params[&#39;current_image&#39;]+1)}&quot;</span>
 <span class="sd">            This replaces {i} in the template with the current image number + 1</span>
 
 <span class="sd">            Example 2: Imagine having image pairs from a stereo webcam named as follows: &quot;images/image01_left.png&quot;,</span>
 <span class="sd">            &quot;images/image01_right.png&quot; and so on. If pattern_labels=[&#39;Left&#39;,&#39;Right&#39;], then</span>
 <span class="sd">            filename_template: &quot;images/image{i}_{dy}&quot; and</span>
-<span class="sd">            &quot;inherent_features&quot;: &quot;{&#39;i&#39;: lambda params: &#39;%02d&#39; % (params[&#39;current_image&#39;]+1),</span>
+<span class="sd">            &quot;placeholder_mapping&quot;: &quot;{&#39;i&#39;: lambda params: &#39;%02d&#39; % (params[&#39;current_image&#39;]+1),</span>
 <span class="sd">                                   &#39;dy&#39;:lambda params: &#39;left&#39; if params[&#39;pattern_label&#39;]==&#39;Left&#39; else &#39;right&#39;}&quot;</span>
 
 <span class="sd">            Here, additionally {dy} gets replaced by either &#39;left&#39; if the pattern_label is &#39;Left&#39; or &#39;right&#39; otherwise</span>
+
+<span class="sd">        If the directory does not contain a MANIFEST_json file,</span>
+<span class="sd">        the defaults are as follows:</span>
+<span class="sd">            :&#39;filename_template&#39;: filepath/*.*, whereas filepath is the path given in dataset_name</span>
+<span class="sd">            :&#39;patterns_per_label&#39;: Number of image files in filepath, whereas filepath is the path given in dataset_name</span>
+<span class="sd">            :&#39;inherent_features&#39;: []</span>
+<span class="sd">            :&#39;placeholder_mapping&#39;: {}</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">filename</span><span class="o">=</span><span class="n">param</span><span class="o">.</span><span class="n">resolve_path</span><span class="p">(</span><span class="n">dataset_name</span><span class="p">)</span>
-        <span class="n">filepath</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-        <span class="n">dataset</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+        <span class="n">filepath</span><span class="o">=</span><span class="n">param</span><span class="o">.</span><span class="n">resolve_path</span><span class="p">(</span><span class="n">dataset_name</span><span class="p">,</span><span class="n">path_to_file</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dataset_name</span><span class="o">=</span><span class="n">filepath</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filename_template</span><span class="o">=</span><span class="n">filepath</span><span class="o">+</span><span class="s">&quot;/*.*&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">patterns_per_label</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename_template</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="o">=</span><span class="s">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dataset_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">placeholder_mapping</span><span class="o">=</span><span class="p">{}</span>
+        <span class="n">inherent_features</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;sf&#39;</span><span class="p">,</span><span class="s">&#39;or&#39;</span><span class="p">,</span><span class="s">&#39;cr&#39;</span><span class="p">]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">filename</span><span class="o">=</span><span class="n">param</span><span class="o">.</span><span class="n">resolve_path</span><span class="p">(</span><span class="n">dataset_name</span><span class="o">+</span><span class="s">&#39;/MANIFEST_json&#39;</span><span class="p">)</span>
+            <span class="n">filepath</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+            <span class="n">dataset</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">dataset_name</span><span class="o">=</span><span class="n">dataset</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">dataset_name</span><span class="p">))</span>
-        <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">([</span> <span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span><span class="n">f</span><span class="p">))</span> <span class="p">])</span> <span class="o">-</span> <span class="mi">1</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">patterns_per_label</span><span class="o">=</span><span class="n">dataset</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;length&#39;</span><span class="p">,</span> <span class="n">length</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="o">=</span><span class="n">dataset</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;description&#39;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">filename_template</span><span class="o">=</span><span class="n">dataset</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;filename_template&#39;</span><span class="p">,</span> <span class="n">filepath</span><span class="o">+</span><span class="s">&quot;/{i}.jpg&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="o">=</span><span class="n">dataset</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;source&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset_name</span><span class="p">)</span>
-        <span class="n">inherent_features</span><span class="o">=</span><span class="nb">eval</span><span class="p">(</span><span class="n">dataset</span><span class="p">[</span><span class="s">&#39;inherent_features&#39;</span><span class="p">])</span> <span class="k">if</span> <span class="s">&#39;inherent_features&#39;</span> <span class="ow">in</span> <span class="n">dataset</span> <span class="k">else</span> <span class="p">{</span><span class="s">&#39;i&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">params</span><span class="p">:</span> <span class="s">&#39;</span><span class="si">%02d</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;current_image&#39;</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">)}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dataset_name</span><span class="o">=</span><span class="n">dataset</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;dataset_name&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset_name</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">patterns_per_label</span><span class="o">=</span><span class="n">dataset</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;length&#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename_template</span><span class="p">)))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="o">=</span><span class="n">dataset</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;description&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">filename_template</span><span class="o">=</span><span class="n">dataset</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;filename_template&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename_template</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="o">=</span><span class="n">dataset</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;source&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">placeholder_mapping</span><span class="o">=</span><span class="nb">eval</span><span class="p">(</span><span class="n">dataset</span><span class="p">[</span><span class="s">&#39;placeholder_mapping&#39;</span><span class="p">])</span> <span class="k">if</span> <span class="s">&#39;placeholder_mapping&#39;</span> <span class="ow">in</span> <span class="n">dataset</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">placeholder_mapping</span>
+            <span class="n">inherent_features</span><span class="o">=</span><span class="n">dataset</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;inherent_features&#39;</span><span class="p">,</span> <span class="n">inherent_features</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
+            <span class="k">pass</span>
 
         <span class="nb">super</span><span class="p">(</span><span class="n">PatternCoordinatorImages</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">inherent_features</span><span class="p">,</span><span class="o">**</span><span class="n">params</span><span class="p">)</span>
 
 
     <span class="k">def</span> <span class="nf">_generate_filenames</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
-        <span class="n">filenames</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">filename_template</span><span class="p">]</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">patterns_per_label</span>
-        <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_inherent_features</span><span class="p">:</span>
-            <span class="n">filenames</span> <span class="o">=</span> <span class="p">[</span><span class="n">filename</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&#39;{&#39;</span><span class="o">+</span><span class="n">feature</span><span class="o">+</span><span class="s">&#39;}&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_inherent_features</span><span class="p">[</span><span class="n">feature</span><span class="p">](</span><span class="n">params</span><span class="p">))</span>
+        <span class="k">if</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">placeholder_mapping</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">):</span>
+            <span class="n">filenames</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">filename_template</span><span class="p">]</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">patterns_per_label</span>
+
+            <span class="k">for</span> <span class="n">placeholder</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">placeholder_mapping</span><span class="p">:</span>
+                <span class="n">filenames</span> <span class="o">=</span> <span class="p">[</span><span class="n">filename</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&#39;{&#39;</span><span class="o">+</span><span class="n">placeholder</span><span class="o">+</span><span class="s">&#39;}&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">placeholder_mapping</span><span class="p">[</span><span class="n">placeholder</span><span class="p">](</span><span class="n">params</span><span class="p">))</span>
                                 <span class="k">for</span> <span class="n">filename</span><span class="p">,</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;current_image&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">filenames</span><span class="p">,</span><span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">patterns_per_label</span><span class="p">))]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">filenames</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename_template</span><span class="p">))</span>
+
         <span class="k">return</span> <span class="n">filenames</span>
 
 
