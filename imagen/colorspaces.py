@@ -22,7 +22,8 @@ FeatureColorConverter
     same for any combination of color spaces.  Specifically, declares:
 
     * image color space (the space in which a dataset of images has been stored),
-    * receptor color space (to which the images will be converted), e.g. for a model retina, and
+    * input color space (to which the images will be converted), e.g. to transform images to a
+         different working dataset, and
     * analysis color space (space in which analyses will be performed)
 
     These values can be set using::
@@ -450,7 +451,7 @@ class ColorConverter(param.Parameterized):
     """
     High-level color conversion class designed to support color space
     transformations along a pipeline common in color vision modelling:
-    image -> receptors (retinas) -> [higher stages] -> analysis
+    image -> input (working colorspace) -> [higher stages] -> analysis
     """
 
     # CEBALERT: should be ClassSelector
@@ -473,19 +474,19 @@ class ColorConverter(param.Parameterized):
         'LCH': _swaplch }
     
 
-    def image2receptors(self,i):
-        """Transform images i provided into the specified receptor color space."""
+    def image2input(self,i):
+        """Transform images i provided into the specified input color space."""
         return self.colorspace.convert(self.image_space, self.input_space, i)
 
 
-    def receptors2analysis(self,r):
-        """Transform receptor space inputs to the analysis color space."""
+    def input2analysis(self,r):
+        """Transform input space inputs to the analysis color space."""
         a = self.colorspace.convert(self.input_space, self.analysis_space, r)
         return self.swap_polar_HSVorder[self.analysis_space](a)
 
 
-    def analysis2receptors(self,a):
-        """Convert back from the analysis color space to the receptor's."""
+    def analysis2input(self,a):
+        """Convert back from the analysis color space to the input's."""
         a = self.swap_polar_HSVorder[self.analysis_space](a)        
         return self.colorspace.convert(self.analysis_space, self.input_space, a)
 
