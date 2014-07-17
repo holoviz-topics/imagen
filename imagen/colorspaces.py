@@ -22,14 +22,14 @@ FeatureColorConverter
     same for any combination of color spaces.  Specifically, declares:
 
     * image color space (the space in which a dataset of images has been stored),
-    * input color space (to which the images will be converted), e.g. to transform images to a
+    * working color space (to which the images will be converted), e.g. to transform images to a
          different working dataset, and
     * analysis color space (space in which analyses will be performed)
 
     These values can be set using::
 
       color_conversion.image_space="XYZ"    # e.g. RGB, XYZ, LMS
-      color_conversion.input_space="RGB" # e.g. RGB, LMS
+      color_conversion.working_space="RGB" # e.g. RGB, LMS
       color_conversion.analysis_space="HSV" # e.g. HSV, LCH
 
 The other code in this file is primarily implementation for these two
@@ -451,7 +451,7 @@ class ColorConverter(param.Parameterized):
     """
     High-level color conversion class designed to support color space
     transformations along a pipeline common in color vision modelling:
-    image -> input (working colorspace) -> [higher stages] -> analysis
+    image (dataset colorspace) -> working (working colorspace) -> [higher stages] -> analysis
     """
 
     # CEBALERT: should be ClassSelector
@@ -462,8 +462,8 @@ class ColorConverter(param.Parameterized):
     image_space = param.ObjectSelector(default='XYZ', objects=['XYZ', 'LMS', 'RGB'], doc="""
         Color space in which images are encoded.""") # CEBALERT: possibly add sRGB?
 
-    input_space = param.ObjectSelector(default='RGB', objects=['RGB','LMS'], doc="""
-        Color space to which images will be transformed to provide input
+    working_space = param.ObjectSelector(default='RGB', objects=['RGB','LMS'], doc="""
+        Color space to which images will be transformed to provide working space
         to later stages of processing.""")
 
     analysis_space = param.ObjectSelector(default='HSV', objects=['HSV','LCH'], doc="""
@@ -474,21 +474,21 @@ class ColorConverter(param.Parameterized):
         'LCH': _swaplch }
     
 
-    def image2input(self,i):
-        """Transform images i provided into the specified input color space."""
-        return self.colorspace.convert(self.image_space, self.input_space, i)
+    def image2working(self,i):
+        """Transform images i provided into the specified working color space."""
+        return self.colorspace.convert(self.image_space, self.working_space, i)
 
 
-    def input2analysis(self,r):
-        """Transform input space inputs to the analysis color space."""
-        a = self.colorspace.convert(self.input_space, self.analysis_space, r)
+    def working2analysis(self,r):
+        """Transform working space inputs to the analysis color space."""
+        a = self.colorspace.convert(self.working_space, self.analysis_space, r)
         return self.swap_polar_HSVorder[self.analysis_space](a)
 
 
-    def analysis2input(self,a):
-        """Convert back from the analysis color space to the input's."""
+    def analysis2working(self,a):
+        """Convert back from the analysis color space to the working space."""
         a = self.swap_polar_HSVorder[self.analysis_space](a)        
-        return self.colorspace.convert(self.analysis_space, self.input_space, a)
+        return self.colorspace.convert(self.analysis_space, self.working_space, a)
 
 
     def analysis2display(self,a):
