@@ -32,7 +32,6 @@ from .patterngenerator import PatternGenerator, Constant
 from .transferfn import DivisiveNormalizeLinf, TransferFn
 
 from os.path import splitext
-import copy
 
 import numbergen
 

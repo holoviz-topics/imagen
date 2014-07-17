@@ -37,7 +37,7 @@ classes, and will rarely need to be used directly.
 
 """
 
-from math import pi
+from math import pi, fmod, floor
 
 import copy
 import colorsys
@@ -512,8 +512,8 @@ class ColorConverter(param.Parameterized):
         a[:,:,1] *= factor
 
 
-# Provide a shared color_conversion object of type FeatureColorConverter
+# Provide a shared color_conversion object
 color_conversion = ColorConverter()
 
 
-__all__ = ["ColorSpace","FeatureColorConverter"]
+__all__ = ["ColorSpace","ColorConverter"]

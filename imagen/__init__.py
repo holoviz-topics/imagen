@@ -1085,8 +1085,8 @@ class OldSweeper(PatternGenerator):
         new_y = p.y+p.size*pg.y
 
         image_array = pg(xdensity=p.xdensity,ydensity=p.ydensity,bounds=p.bounds,
-                         x=new_x + p.speed*p.step*numpy.cos(motion_orientation),
-                         y=new_y + p.speed*p.step*numpy.sin(motion_orientation),
+                         x=new_x + p.speed*p.step*np.cos(motion_orientation),
+                         y=new_y + p.speed*p.step*np.sin(motion_orientation),
                          orientation=p.orientation,
                          scale=pg.scale*p.scale,offset=pg.offset+p.offset)
 
