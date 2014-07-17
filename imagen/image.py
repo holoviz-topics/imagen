@@ -322,13 +322,18 @@ class GenericImage(PatternGenerator):
 
 
     def channels(self, **params_to_override):
-        average = self(**params_to_override)
+        default = self(**params_to_override)
 
-        chan = collections.OrderedDict()
+        res = collections.OrderedDict()
+        res['default'] = default
+
         for i in range(len(self._channel_data)):
-            chan[i] = self._channel_data[i]
+            res[i] = self._channel_data[i]
 
-        return average, chan
+        return res
+
+    def num_channels(self):
+        return len(self._channel_data)
 
 
     def _get_image(self,p):
@@ -529,9 +534,9 @@ class RGBChannelTransform(ChannelTransform):
             # This special ChannelTransform is only valid for RGB (3-channel) images
             assert( len(channel_data)==3 )
 
-            im2pg = color_conversion.image2input
-            pg2analysis = color_conversion.input2analysis
-            analysis2pg = color_conversion.analysis2input
+            im2pg = color_conversion.image2working
+            pg2analysis = color_conversion.working2analysis
+            analysis2pg = color_conversion.analysis2working
             jitterfn = color_conversion.jitter_hue
             satfn = color_conversion.multiply_sat
 
@@ -592,8 +597,8 @@ class CompositeImage(GenericImage):
 
     channel_factors = param.Dynamic(default=[1.,1.,1],doc="""
         Channel scaling factors. The length of this list sets the number of channels to be
-        created, unless the input_generator is alreay NChannel (in which case the number of
-        its channels is used).""")
+        created, unless the input_generator already supports multiple channels (in which case
+        the number of its channels is used).""")
 
     correlate_channels = param.Parameter(default=None, doc="""
         List which contains 3 values:
@@ -608,35 +613,25 @@ class CompositeImage(GenericImage):
             self._channel_data.append( None )
 
 
-    def channels(self, **params_to_override):
-        average = self(**params_to_override)
-
-        chan = collections.OrderedDict()
-        for i in range(len(self._channel_data)):
-            chan[i] = self._channel_data[i]
-
-        return average, self._channel_data
-
-
-    def set_channel_values(self,p,params,average,channels):
+    def set_channel_values(self,p,params,channels_dict):
         """
-        Given an input generator, ExtendToNChannel's channels are synthesized to match the Class scope:
-        -if monochrome generators are used, each channel is a copy of the generated input, scaled by channel_factors;
-        -if NChannel generators are used, their channels are copied and scaled by channel_factors.
+        Given an input generator, CompositeImage's channels are synthesized to match the Class scope:
+        -if single channels generators are used, each channel is a copy of the generated input, scaled by channel_factors;
+        -if multichannel generators are used, their channels are copied and scaled by channel_factors.
         """
         # if the generator has the channels, take those values -
         # otherwise use gray*channel factors
 
-        if( len(channels)>0 ):
-            for i in range(len(channels)):
-                self._channel_data[i] = channels[i]*self.channel_factors[i]
+        if( len(channels_dict)>1 ):
+            for i in range( len(channels_dict)-1 ):
+                self._channel_data[i] = channels_dict.items()[i+1][1]*self.channel_factors[i]
         else:
             for i in range(len(self.channel_factors)):
-                self._channel_data[i] = average*self.channel_factors[i]
+                self._channel_data[i] = channels_dict.items()[0][1]*self.channel_factors[i]
 
     def __call__(self,**params):
         """
-        Generate NChannel patterns, eventually synthesizing them.
+        Generate multichannel patterns, eventually synthesizing them.
         """
         p = param.ParamOverrides(self,params)
 
@@ -645,9 +640,9 @@ class CompositeImage(GenericImage):
         params['bounds']=p.bounds
 
         # (not **p)
-        average, channels = p.generator.channels(**params)
+        channels_dict = p.generator.channels(**params)
 
-        self.set_channel_values(p,params,average,channels)
+        self.set_channel_values(p,params,channels_dict)
 
 
         if self.correlate_channels is not None:
@@ -655,7 +650,8 @@ class CompositeImage(GenericImage):
             self._channel_data[corr_to] = corr_amt*self._channel_data[corr_from]+(1-corr_amt)*self._channel_data[corr_to]
 
 
-        return average
+        # default channel or channel average, depending on the single vs multi channel nature of the generator
+        return channels_dict.items()[0][1] 
 
 
 

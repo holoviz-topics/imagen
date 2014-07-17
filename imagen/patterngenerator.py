@@ -158,11 +158,21 @@ class PatternGenerator(param.Parameterized):
 
     def channels(self, **params_to_override):
         """
-        Channels() adds a shared interface for monochrome (1-channel) and multichannel (NChannel) structures.
-        It will always return 2 objects: the first one is the monochrome (if 1-channel) or channel average 
-        array (if multichannel); the second one is a (possibly empty) list of channels' arrays.
+        Channels() adds a shared interface for single channel and multichannel structures.
+        It will always return an ordered dict: its first element is the single channel of the pattern
+        (if single-channel) or the channel average (if multichannel); the successive elements are the 
+        individual channels' arrays (key: 0,1,..N-1).
         """
-        return self.__call__(**params_to_override), collections.OrderedDict([])
+        return collections.OrderedDict({ 'default':self.__call__(**params_to_override) })
+
+    def num_channels(self):
+        """
+        Query the number of channels implemented by the PatternGenerator. In case of single-channel
+        generators this will return 1; in case of multichannel, it will return the number of channels (eg,
+        in the case of RGB images it would return '3', Red-Green-Blue, even though the OrderedDict returned
+        by channels() will have 4 elements -- the 3 channels + their average).
+        """
+        return 1
 
 
     def _setup_xy(self,bounds,xdensity,ydensity,x,y,orientation):

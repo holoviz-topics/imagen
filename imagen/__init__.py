@@ -879,6 +879,11 @@ class Selector(CompositeBase):
         current_generator = self.get_current_generator()
         return current_generator.channels()
 
+    def num_channels(self):
+        if(len(self.generators)>0):
+            return self.generators[0].num_channels()
+        return 0
+
 
 
 
