@@ -2,7 +2,7 @@
 A family of transfer functions that are aware of sheet coordinate
 systems.
 
-The transfer functions in this file are allowed to make used of Imagen
+The transfer functions in this file are allowed to make use of Imagen
 patterns and are to be supplied with an appropriate
 SheetCoordinateSystem object via the initialize method.
 """
