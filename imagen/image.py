@@ -36,8 +36,6 @@ import copy
 
 import numbergen
 
-from .colorspaces import color_conversion
-
 
 class ImageSampler(param.Parameterized):
     """
@@ -280,8 +278,8 @@ class GenericImage(PatternGenerator):
     Subclasses should override the _get_image method to produce the
     image object.
 
-    The background value is calculated as an edge average: see
-    edge_average().  Black-bordered images therefore have a black
+    By default, the background value is calculated as an edge average:
+    see edge_average().  Black-bordered images therefore have a black
     background, and white-bordered images have a white
     background. Images with no border have a background that is less
     of a contrast than a white or black one.
@@ -307,13 +305,13 @@ class GenericImage(PatternGenerator):
         The PatternSampler to use to resample/resize the image.""")
 
     cache_image = param.Boolean(default=True,doc="""
-        If False, discards the image and pattern_sampler after drawing the pattern each time,
-        to make it possible to use very large databases of images without
-        running out of memory.""")
+        If False, discards the image and pattern_sampler after drawing
+        the pattern each time, to make it possible to use very large
+        databases of images without running out of memory.""")
 
-    channel_transform = param.Callable( doc="""
-       An optional ChannelTransform to apply any post processing to the image channels (eg, channel-specific
-       scaling).""")
+    channel_transforms = param.HookList(class_=ChannelTransform,default=[],doc="""
+        Optional functions to apply post processing to the set of channels.""")
+
 
     def __init__(self, **params):
         self._channel_data = []
@@ -359,8 +357,7 @@ class GenericImage(PatternGenerator):
 
     def _process_channels(self,p,**params_to_override):
         """
-        Method to add the channel information to the channel_data
-        attribute.
+        Add the channel information to the channel_data attribute.
         """
         orig_image = self._image
 
@@ -372,8 +369,8 @@ class GenericImage(PatternGenerator):
 
 
     def function(self,p):
-        height   = p.size
-        width    = p.aspect_ratio*height
+        height = p.size
+        width = p.aspect_ratio*height
 
         result = p.pattern_sampler(self._get_image(p),p.pattern_x,p.pattern_y,
                                    float(p.xdensity),float(p.ydensity),
@@ -402,6 +399,7 @@ class GenericImage(PatternGenerator):
 
         return state
 
+
     def __setstate__(self,state):
         """
         Load the object's state (as in the superclass), but replace
@@ -428,8 +426,7 @@ class FileImage(GenericImage):
         image.  The image can be in any format accepted by PIL,
         e.g. PNG, JPG, TIFF, or PGM as well or numpy save files (.npy
         or .npz) containing 2D or 3D arrays (where the third dimension
-        is used for each channel).
-        """)
+        is used for each channel).""")
 
 
     def __init__(self, **params):
@@ -439,7 +436,7 @@ class FileImage(GenericImage):
 
 
     def __call__(self,**params_to_override):
-        # Cache image to prevent channel_data to be deleted before channel specific processing has been finished.
+        # Cache image to avoid channel_data being deleted before channel-specific processing completes.
         params_to_override['cache_image']=True
         p = param.ParamOverrides(self,params_to_override)
 
@@ -448,8 +445,8 @@ class FileImage(GenericImage):
 
             self._channel_data = self._process_channels(p,**params_to_override)
 
-            if self.channel_transform:
-                self._channel_data = self.channel_transform(p, self._channel_data)
+            for c in self.channel_transforms:
+                self._channel_data = c(p, self._channel_data)
 
             if p.cache_image is False:
                 self._image = None
@@ -486,7 +483,7 @@ class FileImage(GenericImage):
         file_data = np.asarray(im, float)
         file_data = file_data / file_data.max()
 
-        # if the image has more than one channel, load it
+        # if the image has more than one channel, load them
         if( len(file_data.shape) == 3 ):
             num_channels = file_data.shape[2]
             for i in range(num_channels):
@@ -511,7 +508,7 @@ class FileImage(GenericImage):
 
 class RGBChannelTransform(ChannelTransform):
     """
-    PostProcessor for the specific case of 3-channel (RED/GREEN/BLUE)
+    PostProcessor for the specific case of 3-channel (Red/Green/Blue)
     color images.  Color-specific processing is applied, in particular
     to rotate the hue of each image at random, thus achieving a
     balanced color input across many pattern presentations.
@@ -534,6 +531,8 @@ class RGBChannelTransform(ChannelTransform):
             # This special ChannelTransform is only valid for RGB (3-channel) images
             assert( len(channel_data)==3 )
 
+            from .colorspaces import color_conversion
+
             im2pg = color_conversion.image2working
             pg2analysis = color_conversion.working2analysis
             analysis2pg = color_conversion.analysis2working
@@ -553,7 +552,6 @@ class RGBChannelTransform(ChannelTransform):
             for a in channel_data:
                 a.shape = a.shape[0:2]
 
-
         return channel_data
 
 
@@ -562,7 +560,7 @@ class RGBImage(FileImage):
     """
     For backwards compatibility.
     """
-    channel_transform = param.Callable(default=RGBChannelTransform)
+    channel_transforms = param.HookList(default=RGBChannelTransform)
 
 
 class NumpyFile(FileImage):
@@ -581,8 +579,7 @@ class NumpyFile(FileImage):
 
 class CompositeImage(GenericImage):
     """
-    Wrapper for any PatternGenerator to support multiple
-    channels.
+    Wrapper for any PatternGenerator to support multiple channels.
 
     If the specified generator itself already posseses more than one channel,
     CompositeImage will use its channels' data; otherwise, GenericImage will
@@ -593,16 +590,17 @@ class CompositeImage(GenericImage):
     """
 
     generator = param.ClassSelector(class_=PatternGenerator,default=Constant(),doc="""
-        PatternGenerator to be converted to N-Channels.""")
+        PatternGenerator to be converted to multiple channels.""")
 
-    channel_factors = param.Dynamic(default=[1.,1.,1],doc="""
-        Channel scaling factors. The length of this list sets the number of channels to be
-        created, unless the input_generator already supports multiple channels (in which case
-        the number of its channels is used).""")
+    channel_factors = param.Dynamic(default=[1.0,1.0,1.0],doc="""
+        Channel scaling factors. The length of this list sets the
+        number of channels to be created, unless the input_generator
+        already supports multiple channels (in which case the number
+        of its channels is used).""")
 
     correlate_channels = param.Parameter(default=None, doc="""
-        List which contains 3 values:
-          correlate_channels = ( dest_channel_to_correlate, channel_to_correlate_to, correlation_strength )""")
+        List which contains 3 values: ( dest_channel_to_correlate, 
+        channel_to_correlate_to, correlation_strength )""")
 
 
     def __init__(self,**params):
@@ -615,12 +613,11 @@ class CompositeImage(GenericImage):
 
     def set_channel_values(self,p,params,channels_dict):
         """
-        Given an input generator, CompositeImage's channels are synthesized to match the Class scope:
-        -if single channels generators are used, each channel is a copy of the generated input, scaled by channel_factors;
-        -if multichannel generators are used, their channels are copied and scaled by channel_factors.
+        Given an input generator, synthesize the channel data, either
+        by copying a single-channel generator's input, scaled by
+        channel_factors, or by copying and then scaling the channels
+        of a multichannel generator.
         """
-        # if the generator has the channels, take those values -
-        # otherwise use gray*channel factors
 
         if( len(channels_dict)>1 ):
             for i in range( len(channels_dict)-1 ):
@@ -629,10 +626,10 @@ class CompositeImage(GenericImage):
             for i in range(len(self.channel_factors)):
                 self._channel_data[i] = channels_dict.items()[0][1]*self.channel_factors[i]
 
+
     def __call__(self,**params):
-        """
-        Generate multichannel patterns, eventually synthesizing them.
-        """
+        # Generates all channels, then returns the default channel
+
         p = param.ParamOverrides(self,params)
 
         params['xdensity']=p.xdensity
@@ -644,11 +641,8 @@ class CompositeImage(GenericImage):
 
         self.set_channel_values(p,params,channels_dict)
 
-
         if self.correlate_channels is not None:
             corr_to,corr_from,corr_amt = self.correlate_channels
             self._channel_data[corr_to] = corr_amt*self._channel_data[corr_from]+(1-corr_amt)*self._channel_data[corr_to]
 
-
-        # default channel or channel average, depending on the single vs multi channel nature of the generator
         return channels_dict.items()[0][1]
