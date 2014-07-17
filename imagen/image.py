@@ -295,7 +295,39 @@ class CorrelateChannels(ChannelTransform):
 
 
     
-class GenericImage(PatternGenerator):
+class ChannelGenerator(PatternGenerator):
+    """
+    Abstract base class for patterns supporting multiple channels natively.
+    """
+
+    __abstract = True
+
+    channel_transforms = param.HookList(class_=ChannelTransform,default=[],doc="""
+        Optional functions to apply post processing to the set of channels.""")
+
+
+    def __init__(self, **params):
+        self._channel_data = []
+        super(ChannelGenerator, self).__init__(**params)
+
+
+    def channels(self, **params_to_override):
+        default = self(**params_to_override)
+
+        res = collections.OrderedDict()
+        res['default'] = default
+
+        for i in range(len(self._channel_data)):
+            res[i] = self._channel_data[i]
+
+        return res
+
+    def num_channels(self):
+        return len(self._channel_data)
+
+
+
+class GenericImage(ChannelGenerator):
     """
     Generic 2D image generator with support for multiple channels.
 
@@ -333,29 +365,10 @@ class GenericImage(PatternGenerator):
         the pattern each time, to make it possible to use very large
         databases of images without running out of memory.""")
 
-    channel_transforms = param.HookList(class_=ChannelTransform,default=[],doc="""
-        Optional functions to apply post processing to the set of channels.""")
-
 
     def __init__(self, **params):
-        self._channel_data = []
         self._image = None
         super(GenericImage, self).__init__(**params)
-
-
-    def channels(self, **params_to_override):
-        default = self(**params_to_override)
-
-        res = collections.OrderedDict()
-        res['default'] = default
-
-        for i in range(len(self._channel_data)):
-            res[i] = self._channel_data[i]
-
-        return res
-
-    def num_channels(self):
-        return len(self._channel_data)
 
 
     def _get_image(self,p):
@@ -600,7 +613,7 @@ class NumpyFile(FileImage):
 
 
 
-class CompositeImage(GenericImage):
+class CompositeImage(ChannelGenerator):
     """
     Wrapper for any PatternGenerator to support multiple channels.
 
@@ -624,7 +637,6 @@ class CompositeImage(GenericImage):
 
     def __init__(self,**params):
         super(CompositeImage,self).__init__(**params)
-        self._channel_data = []
 
         for i in range(len(self.channel_factors)):
             self._channel_data.append( None )
