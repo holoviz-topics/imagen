@@ -17,7 +17,7 @@ ColorSpace
     between colorspaces, e.g.  ``convert("rgb", "hsv", X)``, where ``X`` 
     is assumed to be a numpy.dstack() object with three matching arrays.
 
-ColorConverter
+FeatureColorConverter
     Declare a set of color spaces to allow external code to work the
     same for any combination of color spaces.  Specifically, declares:
 
@@ -28,7 +28,7 @@ ColorConverter
     These values can be set using::
 
       color_conversion.image_space="XYZ"    # e.g. RGB, XYZ, LMS
-      color_conversion.receptor_space="RGB" # e.g. RGB, LMS
+      color_conversion.input_space="RGB" # e.g. RGB, LMS
       color_conversion.analysis_space="HSV" # e.g. HSV, LCH
 
 The other code in this file is primarily implementation for these two
@@ -461,7 +461,7 @@ class ColorConverter(param.Parameterized):
     image_space = param.ObjectSelector(default='XYZ', objects=['XYZ', 'LMS', 'RGB'], doc="""
         Color space in which images are encoded.""") # CEBALERT: possibly add sRGB?
 
-    receptor_space = param.ObjectSelector(default='RGB', objects=['RGB','LMS'], doc="""
+    input_space = param.ObjectSelector(default='RGB', objects=['RGB','LMS'], doc="""
         Color space to which images will be transformed to provide input
         to later stages of processing.""")
 
@@ -475,19 +475,19 @@ class ColorConverter(param.Parameterized):
 
     def image2receptors(self,i):
         """Transform images i provided into the specified receptor color space."""
-        return self.colorspace.convert(self.image_space, self.receptor_space, i)
+        return self.colorspace.convert(self.image_space, self.input_space, i)
 
 
     def receptors2analysis(self,r):
         """Transform receptor space inputs to the analysis color space."""
-        a = self.colorspace.convert(self.receptor_space, self.analysis_space, r)
+        a = self.colorspace.convert(self.input_space, self.analysis_space, r)
         return self.swap_polar_HSVorder[self.analysis_space](a)
 
 
     def analysis2receptors(self,a):
         """Convert back from the analysis color space to the receptor's."""
         a = self.swap_polar_HSVorder[self.analysis_space](a)        
-        return self.colorspace.convert(self.analysis_space, self.receptor_space, a)
+        return self.colorspace.convert(self.analysis_space, self.input_space, a)
 
 
     def analysis2display(self,a):
@@ -511,10 +511,10 @@ class ColorConverter(param.Parameterized):
         a[:,:,1] *= factor
 
 
-# Provide a shared color_conversion object of type ColorConverter
+# Provide a shared color_conversion object of type FeatureColorConverter
 color_conversion = ColorConverter()
 
 
-__all__ = ["ColorSpace","ColorConverter"]
+__all__ = ["ColorSpace","FeatureColorConverter"]
 
 
