@@ -9,6 +9,8 @@ from numpy import pi
 import param
 from param.parameterized import ParamOverrides
 
+import collections
+
 from dataviews import SheetView
 from dataviews.sheetviews import BoundingBox, BoundingRegionParameter, SheetCoordinateSystem
 from dataviews.options import options, StyleOpts
@@ -154,13 +156,13 @@ class PatternGenerator(param.Parameterized):
         return result
 
 
-    def channels(self):
+    def channels(self, **params_to_override):
         """
         Channels() adds a shared interface for monochrome (1-channel) and multichannel (NChannel) structures.
-        In the general case, it returns a list with a single element, the array of data of the single channel.
-        In the extended case, it returns a list with the array data of each channel.
+        It will always return 2 objects: the first one is the monochrome (if 1-channel) or channel average 
+        array (if multichannel); the second one is a (possibly empty) list of channels' arrays.
         """
-        return [self.__call__()]
+        return self.__call__(**params_to_override), collections.OrderedDict([])
 
 
     def _setup_xy(self,bounds,xdensity,ydensity,x,y,orientation):

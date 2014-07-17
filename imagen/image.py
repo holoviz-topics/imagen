@@ -25,6 +25,8 @@ import numpy as np
 import param
 from param.parameterized import overridable_property
 
+import collections
+
 from dataviews.sheetviews import BoundingBox, SheetCoordinateSystem
 from .patterngenerator import PatternGenerator, Constant
 from .transferfn import DivisiveNormalizeLinf, TransferFn
@@ -319,11 +321,14 @@ class GenericImage(PatternGenerator):
         super(GenericImage, self).__init__(**params)
 
 
-    def channels(self):
-        if self._image is None:
-            self()
+    def channels(self, **params_to_override):
+        average = self(**params_to_override)
 
-        return self._channel_data
+        chan = collections.OrderedDict()
+        for i in range(len(self._channel_data)):
+            chan[i] = self._channel_data[i]
+
+        return average, chan
 
 
     def _get_image(self,p):
@@ -425,23 +430,27 @@ class FileImage(GenericImage):
     def __init__(self, **params):
         super(FileImage,self).__init__(**params)
         self.last_filename = None  # Cached to avoid unnecessary reloading for each channel
+        self._cached_average = None
 
 
     def __call__(self,**params_to_override):
+        # Cache image to prevent channel_data to be deleted before channel specific processing has been finished.
         params_to_override['cache_image']=True
         p = param.ParamOverrides(self,params_to_override)
-        # Cache image to prevent channel_data to be deleted before channel specific processing has been finished.
-        gray = super(FileImage,self).__call__(**params_to_override)
 
-        self._channel_data = self._process_channels(p,**params_to_override)
+        if not ( p.cache_image and (p._image is not None) ):
+            self._cached_average = super(FileImage,self).__call__(**params_to_override)
 
-        if self.channel_transform:
-            self._channel_data = self.channel_transform(p, self._channel_data)
+            self._channel_data = self._process_channels(p,**params_to_override)
 
-        if p.cache_image is False:
-            self._image = None
+            if self.channel_transform:
+                self._channel_data = self.channel_transform(p, self._channel_data)
 
-        return gray
+            if p.cache_image is False:
+                self._image = None
+
+
+        return self._cached_average
 
 
     def _get_image(self,p):
@@ -514,11 +523,12 @@ class RGBChannelTransform(ChannelTransform):
         Numbergen random generator to be used to create a distribution in hue jitter,
         ie, to perform hue rotation on the images.""")
 
-    _hack_recording = param.Parameter(default=None)
-
 
     def __call__(self,p, channel_data):
         if(self.apply_hue_jitter):
+            # This special ChannelTransform is only valid for RGB (3-channel) images
+            assert( len(channel_data)==3 )
+
             im2pg = color_conversion.image2receptors
             pg2analysis = color_conversion.receptors2analysis
             analysis2pg = color_conversion.analysis2receptors
@@ -528,9 +538,6 @@ class RGBChannelTransform(ChannelTransform):
             channs_in  = np.dstack(channel_data)
             channs_out = im2pg(channs_in)
             analysis_space = pg2analysis(channs_out)
-
-            if self._hack_recording is not None:
-                self._hack_recording(self,channs=channs_in,extra=analysis_space)
 
             jitterfn(analysis_space,self.random_hue_jitter())
             satfn(analysis_space,self.saturation)
@@ -572,16 +579,12 @@ class CompositeImage(GenericImage):
     Wrapper for any PatternGenerator to support multiple
     channels.
 
-    If the specified generator itself has a 'generator' attribute,
-    ExtendToNChannel will attempt to get the channels' data from
-    generator.generator (e.g. ColorImage inside a Selector);
-    otherwise, ExtendToNChannel will attempt to get channel_data
-    from generator. If no channel_data is found in this
-    ways, ExtendToNChannel will synthesize the channels from the traditional
-    single channel generator.
+    If the specified generator itself already posseses more than one channel,
+    CompositeImage will use its channels' data; otherwise, GenericImage will
+    synthesize the channels from the single channel of the generator.
 
-    After finding or synthesizing the channels, they are
-    scaled according to relative_channel_strengths.
+    After finding or synthesizing the channels, they are scaled according to 
+    the corresponding channel_factors.
     """
 
     generator = param.ClassSelector(class_=PatternGenerator,default=Constant(),doc="""
@@ -605,26 +608,17 @@ class CompositeImage(GenericImage):
             self._channel_data.append( None )
 
 
-    def channels(self):
-        if(len(self._channel_data)>0):
-            if(self._channel_data[0] is None):
-                fake = copy.deepcopy(self)
-                fake()
-                return fake._channel_data
+    def channels(self, **params_to_override):
+        average = self(**params_to_override)
 
-                #self()
+        chan = collections.OrderedDict()
+        for i in range(len(self._channel_data)):
+            chan[i] = self._channel_data[i]
 
-        return self._channel_data
+        return average, self._channel_data
 
 
-
-    def post_process(self):  # old hack_hook1
-        pass
-
-    def pre_process_generator(self,generator):  # old hack_hook0
-        pass
-
-    def set_channel_values(self,p,params,gray,generator):
+    def set_channel_values(self,p,params,average,channels):
         """
         Given an input generator, ExtendToNChannel's channels are synthesized to match the Class scope:
         -if monochrome generators are used, each channel is a copy of the generated input, scaled by channel_factors;
@@ -633,14 +627,12 @@ class CompositeImage(GenericImage):
         # if the generator has the channels, take those values -
         # otherwise use gray*channel factors
 
-        channels = generator.channels()
-
-        if( len(channels)>1 ):
+        if( len(channels)>0 ):
             for i in range(len(channels)):
                 self._channel_data[i] = channels[i]*self.channel_factors[i]
         else:
             for i in range(len(self.channel_factors)):
-                self._channel_data[i] = gray*self.channel_factors[i]
+                self._channel_data[i] = average*self.channel_factors[i]
 
     def __call__(self,**params):
         """
@@ -653,11 +645,9 @@ class CompositeImage(GenericImage):
         params['bounds']=p.bounds
 
         # (not **p)
-        gray = p.generator(**params)
+        average, channels = p.generator.channels(**params)
 
-        self.pre_process_generator(p.generator)
-
-        self.set_channel_values(p,params,gray,p.generator)
+        self.set_channel_values(p,params,average,channels)
 
 
         if self.correlate_channels is not None:
@@ -665,9 +655,7 @@ class CompositeImage(GenericImage):
             self._channel_data[corr_to] = corr_amt*self._channel_data[corr_from]+(1-corr_amt)*self._channel_data[corr_to]
 
 
-        self.post_process()
-        
-        return gray
+        return average
 
 
 

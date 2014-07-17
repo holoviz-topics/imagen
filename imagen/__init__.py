@@ -874,7 +874,8 @@ class Selector(CompositeBase):
         int_index=int(len(self.generators)*wrap(0,1.0,self.inspect_value('index')))
         return self.generators[int_index]
 
-    def channels(self):
+    def channels(self, **params_to_override):
+        self(**params_to_override)
         current_generator = self.get_current_generator()
         return current_generator.channels()
 
