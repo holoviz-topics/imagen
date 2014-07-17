@@ -529,9 +529,9 @@ class RGBChannelTransform(ChannelTransform):
             # This special ChannelTransform is only valid for RGB (3-channel) images
             assert( len(channel_data)==3 )
 
-            im2pg = color_conversion.image2receptors
-            pg2analysis = color_conversion.receptors2analysis
-            analysis2pg = color_conversion.analysis2receptors
+            im2pg = color_conversion.image2input
+            pg2analysis = color_conversion.input2analysis
+            analysis2pg = color_conversion.analysis2input
             jitterfn = color_conversion.jitter_hue
             satfn = color_conversion.multiply_sat
 
