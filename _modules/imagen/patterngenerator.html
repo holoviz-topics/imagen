@@ -75,6 +75,8 @@
 <span class="kn">import</span> <span class="nn">param</span>
 <span class="kn">from</span> <span class="nn">param.parameterized</span> <span class="kn">import</span> <span class="n">ParamOverrides</span>
 
+<span class="kn">import</span> <span class="nn">collections</span>
+
 <span class="kn">from</span> <span class="nn">dataviews</span> <span class="kn">import</span> <span class="n">SheetView</span>
 <span class="kn">from</span> <span class="nn">dataviews.sheetviews</span> <span class="kn">import</span> <span class="n">BoundingBox</span><span class="p">,</span> <span class="n">BoundingRegionParameter</span><span class="p">,</span> <span class="n">SheetCoordinateSystem</span>
 <span class="kn">from</span> <span class="nn">dataviews.options</span> <span class="kn">import</span> <span class="n">options</span><span class="p">,</span> <span class="n">StyleOpts</span>
@@ -220,6 +222,25 @@
         <span class="k">return</span> <span class="n">result</span>
 
 
+<div class="viewcode-block" id="PatternGenerator.channels"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.patterngenerator.PatternGenerator.channels">[docs]</a>    <span class="k">def</span> <span class="nf">channels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">params_to_override</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Channels() adds a shared interface for single channel and multichannel structures.</span>
+<span class="sd">        It will always return an ordered dict: its first element is the single channel of the pattern</span>
+<span class="sd">        (if single-channel) or the channel average (if multichannel); the successive elements are the</span>
+<span class="sd">        individual channels&#39; arrays (key: 0,1,..N-1).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">collections</span><span class="o">.</span><span class="n">OrderedDict</span><span class="p">({</span> <span class="s">&#39;default&#39;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">__call__</span><span class="p">(</span><span class="o">**</span><span class="n">params_to_override</span><span class="p">)</span> <span class="p">})</span>
+</div>
+<div class="viewcode-block" id="PatternGenerator.num_channels"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.patterngenerator.PatternGenerator.num_channels">[docs]</a>    <span class="k">def</span> <span class="nf">num_channels</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Query the number of channels implemented by the PatternGenerator. In case of single-channel</span>
+<span class="sd">        generators this will return 1; in case of multichannel, it will return the number of channels (eg,</span>
+<span class="sd">        in the case of RGB images it would return &#39;3&#39;, Red-Green-Blue, even though the OrderedDict returned</span>
+<span class="sd">        by channels() will have 4 elements -- the 3 channels + their average).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mi">1</span>
+
+</div>
     <span class="k">def</span> <span class="nf">_setup_xy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">bounds</span><span class="p">,</span><span class="n">xdensity</span><span class="p">,</span><span class="n">ydensity</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">orientation</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Produce pattern coordinate matrices from the bounds and</span>

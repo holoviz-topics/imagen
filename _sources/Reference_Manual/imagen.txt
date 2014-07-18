@@ -34,6 +34,17 @@ imagen.imagen Package
     :inherited-members:
     :show-inheritance:
 
+:mod:`colorspaces` Module
+-------------------------
+
+.. inheritance-diagram:: imagen.colorspaces
+
+
+.. automodule:: imagen.colorspaces
+    :members:
+    :inherited-members:
+    :show-inheritance:
+
 :mod:`image` Module
 -------------------
 

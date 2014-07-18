@@ -890,12 +890,25 @@
         <span class="sd">&quot;&quot;&quot;Return the current generator (as specified by self.index).&quot;&quot;&quot;</span>
         <span class="n">int_index</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generators</span><span class="p">)</span><span class="o">*</span><span class="n">wrap</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">inspect_value</span><span class="p">(</span><span class="s">&#39;index&#39;</span><span class="p">)))</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">generators</span><span class="p">[</span><span class="n">int_index</span><span class="p">]</span>
+</div>
+    <span class="k">def</span> <span class="nf">channels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">params_to_override</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">(</span><span class="o">**</span><span class="n">params_to_override</span><span class="p">)</span>
+        <span class="n">current_generator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_current_generator</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">current_generator</span><span class="o">.</span><span class="n">channels</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">num_channels</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inspect_value</span><span class="p">(</span><span class="s">&#39;index&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">):</span>
+            <span class="k">if</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generators</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">generators</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">num_channels</span><span class="p">()</span>
+            <span class="k">return</span> <span class="mi">0</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_current_generator</span><span class="p">()</span><span class="o">.</span><span class="n">num_channels</span><span class="p">()</span>
 
 
 
 <span class="c">### JABALERT: This class should be eliminated if at all possible; it</span>
 <span class="c">### is just a specialized version of Composite, and should be</span>
-<span class="c">### implementable directly using what is already in Composite.</span></div></div>
+<span class="c">### implementable directly using what is already in Composite.</span></div>
 <div class="viewcode-block" id="GaussiansCorner"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.__init__.GaussiansCorner">[docs]</a><span class="k">class</span> <span class="nc">GaussiansCorner</span><span class="p">(</span><span class="n">PatternGenerator</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Two Gaussian pattern generators with a variable intersection point,</span>
@@ -1138,8 +1151,8 @@
         <span class="n">new_y</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">y</span><span class="o">+</span><span class="n">p</span><span class="o">.</span><span class="n">size</span><span class="o">*</span><span class="n">pg</span><span class="o">.</span><span class="n">y</span>
 
         <span class="n">image_array</span> <span class="o">=</span> <span class="n">pg</span><span class="p">(</span><span class="n">xdensity</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">xdensity</span><span class="p">,</span><span class="n">ydensity</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">ydensity</span><span class="p">,</span><span class="n">bounds</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">bounds</span><span class="p">,</span>
-                         <span class="n">x</span><span class="o">=</span><span class="n">new_x</span> <span class="o">+</span> <span class="n">p</span><span class="o">.</span><span class="n">speed</span><span class="o">*</span><span class="n">p</span><span class="o">.</span><span class="n">step</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">motion_orientation</span><span class="p">),</span>
-                         <span class="n">y</span><span class="o">=</span><span class="n">new_y</span> <span class="o">+</span> <span class="n">p</span><span class="o">.</span><span class="n">speed</span><span class="o">*</span><span class="n">p</span><span class="o">.</span><span class="n">step</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">motion_orientation</span><span class="p">),</span>
+                         <span class="n">x</span><span class="o">=</span><span class="n">new_x</span> <span class="o">+</span> <span class="n">p</span><span class="o">.</span><span class="n">speed</span><span class="o">*</span><span class="n">p</span><span class="o">.</span><span class="n">step</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">motion_orientation</span><span class="p">),</span>
+                         <span class="n">y</span><span class="o">=</span><span class="n">new_y</span> <span class="o">+</span> <span class="n">p</span><span class="o">.</span><span class="n">speed</span><span class="o">*</span><span class="n">p</span><span class="o">.</span><span class="n">step</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">motion_orientation</span><span class="p">),</span>
                          <span class="n">orientation</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">orientation</span><span class="p">,</span>
                          <span class="n">scale</span><span class="o">=</span><span class="n">pg</span><span class="o">.</span><span class="n">scale</span><span class="o">*</span><span class="n">p</span><span class="o">.</span><span class="n">scale</span><span class="p">,</span><span class="n">offset</span><span class="o">=</span><span class="n">pg</span><span class="o">.</span><span class="n">offset</span><span class="o">+</span><span class="n">p</span><span class="o">.</span><span class="n">offset</span><span class="p">)</span>
 
