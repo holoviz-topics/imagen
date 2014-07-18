@@ -569,22 +569,16 @@ class RGBChannelTransform(ChannelTransform):
             # This special ChannelTransform is only valid for RGB (3-channel) and RGBA (4-channel) images
             assert( len(channel_data)==3 or len(channel_data)==4 )
 
-            from .colorspaces import color_conversion
-
-            im2pg = color_conversion.image2working
-            pg2analysis = color_conversion.working2analysis
-            analysis2pg = color_conversion.analysis2working
-            jitterfn = color_conversion.jitter_hue
-            satfn = color_conversion.multiply_sat
+            from .colorspaces import color_conversion as cc
 
             channs_in  = np.dstack(channel_data[0:3])
-            channs_out = im2pg(channs_in)
-            analysis_space = pg2analysis(channs_out)
+            channs_out = cc.image2working(channs_in)
+            analysis_space = cc.working2analysis(channs_out)
 
-            jitterfn(analysis_space,self.random_hue_jitter())
-            satfn(analysis_space,self.saturation)
+            cc.jitter_hue(analysis_space,self.random_hue_jitter())
+            cc.multiply_sat(analysis_space,self.saturation)
 
-            channs_out = analysis2pg(analysis_space)
+            channs_out = cc.analysis2working(analysis_space)
 
             channel_data[0:3] = np.dsplit(channs_out, 3) # must be RGB!
             for a in channel_data:
