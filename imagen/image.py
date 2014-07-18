@@ -543,56 +543,49 @@ class FileImage(GenericImage):
 
 
 
-class RGBChannelTransform(ChannelTransform):
+class RotateHue(ChannelTransform):
     """
-    PostProcessor for the specific case of 3-channel (Red/Green/Blue)
-    or 4-channel (Red/Green/Blue/Alpha) color images.  Color-specific
-    processing is applied, in particular to rotate the hue of each
-    image at random, thus achieving a balanced color input across many
-    pattern presentations.
+    Rotate the hue of an Image PatternGenerator. 
+
+    Requires a three-channel (e.g. RGB) or a 4-channel (e.g. RGBA)
+    color image.  Also allows the saturation of the image to be scaled.
+    
+    Requires the color space of the image to be declared using the
+    colorspaces.color_conversion object, and uses the analysis
+    color space from that object to do the rotation.
     """
 
-    saturation = param.Number(default=1.0)
+    saturation = param.Number(default=1.0,doc="""
+        Scale the saturation by the specified value.""")
 
-    apply_hue_jitter = param.Boolean(default=True, doc="""
-        Whether to apply a random uniform jitter to the image,
-        eg, to perform random hue rotation.""")
-
-    random_hue_jitter = param.ClassSelector(numbergen.RandomDistribution,
-        default=numbergen.UniformRandom(name='hue_jitter',lbound=0,ubound=1,seed=1048921), doc="""
-        Numbergen random generator to be used to create a distribution in hue jitter,
-        ie, to perform hue rotation on the images.""")
+    jitter = param.Number(default=numbergen.UniformRandom(name='hue_jitter',lbound=0,ubound=1,seed=1048921), doc="""
+        Amount of jitter to add.  The default chooses a random value
+        of hue rotation between zero and 100%.  If set to 0, no jitter
+        will be performed.""")
 
 
     def __call__(self,channel_data):
-        if(self.apply_hue_jitter):
-            # This special ChannelTransform is only valid for RGB (3-channel) and RGBA (4-channel) images
-            assert( len(channel_data)==3 or len(channel_data)==4 )
+        assert( len(channel_data)==3 or len(channel_data)==4 )
 
-            from .colorspaces import color_conversion as cc
+        from .colorspaces import color_conversion as cc
 
-            channs_in  = np.dstack(channel_data[0:3])
-            channs_out = cc.image2working(channs_in)
-            analysis_space = cc.working2analysis(channs_out)
+        channs_in  = np.dstack(channel_data[0:3])
+        channs_out = cc.image2working(channs_in)
+        analysis_space = cc.working2analysis(channs_out)
 
-            cc.jitter_hue(analysis_space,self.random_hue_jitter())
-            cc.multiply_sat(analysis_space,self.saturation)
+        if self.jitter != 0:
+            cc.jitter_hue(analysis_space,self.jitter)
+        cc.multiply_sat(analysis_space,self.saturation)
 
-            channs_out = cc.analysis2working(analysis_space)
+        channs_out = cc.analysis2working(analysis_space)
 
-            channel_data[0:3] = np.dsplit(channs_out, 3) # must be RGB!
-            for a in channel_data:
-                a.shape = a.shape[0:2]
+        # Takes only the first three channels (e.g. RGB)
+        channel_data[0:3] = np.dsplit(channs_out, 3)
+        for a in channel_data:
+            a.shape = a.shape[0:2]
 
         return channel_data
 
-
-
-class RGBImage(FileImage):
-    """
-    For backwards compatibility.
-    """
-    channel_transforms = param.HookList(default=[RGBChannelTransform()])
 
 
 class NumpyFile(FileImage):
