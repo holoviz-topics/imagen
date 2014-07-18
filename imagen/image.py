@@ -29,12 +29,12 @@ import collections
 
 from dataviews.sheetviews import BoundingBox, SheetCoordinateSystem
 from .patterngenerator import PatternGenerator, Constant
+from .patterngenerator import ChannelGenerator, ChannelTransform
 from .transferfn import DivisiveNormalizeLinf, TransferFn
 
 from os.path import splitext
 
 import numbergen
-
 
 class ImageSampler(param.Parameterized):
     """
@@ -254,76 +254,6 @@ class FastImageSampler(ImageSampler):
         # redesigned?  The interface to this function is pretty inscrutable.)
         im = ImageOps.fit(self.image,x.shape,self.sampling_method)
         return np.array(im,dtype=np.float)
-
-
-
-class ChannelTransform(param.Parameterized):
-    """
-    A ChannelTransform is a callable object that takes channels as
-    input (an ordered dictionary of arrays) and transforms their
-    contents in some way before returning them.
-    """
-
-    __abstract = True
-
-    def __call__(self, channels):
-        raise NotImplementedError
-
-
-
-class CorrelateChannels(ChannelTransform):
-    """
-    Correlate channels by mixing a fraction of one channel into another.
-    """
-
-    from_channel = param.Number(default=1, doc="""
-        Name of the channel to take data from.""")
-
-    to_channel = param.Number(default=2, doc="""
-        Name of the channel to change data of.""")
-
-    strength = param.Number(default=0, doc="""
-        Strength of the correlation to add, with 0 being no change,
-        and 1.0 overwriting to_channel with from_channel.""")
-
-    def __call__(self, channel_data):
-        channel_data[self.to_channel] = \
-            self.strength*channel_data[self.from_channel] + \
-            (1-self.strength)*channel_data[self.to_channel]
-
-        return channel_data
-
-
-    
-class ChannelGenerator(PatternGenerator):
-    """
-    Abstract base class for patterns supporting multiple channels natively.
-    """
-
-    __abstract = True
-
-    channel_transforms = param.HookList(class_=ChannelTransform,default=[],doc="""
-        Optional functions to apply post processing to the set of channels.""")
-
-
-    def __init__(self, **params):
-        self._channel_data = []
-        super(ChannelGenerator, self).__init__(**params)
-
-
-    def channels(self, **params_to_override):
-        default = self(**params_to_override)
-
-        res = collections.OrderedDict()
-        res['default'] = default
-
-        for i in range(len(self._channel_data)):
-            res[i] = self._channel_data[i]
-
-        return res
-
-    def num_channels(self):
-        return len(self._channel_data)
 
 
 
@@ -599,69 +529,3 @@ class NumpyFile(FileImage):
                                size_normalization='original',
                                whole_pattern_output_fns=[]),doc="""
         The PatternSampler to use to resample/resize the image.""")
-
-
-
-class CompositeImage(ChannelGenerator):
-    """
-    Wrapper for any PatternGenerator to support multiple channels.
-
-    If the specified generator itself already posseses more than one channel,
-    CompositeImage will use its channels' data; otherwise, GenericImage will
-    synthesize the channels from the single channel of the generator.
-
-    After finding or synthesizing the channels, they are scaled according to
-    the corresponding channel_factors.
-    """
-
-    generator = param.ClassSelector(class_=PatternGenerator,default=Constant(),doc="""
-        PatternGenerator to be converted to multiple channels.""")
-
-    channel_factors = param.Dynamic(default=[1.0,1.0,1.0],doc="""
-        Channel scaling factors. The length of this list sets the
-        number of channels to be created, unless the input_generator
-        already supports multiple channels (in which case the number
-        of its channels is used).""")
-
-
-    def __init__(self,**params):
-        super(CompositeImage,self).__init__(**params)
-
-        for i in range(len(self.channel_factors)):
-            self._channel_data.append( None )
-
-
-    def set_channel_values(self,p,params,channels_dict):
-        """
-        Given an input generator, synthesize the channel data, either
-        by copying a single-channel generator's input, scaled by
-        channel_factors, or by copying and then scaling the channels
-        of a multichannel generator.
-        """
-
-        if( len(channels_dict)>1 ):
-            for i in range( len(channels_dict)-1 ):
-                self._channel_data[i] = channels_dict.items()[i+1][1]*self.channel_factors[i]
-        else:
-            for i in range(len(self.channel_factors)):
-                self._channel_data[i] = channels_dict.items()[0][1]*self.channel_factors[i]
-
-
-    def __call__(self,**params):
-        # Generates all channels, then returns the default channel
-
-        p = param.ParamOverrides(self,params)
-
-        params['xdensity']=p.xdensity
-        params['ydensity']=p.ydensity
-        params['bounds']=p.bounds
-
-        # (not **p)
-        channels_dict = p.generator.channels(**params)
-
-        self.set_channel_values(p,params,channels_dict)
-
-        for c in self.channel_transforms:
-            self._channel_data = c(self._channel_data)
-
-        return channels_dict.items()[0][1]
