@@ -558,10 +558,11 @@ class RotateHue(ChannelTransform):
     saturation = param.Number(default=1.0,doc="""
         Scale the saturation by the specified value.""")
 
-    jitter = param.Number(default=numbergen.UniformRandom(name='hue_jitter',lbound=0,ubound=1,seed=1048921), doc="""
-        Amount of jitter to add.  The default chooses a random value
-        of hue rotation between zero and 100%.  If set to 0, no jitter
-        will be performed.""")
+    rotation = param.Number(default=numbergen.UniformRandom(name='hue_jitter',lbound=0,ubound=1,seed=1048921), 
+                            bounds=(0.0,1.0),doc="""
+        Amount by which to rotate the hue.  The default setting
+        chooses a random value of hue rotation between zero and 100%.
+        If set to 0, no rotation will be performed.""")
 
 
     def __call__(self,channel_data):
@@ -573,8 +574,8 @@ class RotateHue(ChannelTransform):
         channs_out = cc.image2working(channs_in)
         analysis_space = cc.working2analysis(channs_out)
 
-        if self.jitter != 0:
-            cc.jitter_hue(analysis_space,self.jitter)
+        if self.rotation != 0:
+            cc.jitter_hue(analysis_space,self.rotation)
         cc.multiply_sat(analysis_space,self.saturation)
 
         channs_out = cc.analysis2working(analysis_space)
