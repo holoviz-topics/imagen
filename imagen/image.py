@@ -286,7 +286,7 @@ class CorrelateChannels(ChannelTransform):
         Strength of the correlation to add, with 0 being no change,
         and 1.0 overwriting to_channel with from_channel.""")
 
-    def __call__(self, p, channel_data):
+    def __call__(self, channel_data):
         channel_data[self.to_channel] = \
             self.strength*channel_data[self.from_channel] + \
             (1-self.strength)*channel_data[self.to_channel]
@@ -546,9 +546,10 @@ class FileImage(GenericImage):
 class RGBChannelTransform(ChannelTransform):
     """
     PostProcessor for the specific case of 3-channel (Red/Green/Blue)
-    color images.  Color-specific processing is applied, in particular
-    to rotate the hue of each image at random, thus achieving a
-    balanced color input across many pattern presentations.
+    or 4-channel (Red/Green/Blue/Alpha) color images.  Color-specific
+    processing is applied, in particular to rotate the hue of each
+    image at random, thus achieving a balanced color input across many
+    pattern presentations.
     """
 
     saturation = param.Number(default=1.0)
@@ -563,10 +564,10 @@ class RGBChannelTransform(ChannelTransform):
         ie, to perform hue rotation on the images.""")
 
 
-    def __call__(self,p, channel_data):
+    def __call__(self,channel_data):
         if(self.apply_hue_jitter):
-            # This special ChannelTransform is only valid for RGB (3-channel) images
-            assert( len(channel_data)==3 )
+            # This special ChannelTransform is only valid for RGB (3-channel) and RGBA (4-channel) images
+            assert( len(channel_data)==3 or len(channel_data)==4 )
 
             from .colorspaces import color_conversion
 
@@ -576,7 +577,7 @@ class RGBChannelTransform(ChannelTransform):
             jitterfn = color_conversion.jitter_hue
             satfn = color_conversion.multiply_sat
 
-            channs_in  = np.dstack(channel_data)
+            channs_in  = np.dstack(channel_data[0:3])
             channs_out = im2pg(channs_in)
             analysis_space = pg2analysis(channs_out)
 
@@ -585,7 +586,7 @@ class RGBChannelTransform(ChannelTransform):
 
             channs_out = analysis2pg(analysis_space)
 
-            channel_data = np.dsplit(channs_out, 3) # must be RGB!
+            channel_data[0:3] = np.dsplit(channs_out, 3) # must be RGB!
             for a in channel_data:
                 a.shape = a.shape[0:2]
 
