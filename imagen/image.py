@@ -25,10 +25,7 @@ import numpy as np
 import param
 from param.parameterized import overridable_property
 
-import collections
-
 from dataviews.sheetviews import BoundingBox, SheetCoordinateSystem
-from .patterngenerator import PatternGenerator, Constant
 from .patterngenerator import ChannelGenerator, ChannelTransform
 from .transferfn import DivisiveNormalizeLinf, TransferFn
 
