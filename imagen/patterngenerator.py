@@ -399,37 +399,17 @@ class ComposeChannels(ChannelGenerator):
     the corresponding channel_factors.
     """
 
-    generator = param.ClassSelector(class_=PatternGenerator,default=Constant(),doc="""
-        PatternGenerator to be converted to multiple channels.""")
-
-    channel_factors = param.Dynamic(default=[1.0,1.0,1.0],doc="""
-        Channel scaling factors. The length of this list sets the
-        number of channels to be created, unless the input_generator
-        already supports multiple channels (in which case the number
-        of its channels is used).""")
+    generators = param.List(class_=PatternGenerator,default=[Constant(scale=0.0)],
+                            bounds=(1,None), doc="""
+        List of patterns to use for each channel. Generators which already have more than one
+        channel will only contribute to a single channel of ComposeChannels.""")
 
 
     def __init__(self,**params):
         super(ComposeChannels,self).__init__(**params)
 
-        for i in range(len(self.channel_factors)):
+        for i in range(len(self.generators)):
             self._channel_data.append( None )
-
-
-    def set_channel_values(self,p,params,channels_dict):
-        """
-        Given an input generator, synthesize the channel data, either
-        by copying a single-channel generator's input, scaled by
-        channel_factors, or by copying and then scaling the channels
-        of a multichannel generator.
-        """
-
-        if( len(channels_dict)>1 ):
-            for i in range( len(channels_dict)-1 ):
-                self._channel_data[i] = channels_dict.items()[i+1][1]*self.channel_factors[i]
-        else:
-            for i in range(len(self.channel_factors)):
-                self._channel_data[i] = channels_dict.items()[0][1]*self.channel_factors[i]
 
 
     def __call__(self,**params):
@@ -442,14 +422,15 @@ class ComposeChannels(ChannelGenerator):
         params['bounds']=p.bounds
 
         # (not **p)
-        channels_dict = p.generator.channels(**params)
+        for i in range(len(p.generators)):
+            self._channel_data[i] = p.generators[i]( **params )
 
-        self.set_channel_values(p,params,channels_dict)
 
         for c in self.channel_transforms:
             self._channel_data = c(self._channel_data)
 
-        return channels_dict.items()[0][1]
+
+        return sum(act for act in self._channel_data)/len(self._channel_data)
 
 
 
