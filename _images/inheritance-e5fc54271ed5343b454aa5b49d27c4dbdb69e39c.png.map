@@ -1,0 +1,9 @@
+<map id="inheritance5a1c78b06b" name="inheritance5a1c78b06b">
+<area shape="rect" id="node1" href="#imagen.patterngenerator.ChannelGenerator" title="Abstract base class for patterns supporting multiple channels natively." alt="" coords="576,4,839,26"/>
+<area shape="rect" id="node5" href="#imagen.patterngenerator.ComposeChannels" title="Create a multi&#45;channel PatternGenerator from another PatternGenerator." alt="" coords="882,4,1147,26"/>
+<area shape="rect" id="node2" href="#imagen.patterngenerator.PatternGenerator" title="A class hierarchy for callable objects that can generate 2D patterns." alt="" coords="272,47,531,69"/>
+<area shape="rect" id="node6" href="#imagen.patterngenerator.Constant" title="Constant pattern generator, i.e., a solid, uniform field of the same value." alt="" coords="601,47,814,69"/>
+<area shape="rect" id="node3" href="#imagen.patterngenerator.ChannelTransform" title="A ChannelTransform is a callable object that takes channels as" alt="" coords="271,89,533,111"/>
+<area shape="rect" id="node7" href="#imagen.patterngenerator.CorrelateChannels" title="Correlate channels by mixing a fraction of one channel into another." alt="" coords="575,89,840,111"/>
+<area shape="rect" id="node4" title="Base class for named objects that support Parameters and message" alt="" coords="5,69,229,91"/>
+</map>

@@ -65,7 +65,11 @@
             
   <h1>Source code for imagen.patterngenerator</h1><div class="highlight"><pre>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">PatternGenerator abstract class and basic example concrete class.</span>
+<span class="sd">PatternGenerator abstract class, basic example concrete class, and multichannel support.</span>
+
+<span class="sd">PatternGenerators support both single-channel patterns, i.e. bare arrays, and </span>
+<span class="sd">multiple channels, such as for color images.  See ``PatternGenerator.__call__``</span>
+<span class="sd">and ``PatternGenerator.channels`` for more information.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 
@@ -230,6 +234,7 @@
 <span class="sd">        individual channels&#39; arrays (key: 0,1,..N-1).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">collections</span><span class="o">.</span><span class="n">OrderedDict</span><span class="p">({</span> <span class="s">&#39;default&#39;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">__call__</span><span class="p">(</span><span class="o">**</span><span class="n">params_to_override</span><span class="p">)</span> <span class="p">})</span>
+
 </div>
 <div class="viewcode-block" id="PatternGenerator.num_channels"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.patterngenerator.PatternGenerator.num_channels">[docs]</a>    <span class="k">def</span> <span class="nf">num_channels</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -366,6 +371,145 @@
             <span class="n">of</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">result</span>
+
+
+</div>
+<div class="viewcode-block" id="ChannelTransform"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.patterngenerator.ChannelTransform">[docs]</a><span class="k">class</span> <span class="nc">ChannelTransform</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">Parameterized</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A ChannelTransform is a callable object that takes channels as</span>
+<span class="sd">    input (an ordered dictionary of arrays) and transforms their</span>
+<span class="sd">    contents in some way before returning them.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">__abstract</span> <span class="o">=</span> <span class="bp">True</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channels</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+
+
+<span class="c"># Example of a ChannelTransform</span></div>
+<div class="viewcode-block" id="CorrelateChannels"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.patterngenerator.CorrelateChannels">[docs]</a><span class="k">class</span> <span class="nc">CorrelateChannels</span><span class="p">(</span><span class="n">ChannelTransform</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Correlate channels by mixing a fraction of one channel into another.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">from_channel</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">        Name of the channel to take data from.&quot;&quot;&quot;</span><span class="p">)</span>
+
+    <span class="n">to_channel</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">        Name of the channel to change data of.&quot;&quot;&quot;</span><span class="p">)</span>
+
+    <span class="n">strength</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">        Strength of the correlation to add, with 0 being no change,</span>
+<span class="s">        and 1.0 overwriting to_channel with from_channel.&quot;&quot;&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel_data</span><span class="p">):</span>
+        <span class="n">channel_data</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">to_channel</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">strength</span><span class="o">*</span><span class="n">channel_data</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">from_channel</span><span class="p">]</span> <span class="o">+</span> \
+            <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">strength</span><span class="p">)</span><span class="o">*</span><span class="n">channel_data</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">to_channel</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">channel_data</span>
+
+
+    </div>
+<div class="viewcode-block" id="ChannelGenerator"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.patterngenerator.ChannelGenerator">[docs]</a><span class="k">class</span> <span class="nc">ChannelGenerator</span><span class="p">(</span><span class="n">PatternGenerator</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Abstract base class for patterns supporting multiple channels natively.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">__abstract</span> <span class="o">=</span> <span class="bp">True</span>
+
+    <span class="n">channel_transforms</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">HookList</span><span class="p">(</span><span class="n">class_</span><span class="o">=</span><span class="n">ChannelTransform</span><span class="p">,</span><span class="n">default</span><span class="o">=</span><span class="p">[],</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">        Optional functions to apply post processing to the set of channels.&quot;&quot;&quot;</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_channel_data</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ChannelGenerator</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">channels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">params_to_override</span><span class="p">):</span>
+        <span class="n">default</span> <span class="o">=</span> <span class="bp">self</span><span class="p">(</span><span class="o">**</span><span class="n">params_to_override</span><span class="p">)</span>
+
+        <span class="n">res</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="n">res</span><span class="p">[</span><span class="s">&#39;default&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">default</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_channel_data</span><span class="p">)):</span>
+            <span class="n">res</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_channel_data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">res</span>
+
+    <span class="k">def</span> <span class="nf">num_channels</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_channel_data</span><span class="p">)</span>
+
+
+<span class="c"># ALERT: Interface needs to change to support multiple generators, not</span>
+<span class="c"># just rescaling a single one.</span></div>
+<div class="viewcode-block" id="ComposeChannels"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.patterngenerator.ComposeChannels">[docs]</a><span class="k">class</span> <span class="nc">ComposeChannels</span><span class="p">(</span><span class="n">ChannelGenerator</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create a multi-channel PatternGenerator from another PatternGenerator.</span>
+
+<span class="sd">    If the specified generator itself already posseses more than one</span>
+<span class="sd">    channel, will use its channels&#39; data; otherwise, will synthesize</span>
+<span class="sd">    the channels from the single channel of the generator.</span>
+
+<span class="sd">    After finding or synthesizing the channels, they are scaled according to</span>
+<span class="sd">    the corresponding channel_factors.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">generator</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">ClassSelector</span><span class="p">(</span><span class="n">class_</span><span class="o">=</span><span class="n">PatternGenerator</span><span class="p">,</span><span class="n">default</span><span class="o">=</span><span class="n">Constant</span><span class="p">(),</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">        PatternGenerator to be converted to multiple channels.&quot;&quot;&quot;</span><span class="p">)</span>
+
+    <span class="n">channel_factors</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Dynamic</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="p">[</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">],</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">        Channel scaling factors. The length of this list sets the</span>
+<span class="s">        number of channels to be created, unless the input_generator</span>
+<span class="s">        already supports multiple channels (in which case the number</span>
+<span class="s">        of its channels is used).&quot;&quot;&quot;</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">**</span><span class="n">params</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ComposeChannels</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">channel_factors</span><span class="p">)):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_channel_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="bp">None</span> <span class="p">)</span>
+
+
+<div class="viewcode-block" id="ComposeChannels.set_channel_values"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.patterngenerator.ComposeChannels.set_channel_values">[docs]</a>    <span class="k">def</span> <span class="nf">set_channel_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">params</span><span class="p">,</span><span class="n">channels_dict</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Given an input generator, synthesize the channel data, either</span>
+<span class="sd">        by copying a single-channel generator&#39;s input, scaled by</span>
+<span class="sd">        channel_factors, or by copying and then scaling the channels</span>
+<span class="sd">        of a multichannel generator.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span><span class="p">(</span> <span class="nb">len</span><span class="p">(</span><span class="n">channels_dict</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">1</span> <span class="p">):</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="nb">len</span><span class="p">(</span><span class="n">channels_dict</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span> <span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_channel_data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">channels_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">channel_factors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">channel_factors</span><span class="p">)):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_channel_data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">channels_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">channel_factors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+</div>
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">**</span><span class="n">params</span><span class="p">):</span>
+        <span class="c"># Generates all channels, then returns the default channel</span>
+
+        <span class="n">p</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">ParamOverrides</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">params</span><span class="p">)</span>
+
+        <span class="n">params</span><span class="p">[</span><span class="s">&#39;xdensity&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">xdensity</span>
+        <span class="n">params</span><span class="p">[</span><span class="s">&#39;ydensity&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">ydensity</span>
+        <span class="n">params</span><span class="p">[</span><span class="s">&#39;bounds&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">bounds</span>
+
+        <span class="c"># (not **p)</span>
+        <span class="n">channels_dict</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">generator</span><span class="o">.</span><span class="n">channels</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_channel_values</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">params</span><span class="p">,</span><span class="n">channels_dict</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">channel_transforms</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_channel_data</span> <span class="o">=</span> <span class="n">c</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_channel_data</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">channels_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+
 
 </div>
 <span class="n">options</span><span class="o">.</span><span class="n">Pattern_SheetView</span> <span class="o">=</span> <span class="n">StyleOpts</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="s">&#39;gray&#39;</span><span class="p">)</span>
