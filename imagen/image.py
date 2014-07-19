@@ -296,6 +296,7 @@ class GenericImage(ChannelGenerator):
     def __init__(self, **params):
         self._image = None
         super(GenericImage, self).__init__(**params)
+        self._get_image(self)
 
 
     def _get_image(self,p):
@@ -394,9 +395,11 @@ class FileImage(GenericImage):
 
 
     def __init__(self, **params):
-        super(FileImage,self).__init__(**params)
         self.last_filename = None  # Cached to avoid unnecessary reloading for each channel
         self._cached_average = None
+        super(FileImage,self).__init__(**params) ## must be called after setting the class-attributes
+        self._image = None # necessary to ensure reloading of data (due to cache mechanisms
+                           # call after super.__init__, which calls _get_image()
 
 
     def __call__(self,**params_to_override):
@@ -486,7 +489,7 @@ class RotateHue(ChannelTransform):
         Scale the saturation by the specified value.""")
 
     rotation = param.Number(default=numbergen.UniformRandom(name='hue_jitter',lbound=0,ubound=1,seed=1048921), 
-                            bounds=(0.0,1.0),doc="""
+                            softbounds=(0.0,1.0),doc="""
         Amount by which to rotate the hue.  The default setting
         chooses a random value of hue rotation between zero and 100%.
         If set to 0, no rotation will be performed.""")
@@ -516,6 +519,30 @@ class RotateHue(ChannelTransform):
 
 
 
+class ScaleChannels(ChannelTransform):
+    """
+    Scale each channel of an Image PatternGenerator by a different factor. 
+
+    The list of channel factors should be the same length as the number of channels.
+    Otherwise, if the factors provided are fewer than the channels of the Image, the
+    remaining channels will not be scaled. If they are more, then only the first N
+    factors are used.
+    """
+
+    channel_factors = param.Dynamic(default=[1.0,1.0,1.0],doc="""
+        Channel scaling factors.""")
+
+
+    def __call__(self,channel_data):
+        # safety check
+        num_channels = min( len(channel_data), len(self.channel_factors) )
+        for i in range( num_channels ):
+            channel_data[i] = channel_data[i] * self.channel_factors[i]
+
+        return channel_data
+
+
+
 class NumpyFile(FileImage):
     """
     For backwards compatibility.
@@ -526,3 +553,5 @@ class NumpyFile(FileImage):
                                size_normalization='original',
                                whole_pattern_output_fns=[]),doc="""
         The PatternSampler to use to resample/resize the image.""")
+
+
