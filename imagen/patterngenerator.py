@@ -375,7 +375,14 @@ class ChannelGenerator(PatternGenerator):
         return res
 
     def num_channels(self):
+        if( len(self._channel_data)==0 ):
+            import copy
+            c = copy.deepcopy(self)
+            return len(c.channels())-1
+
+
         return len(self._channel_data)
+
 
 
 # ALERT: Interface needs to change to support multiple generators, not
@@ -447,3 +454,4 @@ class ComposeChannels(ChannelGenerator):
 
 
 options.Pattern_SheetView = StyleOpts(cmap='gray')
+

@@ -489,7 +489,7 @@ class RotateHue(ChannelTransform):
         Scale the saturation by the specified value.""")
 
     rotation = param.Number(default=numbergen.UniformRandom(name='hue_jitter',lbound=0,ubound=1,seed=1048921), 
-                            bounds=(0.0,1.0),doc="""
+                            softbounds=(0.0,1.0),doc="""
         Amount by which to rotate the hue.  The default setting
         chooses a random value of hue rotation between zero and 100%.
         If set to 0, no rotation will be performed.""")
@@ -519,6 +519,32 @@ class RotateHue(ChannelTransform):
 
 
 
+class ScaleChannels(ChannelTransform):
+    """
+    Scale each channel of an Image PatternGenerator by a different factor. 
+
+    The list of channel factors needs to be the same length as the number of channels.
+    If the factors provided are fewer than the channels of the Image, the remaining channels
+    will not be scaled. If they are more, then only the first N factors are used.
+    """
+
+    channel_factors = param.Dynamic(default=[1.0,1.0,1.0],doc="""
+        Channel scaling factors. The length of this list sets the
+        number of channels to be created, unless the input_generator
+        already supports multiple channels (in which case the number
+        of its channels is used).""")
+
+
+    def __call__(self,channel_data):
+        # safety check
+        num_channels = min( len(channel_data), len(self.channel_factors) )
+        for i in range( num_channels ):
+            channel_data[i] = channel_data[i] * self.channel_factors[i]
+
+        return channel_data
+
+
+
 class NumpyFile(FileImage):
     """
     For backwards compatibility.
@@ -529,3 +555,5 @@ class NumpyFile(FileImage):
                                size_normalization='original',
                                whole_pattern_output_fns=[]),doc="""
         The PatternSampler to use to resample/resize the image.""")
+
+
