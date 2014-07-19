@@ -375,12 +375,6 @@ class ChannelGenerator(PatternGenerator):
         return res
 
     def num_channels(self):
-        if( len(self._channel_data)==0 ):
-            import copy
-            c = copy.deepcopy(self)
-            return len(c.channels())-1
-
-
         return len(self._channel_data)
 
 

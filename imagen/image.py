@@ -299,6 +299,7 @@ class GenericImage(ChannelGenerator):
     def __init__(self, **params):
         self._image = None
         super(GenericImage, self).__init__(**params)
+        self._get_image(self)
 
 
     def _get_image(self,p):
@@ -397,9 +398,11 @@ class FileImage(GenericImage):
 
 
     def __init__(self, **params):
-        super(FileImage,self).__init__(**params)
         self.last_filename = None  # Cached to avoid unnecessary reloading for each channel
         self._cached_average = None
+        super(FileImage,self).__init__(**params) ## must be called after setting the class-attributes
+        self._image = None # necessary to ensure reloading of data (due to cache mechanisms
+                           # call after super.__init__, which calls _get_image()
 
 
     def __call__(self,**params_to_override):
