@@ -526,16 +526,14 @@ class ScaleChannels(ChannelTransform):
     """
     Scale each channel of an Image PatternGenerator by a different factor. 
 
-    The list of channel factors needs to be the same length as the number of channels.
-    If the factors provided are fewer than the channels of the Image, the remaining channels
-    will not be scaled. If they are more, then only the first N factors are used.
+    The list of channel factors should be the same length as the number of channels.
+    Otherwise, if the factors provided are fewer than the channels of the Image, the
+    remaining channels will not be scaled. If they are more, then only the first N
+    factors are used.
     """
 
     channel_factors = param.Dynamic(default=[1.0,1.0,1.0],doc="""
-        Channel scaling factors. The length of this list sets the
-        number of channels to be created, unless the input_generator
-        already supports multiple channels (in which case the number
-        of its channels is used).""")
+        Channel scaling factors.""")
 
 
     def __call__(self,channel_data):

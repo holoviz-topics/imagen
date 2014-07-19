@@ -379,8 +379,7 @@ class ChannelGenerator(PatternGenerator):
 
 
 
-# ALERT: Interface needs to change to support multiple generators, not
-# just rescaling a single one.
+
 class ComposeChannels(ChannelGenerator):
     """
     Create a multi-channel PatternGenerator from another PatternGenerator.
