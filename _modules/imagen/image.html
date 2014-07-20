@@ -91,10 +91,7 @@
 <span class="kn">import</span> <span class="nn">param</span>
 <span class="kn">from</span> <span class="nn">param.parameterized</span> <span class="kn">import</span> <span class="n">overridable_property</span>
 
-<span class="kn">import</span> <span class="nn">collections</span>
-
 <span class="kn">from</span> <span class="nn">dataviews.sheetviews</span> <span class="kn">import</span> <span class="n">BoundingBox</span><span class="p">,</span> <span class="n">SheetCoordinateSystem</span>
-<span class="kn">from</span> <span class="nn">.patterngenerator</span> <span class="kn">import</span> <span class="n">PatternGenerator</span><span class="p">,</span> <span class="n">Constant</span>
 <span class="kn">from</span> <span class="nn">.patterngenerator</span> <span class="kn">import</span> <span class="n">ChannelGenerator</span><span class="p">,</span> <span class="n">ChannelTransform</span>
 <span class="kn">from</span> <span class="nn">.transferfn</span> <span class="kn">import</span> <span class="n">DivisiveNormalizeLinf</span><span class="p">,</span> <span class="n">TransferFn</span>
 
@@ -365,6 +362,7 @@
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_image</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">GenericImage</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_get_image</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
 
     <span class="k">def</span> <span class="nf">_get_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span><span class="p">):</span>
@@ -463,9 +461,11 @@
 
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">FileImage</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">last_filename</span> <span class="o">=</span> <span class="bp">None</span>  <span class="c"># Cached to avoid unnecessary reloading for each channel</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_cached_average</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">FileImage</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">)</span> <span class="c">## must be called after setting the class-attributes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_image</span> <span class="o">=</span> <span class="bp">None</span> <span class="c"># necessary to ensure reloading of data (due to cache mechanisms</span>
+                           <span class="c"># call after super.__init__, which calls _get_image()</span>
 
 
     <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">**</span><span class="n">params_to_override</span><span class="p">):</span>
@@ -555,7 +555,7 @@
 <span class="s">        Scale the saturation by the specified value.&quot;&quot;&quot;</span><span class="p">)</span>
 
     <span class="n">rotation</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">numbergen</span><span class="o">.</span><span class="n">UniformRandom</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;hue_jitter&#39;</span><span class="p">,</span><span class="n">lbound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">ubound</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">seed</span><span class="o">=</span><span class="mi">1048921</span><span class="p">),</span> 
-                            <span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">),</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
+                            <span class="n">softbounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">),</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
 <span class="s">        Amount by which to rotate the hue.  The default setting</span>
 <span class="s">        chooses a random value of hue rotation between zero and 100%.</span>
 <span class="s">        If set to 0, no rotation will be performed.&quot;&quot;&quot;</span><span class="p">)</span>
@@ -585,6 +585,30 @@
 
 
 </div>
+<div class="viewcode-block" id="ScaleChannels"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.image.ScaleChannels">[docs]</a><span class="k">class</span> <span class="nc">ScaleChannels</span><span class="p">(</span><span class="n">ChannelTransform</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Scale each channel of an Image PatternGenerator by a different factor. </span>
+
+<span class="sd">    The list of channel factors should be the same length as the number of channels.</span>
+<span class="sd">    Otherwise, if the factors provided are fewer than the channels of the Image, the</span>
+<span class="sd">    remaining channels will not be scaled. If they are more, then only the first N</span>
+<span class="sd">    factors are used.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">channel_factors</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Dynamic</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="p">[</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">],</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">        Channel scaling factors.&quot;&quot;&quot;</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">channel_data</span><span class="p">):</span>
+        <span class="c"># safety check</span>
+        <span class="n">num_channels</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span> <span class="nb">len</span><span class="p">(</span><span class="n">channel_data</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">channel_factors</span><span class="p">)</span> <span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="n">num_channels</span> <span class="p">):</span>
+            <span class="n">channel_data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">channel_data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">channel_factors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">channel_data</span>
+
+
+</div>
 <div class="viewcode-block" id="NumpyFile"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.image.NumpyFile">[docs]</a><span class="k">class</span> <span class="nc">NumpyFile</span><span class="p">(</span><span class="n">FileImage</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    For backwards compatibility.</span>
@@ -594,8 +618,8 @@
         <span class="n">default</span><span class="o">=</span><span class="n">PatternSampler</span><span class="p">(</span><span class="n">background_value_fn</span><span class="o">=</span><span class="n">edge_average</span><span class="p">,</span>
                                <span class="n">size_normalization</span><span class="o">=</span><span class="s">&#39;original&#39;</span><span class="p">,</span>
                                <span class="n">whole_pattern_output_fns</span><span class="o">=</span><span class="p">[]),</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
-<span class="s">        The PatternSampler to use to resample/resize the image.&quot;&quot;&quot;</span><span class="p">)</span></div>
-</pre></div>
+<span class="s">        The PatternSampler to use to resample/resize the image.&quot;&quot;&quot;</span><span class="p">)</span>
+</pre></div></div>
 
           </div>
         </div>
