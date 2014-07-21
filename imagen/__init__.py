@@ -1024,7 +1024,14 @@ class Sweeper(PatternGenerator):
     generator = param.ClassSelector(PatternGenerator,default=Gaussian(),precedence=0.97, 
                                     doc="Pattern to sweep.")
 
-    reset_period = param.Integer(default=4,bounds=(0,None),doc="""
+    time_offset = param.Number(default=0, doc="""
+      The time offset from which frames are generated given the
+      supplied pattern.""")
+
+    step_offset = param.Number(default=0, doc="""
+      The number of steps to offset the sweeper by.""")
+
+    reset_period = param.Number(default=4,bounds=(0,None),doc="""
         Period between generating each new translation episode.""")
 
     speed = param.Number(default=2.0/24.0,bounds=(0.0,None),doc="""
@@ -1034,29 +1041,26 @@ class Sweeper(PatternGenerator):
     time_fn = param.Callable(default=param.Dynamic.time_fn,doc="""
         Function to generate the time used as a base for translation.""")
 
-    def make_time_fn(self,p,offset):
-        def offset_time_fn():
-            time = p.time_fn()
-            return p.time_fn.time_type((time // p.reset_period) + offset)
-        return offset_time_fn
 
-
-    def function(self,p):
-        motion_time_fn = self.make_time_fn(p,0)
+    def function(self, p):
+        motion_time_fn = OffsetTimeFn(offset=p.time_offset,
+                                      reset_period=p.reset_period,
+                                      time_fn=p.time_fn)
         pg = p.generator
         pg.set_dynamic_time_fn(motion_time_fn)
-        motion_orientation=pg.orientation+pi/2.0
+        motion_orientation = pg.orientation + pi / 2.0
 
-        step = int(p.time_fn()%p.reset_period)
+        step = int(p.time_fn() % p.reset_period) + p.step_offset
 
-        new_x = p.x+p.size*pg.x
-        new_y = p.y+p.size*pg.y
+        new_x = p.x + p.size * pg.x
+        new_y = p.y + p.size * pg.y
 
-        image_array = pg(xdensity=p.xdensity,ydensity=p.ydensity,bounds=p.bounds,
-                         x=new_x+p.speed*step*np.cos(motion_orientation),
-                         y=new_y+p.speed*step*np.sin(motion_orientation),
-                         orientation=pg.orientation+p.orientation,
-                         scale=pg.scale*p.scale,offset=pg.offset+p.offset)
+        image_array = pg(xdensity=p.xdensity, ydensity=p.ydensity,
+                         bounds=p.bounds,
+                         x=new_x + p.speed * step * np.cos(motion_orientation),
+                         y=new_y + p.speed * step * np.sin(motion_orientation),
+                         orientation=pg.orientation + p.orientation,
+                         scale=pg.scale * p.scale, offset=pg.offset + p.offset)
 
         return image_array
 
