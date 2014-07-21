@@ -992,6 +992,28 @@ class Translator(PatternGenerator):
 
 
 
+class OffsetTimeFn(param.Parameterized):
+    """
+    A picklable version of the global time function with a custom offset
+    and reset period.
+    """
+
+    offset = param.Number(default=0, doc="""
+      The time offset from which frames are generated given the
+      supplied pattern.""")
+
+    reset_period = param.Number(default=4,bounds=(0,None),doc="""
+        Period between generating each new translation episode.""")
+
+    time_fn = param.Callable(default=param.Dynamic.time_fn,doc="""
+        Function to generate the time used as a base for translation.""")
+
+    def __call__(self):
+        time = self.time_fn()
+        return self.time_fn.time_type((time // self.reset_period) + self.offset)
+
+
+
 class Sweeper(PatternGenerator):
     """
     PatternGenerator that sweeps a supplied PatternGenerator in a direction
