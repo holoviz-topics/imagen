@@ -1038,6 +1038,10 @@ class Sweeper(PatternGenerator):
         The speed with which the pattern should move,
         in sheet coordinates per time_fn unit.""")
 
+    relative_motion_orientation = param.Number(default=pi/2.0,bounds=(0,2*pi),doc="""
+        The direction in which the pattern should be moved, relative
+        to the orientation of the supplied generator""")
+
     time_fn = param.Callable(default=param.Dynamic.time_fn,doc="""
         Function to generate the time used as a base for translation.""")
 
@@ -1048,7 +1052,7 @@ class Sweeper(PatternGenerator):
                                       time_fn=p.time_fn)
         pg = p.generator
         pg.set_dynamic_time_fn(motion_time_fn)
-        motion_orientation = pg.orientation + pi / 2.0
+        motion_orientation = pg.orientation + p.relative_motion_orientation
 
         step = int(p.time_fn() % p.reset_period) + p.step_offset
 
