@@ -404,10 +404,9 @@ class FileImage(GenericImage):
 
     def __call__(self,**params_to_override):
         # Cache image to avoid channel_data being deleted before channel-specific processing completes.
-        params_to_override['cache_image']=True
         p = param.ParamOverrides(self,params_to_override)
 
-        if not ( p.cache_image and (p._image is not None) ):
+        if not (p.cache_image and (p._image is not None)):
             self._cached_average = super(FileImage,self).__call__(**params_to_override)
 
             self._channel_data = self._process_channels(p,**params_to_override)
@@ -420,6 +419,15 @@ class FileImage(GenericImage):
 
 
         return self._cached_average
+
+
+    def set_matrix_dimensions(self, *args):
+        """
+        Subclassed to delete the cached image when matrix dimensions are
+        changed.
+        """
+        self._image = None
+        super(FileImage, self).set_matrix_dimensions(*args)
 
 
     def _get_image(self,p):
