@@ -470,10 +470,9 @@
 
     <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">**</span><span class="n">params_to_override</span><span class="p">):</span>
         <span class="c"># Cache image to avoid channel_data being deleted before channel-specific processing completes.</span>
-        <span class="n">params_to_override</span><span class="p">[</span><span class="s">&#39;cache_image&#39;</span><span class="p">]</span><span class="o">=</span><span class="bp">True</span>
         <span class="n">p</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">ParamOverrides</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">params_to_override</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span> <span class="n">p</span><span class="o">.</span><span class="n">cache_image</span> <span class="ow">and</span> <span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">_image</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">)</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">cache_image</span> <span class="ow">and</span> <span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">_image</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">)):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_cached_average</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">FileImage</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__call__</span><span class="p">(</span><span class="o">**</span><span class="n">params_to_override</span><span class="p">)</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">_channel_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process_channels</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="o">**</span><span class="n">params_to_override</span><span class="p">)</span>
@@ -488,6 +487,15 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cached_average</span>
 
 
+<div class="viewcode-block" id="FileImage.set_matrix_dimensions"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.image.FileImage.set_matrix_dimensions">[docs]</a>    <span class="k">def</span> <span class="nf">set_matrix_dimensions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Subclassed to delete the cached image when matrix dimensions are</span>
+<span class="sd">        changed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_image</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">FileImage</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">set_matrix_dimensions</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+
+</div>
     <span class="k">def</span> <span class="nf">_get_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span><span class="p">):</span>
         <span class="n">file_</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">splitext</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span>
         <span class="n">npy</span> <span class="o">=</span> <span class="p">(</span><span class="n">ext</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s">&quot;.npy&quot;</span><span class="p">)</span>
