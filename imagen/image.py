@@ -25,10 +25,7 @@ import numpy as np
 import param
 from param.parameterized import overridable_property
 
-import collections
-
 from dataviews.sheetviews import BoundingBox, SheetCoordinateSystem
-from .patterngenerator import PatternGenerator, Constant
 from .patterngenerator import ChannelGenerator, ChannelTransform
 from .transferfn import DivisiveNormalizeLinf, TransferFn
 
@@ -290,7 +287,7 @@ class GenericImage(ChannelGenerator):
                                whole_pattern_output_fns=[DivisiveNormalizeLinf()]),doc="""
         The PatternSampler to use to resample/resize the image.""")
 
-    cache_image = param.Boolean(default=True,doc="""
+    cache_image = param.Boolean(default=False,doc="""
         If False, discards the image and pattern_sampler after drawing
         the pattern each time, to make it possible to use very large
         databases of images without running out of memory.""")
@@ -330,8 +327,10 @@ class GenericImage(ChannelGenerator):
         orig_image = self._image
 
         for i in range(len(self._channel_data)):
-            self._image = self._channel_data[i]
+            self._image = self._original_channel_data[i].copy()  #self._channel_data[i]
             self._channel_data[i] = self._reduced_call(**params_to_override)
+
+
         self._image = orig_image
         return self._channel_data
 
@@ -407,10 +406,9 @@ class FileImage(GenericImage):
 
     def __call__(self,**params_to_override):
         # Cache image to avoid channel_data being deleted before channel-specific processing completes.
-        params_to_override['cache_image']=True
         p = param.ParamOverrides(self,params_to_override)
 
-        if not ( p.cache_image and (p._image is not None) ):
+        if not (p.cache_image and (p._image is not None)):
             self._cached_average = super(FileImage,self).__call__(**params_to_override)
 
             self._channel_data = self._process_channels(p,**params_to_override)
@@ -423,6 +421,15 @@ class FileImage(GenericImage):
 
 
         return self._cached_average
+
+
+    def set_matrix_dimensions(self, *args):
+        """
+        Subclassed to delete the cached image when matrix dimensions are
+        changed.
+        """
+        self._image = None
+        super(FileImage, self).set_matrix_dimensions(*args)
 
 
     def _get_image(self,p):
@@ -458,6 +465,7 @@ class FileImage(GenericImage):
             num_channels = file_data.shape[2]
             for i in range(num_channels):
                 self._channel_data.append( file_data[:, :, i])
+                self._original_channel_data.append( file_data[:, :, i] )
 
 
     def _load_npy(self, filename):
@@ -470,6 +478,7 @@ class FileImage(GenericImage):
 
         for i in range(file_channel_data.shape[2]):
             self._channel_data.append(file_channel_data[:, :, i])
+            self._original_channel_data.append(file_channel_data[:, :, i])
 
         self._image = file_channel_data.sum(2) / file_channel_data.shape[2]
 
