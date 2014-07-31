@@ -825,10 +825,14 @@ class Selector(CompositeBase):
         int_index=int(len(self.generators)*wrap(0,1.0,self.inspect_value('index')))
         return self.generators[int_index]
 
-    def channels(self, **params_to_override):
-        self(**params_to_override)
+    def channels(self, use_cached=False, **params_to_override):
+        default = self(**params_to_override)
         current_generator = self.get_current_generator()
-        return current_generator.channels()
+
+        res = current_generator.channels(use_cached=True)
+        res['default'] = default
+
+        return res
 
     def num_channels(self):
         if(self.inspect_value('index') is None):

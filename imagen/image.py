@@ -287,7 +287,7 @@ class GenericImage(ChannelGenerator):
                                whole_pattern_output_fns=[DivisiveNormalizeLinf()]),doc="""
         The PatternSampler to use to resample/resize the image.""")
 
-    cache_image = param.Boolean(default=True,doc="""
+    cache_image = param.Boolean(default=False,doc="""
         If False, discards the image and pattern_sampler after drawing
         the pattern each time, to make it possible to use very large
         databases of images without running out of memory.""")
@@ -327,8 +327,10 @@ class GenericImage(ChannelGenerator):
         orig_image = self._image
 
         for i in range(len(self._channel_data)):
-            self._image = self._channel_data[i]
+            self._image = self._original_channel_data[i]  #self._channel_data[i]
             self._channel_data[i] = self._reduced_call(**params_to_override)
+
+
         self._image = orig_image
         return self._channel_data
 
@@ -418,6 +420,7 @@ class FileImage(GenericImage):
                 self._image = None
 
 
+
         return self._cached_average
 
 
@@ -450,7 +453,9 @@ class FileImage(GenericImage):
         """
         Load image using PIL.
         """
-        self._channel_data = []
+        self._channel_data[:] = []
+        self._original_channel_data[:] = []
+
         im = Image.open(filename)
         self._image = ImageOps.grayscale(im)
         im.load()
@@ -463,18 +468,21 @@ class FileImage(GenericImage):
             num_channels = file_data.shape[2]
             for i in range(num_channels):
                 self._channel_data.append( file_data[:, :, i])
+                self._original_channel_data.append( file_data[:, :, i] )
 
 
     def _load_npy(self, filename):
         """
         Load image using Numpy.
         """
-        self._channel_data = []
+        self._channel_data[:] = []
+        self._original_channel_data[:] = []
         file_channel_data = np.load(filename)
         file_channel_data = file_channel_data / file_channel_data.max()
 
         for i in range(file_channel_data.shape[2]):
             self._channel_data.append(file_channel_data[:, :, i])
+            self._original_channel_data.append(file_channel_data[:, :, i])
 
         self._image = file_channel_data.sum(2) / file_channel_data.shape[2]
 
