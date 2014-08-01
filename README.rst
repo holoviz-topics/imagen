@@ -1,4 +1,4 @@
-|BuildStatus|_ |PyPIVersion|_
+|BuildStatus|_ |PyPIVersion|_ |ImagenDocs|_
 
 ImaGen
 ======
@@ -23,3 +23,7 @@ dependencies via ``pip install --user imagen``.  More recent changes can be obta
 
 .. |PyPIVersion| image:: http://img.shields.io/pypi/v/imagen.svg
 .. _PyPIVersion: https://pypi.python.org/pypi/imagen
+
+
+.. |ImagenDocs| image:: http://doozy.inf.ed.ac.uk:8010/png?builder=imagen_docs
+.. _ImagenDocs: http://doozy.inf.ed.ac.uk:8010/waterfall
