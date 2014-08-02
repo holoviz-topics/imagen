@@ -454,8 +454,8 @@ class FileImage(GenericImage):
         """
         Load image using PIL.
         """
-        self._channel_data[:] = []
-        self._original_channel_data[:] = []
+        self._channel_data = []
+        self._original_channel_data = []
 
         im = Image.open(filename)
         self._image = ImageOps.grayscale(im)
@@ -476,8 +476,8 @@ class FileImage(GenericImage):
         """
         Load image using Numpy.
         """
-        self._channel_data[:] = []
-        self._original_channel_data[:] = []
+        self._channel_data = []
+        self._original_channel_data = []
         file_channel_data = np.load(filename)
         file_channel_data = file_channel_data / file_channel_data.max()
 
