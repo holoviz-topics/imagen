@@ -327,7 +327,7 @@ class GenericImage(ChannelGenerator):
         orig_image = self._image
 
         for i in range(len(self._channel_data)):
-            self._image = self._original_channel_data[i]  #self._channel_data[i]
+            self._image = self._original_channel_data[i]
             self._channel_data[i] = self._reduced_call(**params_to_override)
 
 
