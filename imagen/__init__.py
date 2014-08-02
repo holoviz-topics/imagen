@@ -827,7 +827,9 @@ class Selector(CompositeBase):
 
     def channels(self, use_cached=False, **params_to_override):
         """
-        Get channel data from the current generator.
+        Get channel data from the current generator.  use_cached is not supported at the moment,
+        though it must be forced to be True in the current_generator in order to avoid generating
+        the same data twice (the first time by  self()  and the second with  current_generator.channels()  ).
         """
         default = self(**params_to_override)
         current_generator = self.get_current_generator()
