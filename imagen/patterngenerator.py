@@ -1,9 +1,11 @@
 """
-PatternGenerator abstract class, basic example concrete class, and multichannel support.
+PatternGenerator abstract class, basic example concrete class, and
+multichannel support.
 
-PatternGenerators support both single-channel patterns, i.e. bare arrays, and 
-multiple channels, such as for color images.  See ``PatternGenerator.__call__``
-and ``PatternGenerator.channels`` for more information.
+PatternGenerators support both single-channel patterns, i.e. bare
+arrays, and multiple channels, such as for color images.  See
+``PatternGenerator.__call__`` and ``PatternGenerator.channels`` for
+more information.
 """
 
 
@@ -125,7 +127,8 @@ class PatternGenerator(param.Parameterized):
 
     def __call__(self,**params_to_override):
         """
-        Call the subclass's 'function' method on a rotated and scaled coordinate system.
+        Call the subclass's 'function' method on a rotated and scaled
+        coordinate system.
 
         Creates and fills an array with the requested pattern.  If
         called without any params, uses the values for the Parameters
@@ -162,20 +165,25 @@ class PatternGenerator(param.Parameterized):
 
     def channels(self, use_cached=False, **params_to_override):
         """
-        Channels() adds a shared interface for single channel and multichannel structures.
-        It will always return an ordered dict: its first element is the single channel of the pattern
-        (if single-channel) or the channel average (if multichannel); the successive elements are the
-        individual channels' arrays (key: 0,1,..N-1).
+        Channels() adds a shared interface for single channel and
+        multichannel structures.  It will always return an ordered
+        dict: its first element is the single channel of the pattern
+        (if single-channel) or the channel average (if multichannel);
+        the successive elements are the individual channels' arrays
+        (key: 0,1,..N-1).
         """
         return collections.OrderedDict({ 'default':self.__call__(**params_to_override) })
 
 
     def num_channels(self):
         """
-        Query the number of channels implemented by the PatternGenerator. In case of single-channel
-        generators this will return 1; in case of multichannel, it will return the number of channels (eg,
-        in the case of RGB images it would return '3', Red-Green-Blue, even though the OrderedDict returned
-        by channels() will have 4 elements -- the 3 channels + their average).
+        Query the number of channels implemented by the
+        PatternGenerator. In case of single-channel generators this
+        will return 1; in case of multichannel, it will return the
+        number of channels (eg, in the case of RGB images it would
+        return '3', Red-Green-Blue, even though the OrderedDict
+        returned by channels() will have 4 elements -- the 3 channels
+        + their average).
         """
         return 1
 
@@ -215,8 +223,8 @@ class PatternGenerator(param.Parameterized):
 
     def _create_and_rotate_coordinate_arrays(self, x, y, orientation):
         """
-        Create pattern matrices from x and y vectors, and rotate
-        them to the specified orientation.
+        Create pattern matrices from x and y vectors, and rotate them
+        to the specified orientation.
         """
         # Using this two-liner requires that x increase from left to
         # right and y decrease from left to right; I don't think it
@@ -242,11 +250,12 @@ class PatternGenerator(param.Parameterized):
 
     def set_matrix_dimensions(self, bounds, xdensity, ydensity):
         """
-        Change the dimensions of the matrix into which the pattern will be drawn.
-        Users of this class should call this method rather than changing
-        the bounds, xdensity, and ydensity parameters directly.  Subclasses
-        can override this method to update any internal data structures that
-        may depend on the matrix dimensions.
+        Change the dimensions of the matrix into which the pattern
+        will be drawn.  Users of this class should call this method
+        rather than changing the bounds, xdensity, and ydensity
+        parameters directly.  Subclasses can override this method to
+        update any internal data structures that may depend on the
+        matrix dimensions.
         """
         self.bounds = bounds
         self.xdensity = xdensity
@@ -346,7 +355,7 @@ class CorrelateChannels(ChannelTransform):
         return channel_data
 
 
-    
+
 class ChannelGenerator(PatternGenerator):
     """
     Abstract base class for patterns supporting multiple channels natively.
@@ -383,17 +392,17 @@ class ChannelGenerator(PatternGenerator):
 
 
 
-
 class ComposeChannels(ChannelGenerator):
     """
-    Create a multi-channel PatternGenerator from another PatternGenerator.
+    Create a multi-channel PatternGenerator from another
+    PatternGenerator.
 
     If the specified generator itself already posseses more than one
     channel, will use its channels' data; otherwise, will synthesize
     the channels from the single channel of the generator.
 
-    After finding or synthesizing the channels, they are scaled according to
-    the corresponding channel_factors.
+    After finding or synthesizing the channels, they are scaled
+    according to the corresponding channel_factors.
     """
 
     generators = param.List(class_=PatternGenerator,default=[Constant(scale=0.0)],
@@ -426,10 +435,8 @@ class ComposeChannels(ChannelGenerator):
         for c in self.channel_transforms:
             self._channel_data = c(self._channel_data)
 
-
         return sum(act for act in self._channel_data)/len(self._channel_data)
 
 
 
 options.Pattern_SheetView = StyleOpts(cmap='gray')
-

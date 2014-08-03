@@ -21,9 +21,10 @@ FeatureColorConverter
     Declare a set of color spaces to allow external code to work the
     same for any combination of color spaces.  Specifically, declares:
 
-    * image color space (the space in which a dataset of images has been stored),
-    * working color space (to which the images will be converted), e.g. to transform images to a
-         different working dataset, and
+    * image color space (the space in which a dataset of images has
+      been stored),
+    * working color space (to which the images will be converted),
+         e.g. to transform images to a different working dataset, and
     * analysis color space (space in which analyses will be performed)
 
     These values can be set using::

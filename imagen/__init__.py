@@ -231,13 +231,14 @@ class Disk(PatternGenerator):
     """
     2D disk pattern generator.
 
-    An elliptical disk can be obtained by adjusting the aspect_ratio of a circular
-    disk; this transforms a circle into an ellipse by stretching the circle in the
-    y (vertical) direction.
+    An elliptical disk can be obtained by adjusting the aspect_ratio
+    of a circular disk; this transforms a circle into an ellipse by
+    stretching the circle in the y (vertical) direction.
 
-    The Gaussian fall-off at a point P is an approximation for non-circular disks,
-    since the point on the ellipse closest to P is taken to be the same point as
-    the point on the circle before stretching that was closest to P.
+    The Gaussian fall-off at a point P is an approximation for
+    non-circular disks, since the point on the ellipse closest to P is
+    taken to be the same point as the point on the circle before
+    stretching that was closest to P.
     """
 
     aspect_ratio  = param.Number(default=1.0,bounds=(0.0,None),softbounds=(0.0,2.0),
@@ -291,9 +292,9 @@ class OrientationContrast(SineGrating):
     """
     Circular pattern for testing responses to differences in contrast.
 
-    The pattern contains a sine grating ring surrounding a sine grating disk, each
-    with parameters (orientation, size, scale and offset) that can be
-    changed independently.
+    The pattern contains a sine grating ring surrounding a sine
+    grating disk, each with parameters (orientation, size, scale and
+    offset) that can be changed independently.
     """
 
     orientationcenter   = param.Number(default=0.0,bounds=(0.0,2*pi), doc="Orientation of the center grating.")
@@ -334,8 +335,8 @@ class OrientationContrast(SineGrating):
 
 class RawRectangle(PatternGenerator):
     """
-    2D rectangle pattern generator with no smoothing, for use when drawing
-    patterns pixel by pixel.
+    2D rectangle pattern generator with no smoothing, for use when
+    drawing patterns pixel by pixel.
     """
 
     aspect_ratio   = param.Number(default=1.0,bounds=(0.0,None),softbounds=(0.0,2.0),
@@ -353,7 +354,10 @@ class RawRectangle(PatternGenerator):
 
 
 class Rectangle(PatternGenerator):
-    """2D rectangle pattern, with Gaussian smoothing around the edges."""
+    """
+    2D rectangle pattern, with Gaussian smoothing around the
+    edges.
+    """
 
     aspect_ratio = param.Number(default=1.0,bounds=(0.0,None),softbounds=(0.0,6.0),
         precedence=0.31,doc=
@@ -551,8 +555,8 @@ class Composite(CompositeBase):
     """
     PatternGenerator that accepts a list of other PatternGenerators.
     To create a new pattern, asks each of the PatternGenerators in the
-    list to create a pattern, then it combines the patterns to create a
-    single pattern that it returns.
+    list to create a pattern, then it combines the patterns to create
+    a single pattern that it returns.
     """
 
     # The Accum_Replace operator from LISSOM is not yet supported,
@@ -643,8 +647,8 @@ class Composite(CompositeBase):
 
 class SeparatedComposite(Composite):
     """
-    Generalized version of the Composite PatternGenerator that enforces spacing constraints
-    between pattern centers.
+    Generalized version of the Composite PatternGenerator that
+    enforces spacing constraints between pattern centers.
 
     Currently supports minimum spacing, but can be generalized to
     support maximum spacing also (and both at once).
@@ -668,7 +672,8 @@ class SeparatedComposite(Composite):
 
     max_trials = param.Integer(default = 50, bounds = (0,None),
                          softbounds = (0,100), precedence=-1, doc="""
-        Number of times to try for a new pattern location that meets the criteria.
+        Number of times to try for a new pattern location that meets
+        the criteria.
 
         This is an essentially arbitrary timeout value that helps
         prevent an endless loop in case the requirements cannot be
@@ -677,8 +682,8 @@ class SeparatedComposite(Composite):
 
     def __distance_valid(self, g0, g1, p):
         """
-        Returns true if the distance between the (x,y) locations of two generators
-        g0 and g1 is greater than a minimum separation.
+        Returns true if the distance between the (x,y) locations of
+        two generators g0 and g1 is greater than a minimum separation.
 
         Can be extended easily to support other criteria.
         """
@@ -689,11 +694,13 @@ class SeparatedComposite(Composite):
 
     def _advance_pattern_generators(self,p):
         """
-        Advance the parameters for each generator for this presentation.
+        Advance the parameters for each generator for this
+        presentation.
 
-        Picks a position for each generator that is accepted by __distance_valid
-        for all combinations.  Returns a new list of the generators, with
-        some potentially omitted due to failure to meet the constraints.
+        Picks a position for each generator that is accepted by
+        __distance_valid for all combinations.  Returns a new list of
+        the generators, with some potentially omitted due to failure
+        to meet the constraints.
         """
 
         valid_generators = []
@@ -1030,12 +1037,12 @@ class OffsetTimeFn(param.Parameterized):
 
 class Sweeper(PatternGenerator):
     """
-    PatternGenerator that sweeps a supplied PatternGenerator in a direction
-    perpendicular to its orientation. Each time step, the supplied
-    PatternGenerator is sweeped further at a fixed speed, and after reset_period
-    time steps a new pattern is drawn.
+    PatternGenerator that sweeps a supplied PatternGenerator in a
+    direction perpendicular to its orientation. Each time step, the
+    supplied PatternGenerator is sweeped further at a fixed speed, and
+    after reset_period time steps a new pattern is drawn.
     """
-    generator = param.ClassSelector(PatternGenerator,default=Gaussian(),precedence=0.97, 
+    generator = param.ClassSelector(PatternGenerator,default=Gaussian(),precedence=0.97,
                                     doc="Pattern to sweep.")
 
     time_offset = param.Number(default=0, doc="""
@@ -1102,8 +1109,8 @@ class Sweeper(PatternGenerator):
 
 class OldSweeper(PatternGenerator):
     """
-    PatternGenerator that sweeps a supplied PatternGenerator in a direction
-    perpendicular to its orientation.
+    PatternGenerator that sweeps a supplied PatternGenerator in a
+    direction perpendicular to its orientation.
     """
 
     generator = param.Parameter(default=Gaussian(),precedence=0.97, doc="Pattern to sweep.")
@@ -1186,7 +1193,8 @@ class DifferenceOfGaussians(PatternGenerator):
 class Sigmoid(PatternGenerator):
     """
     Two-dimensional sigmoid pattern, dividing the plane into positive
-    and negative halves with a smoothly sloping transition between them.
+    and negative halves with a smoothly sloping transition between
+    them.
     """
 
     slope = param.Number(default=10.0, bounds=(None,None), softbounds=(-100.0,100.0),
@@ -1263,7 +1271,8 @@ class LogGaussian(PatternGenerator):
 
     def __call__(self, **params_to_override):
         """
-        Call the subclass's 'function' method on a rotated and scaled coordinate system.
+        Call the subclass's 'function' method on a rotated and scaled
+        coordinate system.
 
         Creates and fills an array with the requested pattern.  If
         called without any params, uses the values for the Parameters
@@ -1328,8 +1337,9 @@ class LogGaussian(PatternGenerator):
 
 class SigmoidedDoLG(PatternGenerator):
     """
-    Sigmoid multiplicatively combined with a difference of Log Gaussians, such that one part of the plane can be
-    the mirror image of the other, and the peaks of the gaussians are movable.
+    Sigmoid multiplicatively combined with a difference of Log
+    Gaussians, such that one part of the plane can be the mirror image
+    of the other, and the peaks of the gaussians are movable.
     """
 
     size = param.Number(default=1.5)
@@ -1565,12 +1575,16 @@ class PowerSpectrum(PatternGenerator):
 
     def _set_frequency_spacing(self, min_freq, max_freq):
         """
-        Frequency spacing to use, i.e. how to map the available frequency range to the discrete sheet rows.
+        Frequency spacing to use, i.e. how to map the available
+        frequency range to the discrete sheet rows.
 
-        NOTE: We're calculating the spacing of a range between the highest and lowest frequencies, the actual
-        segmentation and averaging of the frequencies to fit this spacing occurs in _getAmplitudes().
+        NOTE: We're calculating the spacing of a range between the
+        highest and lowest frequencies, the actual segmentation and
+        averaging of the frequencies to fit this spacing occurs in
+        _getAmplitudes().
 
-        This method is here solely to provide a minimal overload if custom spacing is required.
+        This method is here solely to provide a minimal overload if
+        custom spacing is required.
         """
 
         self.frequency_spacing = np.linspace(min_freq, max_freq, num=self._sheet_dimensions[0]+1, endpoint=True)
@@ -1578,8 +1592,9 @@ class PowerSpectrum(PatternGenerator):
 
     def _get_row_amplitudes(self):
         """
-        Perform a real Discrete Fourier Transform (DFT; implemented using a Fast Fourier Transform algorithm, FFT)
-        of the current sample from the signal multiplied by the smoothing window.
+        Perform a real Discrete Fourier Transform (DFT; implemented
+        using a Fast Fourier Transform algorithm, FFT) of the current
+        sample from the signal multiplied by the smoothing window.
 
         See numpy.rfft for information about the Fourier transform.
         """
@@ -1636,8 +1651,8 @@ class PowerSpectrum(PatternGenerator):
 
 class Spectrogram(PowerSpectrum):
     """
-    Extends PowerSpectrum to provide a temporal buffer, yielding
-    a 2D representation of a fixed-width spectrogram.
+    Extends PowerSpectrum to provide a temporal buffer, yielding a 2D
+    representation of a fixed-width spectrogram.
     """
 
     min_latency = param.Integer(default=0, precedence=1,

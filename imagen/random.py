@@ -1,5 +1,6 @@
 """
-Two-dimensional pattern generators drawing from various random distributions.
+Two-dimensional pattern generators drawing from various random
+distributions.
 """
 
 import warnings

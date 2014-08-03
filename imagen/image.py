@@ -79,20 +79,20 @@ class PatternSampler(ImageSampler):
     size_normalization = param.ObjectSelector(default='original',
         objects=['original','stretch_to_fit','fit_shortest','fit_longest'],
         doc="""
-        Determines how the pattern is scaled initially, relative to the
-        default retinal dimension of 1.0 in sheet coordinates:
+        Determines how the pattern is scaled initially, relative to
+        the default retinal dimension of 1.0 in sheet coordinates:
 
         'stretch_to_fit': scale both dimensions of the pattern so they
-        would fill a Sheet with bounds=BoundingBox(radius=0.5) (disregards
-        the original's aspect ratio).
+        would fill a Sheet with bounds=BoundingBox(radius=0.5)
+        (disregards the original's aspect ratio).
 
-        'fit_shortest': scale the pattern so that its shortest dimension
+        'fit_shortest': scale the pattern so that its shortest
+        dimension is made to fill the corresponding dimension on a
+        Sheet with bounds=BoundingBox(radius=0.5) (maintains the
+        original's aspect ratio, filling the entire bounding box).
+
+        'fit_longest': scale the pattern so that its longest dimension
         is made to fill the corresponding dimension on a Sheet with
-        bounds=BoundingBox(radius=0.5) (maintains the original's aspect
-        ratio, filling the entire bounding box).
-
-        'fit_longest': scale the pattern so that its longest dimension is
-        made to fill the corresponding dimension on a Sheet with
         bounds=BoundingBox(radius=0.5) (maintains the original's
         aspect ratio, fitting the image into the bounding box but not
         necessarily filling it).
@@ -200,7 +200,6 @@ class PatternSampler(ImageSampler):
             else:
                 sf = pattern_rows/sheet_ydensity
             x*=sf;y*=sf
-
 
 
 
@@ -423,8 +422,8 @@ class FileImage(GenericImage):
 
     def set_matrix_dimensions(self, *args):
         """
-        Subclassed to delete the cached image when matrix dimensions are
-        changed.
+        Subclassed to delete the cached image when matrix dimensions
+        are changed.
         """
         self._image = None
         super(FileImage, self).set_matrix_dimensions(*args)
@@ -488,20 +487,21 @@ class FileImage(GenericImage):
 
 class RotateHue(ChannelTransform):
     """
-    Rotate the hue of an Image PatternGenerator. 
+    Rotate the hue of an Image PatternGenerator.
 
     Requires a three-channel (e.g. RGB) or a 4-channel (e.g. RGBA)
-    color image.  Also allows the saturation of the image to be scaled.
-    
+    color image.  Also allows the saturation of the image to be
+    scaled.
+
     Requires the color space of the image to be declared using the
-    colorspaces.color_conversion object, and uses the analysis
-    color space from that object to do the rotation.
+    colorspaces.color_conversion object, and uses the analysis color
+    space from that object to do the rotation.
     """
 
     saturation = param.Number(default=1.0,doc="""
         Scale the saturation by the specified value.""")
 
-    rotation = param.Number(default=numbergen.UniformRandom(name='hue_jitter',lbound=0,ubound=1,seed=1048921), 
+    rotation = param.Number(default=numbergen.UniformRandom(name='hue_jitter',lbound=0,ubound=1,seed=1048921),
                             softbounds=(0.0,1.0),doc="""
         Amount by which to rotate the hue.  The default setting
         chooses a random value of hue rotation between zero and 100%.
@@ -534,12 +534,13 @@ class RotateHue(ChannelTransform):
 
 class ScaleChannels(ChannelTransform):
     """
-    Scale each channel of an Image PatternGenerator by a different factor. 
+    Scale each channel of an Image PatternGenerator by a different
+    factor.
 
-    The list of channel factors should be the same length as the number of channels.
-    Otherwise, if the factors provided are fewer than the channels of the Image, the
-    remaining channels will not be scaled. If they are more, then only the first N
-    factors are used.
+    The list of channel factors should be the same length as the
+    number of channels.  Otherwise, if the factors provided are fewer
+    than the channels of the Image, the remaining channels will not be
+    scaled. If they are more, then only the first N factors are used.
     """
 
     channel_factors = param.Dynamic(default=[1.0,1.0,1.0],doc="""
@@ -566,5 +567,3 @@ class NumpyFile(FileImage):
                                size_normalization='original',
                                whole_pattern_output_fns=[]),doc="""
         The PatternSampler to use to resample/resize the image.""")
-
-

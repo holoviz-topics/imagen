@@ -188,8 +188,9 @@ class LogSpectrogram(Spectrogram):
 
 class ModulatedLogSpectrogram(LogSpectrogram):
     """
-    Extends OctaveSpectrogram with a simple model of outer ear amplification.
-    One can set both the range to amplify and the amount.
+    Extends OctaveSpectrogram with a simple model of outer ear
+    amplification.  One can set both the range to amplify and the
+    amount.
     """
 
     lower_freq_bound = param.Number(default=1000.0, bounds=(0.0,None),

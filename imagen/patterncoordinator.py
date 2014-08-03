@@ -45,10 +45,14 @@ class FeatureCoordinator(param.ParameterizedFunction):
     def __call__(self, pattern, pattern_label, pattern_number, master_seed, **params):
         """
         'pattern' is the PatternGenerator to be modified
-        'pattern_label' is the name to be given to this PatternGenerator, used to select different behaviors
-        'pattern_number' is an integer value distinguishing between multiple patterns with the same pattern_label
-        'master_seed' is to be used for any random number generator seeds used for this pattern
-        'params' consists of optional keyword-value pairs to be provided for subclasses' parameters
+        'pattern_label' is the name to be given to this
+        PatternGenerator, used to select different behaviors
+        'pattern_number' is an integer value distinguishing between
+        multiple patterns with the same pattern_label
+        'master_seed' is to be used for any random number generator
+        seeds used for this pattern
+        'params' consists of optional keyword-value pairs to be
+        provided for subclasses' parameters
         """
         raise NotImplementedError
 
@@ -56,7 +60,8 @@ class FeatureCoordinator(param.ParameterizedFunction):
 
 class XCoordinator(FeatureCoordinator):
     """
-    Chooses a random value for the x coordinate, subject to the provided position_bound_x.
+    Chooses a random value for the x coordinate, subject to the
+    provided position_bound_x.
     """
 
     position_bound_x = param.Number(default=0.8,doc="""
@@ -76,7 +81,8 @@ class XCoordinator(FeatureCoordinator):
 
 class YCoordinator(FeatureCoordinator):
     """
-    Chooses a random value for the y coordinate, subject to the provided position_bound_y.
+    Chooses a random value for the y coordinate, subject to the
+    provided position_bound_y.
     """
 
     position_bound_y = param.Number(default=0.8,doc="""
@@ -96,7 +102,8 @@ class YCoordinator(FeatureCoordinator):
 
 class OrientationCoordinator(FeatureCoordinator):
     """
-    Chooses a random orientation within the specified orientation_bound in each direction.
+    Chooses a random orientation within the specified
+    orientation_bound in each direction.
     """
 
     orientation_bound = param.Number(default=math.pi,doc="""
@@ -115,11 +122,12 @@ class OrientationCoordinator(FeatureCoordinator):
 
 class PatternCoordinator(param.Parameterized):
     """
-    Returns a set of coordinated PatternGenerators, named according to pattern_labels.
+    Returns a set of coordinated PatternGenerators, named according to
+    pattern_labels.
 
-    The features to be modified are specified with the features_to_vary
-    parameter. A feature is something coordinated between the
-    PatternGenerators, either:
+    The features to be modified are specified with the
+    features_to_vary parameter. A feature is something coordinated
+    between the PatternGenerators, either:
 
     a. one of the existing parameters of the PatternGenerators
        (such as size), or
@@ -190,8 +198,9 @@ class PatternCoordinator(param.Parameterized):
 
     def _create_patterns(self, properties=None):
         """
-        Return a list (of length patterns_per_label) of PatternGenerator instances.
-        Should use pattern_type and pattern_parameters to create each pattern.
+        Return a list (of length patterns_per_label) of
+        PatternGenerator instances.  Should use pattern_type and
+        pattern_parameters to create each pattern.
 
         properties is a dictionary, e.g. {'pattern_label':
         pattern_label}, which can be used to create PatternGenerators
@@ -203,11 +212,11 @@ class PatternCoordinator(param.Parameterized):
     def __init__(self,inherent_features=[],**params):
 
         """
-        If a dataset already and inherently includes certain features, a list
-        with the inherent feature names should be supplied.
+        If a dataset already and inherently includes certain features,
+        a list with the inherent feature names should be supplied.
 
-        Any extra parameter values supplied here will be passed down to the
-        feature_coordinators requested in features_to_vary.
+        Any extra parameter values supplied here will be passed down
+        to the feature_coordinators requested in features_to_vary.
         """
         p=ParamOverrides(self,params,allow_extra_keywords=True)
 
@@ -262,55 +271,77 @@ class PatternCoordinatorImages(PatternCoordinator):
 
     def __init__(self,dataset_name,**params):
         """
-        dataset_name is the path to a folder containing a MANIFEST_json
-        (https://docs.python.org/2/library/json.html), which contains a description for a dataset.
-        If no MANIFEST_json is present, all image files in the specified folder are used.
+        dataset_name is the path to a folder containing a
+        MANIFEST_json (https://docs.python.org/2/library/json.html),
+        which contains a description for a dataset.  If no
+        MANIFEST_json is present, all image files in the specified
+        folder are used.
 
-        Any extra parameter values supplied here will be passed down to the
-        feature_coordinators requested in features_to_vary.
+        Any extra parameter values supplied here will be passed down
+        to the feature_coordinators requested in features_to_vary.
 
-        The JSON file can contain any of the following entries, if an entry is not present, the default is used:
-            :'dataset_name': Name of the dataset (string, default=filepath)
+        The JSON file can contain any of the following entries, if an
+        entry is not present, the default is used:
+
+            :'dataset_name': Name of the dataset (string,
+            default=filepath)
             :'length': Number of images in the dataset (integer,
-            default=number of files in directory matching filename_template)
-            :'description': Description of the dataset (string, default="")
-            :'source': Citation of paper for which the dataset was created (string, default=name)
-            :'filename_template': Path to the images with placeholders ({placeholder_name})
-            for inherent features and the image number, e.g. "filename_template": "images/image{i}.png".
-            The placeholders are replaced according to placeholder_mapping.
-            Alternatively, glob patterns such as * or ? can be used, e.g. "filename_template": "images/*.png"
-            (default=path_to_dataset_name/*.*)
-            :'placeholder_mapping': Dictionary specifying the replacement of placeholders in filename_template;
-            value is used in eval() (default={}).
-            :'inherent_features': Features for which the corresponding feature_coordinators should not be applied
+            default=number of files in directory matching
+            filename_template)
+            :'description': Description of the dataset (string,
+            default="")
+            :'source': Citation of paper for which the dataset was
+            created (string, default=name)
+            :'filename_template': Path to the images with placeholders
+            ({placeholder_name}) for inherent features and the image
+            number, e.g. "filename_template": "images/image{i}.png".
+            The placeholders are replaced according to
+            placeholder_mapping.  Alternatively, glob patterns such as
+            * or ? can be used, e.g. "filename_template":
+            "images/*.png" (default=path_to_dataset_name/*.*)
+            :'placeholder_mapping': Dictionary specifying the
+            replacement of placeholders in filename_template; value is
+            used in eval() (default={}).
+            :'inherent_features': Features for which the corresponding
+            feature_coordinators should not be applied
             (default=['sf','or','cr'])
 
             Currently, the label of the pattern generator
             ('pattern_label') as well as the image number
             ('current_image') are given as parameters to each callable
-            supplied in placeholder_mapping, where current_image varies
-            from 0 to length-1 and pattern_label is one of the items
-            of pattern_labels. (python code, default={'i': lambda params: '%02d' % (params['current_image']+1)}
+            supplied in placeholder_mapping, where current_image
+            varies from 0 to length-1 and pattern_label is one of the
+            items of pattern_labels.
+            (python code, default={'i': lambda params: '%02d' %
+            (params['current_image']+1)}
 
             Example 1: Imagine having images without any inherent
             features named as follows: "images/image01.png",
             "images/image02.png" and so on. Then, filename_template:
             "images/image{i}.png" and "placeholder_mapping":
             "{'i': lambda params: '%02d' % (params['current_image']+1)}"
-            This replaces {i} in the template with the current image number + 1
+            This replaces {i} in the template with the current image
+            number + 1
 
-            Example 2: Imagine having image pairs from a stereo webcam named as follows: "images/image01_left.png",
-            "images/image01_right.png" and so on. If pattern_labels=['Left','Right'], then
-            filename_template: "images/image{i}_{dy}" and
-            "placeholder_mapping": "{'i': lambda params: '%02d' % (params['current_image']+1),
-                                   'dy':lambda params: 'left' if params['pattern_label']=='Left' else 'right'}"
+            Example 2: Imagine having image pairs from a stereo webcam
+            named as follows: "images/image01_left.png",
 
-            Here, additionally {dy} gets replaced by either 'left' if the pattern_label is 'Left' or 'right' otherwise
+            "images/image01_right.png" and so on. If
+            pattern_labels=['Left','Right'], then filename_template:
+            "images/image{i}_{dy}" and "placeholder_mapping":
+            "{'i': lambda params: '%02d' % (params['current_image']+1),
+            'dy':lambda params: 'left' if
+            params['pattern_label']=='Left' else 'right'}"
 
-        If the directory does not contain a MANIFEST_json file,
-        the defaults are as follows:
-            :'filename_template': filepath/*.*, whereas filepath is the path given in dataset_name
-            :'patterns_per_label': Number of image files in filepath, whereas filepath is the path given in dataset_name
+            Here, additionally {dy} gets replaced by either 'left' if
+            the pattern_label is 'Left' or 'right' otherwise
+
+        If the directory does not contain a MANIFEST_json file, the
+        defaults are as follows:
+            :'filename_template': filepath/*.*, whereas filepath is
+            the path given in dataset_name
+            :'patterns_per_label': Number of image files in filepath,
+            whereas filepath is the path given in dataset_name
             :'inherent_features': []
             :'placeholder_mapping': {}
         """
