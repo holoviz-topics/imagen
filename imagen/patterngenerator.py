@@ -160,7 +160,7 @@ class PatternGenerator(param.Parameterized):
         return result
 
 
-    def channels(self, **params_to_override):
+    def channels(self, use_cached=False, **params_to_override):
         """
         Channels() adds a shared interface for single channel and multichannel structures.
         It will always return an ordered dict: its first element is the single channel of the pattern
@@ -359,15 +359,19 @@ class ChannelGenerator(PatternGenerator):
 
 
     def __init__(self, **params):
-        self._channel_data = []
+        self._original_channel_data = [] # channel data before processing
+        self._channel_data = []          # channel data after processing
         super(ChannelGenerator, self).__init__(**params)
 
 
-    def channels(self, **params_to_override):
-        default = self(**params_to_override)
-
+    def channels(self, use_cached=False, **params_to_override):
         res = collections.OrderedDict()
-        res['default'] = default
+
+        if not use_cached:
+            default = self(**params_to_override)
+            res['default'] = default
+        else:
+            res['default'] = None
 
         for i in range(len(self._channel_data)):
             res[i] = self._channel_data[i]
