@@ -20,7 +20,7 @@ def seed(seed=None):
     """
     Set the seed on the shared RandomState instance.
     """
-    warnings.warn("Use param.seed instead. To be deprecated.", FutureWarning)
+    warnings.warn("Use param.random_seed instead. To be deprecated.", FutureWarning)
     RandomGenerator.random_generator.seed(seed)
 
 
