@@ -111,10 +111,14 @@
     <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">pattern_label</span><span class="p">,</span> <span class="n">pattern_number</span><span class="p">,</span> <span class="n">master_seed</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        &#39;pattern&#39; is the PatternGenerator to be modified</span>
-<span class="sd">        &#39;pattern_label&#39; is the name to be given to this PatternGenerator, used to select different behaviors</span>
-<span class="sd">        &#39;pattern_number&#39; is an integer value distinguishing between multiple patterns with the same pattern_label</span>
-<span class="sd">        &#39;master_seed&#39; is to be used for any random number generator seeds used for this pattern</span>
-<span class="sd">        &#39;params&#39; consists of optional keyword-value pairs to be provided for subclasses&#39; parameters</span>
+<span class="sd">        &#39;pattern_label&#39; is the name to be given to this</span>
+<span class="sd">        PatternGenerator, used to select different behaviors</span>
+<span class="sd">        &#39;pattern_number&#39; is an integer value distinguishing between</span>
+<span class="sd">        multiple patterns with the same pattern_label</span>
+<span class="sd">        &#39;master_seed&#39; is to be used for any random number generator</span>
+<span class="sd">        seeds used for this pattern</span>
+<span class="sd">        &#39;params&#39; consists of optional keyword-value pairs to be</span>
+<span class="sd">        provided for subclasses&#39; parameters</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
@@ -122,7 +126,8 @@
 </div>
 <div class="viewcode-block" id="XCoordinator"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.patterncoordinator.XCoordinator">[docs]</a><span class="k">class</span> <span class="nc">XCoordinator</span><span class="p">(</span><span class="n">FeatureCoordinator</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Chooses a random value for the x coordinate, subject to the provided position_bound_x.</span>
+<span class="sd">    Chooses a random value for the x coordinate, subject to the</span>
+<span class="sd">    provided position_bound_x.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">position_bound_x</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
@@ -142,7 +147,8 @@
 </div>
 <div class="viewcode-block" id="YCoordinator"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.patterncoordinator.YCoordinator">[docs]</a><span class="k">class</span> <span class="nc">YCoordinator</span><span class="p">(</span><span class="n">FeatureCoordinator</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Chooses a random value for the y coordinate, subject to the provided position_bound_y.</span>
+<span class="sd">    Chooses a random value for the y coordinate, subject to the</span>
+<span class="sd">    provided position_bound_y.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">position_bound_y</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
@@ -162,7 +168,8 @@
 </div>
 <div class="viewcode-block" id="OrientationCoordinator"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.patterncoordinator.OrientationCoordinator">[docs]</a><span class="k">class</span> <span class="nc">OrientationCoordinator</span><span class="p">(</span><span class="n">FeatureCoordinator</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Chooses a random orientation within the specified orientation_bound in each direction.</span>
+<span class="sd">    Chooses a random orientation within the specified</span>
+<span class="sd">    orientation_bound in each direction.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">orientation_bound</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
@@ -181,11 +188,12 @@
 </div>
 <div class="viewcode-block" id="PatternCoordinator"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.patterncoordinator.PatternCoordinator">[docs]</a><span class="k">class</span> <span class="nc">PatternCoordinator</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">Parameterized</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Returns a set of coordinated PatternGenerators, named according to pattern_labels.</span>
+<span class="sd">    Returns a set of coordinated PatternGenerators, named according to</span>
+<span class="sd">    pattern_labels.</span>
 
-<span class="sd">    The features to be modified are specified with the features_to_vary</span>
-<span class="sd">    parameter. A feature is something coordinated between the</span>
-<span class="sd">    PatternGenerators, either:</span>
+<span class="sd">    The features to be modified are specified with the</span>
+<span class="sd">    features_to_vary parameter. A feature is something coordinated</span>
+<span class="sd">    between the PatternGenerators, either:</span>
 
 <span class="sd">    a. one of the existing parameters of the PatternGenerators</span>
 <span class="sd">       (such as size), or</span>
@@ -256,8 +264,9 @@
 
     <span class="k">def</span> <span class="nf">_create_patterns</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">properties</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Return a list (of length patterns_per_label) of PatternGenerator instances.</span>
-<span class="sd">        Should use pattern_type and pattern_parameters to create each pattern.</span>
+<span class="sd">        Return a list (of length patterns_per_label) of</span>
+<span class="sd">        PatternGenerator instances.  Should use pattern_type and</span>
+<span class="sd">        pattern_parameters to create each pattern.</span>
 
 <span class="sd">        properties is a dictionary, e.g. {&#39;pattern_label&#39;:</span>
 <span class="sd">        pattern_label}, which can be used to create PatternGenerators</span>
@@ -269,11 +278,11 @@
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">inherent_features</span><span class="o">=</span><span class="p">[],</span><span class="o">**</span><span class="n">params</span><span class="p">):</span>
 
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        If a dataset already and inherently includes certain features, a list</span>
-<span class="sd">        with the inherent feature names should be supplied.</span>
+<span class="sd">        If a dataset already and inherently includes certain features,</span>
+<span class="sd">        a list with the inherent feature names should be supplied.</span>
 
-<span class="sd">        Any extra parameter values supplied here will be passed down to the</span>
-<span class="sd">        feature_coordinators requested in features_to_vary.</span>
+<span class="sd">        Any extra parameter values supplied here will be passed down</span>
+<span class="sd">        to the feature_coordinators requested in features_to_vary.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">p</span><span class="o">=</span><span class="n">ParamOverrides</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">params</span><span class="p">,</span><span class="n">allow_extra_keywords</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
@@ -328,55 +337,77 @@
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dataset_name</span><span class="p">,</span><span class="o">**</span><span class="n">params</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        dataset_name is the path to a folder containing a MANIFEST_json</span>
-<span class="sd">        (https://docs.python.org/2/library/json.html), which contains a description for a dataset.</span>
-<span class="sd">        If no MANIFEST_json is present, all image files in the specified folder are used.</span>
+<span class="sd">        dataset_name is the path to a folder containing a</span>
+<span class="sd">        MANIFEST_json (https://docs.python.org/2/library/json.html),</span>
+<span class="sd">        which contains a description for a dataset.  If no</span>
+<span class="sd">        MANIFEST_json is present, all image files in the specified</span>
+<span class="sd">        folder are used.</span>
 
-<span class="sd">        Any extra parameter values supplied here will be passed down to the</span>
-<span class="sd">        feature_coordinators requested in features_to_vary.</span>
+<span class="sd">        Any extra parameter values supplied here will be passed down</span>
+<span class="sd">        to the feature_coordinators requested in features_to_vary.</span>
 
-<span class="sd">        The JSON file can contain any of the following entries, if an entry is not present, the default is used:</span>
-<span class="sd">            :&#39;dataset_name&#39;: Name of the dataset (string, default=filepath)</span>
+<span class="sd">        The JSON file can contain any of the following entries, if an</span>
+<span class="sd">        entry is not present, the default is used:</span>
+
+<span class="sd">            :&#39;dataset_name&#39;: Name of the dataset (string,</span>
+<span class="sd">            default=filepath)</span>
 <span class="sd">            :&#39;length&#39;: Number of images in the dataset (integer,</span>
-<span class="sd">            default=number of files in directory matching filename_template)</span>
-<span class="sd">            :&#39;description&#39;: Description of the dataset (string, default=&quot;&quot;)</span>
-<span class="sd">            :&#39;source&#39;: Citation of paper for which the dataset was created (string, default=name)</span>
-<span class="sd">            :&#39;filename_template&#39;: Path to the images with placeholders ({placeholder_name})</span>
-<span class="sd">            for inherent features and the image number, e.g. &quot;filename_template&quot;: &quot;images/image{i}.png&quot;.</span>
-<span class="sd">            The placeholders are replaced according to placeholder_mapping.</span>
-<span class="sd">            Alternatively, glob patterns such as * or ? can be used, e.g. &quot;filename_template&quot;: &quot;images/*.png&quot;</span>
-<span class="sd">            (default=path_to_dataset_name/*.*)</span>
-<span class="sd">            :&#39;placeholder_mapping&#39;: Dictionary specifying the replacement of placeholders in filename_template;</span>
-<span class="sd">            value is used in eval() (default={}).</span>
-<span class="sd">            :&#39;inherent_features&#39;: Features for which the corresponding feature_coordinators should not be applied</span>
+<span class="sd">            default=number of files in directory matching</span>
+<span class="sd">            filename_template)</span>
+<span class="sd">            :&#39;description&#39;: Description of the dataset (string,</span>
+<span class="sd">            default=&quot;&quot;)</span>
+<span class="sd">            :&#39;source&#39;: Citation of paper for which the dataset was</span>
+<span class="sd">            created (string, default=name)</span>
+<span class="sd">            :&#39;filename_template&#39;: Path to the images with placeholders</span>
+<span class="sd">            ({placeholder_name}) for inherent features and the image</span>
+<span class="sd">            number, e.g. &quot;filename_template&quot;: &quot;images/image{i}.png&quot;.</span>
+<span class="sd">            The placeholders are replaced according to</span>
+<span class="sd">            placeholder_mapping.  Alternatively, glob patterns such as</span>
+<span class="sd">            * or ? can be used, e.g. &quot;filename_template&quot;:</span>
+<span class="sd">            &quot;images/*.png&quot; (default=path_to_dataset_name/*.*)</span>
+<span class="sd">            :&#39;placeholder_mapping&#39;: Dictionary specifying the</span>
+<span class="sd">            replacement of placeholders in filename_template; value is</span>
+<span class="sd">            used in eval() (default={}).</span>
+<span class="sd">            :&#39;inherent_features&#39;: Features for which the corresponding</span>
+<span class="sd">            feature_coordinators should not be applied</span>
 <span class="sd">            (default=[&#39;sf&#39;,&#39;or&#39;,&#39;cr&#39;])</span>
 
 <span class="sd">            Currently, the label of the pattern generator</span>
 <span class="sd">            (&#39;pattern_label&#39;) as well as the image number</span>
 <span class="sd">            (&#39;current_image&#39;) are given as parameters to each callable</span>
-<span class="sd">            supplied in placeholder_mapping, where current_image varies</span>
-<span class="sd">            from 0 to length-1 and pattern_label is one of the items</span>
-<span class="sd">            of pattern_labels. (python code, default={&#39;i&#39;: lambda params: &#39;%02d&#39; % (params[&#39;current_image&#39;]+1)}</span>
+<span class="sd">            supplied in placeholder_mapping, where current_image</span>
+<span class="sd">            varies from 0 to length-1 and pattern_label is one of the</span>
+<span class="sd">            items of pattern_labels.</span>
+<span class="sd">            (python code, default={&#39;i&#39;: lambda params: &#39;%02d&#39; %</span>
+<span class="sd">            (params[&#39;current_image&#39;]+1)}</span>
 
 <span class="sd">            Example 1: Imagine having images without any inherent</span>
 <span class="sd">            features named as follows: &quot;images/image01.png&quot;,</span>
 <span class="sd">            &quot;images/image02.png&quot; and so on. Then, filename_template:</span>
 <span class="sd">            &quot;images/image{i}.png&quot; and &quot;placeholder_mapping&quot;:</span>
 <span class="sd">            &quot;{&#39;i&#39;: lambda params: &#39;%02d&#39; % (params[&#39;current_image&#39;]+1)}&quot;</span>
-<span class="sd">            This replaces {i} in the template with the current image number + 1</span>
+<span class="sd">            This replaces {i} in the template with the current image</span>
+<span class="sd">            number + 1</span>
 
-<span class="sd">            Example 2: Imagine having image pairs from a stereo webcam named as follows: &quot;images/image01_left.png&quot;,</span>
-<span class="sd">            &quot;images/image01_right.png&quot; and so on. If pattern_labels=[&#39;Left&#39;,&#39;Right&#39;], then</span>
-<span class="sd">            filename_template: &quot;images/image{i}_{dy}&quot; and</span>
-<span class="sd">            &quot;placeholder_mapping&quot;: &quot;{&#39;i&#39;: lambda params: &#39;%02d&#39; % (params[&#39;current_image&#39;]+1),</span>
-<span class="sd">                                   &#39;dy&#39;:lambda params: &#39;left&#39; if params[&#39;pattern_label&#39;]==&#39;Left&#39; else &#39;right&#39;}&quot;</span>
+<span class="sd">            Example 2: Imagine having image pairs from a stereo webcam</span>
+<span class="sd">            named as follows: &quot;images/image01_left.png&quot;,</span>
 
-<span class="sd">            Here, additionally {dy} gets replaced by either &#39;left&#39; if the pattern_label is &#39;Left&#39; or &#39;right&#39; otherwise</span>
+<span class="sd">            &quot;images/image01_right.png&quot; and so on. If</span>
+<span class="sd">            pattern_labels=[&#39;Left&#39;,&#39;Right&#39;], then filename_template:</span>
+<span class="sd">            &quot;images/image{i}_{dy}&quot; and &quot;placeholder_mapping&quot;:</span>
+<span class="sd">            &quot;{&#39;i&#39;: lambda params: &#39;%02d&#39; % (params[&#39;current_image&#39;]+1),</span>
+<span class="sd">            &#39;dy&#39;:lambda params: &#39;left&#39; if</span>
+<span class="sd">            params[&#39;pattern_label&#39;]==&#39;Left&#39; else &#39;right&#39;}&quot;</span>
 
-<span class="sd">        If the directory does not contain a MANIFEST_json file,</span>
-<span class="sd">        the defaults are as follows:</span>
-<span class="sd">            :&#39;filename_template&#39;: filepath/*.*, whereas filepath is the path given in dataset_name</span>
-<span class="sd">            :&#39;patterns_per_label&#39;: Number of image files in filepath, whereas filepath is the path given in dataset_name</span>
+<span class="sd">            Here, additionally {dy} gets replaced by either &#39;left&#39; if</span>
+<span class="sd">            the pattern_label is &#39;Left&#39; or &#39;right&#39; otherwise</span>
+
+<span class="sd">        If the directory does not contain a MANIFEST_json file, the</span>
+<span class="sd">        defaults are as follows:</span>
+<span class="sd">            :&#39;filename_template&#39;: filepath/*.*, whereas filepath is</span>
+<span class="sd">            the path given in dataset_name</span>
+<span class="sd">            :&#39;patterns_per_label&#39;: Number of image files in filepath,</span>
+<span class="sd">            whereas filepath is the path given in dataset_name</span>
 <span class="sd">            :&#39;inherent_features&#39;: []</span>
 <span class="sd">            :&#39;placeholder_mapping&#39;: {}</span>
 <span class="sd">        &quot;&quot;&quot;</span>

@@ -65,11 +65,13 @@
             
   <h1>Source code for imagen.patterngenerator</h1><div class="highlight"><pre>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">PatternGenerator abstract class, basic example concrete class, and multichannel support.</span>
+<span class="sd">PatternGenerator abstract class, basic example concrete class, and</span>
+<span class="sd">multichannel support.</span>
 
-<span class="sd">PatternGenerators support both single-channel patterns, i.e. bare arrays, and </span>
-<span class="sd">multiple channels, such as for color images.  See ``PatternGenerator.__call__``</span>
-<span class="sd">and ``PatternGenerator.channels`` for more information.</span>
+<span class="sd">PatternGenerators support both single-channel patterns, i.e. bare</span>
+<span class="sd">arrays, and multiple channels, such as for color images.  See</span>
+<span class="sd">``PatternGenerator.__call__`` and ``PatternGenerator.channels`` for</span>
+<span class="sd">more information.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 
@@ -191,7 +193,8 @@
 
     <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">**</span><span class="n">params_to_override</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Call the subclass&#39;s &#39;function&#39; method on a rotated and scaled coordinate system.</span>
+<span class="sd">        Call the subclass&#39;s &#39;function&#39; method on a rotated and scaled</span>
+<span class="sd">        coordinate system.</span>
 
 <span class="sd">        Creates and fills an array with the requested pattern.  If</span>
 <span class="sd">        called without any params, uses the values for the Parameters</span>
@@ -226,22 +229,27 @@
         <span class="k">return</span> <span class="n">result</span>
 
 
-<div class="viewcode-block" id="PatternGenerator.channels"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.patterngenerator.PatternGenerator.channels">[docs]</a>    <span class="k">def</span> <span class="nf">channels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">params_to_override</span><span class="p">):</span>
+<div class="viewcode-block" id="PatternGenerator.channels"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.patterngenerator.PatternGenerator.channels">[docs]</a>    <span class="k">def</span> <span class="nf">channels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">use_cached</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="o">**</span><span class="n">params_to_override</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Channels() adds a shared interface for single channel and multichannel structures.</span>
-<span class="sd">        It will always return an ordered dict: its first element is the single channel of the pattern</span>
-<span class="sd">        (if single-channel) or the channel average (if multichannel); the successive elements are the</span>
-<span class="sd">        individual channels&#39; arrays (key: 0,1,..N-1).</span>
+<span class="sd">        Channels() adds a shared interface for single channel and</span>
+<span class="sd">        multichannel structures.  It will always return an ordered</span>
+<span class="sd">        dict: its first element is the single channel of the pattern</span>
+<span class="sd">        (if single-channel) or the channel average (if multichannel);</span>
+<span class="sd">        the successive elements are the individual channels&#39; arrays</span>
+<span class="sd">        (key: 0,1,..N-1).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">collections</span><span class="o">.</span><span class="n">OrderedDict</span><span class="p">({</span> <span class="s">&#39;default&#39;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">__call__</span><span class="p">(</span><span class="o">**</span><span class="n">params_to_override</span><span class="p">)</span> <span class="p">})</span>
 
 </div>
 <div class="viewcode-block" id="PatternGenerator.num_channels"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.patterngenerator.PatternGenerator.num_channels">[docs]</a>    <span class="k">def</span> <span class="nf">num_channels</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Query the number of channels implemented by the PatternGenerator. In case of single-channel</span>
-<span class="sd">        generators this will return 1; in case of multichannel, it will return the number of channels (eg,</span>
-<span class="sd">        in the case of RGB images it would return &#39;3&#39;, Red-Green-Blue, even though the OrderedDict returned</span>
-<span class="sd">        by channels() will have 4 elements -- the 3 channels + their average).</span>
+<span class="sd">        Query the number of channels implemented by the</span>
+<span class="sd">        PatternGenerator. In case of single-channel generators this</span>
+<span class="sd">        will return 1; in case of multichannel, it will return the</span>
+<span class="sd">        number of channels (eg, in the case of RGB images it would</span>
+<span class="sd">        return &#39;3&#39;, Red-Green-Blue, even though the OrderedDict</span>
+<span class="sd">        returned by channels() will have 4 elements -- the 3 channels</span>
+<span class="sd">        + their average).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="mi">1</span>
 
@@ -281,8 +289,8 @@
 </div>
     <span class="k">def</span> <span class="nf">_create_and_rotate_coordinate_arrays</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">orientation</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Create pattern matrices from x and y vectors, and rotate</span>
-<span class="sd">        them to the specified orientation.</span>
+<span class="sd">        Create pattern matrices from x and y vectors, and rotate them</span>
+<span class="sd">        to the specified orientation.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c"># Using this two-liner requires that x increase from left to</span>
         <span class="c"># right and y decrease from left to right; I don&#39;t think it</span>
@@ -308,11 +316,12 @@
 
 <div class="viewcode-block" id="PatternGenerator.set_matrix_dimensions"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.patterngenerator.PatternGenerator.set_matrix_dimensions">[docs]</a>    <span class="k">def</span> <span class="nf">set_matrix_dimensions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="n">xdensity</span><span class="p">,</span> <span class="n">ydensity</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Change the dimensions of the matrix into which the pattern will be drawn.</span>
-<span class="sd">        Users of this class should call this method rather than changing</span>
-<span class="sd">        the bounds, xdensity, and ydensity parameters directly.  Subclasses</span>
-<span class="sd">        can override this method to update any internal data structures that</span>
-<span class="sd">        may depend on the matrix dimensions.</span>
+<span class="sd">        Change the dimensions of the matrix into which the pattern</span>
+<span class="sd">        will be drawn.  Users of this class should call this method</span>
+<span class="sd">        rather than changing the bounds, xdensity, and ydensity</span>
+<span class="sd">        parameters directly.  Subclasses can override this method to</span>
+<span class="sd">        update any internal data structures that may depend on the</span>
+<span class="sd">        matrix dimensions.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">bounds</span> <span class="o">=</span> <span class="n">bounds</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">xdensity</span> <span class="o">=</span> <span class="n">xdensity</span>
@@ -412,7 +421,7 @@
         <span class="k">return</span> <span class="n">channel_data</span>
 
 
-    </div>
+</div>
 <div class="viewcode-block" id="ChannelGenerator"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.patterngenerator.ChannelGenerator">[docs]</a><span class="k">class</span> <span class="nc">ChannelGenerator</span><span class="p">(</span><span class="n">PatternGenerator</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Abstract base class for patterns supporting multiple channels natively.</span>
@@ -425,15 +434,19 @@
 
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_channel_data</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_original_channel_data</span> <span class="o">=</span> <span class="p">[]</span> <span class="c"># channel data before processing</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_channel_data</span> <span class="o">=</span> <span class="p">[]</span>          <span class="c"># channel data after processing</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">ChannelGenerator</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">)</span>
 
 
-    <span class="k">def</span> <span class="nf">channels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">params_to_override</span><span class="p">):</span>
-        <span class="n">default</span> <span class="o">=</span> <span class="bp">self</span><span class="p">(</span><span class="o">**</span><span class="n">params_to_override</span><span class="p">)</span>
-
+    <span class="k">def</span> <span class="nf">channels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">use_cached</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="o">**</span><span class="n">params_to_override</span><span class="p">):</span>
         <span class="n">res</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">OrderedDict</span><span class="p">()</span>
-        <span class="n">res</span><span class="p">[</span><span class="s">&#39;default&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">default</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">use_cached</span><span class="p">:</span>
+            <span class="n">default</span> <span class="o">=</span> <span class="bp">self</span><span class="p">(</span><span class="o">**</span><span class="n">params_to_override</span><span class="p">)</span>
+            <span class="n">res</span><span class="p">[</span><span class="s">&#39;default&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">default</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">res</span><span class="p">[</span><span class="s">&#39;default&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span>
 
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_channel_data</span><span class="p">)):</span>
             <span class="n">res</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_channel_data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
@@ -444,18 +457,18 @@
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_channel_data</span><span class="p">)</span>
 
 
-
 </div>
 <div class="viewcode-block" id="ComposeChannels"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.patterngenerator.ComposeChannels">[docs]</a><span class="k">class</span> <span class="nc">ComposeChannels</span><span class="p">(</span><span class="n">ChannelGenerator</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Create a multi-channel PatternGenerator from another PatternGenerator.</span>
+<span class="sd">    Create a multi-channel PatternGenerator from another</span>
+<span class="sd">    PatternGenerator.</span>
 
 <span class="sd">    If the specified generator itself already posseses more than one</span>
 <span class="sd">    channel, will use its channels&#39; data; otherwise, will synthesize</span>
 <span class="sd">    the channels from the single channel of the generator.</span>
 
-<span class="sd">    After finding or synthesizing the channels, they are scaled according to</span>
-<span class="sd">    the corresponding channel_factors.</span>
+<span class="sd">    After finding or synthesizing the channels, they are scaled</span>
+<span class="sd">    according to the corresponding channel_factors.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">generators</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">class_</span><span class="o">=</span><span class="n">PatternGenerator</span><span class="p">,</span><span class="n">default</span><span class="o">=</span><span class="p">[</span><span class="n">Constant</span><span class="p">(</span><span class="n">scale</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)],</span>
@@ -487,7 +500,6 @@
 
         <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">channel_transforms</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_channel_data</span> <span class="o">=</span> <span class="n">c</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_channel_data</span><span class="p">)</span>
-
 
         <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">act</span> <span class="k">for</span> <span class="n">act</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_channel_data</span><span class="p">)</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_channel_data</span><span class="p">)</span>
 

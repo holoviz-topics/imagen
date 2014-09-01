@@ -297,13 +297,14 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    2D disk pattern generator.</span>
 
-<span class="sd">    An elliptical disk can be obtained by adjusting the aspect_ratio of a circular</span>
-<span class="sd">    disk; this transforms a circle into an ellipse by stretching the circle in the</span>
-<span class="sd">    y (vertical) direction.</span>
+<span class="sd">    An elliptical disk can be obtained by adjusting the aspect_ratio</span>
+<span class="sd">    of a circular disk; this transforms a circle into an ellipse by</span>
+<span class="sd">    stretching the circle in the y (vertical) direction.</span>
 
-<span class="sd">    The Gaussian fall-off at a point P is an approximation for non-circular disks,</span>
-<span class="sd">    since the point on the ellipse closest to P is taken to be the same point as</span>
-<span class="sd">    the point on the circle before stretching that was closest to P.</span>
+<span class="sd">    The Gaussian fall-off at a point P is an approximation for</span>
+<span class="sd">    non-circular disks, since the point on the ellipse closest to P is</span>
+<span class="sd">    taken to be the same point as the point on the circle before</span>
+<span class="sd">    stretching that was closest to P.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">aspect_ratio</span>  <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span><span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span><span class="n">softbounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">2.0</span><span class="p">),</span>
@@ -357,9 +358,9 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Circular pattern for testing responses to differences in contrast.</span>
 
-<span class="sd">    The pattern contains a sine grating ring surrounding a sine grating disk, each</span>
-<span class="sd">    with parameters (orientation, size, scale and offset) that can be</span>
-<span class="sd">    changed independently.</span>
+<span class="sd">    The pattern contains a sine grating ring surrounding a sine</span>
+<span class="sd">    grating disk, each with parameters (orientation, size, scale and</span>
+<span class="sd">    offset) that can be changed independently.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">orientationcenter</span>   <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span><span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mi">2</span><span class="o">*</span><span class="n">pi</span><span class="p">),</span> <span class="n">doc</span><span class="o">=</span><span class="s">&quot;Orientation of the center grating.&quot;</span><span class="p">)</span>
@@ -400,8 +401,8 @@
 </div>
 <div class="viewcode-block" id="RawRectangle"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.__init__.RawRectangle">[docs]</a><span class="k">class</span> <span class="nc">RawRectangle</span><span class="p">(</span><span class="n">PatternGenerator</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    2D rectangle pattern generator with no smoothing, for use when drawing</span>
-<span class="sd">    patterns pixel by pixel.</span>
+<span class="sd">    2D rectangle pattern generator with no smoothing, for use when</span>
+<span class="sd">    drawing patterns pixel by pixel.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">aspect_ratio</span>   <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span><span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span><span class="n">softbounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">2.0</span><span class="p">),</span>
@@ -419,7 +420,10 @@
 
 </div>
 <div class="viewcode-block" id="Rectangle"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.__init__.Rectangle">[docs]</a><span class="k">class</span> <span class="nc">Rectangle</span><span class="p">(</span><span class="n">PatternGenerator</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;2D rectangle pattern, with Gaussian smoothing around the edges.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    2D rectangle pattern, with Gaussian smoothing around the</span>
+<span class="sd">    edges.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">aspect_ratio</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span><span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span><span class="n">softbounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">6.0</span><span class="p">),</span>
         <span class="n">precedence</span><span class="o">=</span><span class="mf">0.31</span><span class="p">,</span><span class="n">doc</span><span class="o">=</span>
@@ -617,8 +621,8 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    PatternGenerator that accepts a list of other PatternGenerators.</span>
 <span class="sd">    To create a new pattern, asks each of the PatternGenerators in the</span>
-<span class="sd">    list to create a pattern, then it combines the patterns to create a</span>
-<span class="sd">    single pattern that it returns.</span>
+<span class="sd">    list to create a pattern, then it combines the patterns to create</span>
+<span class="sd">    a single pattern that it returns.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c"># The Accum_Replace operator from LISSOM is not yet supported,</span>
@@ -709,8 +713,8 @@
 </div></div>
 <div class="viewcode-block" id="SeparatedComposite"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.__init__.SeparatedComposite">[docs]</a><span class="k">class</span> <span class="nc">SeparatedComposite</span><span class="p">(</span><span class="n">Composite</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Generalized version of the Composite PatternGenerator that enforces spacing constraints</span>
-<span class="sd">    between pattern centers.</span>
+<span class="sd">    Generalized version of the Composite PatternGenerator that</span>
+<span class="sd">    enforces spacing constraints between pattern centers.</span>
 
 <span class="sd">    Currently supports minimum spacing, but can be generalized to</span>
 <span class="sd">    support maximum spacing also (and both at once).</span>
@@ -734,7 +738,8 @@
 
     <span class="n">max_trials</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Integer</span><span class="p">(</span><span class="n">default</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span> <span class="n">bounds</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span>
                          <span class="n">softbounds</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">100</span><span class="p">),</span> <span class="n">precedence</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
-<span class="s">        Number of times to try for a new pattern location that meets the criteria.</span>
+<span class="s">        Number of times to try for a new pattern location that meets</span>
+<span class="s">        the criteria.</span>
 
 <span class="s">        This is an essentially arbitrary timeout value that helps</span>
 <span class="s">        prevent an endless loop in case the requirements cannot be</span>
@@ -743,8 +748,8 @@
 
     <span class="k">def</span> <span class="nf">__distance_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">g0</span><span class="p">,</span> <span class="n">g1</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns true if the distance between the (x,y) locations of two generators</span>
-<span class="sd">        g0 and g1 is greater than a minimum separation.</span>
+<span class="sd">        Returns true if the distance between the (x,y) locations of</span>
+<span class="sd">        two generators g0 and g1 is greater than a minimum separation.</span>
 
 <span class="sd">        Can be extended easily to support other criteria.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -755,11 +760,13 @@
 
     <span class="k">def</span> <span class="nf">_advance_pattern_generators</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Advance the parameters for each generator for this presentation.</span>
+<span class="sd">        Advance the parameters for each generator for this</span>
+<span class="sd">        presentation.</span>
 
-<span class="sd">        Picks a position for each generator that is accepted by __distance_valid</span>
-<span class="sd">        for all combinations.  Returns a new list of the generators, with</span>
-<span class="sd">        some potentially omitted due to failure to meet the constraints.</span>
+<span class="sd">        Picks a position for each generator that is accepted by</span>
+<span class="sd">        __distance_valid for all combinations.  Returns a new list of</span>
+<span class="sd">        the generators, with some potentially omitted due to failure</span>
+<span class="sd">        to meet the constraints.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">valid_generators</span> <span class="o">=</span> <span class="p">[]</span>
@@ -891,12 +898,26 @@
         <span class="n">int_index</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generators</span><span class="p">)</span><span class="o">*</span><span class="n">wrap</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">inspect_value</span><span class="p">(</span><span class="s">&#39;index&#39;</span><span class="p">)))</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">generators</span><span class="p">[</span><span class="n">int_index</span><span class="p">]</span>
 </div>
-    <span class="k">def</span> <span class="nf">channels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">params_to_override</span><span class="p">):</span>
-        <span class="bp">self</span><span class="p">(</span><span class="o">**</span><span class="n">params_to_override</span><span class="p">)</span>
+<div class="viewcode-block" id="Selector.channels"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.__init__.Selector.channels">[docs]</a>    <span class="k">def</span> <span class="nf">channels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">use_cached</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="o">**</span><span class="n">params_to_override</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get channel data from the current generator.  use_cached is</span>
+<span class="sd">        not supported at the moment, though it must be forced to be</span>
+<span class="sd">        True in the current_generator in order to avoid generating the</span>
+<span class="sd">        same data twice (the first time by self() and the second with</span>
+<span class="sd">        current_generator.channels() ).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">default</span> <span class="o">=</span> <span class="bp">self</span><span class="p">(</span><span class="o">**</span><span class="n">params_to_override</span><span class="p">)</span>
         <span class="n">current_generator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_current_generator</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">current_generator</span><span class="o">.</span><span class="n">channels</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">num_channels</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">current_generator</span><span class="o">.</span><span class="n">channels</span><span class="p">(</span><span class="n">use_cached</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">res</span><span class="p">[</span><span class="s">&#39;default&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">default</span>
+
+        <span class="k">return</span> <span class="n">res</span>
+</div>
+<div class="viewcode-block" id="Selector.num_channels"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.__init__.Selector.num_channels">[docs]</a>    <span class="k">def</span> <span class="nf">num_channels</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the number of channels in the input generators.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inspect_value</span><span class="p">(</span><span class="s">&#39;index&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">):</span>
             <span class="k">if</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generators</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">):</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">generators</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">num_channels</span><span class="p">()</span>
@@ -908,7 +929,7 @@
 
 <span class="c">### JABALERT: This class should be eliminated if at all possible; it</span>
 <span class="c">### is just a specialized version of Composite, and should be</span>
-<span class="c">### implementable directly using what is already in Composite.</span></div>
+<span class="c">### implementable directly using what is already in Composite.</span></div></div>
 <div class="viewcode-block" id="GaussiansCorner"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.__init__.GaussiansCorner">[docs]</a><span class="k">class</span> <span class="nc">GaussiansCorner</span><span class="p">(</span><span class="n">PatternGenerator</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Two Gaussian pattern generators with a variable intersection point,</span>
@@ -1082,12 +1103,12 @@
 
 <div class="viewcode-block" id="Sweeper"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.__init__.Sweeper">[docs]</a><span class="k">class</span> <span class="nc">Sweeper</span><span class="p">(</span><span class="n">PatternGenerator</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    PatternGenerator that sweeps a supplied PatternGenerator in a direction</span>
-<span class="sd">    perpendicular to its orientation. Each time step, the supplied</span>
-<span class="sd">    PatternGenerator is sweeped further at a fixed speed, and after reset_period</span>
-<span class="sd">    time steps a new pattern is drawn.</span>
+<span class="sd">    PatternGenerator that sweeps a supplied PatternGenerator in a</span>
+<span class="sd">    direction perpendicular to its orientation. Each time step, the</span>
+<span class="sd">    supplied PatternGenerator is sweeped further at a fixed speed, and</span>
+<span class="sd">    after reset_period time steps a new pattern is drawn.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">generator</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">ClassSelector</span><span class="p">(</span><span class="n">PatternGenerator</span><span class="p">,</span><span class="n">default</span><span class="o">=</span><span class="n">Gaussian</span><span class="p">(),</span><span class="n">precedence</span><span class="o">=</span><span class="mf">0.97</span><span class="p">,</span> 
+    <span class="n">generator</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">ClassSelector</span><span class="p">(</span><span class="n">PatternGenerator</span><span class="p">,</span><span class="n">default</span><span class="o">=</span><span class="n">Gaussian</span><span class="p">(),</span><span class="n">precedence</span><span class="o">=</span><span class="mf">0.97</span><span class="p">,</span>
                                     <span class="n">doc</span><span class="o">=</span><span class="s">&quot;Pattern to sweep.&quot;</span><span class="p">)</span>
 
     <span class="n">time_offset</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
@@ -1154,8 +1175,8 @@
 </div>
 <div class="viewcode-block" id="OldSweeper"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.__init__.OldSweeper">[docs]</a><span class="k">class</span> <span class="nc">OldSweeper</span><span class="p">(</span><span class="n">PatternGenerator</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    PatternGenerator that sweeps a supplied PatternGenerator in a direction</span>
-<span class="sd">    perpendicular to its orientation.</span>
+<span class="sd">    PatternGenerator that sweeps a supplied PatternGenerator in a</span>
+<span class="sd">    direction perpendicular to its orientation.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">generator</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">Gaussian</span><span class="p">(),</span><span class="n">precedence</span><span class="o">=</span><span class="mf">0.97</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="s">&quot;Pattern to sweep.&quot;</span><span class="p">)</span>
@@ -1238,7 +1259,8 @@
 <div class="viewcode-block" id="Sigmoid"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.__init__.Sigmoid">[docs]</a><span class="k">class</span> <span class="nc">Sigmoid</span><span class="p">(</span><span class="n">PatternGenerator</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Two-dimensional sigmoid pattern, dividing the plane into positive</span>
-<span class="sd">    and negative halves with a smoothly sloping transition between them.</span>
+<span class="sd">    and negative halves with a smoothly sloping transition between</span>
+<span class="sd">    them.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">slope</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span> <span class="n">softbounds</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">100.0</span><span class="p">,</span><span class="mf">100.0</span><span class="p">),</span>
@@ -1315,7 +1337,8 @@
 
     <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">params_to_override</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Call the subclass&#39;s &#39;function&#39; method on a rotated and scaled coordinate system.</span>
+<span class="sd">        Call the subclass&#39;s &#39;function&#39; method on a rotated and scaled</span>
+<span class="sd">        coordinate system.</span>
 
 <span class="sd">        Creates and fills an array with the requested pattern.  If</span>
 <span class="sd">        called without any params, uses the values for the Parameters</span>
@@ -1380,8 +1403,9 @@
 </div>
 <div class="viewcode-block" id="SigmoidedDoLG"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.__init__.SigmoidedDoLG">[docs]</a><span class="k">class</span> <span class="nc">SigmoidedDoLG</span><span class="p">(</span><span class="n">PatternGenerator</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Sigmoid multiplicatively combined with a difference of Log Gaussians, such that one part of the plane can be</span>
-<span class="sd">    the mirror image of the other, and the peaks of the gaussians are movable.</span>
+<span class="sd">    Sigmoid multiplicatively combined with a difference of Log</span>
+<span class="sd">    Gaussians, such that one part of the plane can be the mirror image</span>
+<span class="sd">    of the other, and the peaks of the gaussians are movable.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">size</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
@@ -1617,12 +1641,16 @@
 
     <span class="k">def</span> <span class="nf">_set_frequency_spacing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_freq</span><span class="p">,</span> <span class="n">max_freq</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Frequency spacing to use, i.e. how to map the available frequency range to the discrete sheet rows.</span>
+<span class="sd">        Frequency spacing to use, i.e. how to map the available</span>
+<span class="sd">        frequency range to the discrete sheet rows.</span>
 
-<span class="sd">        NOTE: We&#39;re calculating the spacing of a range between the highest and lowest frequencies, the actual</span>
-<span class="sd">        segmentation and averaging of the frequencies to fit this spacing occurs in _getAmplitudes().</span>
+<span class="sd">        NOTE: We&#39;re calculating the spacing of a range between the</span>
+<span class="sd">        highest and lowest frequencies, the actual segmentation and</span>
+<span class="sd">        averaging of the frequencies to fit this spacing occurs in</span>
+<span class="sd">        _getAmplitudes().</span>
 
-<span class="sd">        This method is here solely to provide a minimal overload if custom spacing is required.</span>
+<span class="sd">        This method is here solely to provide a minimal overload if</span>
+<span class="sd">        custom spacing is required.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">frequency_spacing</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">min_freq</span><span class="p">,</span> <span class="n">max_freq</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_sheet_dimensions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
@@ -1630,8 +1658,9 @@
 
     <span class="k">def</span> <span class="nf">_get_row_amplitudes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Perform a real Discrete Fourier Transform (DFT; implemented using a Fast Fourier Transform algorithm, FFT)</span>
-<span class="sd">        of the current sample from the signal multiplied by the smoothing window.</span>
+<span class="sd">        Perform a real Discrete Fourier Transform (DFT; implemented</span>
+<span class="sd">        using a Fast Fourier Transform algorithm, FFT) of the current</span>
+<span class="sd">        sample from the signal multiplied by the smoothing window.</span>
 
 <span class="sd">        See numpy.rfft for information about the Fourier transform.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1688,8 +1717,8 @@
 </div>
 <div class="viewcode-block" id="Spectrogram"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.__init__.Spectrogram">[docs]</a><span class="k">class</span> <span class="nc">Spectrogram</span><span class="p">(</span><span class="n">PowerSpectrum</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Extends PowerSpectrum to provide a temporal buffer, yielding</span>
-<span class="sd">    a 2D representation of a fixed-width spectrogram.</span>
+<span class="sd">    Extends PowerSpectrum to provide a temporal buffer, yielding a 2D</span>
+<span class="sd">    representation of a fixed-width spectrogram.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">min_latency</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Integer</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">precedence</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>

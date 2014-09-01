@@ -145,20 +145,20 @@
     <span class="n">size_normalization</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">ObjectSelector</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s">&#39;original&#39;</span><span class="p">,</span>
         <span class="n">objects</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;original&#39;</span><span class="p">,</span><span class="s">&#39;stretch_to_fit&#39;</span><span class="p">,</span><span class="s">&#39;fit_shortest&#39;</span><span class="p">,</span><span class="s">&#39;fit_longest&#39;</span><span class="p">],</span>
         <span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
-<span class="s">        Determines how the pattern is scaled initially, relative to the</span>
-<span class="s">        default retinal dimension of 1.0 in sheet coordinates:</span>
+<span class="s">        Determines how the pattern is scaled initially, relative to</span>
+<span class="s">        the default retinal dimension of 1.0 in sheet coordinates:</span>
 
 <span class="s">        &#39;stretch_to_fit&#39;: scale both dimensions of the pattern so they</span>
-<span class="s">        would fill a Sheet with bounds=BoundingBox(radius=0.5) (disregards</span>
-<span class="s">        the original&#39;s aspect ratio).</span>
+<span class="s">        would fill a Sheet with bounds=BoundingBox(radius=0.5)</span>
+<span class="s">        (disregards the original&#39;s aspect ratio).</span>
 
-<span class="s">        &#39;fit_shortest&#39;: scale the pattern so that its shortest dimension</span>
+<span class="s">        &#39;fit_shortest&#39;: scale the pattern so that its shortest</span>
+<span class="s">        dimension is made to fill the corresponding dimension on a</span>
+<span class="s">        Sheet with bounds=BoundingBox(radius=0.5) (maintains the</span>
+<span class="s">        original&#39;s aspect ratio, filling the entire bounding box).</span>
+
+<span class="s">        &#39;fit_longest&#39;: scale the pattern so that its longest dimension</span>
 <span class="s">        is made to fill the corresponding dimension on a Sheet with</span>
-<span class="s">        bounds=BoundingBox(radius=0.5) (maintains the original&#39;s aspect</span>
-<span class="s">        ratio, filling the entire bounding box).</span>
-
-<span class="s">        &#39;fit_longest&#39;: scale the pattern so that its longest dimension is</span>
-<span class="s">        made to fill the corresponding dimension on a Sheet with</span>
 <span class="s">        bounds=BoundingBox(radius=0.5) (maintains the original&#39;s</span>
 <span class="s">        aspect ratio, fitting the image into the bounding box but not</span>
 <span class="s">        necessarily filling it).</span>
@@ -268,7 +268,6 @@
             <span class="n">x</span><span class="o">*=</span><span class="n">sf</span><span class="p">;</span><span class="n">y</span><span class="o">*=</span><span class="n">sf</span>
 
 
-
 </div>
 <div class="viewcode-block" id="edge_average"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.image.edge_average">[docs]</a><span class="k">def</span> <span class="nf">edge_average</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
     <span class="s">&quot;Return the mean value around the edge of an array.&quot;</span>
@@ -353,7 +352,7 @@
                                <span class="n">whole_pattern_output_fns</span><span class="o">=</span><span class="p">[</span><span class="n">DivisiveNormalizeLinf</span><span class="p">()]),</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
 <span class="s">        The PatternSampler to use to resample/resize the image.&quot;&quot;&quot;</span><span class="p">)</span>
 
-    <span class="n">cache_image</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Boolean</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
+    <span class="n">cache_image</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Boolean</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
 <span class="s">        If False, discards the image and pattern_sampler after drawing</span>
 <span class="s">        the pattern each time, to make it possible to use very large</span>
 <span class="s">        databases of images without running out of memory.&quot;&quot;&quot;</span><span class="p">)</span>
@@ -393,7 +392,7 @@
         <span class="n">orig_image</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_image</span>
 
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_channel_data</span><span class="p">)):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_image</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_channel_data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_image</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_original_channel_data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_channel_data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reduced_call</span><span class="p">(</span><span class="o">**</span><span class="n">params_to_override</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_image</span> <span class="o">=</span> <span class="n">orig_image</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_channel_data</span>
@@ -489,8 +488,8 @@
 
 <div class="viewcode-block" id="FileImage.set_matrix_dimensions"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.image.FileImage.set_matrix_dimensions">[docs]</a>    <span class="k">def</span> <span class="nf">set_matrix_dimensions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Subclassed to delete the cached image when matrix dimensions are</span>
-<span class="sd">        changed.</span>
+<span class="sd">        Subclassed to delete the cached image when matrix dimensions</span>
+<span class="sd">        are changed.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_image</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">FileImage</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">set_matrix_dimensions</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
@@ -517,6 +516,8 @@
 <span class="sd">        Load image using PIL.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_channel_data</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_original_channel_data</span> <span class="o">=</span> <span class="p">[]</span>
+
         <span class="n">im</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_image</span> <span class="o">=</span> <span class="n">ImageOps</span><span class="o">.</span><span class="n">grayscale</span><span class="p">(</span><span class="n">im</span><span class="p">)</span>
         <span class="n">im</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
@@ -529,6 +530,7 @@
             <span class="n">num_channels</span> <span class="o">=</span> <span class="n">file_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_channels</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_channel_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">file_data</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">i</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_original_channel_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">file_data</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">i</span><span class="p">]</span> <span class="p">)</span>
 
 
     <span class="k">def</span> <span class="nf">_load_npy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
@@ -536,11 +538,13 @@
 <span class="sd">        Load image using Numpy.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_channel_data</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_original_channel_data</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">file_channel_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
         <span class="n">file_channel_data</span> <span class="o">=</span> <span class="n">file_channel_data</span> <span class="o">/</span> <span class="n">file_channel_data</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
 
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">file_channel_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_channel_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">file_channel_data</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">i</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_original_channel_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">file_channel_data</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">i</span><span class="p">])</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_image</span> <span class="o">=</span> <span class="n">file_channel_data</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">file_channel_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
 
@@ -549,20 +553,21 @@
 </div>
 <div class="viewcode-block" id="RotateHue"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.image.RotateHue">[docs]</a><span class="k">class</span> <span class="nc">RotateHue</span><span class="p">(</span><span class="n">ChannelTransform</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Rotate the hue of an Image PatternGenerator. </span>
+<span class="sd">    Rotate the hue of an Image PatternGenerator.</span>
 
 <span class="sd">    Requires a three-channel (e.g. RGB) or a 4-channel (e.g. RGBA)</span>
-<span class="sd">    color image.  Also allows the saturation of the image to be scaled.</span>
-<span class="sd">    </span>
+<span class="sd">    color image.  Also allows the saturation of the image to be</span>
+<span class="sd">    scaled.</span>
+
 <span class="sd">    Requires the color space of the image to be declared using the</span>
-<span class="sd">    colorspaces.color_conversion object, and uses the analysis</span>
-<span class="sd">    color space from that object to do the rotation.</span>
+<span class="sd">    colorspaces.color_conversion object, and uses the analysis color</span>
+<span class="sd">    space from that object to do the rotation.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">saturation</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
 <span class="s">        Scale the saturation by the specified value.&quot;&quot;&quot;</span><span class="p">)</span>
 
-    <span class="n">rotation</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">numbergen</span><span class="o">.</span><span class="n">UniformRandom</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;hue_jitter&#39;</span><span class="p">,</span><span class="n">lbound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">ubound</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">seed</span><span class="o">=</span><span class="mi">1048921</span><span class="p">),</span> 
+    <span class="n">rotation</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">numbergen</span><span class="o">.</span><span class="n">UniformRandom</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;hue_jitter&#39;</span><span class="p">,</span><span class="n">lbound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">ubound</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">seed</span><span class="o">=</span><span class="mi">1048921</span><span class="p">),</span>
                             <span class="n">softbounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">),</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
 <span class="s">        Amount by which to rotate the hue.  The default setting</span>
 <span class="s">        chooses a random value of hue rotation between zero and 100%.</span>
@@ -595,12 +600,13 @@
 </div>
 <div class="viewcode-block" id="ScaleChannels"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.image.ScaleChannels">[docs]</a><span class="k">class</span> <span class="nc">ScaleChannels</span><span class="p">(</span><span class="n">ChannelTransform</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Scale each channel of an Image PatternGenerator by a different factor. </span>
+<span class="sd">    Scale each channel of an Image PatternGenerator by a different</span>
+<span class="sd">    factor.</span>
 
-<span class="sd">    The list of channel factors should be the same length as the number of channels.</span>
-<span class="sd">    Otherwise, if the factors provided are fewer than the channels of the Image, the</span>
-<span class="sd">    remaining channels will not be scaled. If they are more, then only the first N</span>
-<span class="sd">    factors are used.</span>
+<span class="sd">    The list of channel factors should be the same length as the</span>
+<span class="sd">    number of channels.  Otherwise, if the factors provided are fewer</span>
+<span class="sd">    than the channels of the Image, the remaining channels will not be</span>
+<span class="sd">    scaled. If they are more, then only the first N factors are used.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">channel_factors</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Dynamic</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="p">[</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">],</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
@@ -626,8 +632,8 @@
         <span class="n">default</span><span class="o">=</span><span class="n">PatternSampler</span><span class="p">(</span><span class="n">background_value_fn</span><span class="o">=</span><span class="n">edge_average</span><span class="p">,</span>
                                <span class="n">size_normalization</span><span class="o">=</span><span class="s">&#39;original&#39;</span><span class="p">,</span>
                                <span class="n">whole_pattern_output_fns</span><span class="o">=</span><span class="p">[]),</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
-<span class="s">        The PatternSampler to use to resample/resize the image.&quot;&quot;&quot;</span><span class="p">)</span>
-</pre></div></div>
+<span class="s">        The PatternSampler to use to resample/resize the image.&quot;&quot;&quot;</span><span class="p">)</span></div>
+</pre></div>
 
           </div>
         </div>
