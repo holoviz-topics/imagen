@@ -551,7 +551,13 @@ class ScaleChannels(ChannelTransform):
         # safety check
         num_channels = min( len(channel_data), len(self.channel_factors) )
         for i in range( num_channels ):
-            channel_data[i] = channel_data[i] * self.channel_factors[i]
+            #TFALERT: Not sure why this is required, it should work out of the box
+            #Maybe because channel_factors should be a param.List rather than
+            #param.Dynamic?
+            if(callable(self.channel_factors[i])):
+                channel_data[i] = channel_data[i] * self.channel_factors[i]()
+            else:
+                channel_data[i] = channel_data[i] * self.channel_factors[i]
 
         return channel_data
 
