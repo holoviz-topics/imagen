@@ -29,7 +29,7 @@ from param.parameterized import ParamOverrides
 from param import ClassSelector
 
 # Imported here so that all PatternGenerators will be in the same package
-from .patterngenerator import Constant, PatternGenerator
+from .patterngenerator import Constant, PatternGenerator, ChannelGenerator
 
 from dataviews import SheetStack, Dimension
 from dataviews.sheetviews import SheetCoordinateSystem
@@ -1035,7 +1035,7 @@ class OffsetTimeFn(param.Parameterized):
 
 
 
-class Sweeper(PatternGenerator):
+class Sweeper(ChannelGenerator):
     """
     PatternGenerator that sweeps a supplied PatternGenerator in a
     direction perpendicular to its orientation. Each time step, the
@@ -1067,6 +1067,10 @@ class Sweeper(PatternGenerator):
         Function to generate the time used as a base for translation.""")
 
 
+    def num_channels(self):
+        return self.generator.num_channels()
+
+
     def function(self, p):
         motion_time_fn = OffsetTimeFn(offset=p.time_offset,
                                       reset_period=p.reset_period,
@@ -1079,6 +1083,23 @@ class Sweeper(PatternGenerator):
 
         new_x = p.x + p.size * pg.x
         new_y = p.y + p.size * pg.y
+
+        try:
+            #TFALERT: Not sure whether this is needed
+            if(len(self._channel_data)!=len(pg._channel_data)):
+               self._channel_data=copy.deepcopy(pg._channel_data)
+
+            # For multichannel pattern generators
+            for i in range(len(pg._channel_data)):
+                self._channel_data[i] = pg.channels(
+                    x=new_x + p.speed * step * np.cos(motion_orientation),
+                    y=new_y + p.speed * step * np.sin(motion_orientation),
+                    xdensity=p.xdensity, ydensity=p.ydensity,
+                    bounds=p.bounds,
+                    orientation=pg.orientation + p.orientation,
+                    scale=pg.scale * p.scale, offset=pg.offset + p.offset)[i]
+        except AttributeError:
+            pass
 
         image_array = pg(xdensity=p.xdensity, ydensity=p.ydensity,
                          bounds=p.bounds,
