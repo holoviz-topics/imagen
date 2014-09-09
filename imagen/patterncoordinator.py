@@ -353,7 +353,7 @@ class PatternCoordinatorImages(PatternCoordinator):
         self.description=""
         self.source=self.dataset_name
         self.placeholder_mapping={}
-        inherent_features=['sf','or','cr']
+        inherent_features=['sf','cr']
         try:
             filename=param.resolve_path(dataset_name+'/MANIFEST_json')
             filepath=os.path.dirname(filename)
