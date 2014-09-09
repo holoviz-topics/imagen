@@ -558,6 +558,7 @@ class ScaleChannels(ChannelTransform):
                 channel_data[i] = channel_data[i] * self.channel_factors[i]()
             else:
                 channel_data[i] = channel_data[i] * self.channel_factors[i]
+            channel_data[i][channel_data[i]>1]=1.0
 
         return channel_data
 
