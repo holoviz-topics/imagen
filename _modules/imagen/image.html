@@ -617,7 +617,14 @@
         <span class="c"># safety check</span>
         <span class="n">num_channels</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span> <span class="nb">len</span><span class="p">(</span><span class="n">channel_data</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">channel_factors</span><span class="p">)</span> <span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="n">num_channels</span> <span class="p">):</span>
-            <span class="n">channel_data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">channel_data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">channel_factors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="c">#TFALERT: Not sure why this is required, it should work out of the box</span>
+            <span class="c">#Maybe because channel_factors should be a param.List rather than</span>
+            <span class="c">#param.Dynamic?</span>
+            <span class="k">if</span><span class="p">(</span><span class="nb">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">channel_factors</span><span class="p">[</span><span class="n">i</span><span class="p">])):</span>
+                <span class="n">channel_data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">channel_data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">channel_factors</span><span class="p">[</span><span class="n">i</span><span class="p">]()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">channel_data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">channel_data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">channel_factors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">channel_data</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">channel_data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">]</span><span class="o">=</span><span class="mf">1.0</span>
 
         <span class="k">return</span> <span class="n">channel_data</span>
 
