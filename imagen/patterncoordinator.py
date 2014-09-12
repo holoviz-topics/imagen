@@ -1,8 +1,10 @@
 """
-Provides the class PatternCoordinator and a family of FeatureCoordinator classes.
+Provides the class PatternCoordinator and a family of
+FeatureCoordinator classes.
 
-PatternCoordinator creates a set of pattern generators whose parameters are
-related in some way, as controlled by a subclass of FeatureCoordinator.
+PatternCoordinator creates a set of pattern generators whose
+parameters are related in some way, as controlled by a subclass of
+FeatureCoordinator.
 """
 
 import os
@@ -107,7 +109,8 @@ class OrientationCoordinator(FeatureCoordinator):
     """
 
     orientation_bound = param.Number(default=math.pi,doc="""
-        Rotate pattern around the origin by at most orientation_bound radians (in both directions).""")
+        Rotate pattern around the origin by at most orientation_bound
+        radians (in both directions).""")
 
 
     align_orientations = param.Boolean(default=False, doc="""
@@ -188,7 +191,8 @@ class PatternCoordinator(param.Parameterized):
         include this master_seed value, so that changing it will
         change all of the random pattern parameter streams.""")
 
-    composite_type = param.ClassSelector(CompositeBase,default=Composite,is_instance=False,doc="""
+    composite_type = param.ClassSelector(CompositeBase,default=Composite,
+                                         is_instance=False,doc="""
         Class that combines the patterns_per_label individual patterns
         and creates a single combined pattern that it returns for a
         given label.  For instance, imagen.Composite can merge the
@@ -197,7 +201,8 @@ class PatternCoordinator(param.Parameterized):
         choose one out of a given set of patterns.""")
 
     composite_parameters = param.Dict(default={},doc="""
-        If present, these parameter values will be passed to the composite specified in composite_type.""")
+        If present, these parameter values will be passed to the
+        composite specified in composite_type.""")
 
     feature_coordinators = param.Dict(default=collections.OrderedDict([
         ('xy', [XCoordinator,YCoordinator]),
@@ -217,7 +222,8 @@ class PatternCoordinator(param.Parameterized):
         pattern_label}, which can be used to create PatternGenerators
         depending on the requested pattern_label
         """
-        return [self.pattern_type(**self.pattern_parameters) for i in range(self.patterns_per_label)]
+        return [self.pattern_type(**self.pattern_parameters)
+                for i in range(self.patterns_per_label)]
 
 
     def __init__(self,inherent_features=[],**params):
@@ -265,20 +271,25 @@ class PatternCoordinator(param.Parameterized):
             # Apply _feature_coordinators_to_apply
             for i in range(len(patterns)):
                 for fn in self._feature_coordinators_to_apply:
-                    patterns[i]=fn(patterns[i],pattern_label,i,self.master_seed,**self._feature_params)
+                    patterns[i]=fn(patterns[i],pattern_label, i,
+                                   self.master_seed, **self._feature_params)
 
-            combined_patterns=self.composite_type(generators=patterns,**self.composite_parameters)
+            combined_patterns=self.composite_type(generators=patterns,
+                                                  **self.composite_parameters)
             coordinated_pattern_generators.update({pattern_label:combined_patterns})
         return coordinated_pattern_generators
 
 
 
 class PatternCoordinatorImages(PatternCoordinator):
-    pattern_type = param.ClassSelector(PatternGenerator,default=FileImage,is_instance=False)
+
+    pattern_type = param.ClassSelector(PatternGenerator,
+                                       default=FileImage,is_instance=False)
 
     pattern_parameters = param.Dict(default={'size': 10})
 
-    composite_type = param.ClassSelector(CompositeBase,default=Selector,is_instance=False)
+    composite_type = param.ClassSelector(CompositeBase,
+                                         default=Selector,is_instance=False)
 
     def __init__(self,dataset_name,**params):
         """
@@ -371,11 +382,14 @@ class PatternCoordinatorImages(PatternCoordinator):
             dataset=json.loads(open(filename).read())
 
             self.dataset_name=dataset.get('dataset_name', self.dataset_name)
-            self.patterns_per_label=dataset.get('length', len(glob.glob(self.filename_template)))
+            self.patterns_per_label=dataset.get('length',
+                                                len(glob.glob(self.filename_template)))
             self.description=dataset.get('description', self.description)
             self.filename_template=dataset.get('filename_template', self.filename_template)
             self.source=dataset.get('source', self.source)
-            self.placeholder_mapping=eval(dataset['placeholder_mapping']) if 'placeholder_mapping' in dataset else self.placeholder_mapping
+            self.placeholder_mapping=(eval(dataset['placeholder_mapping'])
+                                      if 'placeholder_mapping' in dataset
+                                      else self.placeholder_mapping)
             inherent_features=dataset.get('inherent_features', inherent_features)
         except IOError:
             pass
@@ -388,8 +402,10 @@ class PatternCoordinatorImages(PatternCoordinator):
             filenames = [self.filename_template]*self.patterns_per_label
 
             for placeholder in self.placeholder_mapping:
-                filenames = [filename.replace('{'+placeholder+'}', self.placeholder_mapping[placeholder](params))
-                                for filename,params['current_image'] in zip(filenames,range(self.patterns_per_label))]
+                filenames = [filename.replace('{'+placeholder+'}',
+                                              self.placeholder_mapping[placeholder](params))
+                             for filename,params['current_image'] in
+                             zip(filenames,range(self.patterns_per_label))]
         else:
             filenames = sorted(glob.glob(self.filename_template))
 
@@ -401,4 +417,5 @@ class PatternCoordinatorImages(PatternCoordinator):
                     filename=f,
                     cache_image=False,
                     **self.pattern_parameters)
-                for f,i in zip(self._generate_filenames(properties),range(self.patterns_per_label))]
+                for f,i in zip(self._generate_filenames(properties),
+                               range(self.patterns_per_label))]
