@@ -109,14 +109,25 @@ class OrientationCoordinator(FeatureCoordinator):
     orientation_bound = param.Number(default=math.pi,doc="""
         Rotate pattern around the origin by at most orientation_bound radians (in both directions).""")
 
+
+    align_orientations = param.Boolean(default=False, doc="""
+        Whether or not to align pattern orientations when composing
+        multiple patterns together.
+
+        Alignment may be useful to prevent crossing stimuli or may be
+        appropriate for moving patterns sweeped in a single direction
+        of motion.  """)
+
     def __call__(self, pattern, pattern_label, pattern_number, master_seed, **params):
         p = ParamOverrides(self,params,allow_extra_keywords=True)
         new_pattern=copy.copy(pattern)
         new_pattern.orientation = pattern.get_value_generator('orientation')+\
             numbergen.UniformRandom(lbound=-p.orientation_bound,
                                     ubound=p.orientation_bound,
-                                    seed=master_seed+21+pattern_number,
-                                    name="OrientationCoordinator"+str(pattern_number))
+                                    seed=master_seed+21+(0 if p.align_orientations else pattern_number),
+                                    name=("OrientationCoordinator"
+                                          + ('' if p.align_orientations else str(pattern_number)))
+                                )
         return new_pattern
 
 
