@@ -762,6 +762,8 @@ class Animation(SheetStack):
 
 
     def __init__(self, pattern, frames, **kwargs):
+        self.warning("Animation is soon to be depracated. "
+                     "Use the anim() method on pattern generators instead")
         super(Animation, self).__init__(pattern=pattern,
                                         frames=frames,
                                         **kwargs)
