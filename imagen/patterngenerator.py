@@ -163,6 +163,13 @@ class PatternGenerator(param.Parameterized):
         return result
 
 
+    def __getitem__(self, coords):
+        arr = (np.dstack(self.channels().values()[1:])
+               if self.num_channels() in [3,4] else self())
+        return SheetView(arr, self.bounds,
+                         label=self.__class__.__name__+ ' Pattern')[coords]
+
+
     def channels(self, use_cached=False, **params_to_override):
         """
         Channels() adds a shared interface for single channel and
@@ -278,11 +285,6 @@ class PatternGenerator(param.Parameterized):
             if hasattr(of,'state_pop'):
                 of.state_pop()
         super(PatternGenerator, self).state_pop()
-
-
-    def __getitem__(self, coords):
-        label = self.__class__.__name__+ ' Pattern'
-        return SheetView(self(), self.bounds, label=label)[coords]
 
 
     def anim(self, frames, offset=0, timestep=1,
@@ -425,13 +427,6 @@ class ChannelGenerator(PatternGenerator):
 
     def num_channels(self):
         return len(self._channel_data)
-
-
-    def __getitem__(self, coords):
-        arr = (self() if self.num_channels() in [1,2]
-               else np.dstack(self.channels().values()[1:]))
-        return SheetView(arr, self.bounds,
-                         label=self.__class__.__name__+ ' Pattern')[coords]
 
 
 class ComposeChannels(ChannelGenerator):

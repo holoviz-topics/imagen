@@ -861,13 +861,6 @@ class Selector(CompositeBase):
 
         return self.get_current_generator().num_channels()
 
-    def __getitem__(self, coords):
-        arr = (self() if self.num_channels() in [1,2]
-               else np.dstack(self.channels().values()[1:]))
-        return SheetView(arr, self.bounds,
-                         label=self.__class__.__name__+ ' Pattern')[coords]
-
-
 
 ### JABALERT: This class should be eliminated if at all possible; it
 ### is just a specialized version of Composite, and should be
