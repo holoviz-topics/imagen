@@ -83,7 +83,7 @@
 
 <span class="kn">import</span> <span class="nn">collections</span>
 
-<span class="kn">from</span> <span class="nn">dataviews</span> <span class="kn">import</span> <span class="n">SheetView</span>
+<span class="kn">from</span> <span class="nn">dataviews</span> <span class="kn">import</span> <span class="n">SheetView</span><span class="p">,</span> <span class="n">SheetStack</span>
 <span class="kn">from</span> <span class="nn">dataviews.sheetviews</span> <span class="kn">import</span> <span class="n">BoundingBox</span><span class="p">,</span> <span class="n">BoundingRegionParameter</span><span class="p">,</span> <span class="n">SheetCoordinateSystem</span>
 <span class="kn">from</span> <span class="nn">dataviews.options</span> <span class="kn">import</span> <span class="n">options</span><span class="p">,</span> <span class="n">StyleOpts</span>
 
@@ -229,6 +229,13 @@
         <span class="k">return</span> <span class="n">result</span>
 
 
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coords</span><span class="p">):</span>
+        <span class="n">arr</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dstack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">channels</span><span class="p">()</span><span class="o">.</span><span class="n">values</span><span class="p">()[</span><span class="mi">1</span><span class="p">:])</span>
+               <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_channels</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span> <span class="k">else</span> <span class="bp">self</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">SheetView</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bounds</span><span class="p">,</span>
+                         <span class="n">label</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="o">+</span> <span class="s">&#39; Pattern&#39;</span><span class="p">)[</span><span class="n">coords</span><span class="p">]</span>
+
+
 <div class="viewcode-block" id="PatternGenerator.channels"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.patterngenerator.PatternGenerator.channels">[docs]</a>    <span class="k">def</span> <span class="nf">channels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">use_cached</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="o">**</span><span class="n">params_to_override</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Channels() adds a shared interface for single channel and</span>
@@ -346,12 +353,43 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">PatternGenerator</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">state_pop</span><span class="p">()</span>
 
 </div>
-    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coords</span><span class="p">):</span>
-        <span class="n">label</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="o">+</span> <span class="s">&#39; Pattern&#39;</span>
-        <span class="k">return</span> <span class="n">SheetView</span><span class="p">(</span><span class="bp">self</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">bounds</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)[</span><span class="n">coords</span><span class="p">]</span>
+<div class="viewcode-block" id="PatternGenerator.anim"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.patterngenerator.PatternGenerator.anim">[docs]</a>    <span class="k">def</span> <span class="nf">anim</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frames</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+             <span class="n">dimension</span><span class="o">=</span><span class="s">&#39;Frames&#39;</span><span class="p">,</span> <span class="n">time_fn</span><span class="o">=</span><span class="n">param</span><span class="o">.</span><span class="n">Dynamic</span><span class="o">.</span><span class="n">time_fn</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        frames: The number of frames generated relative to offset.</span>
+
+<span class="sd">        time_fn: The time object shared across the time-varying</span>
+<span class="sd">        objects that are to be sampled.</span>
+
+<span class="sd">        offset: The time offset from which frames are generated given</span>
+<span class="sd">        the supplied pattern</span>
+
+<span class="sd">        timestep: The time interval between successive layers. Valid</span>
+<span class="sd">        time values must be an integer multiple of this timestep value</span>
+<span class="sd">        (which may be a float or some other numeric type).</span>
+
+<span class="sd">        dimension: Animations are indexed by time. This may be by</span>
+<span class="sd">        integer frame number or some continuous (e.g. floating point</span>
+<span class="sd">        or rational) representation of time.</span>
+
+<span class="sd">        Note that the offset, timestep, dimensions and time_fn only</span>
+<span class="sd">        affect patterns parameterized by time-dependent number</span>
+<span class="sd">        generators. Otherwise, the frames are generated by successive</span>
+<span class="sd">        call to the pattern which may or may not be varying (e.g to</span>
+<span class="sd">        view the patterns contained within a Selector).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">stack</span> <span class="o">=</span> <span class="n">SheetStack</span><span class="p">(</span><span class="n">dimensions</span><span class="o">=</span><span class="p">[</span><span class="n">dimension</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state_push</span><span class="p">()</span>
+        <span class="k">with</span> <span class="n">time_fn</span> <span class="k">as</span> <span class="n">t</span><span class="p">:</span>
+            <span class="n">t</span><span class="p">(</span><span class="n">offset</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">frames</span><span class="p">):</span>
+                <span class="n">stack</span><span class="p">[</span><span class="n">t</span><span class="p">()]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[:]</span>
+                <span class="n">t</span> <span class="o">+=</span> <span class="n">timestep</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state_pop</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">stack</span>
 
 <span class="c"># Override class type; must be set here rather than when mask_shape is declared,</span>
-<span class="c"># to avoid referring to class not yet constructed</span></div>
+<span class="c"># to avoid referring to class not yet constructed</span></div></div>
 <span class="n">PatternGenerator</span><span class="o">.</span><span class="n">params</span><span class="p">(</span><span class="s">&#39;mask_shape&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">class_</span><span class="o">=</span><span class="n">PatternGenerator</span>
 
 
@@ -455,7 +493,6 @@
 
     <span class="k">def</span> <span class="nf">num_channels</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_channel_data</span><span class="p">)</span>
-
 
 </div>
 <div class="viewcode-block" id="ComposeChannels"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.patterngenerator.ComposeChannels">[docs]</a><span class="k">class</span> <span class="nc">ComposeChannels</span><span class="p">(</span><span class="n">ChannelGenerator</span><span class="p">):</span>
