@@ -32,7 +32,7 @@ from param import ClassSelector
 from .patterngenerator import Constant, PatternGenerator, ChannelGenerator
 
 from dataviews import SheetStack, Dimension
-from dataviews.sheetviews import SheetView, SheetCoordinateSystem
+from dataviews.sheetviews import SheetView, SheetCoordinateSystem # pyflakes:ignore (API import)
 from dataviews import boundingregion, sheetcoords # pyflakes:ignore (API import)
 
 from .patternfn import gaussian,exponential,gabor,line,disk,ring,\
