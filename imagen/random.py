@@ -1,3 +1,4 @@
+
 """
 Two-dimensional pattern generators drawing from various random distributions.
 """
@@ -131,6 +132,8 @@ class DenseNoise(RandomGenerator):
     def _distrib(self, shape, p):               
         assert ( p.grid_density <= p.xdensity ), 'grid density bigger than pixel density x'
         assert ( p.grid_density <= p.ydensity),  'grid density bigger than pixel density y'
+        assert ( shape[1] > 0 ), 'Pixel matrix can not be zero'
+        assert ( shape[0] > 0 ),  'Pixel matrix can not be zero'
         
         Nx = shape[1]  
         Ny = shape[0] # Size of the pixel matrix 
@@ -138,22 +141,23 @@ class DenseNoise(RandomGenerator):
         SC = SheetCoordinateSystem(p.bounds, p.xdensity, p.ydensity)
         unitary_distance_x = SC._SheetCoordinateSystem__xstep
         unitary_distance_y = SC._SheetCoordinateSystem__ystep
+
         
-        sheet_x_size = round(unitary_distance_x * Nx)
-        sheet_y_size = round(unitary_distance_y * Ny)
-        
+        sheet_x_size = unitary_distance_x * Nx 
+        sheet_y_size = unitary_distance_y * Ny
+
         # Sizes of the structure matrix 
-        nx = int(sheet_x_size * p.grid_density)
-        ny = int(sheet_y_size * p.grid_density)
+        nx = int(round(sheet_x_size * p.grid_density))  # Number of points in the x's
+        ny = int(round(sheet_y_size * p.grid_density))  # Number of points in the y's
         
-        ps_x = int(round(Nx / nx)) #Closest integer 
-        ps_y = int(round(Ny / ny))
+        assert ( nx > 0 ), 'Grid density or bound box in the x dimension too smal'
+        assert ( ny > 0 ), 'Grid density or bound bonx in the y dimension too smal'
         
         # If the noise grid is proportional to the pixel grid 
         # and fits neatly into it then this method is faster (~100 times faster)
         if ( Nx % nx == 0) and (Ny % ny == 0):
               
-            if (ps_x == 1) and (ps_y == 1):  #This is faster to call the whole procedure 
+            if (Nx == nx) and (Ny == ny):  #This is faster to call the whole procedure 
                 result = 0.5 * (p.random_generator.randint(-1, 2, shape) + 1)
                 return  result * p.scale + p.offset
             
@@ -162,47 +166,48 @@ class DenseNoise(RandomGenerator):
                 A = np.zeros(shape)    
                 # Noise matrix that contains the structure of 0, 0.5 and 1's  
                 Z = 0.5 * (p.random_generator.randint(-1, 2, (nx, ny)) + 1 )               
-                
+
+                ps_x = int(round(Nx * 1.0/ nx))  #Closest integer 
+                ps_y = int(round(Ny * 1.0/ ny))
+        
                 # Noise matrix is mapped to the pixel matrix   
                 for i in range(nx):
                     for j in range(ny): 
                         A[i * ps_y: (i + 1) * ps_y, j * ps_x: (j + 1) * ps_x] = Z[i,j]
-                
+
                 return A * p.scale + p.offset
             
         # General method in case the noise grid does not 
         # fall neatly in the pixels grid      
         else:
-                  
-            x_points,y_points = SC.sheetcoordinates_of_matrixidx()
             
             # Obtain length of the side and length of the
             # division line between the grid 
-            
-            division_x = sheet_x_size / nx
-            division_y = sheet_y_size / ny
+            x_points,y_points = SC.sheetcoordinates_of_matrixidx()
+
+            division_x = 1.0 / p.grid_density
+            division_y = 1.0 / p.grid_density
             
             # This is the actual matrix of the pixels 
             A = np.zeros(shape)
             # Noise matrix that contains the structure of 0, 0.5 and 1's  
             Z = 0.5 * (p.random_generator.randint(-1, 2, (nx, ny)) + 1 )
+
+            size_of_block_x = Nx * 1.0 / nx
+            size_of_block_y = Ny * 1.0 / ny
             
             # Noise matrix is mapped to the pixel matrix   
             for i in range(Nx):
                 for j in range(Ny):
                     # Map along the x coordinates 
-                    aux1 = x_points[i] + (sheet_x_size  / 2)
-                    outcome1 = int(aux1 / division_x)
-                    # Map along the y coordinates
-                    aux2 = y_points[-(j+1)] + (sheet_y_size  / 2)
-                    outcome2 = int(aux2 / division_y)
-                    # Assign 
-                    A[j][i] = Z[outcome2][outcome1]
-            
+                    x_entry = int( i / size_of_block_x)
+                    y_entry = int( j / size_of_block_y)
+                    A[j][i] = Z[x_entry][y_entry]
+                
             return A * p.scale + p.offset
 
-
 class SparseNoise(RandomGenerator):
+
     '''
     2D sparse noise pattern generator with variable and free grid size
     
@@ -274,26 +279,30 @@ class SparseNoise(RandomGenerator):
     def _distrib(self, shape, p):
         assert ( p.grid_density <= p.xdensity ), 'grid density bigger than pixel density x'
         assert ( p.grid_density <= p.ydensity),  'grid density bigger than pixel density y'
+        assert ( shape[1] > 0 ), 'Pixel matrix can not be zero'
+        assert ( shape[0] > 0 ),  'Pixel matrix can not be zero'
         
         Nx = shape[1]  
         Ny = shape[0] # Size of the pixel matrix 
+        
       
         SC = SheetCoordinateSystem(p.bounds, p.xdensity, p.ydensity)
         unitary_distance_x = SC._SheetCoordinateSystem__xstep
         unitary_distance_y = SC._SheetCoordinateSystem__ystep
-        
-        sheet_x_size = round(unitary_distance_x * Nx)
-        sheet_y_size = round(unitary_distance_y * Ny)
-        
+
+        sheet_x_size = unitary_distance_x * Nx 
+        sheet_y_size = unitary_distance_y * Ny
+
         # Sizes of the structure matrix 
-        nx = int(sheet_x_size * p.grid_density)
-        ny = int(sheet_y_size * p.grid_density)
+        nx = int(round(sheet_x_size * p.grid_density))  # Number of points in the x's
+        ny = int(round(sheet_y_size * p.grid_density))  # Number of points in the y's
+        
+        assert ( nx > 0 ), 'Grid density or bound box in the x dimension too smal'
+        assert ( ny > 0 ), 'Grid density or bound bonx in the y dimension too smal'
         
         ps_x = int(round(Nx / nx)) #Closest integer 
         ps_y = int(round(Ny / ny))
-        
-        
-      
+              
         # This is the actual matrix of the pixels 
         A = np.ones(shape) * 0.5   
            
@@ -327,9 +336,11 @@ class SparseNoise(RandomGenerator):
                 # Obtain length of the side and length of the
                 # division line between the grid 
                 
-                division_x = sheet_x_size / nx
-                division_y = sheet_y_size / ny
-            
+                division_x = 1.0 / p.grid_density
+                division_y = 1.0 / p.grid_density
+
+                size_of_block_x = Nx * 1.0 / nx
+                size_of_block_y = Ny * 1.0 / ny
             
                 # Construct the noise matrix 
                 Z = np.ones((nx,ny)) * 0.5
@@ -338,22 +349,16 @@ class SparseNoise(RandomGenerator):
                 z = p.random_generator.randint(0,2) 
                 Z[x,y] = z
                 
-                print Z
-                
-                # Noise matrix is mapped to the pixel matrix   
+                            # Noise matrix is mapped to the pixel matrix   
                 for i in range(Nx):
                     for j in range(Ny):
                         # Map along the x coordinates 
-                        aux1 = x_points[i] + (sheet_x_size / 2)
-                        outcome1 = int(aux1 / division_x)
-                        # Map along the y coordinates
-                        aux2 = y_points[-(j+1)] + (sheet_y_size / 2)
-                        outcome2 = int(aux2 / division_y)
-                        # Assign 
-                        A[j][i] = Z[outcome2][outcome1]
-                
+                        x_entry = int( i / size_of_block_x)
+                        y_entry = int( j / size_of_block_y)
+                        A[j][i] = Z[x_entry][y_entry]
+
                 return A * p.scale + p.offset
-        
+
          
 class UniformRandom(RandomGenerator):
     """2D uniform random noise pattern generator."""
