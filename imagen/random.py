@@ -422,9 +422,6 @@ class DenseNoise(RandomGenerator):
             # division line between the grid 
             x_points,y_points = SC.sheetcoordinates_of_matrixidx()
 
-            division_x = 1.0 / p.grid_density
-            division_y = 1.0 / p.grid_density
-            
             # This is the actual matrix of the pixels 
             A = np.zeros(shape)
             # Noise matrix that contains the structure of 0, 0.5, and 1's  
@@ -603,9 +600,6 @@ class SparseNoise(RandomGenerator):
                 # Obtain length of the side and length of the
                 # division line between the grid 
                 
-                division_x = 1.0 / p.grid_density
-                division_y = 1.0 / p.grid_density
-
                 size_of_block_x = Nx * 1.0 / nx
                 size_of_block_y = Ny * 1.0 / ny
             
