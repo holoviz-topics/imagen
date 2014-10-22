@@ -346,7 +346,351 @@
         <span class="k">for</span> <span class="n">of</span> <span class="ow">in</span> <span class="n">p</span><span class="o">.</span><span class="n">output_fns</span><span class="p">:</span>
             <span class="n">of</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">result</span></div>
+        <span class="k">return</span> <span class="n">result</span>
+
+
+
+</div>
+<div class="viewcode-block" id="DenseNoise"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.random.DenseNoise">[docs]</a><span class="k">class</span> <span class="nc">DenseNoise</span><span class="p">(</span><span class="n">RandomGenerator</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    2D Dense noise pattern generator, constrained to a grid.</span>
+
+<span class="sd">    Similar to UniformRandom, but draws the noise pattern in a grid</span>
+<span class="sd">    that can be smaller than the actual density of the</span>
+<span class="sd">    PatternGenerator.</span>
+
+<span class="sd">    By default, this produces a matrix with random values 0.0, 0.5, and 1.</span>
+<span class="sd">    When a scale and an offset are provided the transformation maps them to:</span>
+
+<span class="sd">     0 -&gt; offset</span>
+<span class="sd">     0.5 -&gt; offset + 0.5 * scale</span>
+<span class="sd">     1 -&gt; offset + scale</span>
+
+<span class="sd">    --------</span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    DenseNoise(grid_density=1, bounds=BoundingBox(radius=1),</span>
+<span class="sd">        xdensity=4, ydensity=4)  will produce something like this:</span>
+
+<span class="sd">    [[ 1.  1.  1.  1.  0.  0.  0.  0. ]</span>
+<span class="sd">     [ 1.  1.  1.  1.  0.  0.  0.  0. ]  </span>
+<span class="sd">     [ 1.  1.  1.  1.  0.  0.  0.  0. ]  Here the Sheet-coordinate size is 2.0x2.0,</span>
+<span class="sd">     [ 1.  1.  1.  1.  0.  0.  0.  0. ]  so grid_density=1 yields a 2x2 grid</span>
+<span class="sd">     [ 0.  0.  0.  0.  0.5 0.5 0.5 0.5]  sampled at 4 units per grid cell</span>
+<span class="sd">     [ 0.  0.  0.  0.  0.5 0.5 0.5 0.5]</span>
+<span class="sd">     [ 0.  0.  0.  0.  0.5 0.5 0.5 0.5]</span>
+<span class="sd">     [ 0.  0.  0.  0.  0.5 0.5 0.5 0.5]])</span>
+
+
+
+<span class="sd">    DenseNoise(grid_density=2, bounds=BoundingBox(radius=1),</span>
+<span class="sd">        xdensity=4, ydensity=4)  on the other hand will produce something like:</span>
+
+<span class="sd">    [[ 1.  1.  0.  0.  0.  0.  0.5 0.5]</span>
+<span class="sd">     [ 1.  1.  0.  0.  0.  0.  0.5 0.5]</span>
+<span class="sd">     [ 1.  1.  1.  1.  0.  0.  0.  0. ]  Again the Sheet-coordinate size is 2.0x2.0,</span>
+<span class="sd">     [ 1.  1.  1.  1.  0.  0.  0.  0. ]  but grid_density=2 yields a 4x4 grid</span>
+<span class="sd">     [ 0.  0.  0.5 0.5 1.  1.  1.  1. ]  with 2 units per grid cell</span>
+<span class="sd">     [ 0.  0.  0.5 0.5 1.  1.  1.  1. ]</span>
+<span class="sd">     [ 1.  1.  0.  0.  1.  1.  1.  1. ]</span>
+<span class="sd">     [ 1.  1.  0.  0.  1.  1.  1.  1. ]]</span>
+
+<span class="sd">    -----</span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+
+<span class="sd">    1. This method works much faster when the noise matrix falls neatly</span>
+<span class="sd">       into the pixel matrix (~100 times faster).</span>
+
+<span class="sd">    2. The value of each pixel in the generated pattern is determined</span>
+<span class="sd">       by where the center of that pixel lies in the underlying grid,</span>
+<span class="sd">       regardless of any overlap of that pixel with other grid</span>
+<span class="sd">       squares.</span>
+
+<span class="sd">    3. If a particular number of cells N is wanted, divide it by the</span>
+<span class="sd">       length of the side of the bounding box to determine the</span>
+<span class="sd">       grid_density. For example, if the user wants to have N=10 cells</span>
+<span class="sd">       for a BoundingBox(radius=1) (which gives a bounding box size of</span>
+<span class="sd">       2.0x2.0), the grid_density must be set to N/2 = 5 in order to</span>
+<span class="sd">       have ten cells.  </span>
+
+<span class="sd">    4. The xdensity and ydensity must both be at least as large as the</span>
+<span class="sd">       grid_density, e.g. 5 for the above example.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">grid_density</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span> <span class="n">softbounds</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">50</span><span class="p">),</span> <span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">        Grid elements per 1.0 distance in Sheet coordinates.&quot;&quot;&quot;</span><span class="p">)</span>
+
+    <span class="c"># Hide unused parameters</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">precedence</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">precedence</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">precedence</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">_distrib</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>               
+        <span class="n">max_density</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">xdensity</span><span class="p">,</span><span class="n">p</span><span class="o">.</span><span class="n">ydensity</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">grid_density</span> <span class="o">&gt;</span> <span class="n">max_density</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s">&quot;warned_about_density&quot;</span><span class="p">)):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s">&quot;Requested grid_density </span><span class="si">%s</span><span class="s"> larger than xdensity </span><span class="si">%s</span><span class="s"> or ydensity </span><span class="si">%s</span><span class="s">; capped at </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> 
+                         <span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">grid_density</span><span class="p">,</span><span class="n">p</span><span class="o">.</span><span class="n">xdensity</span><span class="p">,</span><span class="n">p</span><span class="o">.</span><span class="n">ydensity</span><span class="p">,</span><span class="n">max_density</span><span class="p">))</span>
+            <span class="n">p</span><span class="o">.</span><span class="n">grid_density</span> <span class="o">=</span> <span class="n">max_density</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">warned_about_density</span><span class="o">=</span><span class="bp">True</span>
+
+        <span class="n">Nx</span> <span class="o">=</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>  
+        <span class="n">Ny</span> <span class="o">=</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c"># Size of the pixel matrix </span>
+      
+        <span class="k">assert</span> <span class="p">(</span><span class="n">Nx</span><span class="o">&gt;</span><span class="mi">0</span> <span class="ow">and</span> <span class="n">Ny</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">),</span> <span class="s">&#39;Pixel matrix cannot be zero&#39;</span>
+
+        <span class="n">SC</span> <span class="o">=</span> <span class="n">SheetCoordinateSystem</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">bounds</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">xdensity</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">ydensity</span><span class="p">)</span>
+        <span class="n">unitary_distance_x</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="n">_SheetCoordinateSystem__xstep</span>
+        <span class="n">unitary_distance_y</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="n">_SheetCoordinateSystem__ystep</span>
+
+        
+        <span class="n">sheet_x_size</span> <span class="o">=</span> <span class="n">unitary_distance_x</span> <span class="o">*</span> <span class="n">Nx</span> 
+        <span class="n">sheet_y_size</span> <span class="o">=</span> <span class="n">unitary_distance_y</span> <span class="o">*</span> <span class="n">Ny</span>
+
+        <span class="c"># Sizes of the structure matrix </span>
+        <span class="n">nx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">sheet_x_size</span> <span class="o">*</span> <span class="n">p</span><span class="o">.</span><span class="n">grid_density</span><span class="p">))</span>  <span class="c"># Number of points in the x&#39;s</span>
+        <span class="n">ny</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">sheet_y_size</span> <span class="o">*</span> <span class="n">p</span><span class="o">.</span><span class="n">grid_density</span><span class="p">))</span>  <span class="c"># Number of points in the y&#39;s</span>
+        
+        <span class="k">assert</span> <span class="p">(</span> <span class="n">nx</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="p">),</span> <span class="s">&#39;Grid density or bound box in the x dimension too small&#39;</span>
+        <span class="k">assert</span> <span class="p">(</span> <span class="n">ny</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="p">),</span> <span class="s">&#39;Grid density or bound box in the y dimension too small&#39;</span>
+        
+        <span class="c"># If the noise grid is proportional to the pixel grid and fits</span>
+        <span class="c"># neatly into it then this method is ~100 times faster</span>
+        <span class="k">if</span> <span class="p">(</span> <span class="n">Nx</span> <span class="o">%</span> <span class="n">nx</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">Ny</span> <span class="o">%</span> <span class="n">ny</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+              
+            <span class="k">if</span> <span class="p">(</span><span class="n">Nx</span> <span class="o">==</span> <span class="n">nx</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">Ny</span> <span class="o">==</span> <span class="n">ny</span><span class="p">):</span>  <span class="c">#This is faster to call the whole procedure </span>
+                <span class="n">result</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">random_generator</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="k">return</span>  <span class="n">result</span> <span class="o">*</span> <span class="n">p</span><span class="o">.</span><span class="n">scale</span> <span class="o">+</span> <span class="n">p</span><span class="o">.</span><span class="n">offset</span>
+            
+            <span class="k">else</span><span class="p">:</span> 
+                <span class="c"># This is the actual matrix of the pixels </span>
+                <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>    
+                <span class="c"># Noise matrix that contains the structure of 0, 0.5, and 1&#39;s  </span>
+                <span class="n">Z</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">random_generator</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="p">(</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">)</span>               
+
+                <span class="n">ps_x</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">Nx</span> <span class="o">*</span> <span class="mf">1.0</span><span class="o">/</span> <span class="n">nx</span><span class="p">))</span>  <span class="c">#Closest integer </span>
+                <span class="n">ps_y</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">Ny</span> <span class="o">*</span> <span class="mf">1.0</span><span class="o">/</span> <span class="n">ny</span><span class="p">))</span>
+        
+                <span class="c"># Noise matrix is mapped to the pixel matrix   </span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nx</span><span class="p">):</span>
+                    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ny</span><span class="p">):</span> 
+                        <span class="n">A</span><span class="p">[</span><span class="n">i</span> <span class="o">*</span> <span class="n">ps_y</span><span class="p">:</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">ps_y</span><span class="p">,</span> <span class="n">j</span> <span class="o">*</span> <span class="n">ps_x</span><span class="p">:</span> <span class="p">(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">ps_x</span><span class="p">]</span> <span class="o">=</span> <span class="n">Z</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span>
+
+                <span class="k">return</span> <span class="n">A</span> <span class="o">*</span> <span class="n">p</span><span class="o">.</span><span class="n">scale</span> <span class="o">+</span> <span class="n">p</span><span class="o">.</span><span class="n">offset</span>
+            
+        <span class="c"># General method in case the noise grid does not </span>
+        <span class="c"># fall neatly in the pixel grid      </span>
+        <span class="k">else</span><span class="p">:</span>
+            
+            <span class="c"># Obtain length of the side and length of the</span>
+            <span class="c"># division line between the grid </span>
+            <span class="n">x_points</span><span class="p">,</span><span class="n">y_points</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="n">sheetcoordinates_of_matrixidx</span><span class="p">()</span>
+
+            <span class="n">division_x</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">p</span><span class="o">.</span><span class="n">grid_density</span>
+            <span class="n">division_y</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">p</span><span class="o">.</span><span class="n">grid_density</span>
+            
+            <span class="c"># This is the actual matrix of the pixels </span>
+            <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+            <span class="c"># Noise matrix that contains the structure of 0, 0.5, and 1&#39;s  </span>
+            <span class="n">Z</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">random_generator</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="p">(</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">)</span>
+
+            <span class="n">size_of_block_x</span> <span class="o">=</span> <span class="n">Nx</span> <span class="o">*</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">nx</span>
+            <span class="n">size_of_block_y</span> <span class="o">=</span> <span class="n">Ny</span> <span class="o">*</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">ny</span>
+            
+            <span class="c"># Noise matrix is mapped to the pixel matrix   </span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nx</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Ny</span><span class="p">):</span>
+                    <span class="c"># Map along the x coordinates </span>
+                    <span class="n">x_entry</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="n">i</span> <span class="o">/</span> <span class="n">size_of_block_x</span><span class="p">)</span>
+                    <span class="n">y_entry</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="n">j</span> <span class="o">/</span> <span class="n">size_of_block_y</span><span class="p">)</span>
+                    <span class="n">A</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">Z</span><span class="p">[</span><span class="n">x_entry</span><span class="p">][</span><span class="n">y_entry</span><span class="p">]</span>
+                
+            <span class="k">return</span> <span class="n">A</span> <span class="o">*</span> <span class="n">p</span><span class="o">.</span><span class="n">scale</span> <span class="o">+</span> <span class="n">p</span><span class="o">.</span><span class="n">offset</span>
+
+
+</div>
+<div class="viewcode-block" id="SparseNoise"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.random.SparseNoise">[docs]</a><span class="k">class</span> <span class="nc">SparseNoise</span><span class="p">(</span><span class="n">RandomGenerator</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    2D sparse noise pattern generator, with optional constraining to a grid.</span>
+
+<span class="sd">    Draws a square pixel of random brightness at a random location,</span>
+<span class="sd">    either entirely random on the pattern surface or chosen from a</span>
+<span class="sd">    predefined grid of possible positions.</span>
+
+<span class="sd">    By default, produces a matrix with 0.5 everywhere except for a</span>
+<span class="sd">    square patch in one random location. This value is randomly</span>
+<span class="sd">    assigned to either 0 or 1, and then is scaled with the parameters</span>
+<span class="sd">    scale and offset in the following way:</span>
+
+<span class="sd">     0 -&gt; offset</span>
+<span class="sd">     1 -&gt; offset + scale</span>
+
+<span class="sd">    --------</span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    SparseNoise(grid_density=1, grid=True, bounds=BoundingBox(radius=1),</span>
+<span class="sd">        xdensity=4, ydensity=4) will produce something like this:</span>
+
+<span class="sd">    [[ 0.5 0.5 0.5 0.5 0.  0.  0.  0. ] </span>
+<span class="sd">     [ 0.5 0.5 0.5 0.5 0.  0.  0.  0. ] </span>
+<span class="sd">     [ 0.5 0.5 0.5 0.5 0.  0.  0.  0. ]  Here the Sheet-coordinate size is 2.0x2.0,</span>
+<span class="sd">     [ 0.5 0.5 0.5 0.5 0.  0.  0.  0. ]  so grid_density=1 yields a 2x2 grid</span>
+<span class="sd">     [ 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5]  sampled at 4 units per grid cell, with 0.5</span>
+<span class="sd">     [ 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5]  everywhere except the one active cell</span>
+<span class="sd">     [ 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5]</span>
+<span class="sd">     [ 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5]]</span>
+
+<span class="sd">    SparseNoise(grid_density=2, grid=True, bounds=BoundingBox(radius=1),</span>
+<span class="sd">        xdensity=4, ydensity=4) on the other hand will produce something like:</span>
+
+<span class="sd">    [[ 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5]</span>
+<span class="sd">     [ 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5]</span>
+<span class="sd">     [ 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5]  Again the Sheet-coordinate size is 2.0x2.0,</span>
+<span class="sd">     [ 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5]  but grid_density=2 yields a 4x4 grid</span>
+<span class="sd">     [ 0.5 0.5 0.5 0.5 0.5 0.5 1.  1. ]  with 2 units per grid cell</span>
+<span class="sd">     [ 0.5 0.5 0.5 0.5 0.5 0.5 1.  1. ]  </span>
+<span class="sd">     [ 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5]</span>
+<span class="sd">     [ 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5]]</span>
+
+<span class="sd">    SparseNoise(grid_density=2, grid=False, bounds=BoundingBox(radius=1),</span>
+<span class="sd">        xdensity=4, ydensity=4) will produce something like:</span>
+
+<span class="sd">    [[ 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5]</span>
+<span class="sd">     [ 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5]</span>
+<span class="sd">     [ 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5]</span>
+<span class="sd">     [ 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5]  Here notice that the patch is no longer</span>
+<span class="sd">     [ 0.5 0.5 0.5 0.5 0.5 0.  0.  0.5]  aligned with a fixed grid</span>
+<span class="sd">     [ 0.5 0.5 0.5 0.5 0.5 0.  0.  0.5]</span>
+<span class="sd">     [ 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5]</span>
+<span class="sd">     [ 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5]]</span>
+
+
+<span class="sd">    -----</span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+
+<span class="sd">    1. This method works ~100 times faster when the noise matrix falls neatly</span>
+<span class="sd">       into the pixel matrix.</span>
+
+<span class="sd">    2. The value of each pixel in the generated pattern is determined</span>
+<span class="sd">       by where the center of that pixel lies in the underlying grid,</span>
+<span class="sd">       regardless of any overlap of that pixel with other grid</span>
+<span class="sd">       squares.</span>
+
+<span class="sd">    3. If a particular number of cells N is wanted, divide it by the</span>
+<span class="sd">       length of the side of the bounding box to determine the</span>
+<span class="sd">       grid_density. For example, if the user wants to have N=10 cells</span>
+<span class="sd">       for a BoundingBox(radius=1) (which gives a bounding box size of</span>
+<span class="sd">       2.0x2.0), the grid_density must be set to N/2 = 5 in order to</span>
+<span class="sd">       have ten cells.  </span>
+
+<span class="sd">    4. The xdensity and ydensity must both be at least as large as the</span>
+<span class="sd">       grid_density, e.g. 5 for the above example.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">grid_density</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span> <span class="n">softbounds</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">50</span><span class="p">),</span> <span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">        Grid elements per 1.0 distance in Sheet coordinates.&quot;&quot;&quot;</span><span class="p">)</span>
+
+    <span class="n">grid</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Boolean</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">        If True, each spot is snapped to a grid, so that subsequent</span>
+<span class="s">        spots are forced to overlap either entirely or not at all,</span>
+<span class="s">        never partially.  Otherwise, the spot size is fixed by the</span>
+<span class="s">        grid_density, but it may appear anywhere.&quot;&quot;&quot;</span><span class="p">)</span>
+
+
+    <span class="c"># Hide unused parameters</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">precedence</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">precedence</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">precedence</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_distrib</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+        <span class="n">max_density</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">xdensity</span><span class="p">,</span><span class="n">p</span><span class="o">.</span><span class="n">ydensity</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">grid_density</span> <span class="o">&gt;</span> <span class="n">max_density</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s">&quot;warned_about_density&quot;</span><span class="p">)):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s">&quot;Requested grid_density </span><span class="si">%s</span><span class="s"> larger than xdensity </span><span class="si">%s</span><span class="s"> or ydensity </span><span class="si">%s</span><span class="s">; capped at </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> 
+                         <span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">grid_density</span><span class="p">,</span><span class="n">p</span><span class="o">.</span><span class="n">xdensity</span><span class="p">,</span><span class="n">p</span><span class="o">.</span><span class="n">ydensity</span><span class="p">,</span><span class="n">max_density</span><span class="p">))</span>
+            <span class="n">p</span><span class="o">.</span><span class="n">grid_density</span> <span class="o">=</span> <span class="n">max_density</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">warned_about_density</span><span class="o">=</span><span class="bp">True</span>
+
+        <span class="n">Nx</span> <span class="o">=</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>  
+        <span class="n">Ny</span> <span class="o">=</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c"># Size of the pixel matrix </span>
+        
+        <span class="k">assert</span> <span class="p">(</span><span class="n">Nx</span><span class="o">&gt;</span><span class="mi">0</span> <span class="ow">and</span> <span class="n">Ny</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">),</span> <span class="s">&#39;Pixel matrix cannot be zero&#39;</span>
+      
+        <span class="n">SC</span> <span class="o">=</span> <span class="n">SheetCoordinateSystem</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">bounds</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">xdensity</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">ydensity</span><span class="p">)</span>
+        <span class="n">unitary_distance_x</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="n">_SheetCoordinateSystem__xstep</span>
+        <span class="n">unitary_distance_y</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="n">_SheetCoordinateSystem__ystep</span>
+
+        <span class="n">sheet_x_size</span> <span class="o">=</span> <span class="n">unitary_distance_x</span> <span class="o">*</span> <span class="n">Nx</span> 
+        <span class="n">sheet_y_size</span> <span class="o">=</span> <span class="n">unitary_distance_y</span> <span class="o">*</span> <span class="n">Ny</span>
+
+        <span class="c"># Sizes of the structure matrix </span>
+        <span class="n">nx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">sheet_x_size</span> <span class="o">*</span> <span class="n">p</span><span class="o">.</span><span class="n">grid_density</span><span class="p">))</span>  <span class="c"># Number of points in the x&#39;s</span>
+        <span class="n">ny</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">sheet_y_size</span> <span class="o">*</span> <span class="n">p</span><span class="o">.</span><span class="n">grid_density</span><span class="p">))</span>  <span class="c"># Number of points in the y&#39;s</span>
+        
+        <span class="k">assert</span> <span class="p">(</span> <span class="n">nx</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="p">),</span> <span class="s">&#39;Grid density or bound box in the x dimension too small&#39;</span>
+        <span class="k">assert</span> <span class="p">(</span> <span class="n">ny</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="p">),</span> <span class="s">&#39;Grid density or bound box in the y dimension too smal&#39;</span>
+        
+        <span class="n">ps_x</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">Nx</span> <span class="o">/</span> <span class="n">nx</span><span class="p">))</span> <span class="c">#Closest integer </span>
+        <span class="n">ps_y</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">Ny</span> <span class="o">/</span> <span class="n">ny</span><span class="p">))</span>
+              
+        <span class="c"># This is the actual matrix of the pixels </span>
+        <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.5</span>   
+           
+        <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">grid</span> <span class="o">==</span> <span class="bp">False</span><span class="p">:</span>  <span class="c">#The centers of the spots are randomly distributed in space </span>
+                        
+            <span class="n">x</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">random_generator</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">Nx</span> <span class="o">-</span> <span class="n">ps_x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">random_generator</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">Ny</span> <span class="o">-</span> <span class="n">ps_y</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">z</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">random_generator</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> 
+                        
+            <span class="c"># Noise matrix is mapped to the pixel matrix   </span>
+            <span class="n">A</span><span class="p">[</span><span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">ps_y</span><span class="p">),</span> <span class="n">y</span><span class="p">:</span> <span class="p">(</span><span class="n">y</span> <span class="o">+</span> <span class="n">ps_x</span><span class="p">)]</span> <span class="o">=</span>  <span class="n">z</span>   
+           
+            <span class="k">return</span> <span class="n">A</span> <span class="o">*</span> <span class="n">p</span><span class="o">.</span><span class="n">scale</span> <span class="o">+</span> <span class="n">p</span><span class="o">.</span><span class="n">offset</span>
+        
+        <span class="k">else</span><span class="p">:</span> <span class="c">#In case you want the grid</span>
+            
+            <span class="k">if</span>  <span class="p">(</span> <span class="n">Nx</span> <span class="o">%</span> <span class="n">nx</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">Ny</span> <span class="o">%</span> <span class="n">ny</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span> <span class="c">#When the noise grid falls neatly into the the pixel grid </span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">random_generator</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">nx</span><span class="p">)</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">random_generator</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ny</span><span class="p">)</span>
+                <span class="n">z</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">random_generator</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> 
+                
+               <span class="c"># Noise matrix is mapped to the pixel matrix (faster method)       </span>
+                <span class="n">A</span><span class="p">[</span><span class="n">x</span><span class="o">*</span><span class="n">ps_y</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">ps_y</span> <span class="o">+</span> <span class="n">ps_y</span><span class="p">),</span> <span class="n">y</span><span class="o">*</span><span class="n">ps_x</span><span class="p">:</span> <span class="p">(</span><span class="n">y</span><span class="o">*</span><span class="n">ps_x</span> <span class="o">+</span> <span class="n">ps_x</span><span class="p">)]</span> <span class="o">=</span> <span class="n">z</span>  
+                
+                <span class="k">return</span> <span class="n">A</span> <span class="o">*</span> <span class="n">p</span><span class="o">.</span><span class="n">scale</span> <span class="o">+</span> <span class="n">p</span><span class="o">.</span><span class="n">offset</span>
+                    
+            <span class="k">else</span><span class="p">:</span> <span class="c"># If noise grid does not fit neatly in the pixel grid (slow method)</span>
+                
+                <span class="n">x_points</span><span class="p">,</span><span class="n">y_points</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="n">sheetcoordinates_of_matrixidx</span><span class="p">()</span>
+                
+                <span class="c"># Obtain length of the side and length of the</span>
+                <span class="c"># division line between the grid </span>
+                
+                <span class="n">division_x</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">p</span><span class="o">.</span><span class="n">grid_density</span>
+                <span class="n">division_y</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">p</span><span class="o">.</span><span class="n">grid_density</span>
+
+                <span class="n">size_of_block_x</span> <span class="o">=</span> <span class="n">Nx</span> <span class="o">*</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">nx</span>
+                <span class="n">size_of_block_y</span> <span class="o">=</span> <span class="n">Ny</span> <span class="o">*</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">ny</span>
+            
+                <span class="c"># Construct the noise matrix </span>
+                <span class="n">Z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">nx</span><span class="p">,</span><span class="n">ny</span><span class="p">))</span> <span class="o">*</span> <span class="mf">0.5</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">random_generator</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">nx</span><span class="p">)</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">random_generator</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ny</span><span class="p">)</span>
+                <span class="n">z</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">random_generator</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> 
+                <span class="n">Z</span><span class="p">[</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">]</span> <span class="o">=</span> <span class="n">z</span>
+                
+                            <span class="c"># Noise matrix is mapped to the pixel matrix   </span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nx</span><span class="p">):</span>
+                    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Ny</span><span class="p">):</span>
+                        <span class="c"># Map along the x coordinates </span>
+                        <span class="n">x_entry</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="n">i</span> <span class="o">/</span> <span class="n">size_of_block_x</span><span class="p">)</span>
+                        <span class="n">y_entry</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="n">j</span> <span class="o">/</span> <span class="n">size_of_block_y</span><span class="p">)</span>
+                        <span class="n">A</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">Z</span><span class="p">[</span><span class="n">x_entry</span><span class="p">][</span><span class="n">y_entry</span><span class="p">]</span>
+
+                <span class="k">return</span> <span class="n">A</span> <span class="o">*</span> <span class="n">p</span><span class="o">.</span><span class="n">scale</span> <span class="o">+</span> <span class="n">p</span><span class="o">.</span><span class="n">offset</span></div>
 </pre></div>
 
           </div>
