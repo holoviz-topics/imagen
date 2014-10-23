@@ -488,9 +488,6 @@
             <span class="c"># division line between the grid </span>
             <span class="n">x_points</span><span class="p">,</span><span class="n">y_points</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="n">sheetcoordinates_of_matrixidx</span><span class="p">()</span>
 
-            <span class="n">division_x</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">p</span><span class="o">.</span><span class="n">grid_density</span>
-            <span class="n">division_y</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">p</span><span class="o">.</span><span class="n">grid_density</span>
-            
             <span class="c"># This is the actual matrix of the pixels </span>
             <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
             <span class="c"># Noise matrix that contains the structure of 0, 0.5, and 1&#39;s  </span>
@@ -669,9 +666,6 @@
                 <span class="c"># Obtain length of the side and length of the</span>
                 <span class="c"># division line between the grid </span>
                 
-                <span class="n">division_x</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">p</span><span class="o">.</span><span class="n">grid_density</span>
-                <span class="n">division_y</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">p</span><span class="o">.</span><span class="n">grid_density</span>
-
                 <span class="n">size_of_block_x</span> <span class="o">=</span> <span class="n">Nx</span> <span class="o">*</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">nx</span>
                 <span class="n">size_of_block_y</span> <span class="o">=</span> <span class="n">Ny</span> <span class="o">*</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">ny</span>
             
