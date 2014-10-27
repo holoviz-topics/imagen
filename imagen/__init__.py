@@ -13,7 +13,7 @@ import sys, os, copy
 # Add param submodule to sys.path
 cwd = os.path.abspath(os.path.split(__file__)[0])
 sys.path.insert(0, os.path.join(cwd, '..', 'param'))
-sys.path.insert(0, os.path.join(cwd, '..', 'dataviews'))
+sys.path.insert(0, os.path.join(cwd, '..', 'holoviews'))
 
 import param
 from param.version import Version
@@ -31,9 +31,11 @@ from param import ClassSelector
 # Imported here so that all PatternGenerators will be in the same package
 from .patterngenerator import Constant, PatternGenerator, ChannelGenerator
 
-from dataviews import SheetStack, Dimension
-from dataviews.sheetviews import SheetView, SheetCoordinateSystem # pyflakes:ignore (API import)
-from dataviews import boundingregion, sheetcoords # pyflakes:ignore (API import)
+from holoviews.core import Dimension, ViewMap
+from holoviews.views import SheetMatrix
+
+from holoviews.core import SheetCoordinateSystem # pyflakes:ignore (API import)
+from holoviews import boundingregion, sheetcoords # pyflakes:ignore (API import)
 
 from .patternfn import gaussian,exponential,gabor,line,disk,ring,\
     sigmoid,arc_by_radian,arc_by_center,smooth_rectangle,float_error_ignore, \
@@ -724,7 +726,7 @@ class SeparatedComposite(Composite):
 
 
 
-class Animation(SheetStack):
+class Animation(ViewMap):
     """
     An Animation is a collection of SheetLayers associated with
     corresponding time values using a fixed timebase. Each individual

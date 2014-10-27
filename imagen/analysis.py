@@ -1,8 +1,8 @@
 """
 The ImaGen analysis module provides common analysis functions, which
-can be applied to any SheetView or SheetStack. This allows the user to
+can be applied to any SheetMatrix or ViewMap. This allows the user to
 perform analyses on their input patterns or any other arrays embedded
-within a SheetView and display the output of the analysis alongside
+within a SheetMatrix and display the output of the analysis alongside
 the original patterns.
 
 Currently this module provides FFT, auto-correlation and gradient
@@ -13,16 +13,15 @@ import numpy as np
 from numpy.fft.fftpack import fft2
 from numpy.fft.helper import fftshift
 
+from holoviews.core import options
 import param
-from dataviews import SheetView
-from dataviews.sheetviews import BoundingBox
-from dataviews.options import options
-from dataviews.operation  import ViewOperation
-from dataviews.styles import GrayNearest
 
 from imagen import wrap
 
-
+from holoviews import SheetMatrix
+from holoviews.core import BoundingBox
+from holoviews.core.operation import ViewOperation
+from holoviews.styles import GrayNearest
 
 
 class fft_power_spectrum(ViewOperation):
@@ -38,7 +37,7 @@ class fft_power_spectrum(ViewOperation):
 
     label = param.String(default='FFT Power Spectrum', doc="""
       The label suffix used for the output power spectrum as appended
-      to the label of the input SheetView.""")
+      to the label of the input SheetMatrix.""")
 
 
     def _process(self, sheetview, key=None):
@@ -54,18 +53,18 @@ class fft_power_spectrum(ViewOperation):
         density = sheetview.xdensity
         bb = BoundingBox(radius=(density/2)/(r-l))
 
-        return [SheetView(normalized_spectrum, bb,
-                          label=sheetview.label + ' ' + self.p.label,
-                          value="FFT Power")]
+        return [SheetMatrix(normalized_spectrum, bb,
+                            label=sheetview.label + ' ' + self.p.label,
+                            value="FFT Power")]
 
 
 
 class gradient(ViewOperation):
     """
-    Compute the gradient plot of the supplied SheetView or SheetStack.
+    Compute the gradient plot of the supplied SheetMatrix or ViewMap.
     Translated from Octave code originally written by Yoonsuck Choe.
 
-    If the SheetView has a cyclic_range, negative differences will be
+    If the SheetMatrix has a cyclic_range, negative differences will be
     wrapped into the range.
 
     Example:: gradient(topo.sim.V1.views.maps.OrientationPreference)
@@ -73,7 +72,7 @@ class gradient(ViewOperation):
 
     label = param.String(default='Gradient', doc="""
       The label suffix used for the output gradient as appended to the
-      label of the input SheetView.""")
+      label of the input SheetMatrix.""")
 
     def _process(self, sheetview, key=None):
         data = sheetview.data
@@ -92,8 +91,8 @@ class gradient(ViewOperation):
             dx = 0.5 * cyclic_range - np.abs(dx - 0.5 * cyclic_range)
             dy = 0.5 * cyclic_range - np.abs(dy - 0.5 * cyclic_range)
 
-        return [SheetView(np.sqrt(dx*dx + dy*dy), sheetview.bounds,
-                          value=sheetview.label + ' ' + self.p.label)]
+        return [SheetMatrix(np.sqrt(dx * dx + dy * dy), sheetview.bounds,
+                            value=sheetview.label + ' ' + self.p.label)]
 
 
 
@@ -108,14 +107,14 @@ class autocorrelation(ViewOperation):
 
     label = param.String(default='AutoCorrelation', doc="""
       The label suffix used for the output autocorrelation as appended
-      to the label of the input SheetView.""")
+      to the label of the input SheetMatrix.""")
 
     def _process(self, sheetview, key=None):
         import scipy.signal
         data = sheetview.data
         autocorr_data = scipy.signal.correlate2d(data, data)
-        return [SheetView(autocorr_data, sheetview.bounds,
-                          value=sheetview.label + ' ' + self.p.label)]
+        return [SheetMatrix(autocorr_data, sheetview.bounds,
+                            value=sheetview.label + ' ' + self.p.label)]
 
 
 
@@ -124,10 +123,10 @@ class autocorrelation(ViewOperation):
 class cyclic_similarity_index(ViewOperation):
     """
     The similarity index between any two cyclic maps. By default, a
-    zero value indicates uncorrelated SheetView data. The similarity
+    zero value indicates uncorrelated SheetMatrix data. The similarity
     index may be useful for quantifying the stability of some cyclic
-    quantity over time by comparing each sample in a SheetStack to the
-    final SheetView element.
+    quantity over time by comparing each sample in a ViewMap to the
+    final SheetMatrix element.
     """
 
     unit_range = param.Boolean(default=True, doc="""
@@ -139,15 +138,17 @@ class cyclic_similarity_index(ViewOperation):
 
     label = param.String(default='Cyclic Similarity', doc="""
       The label suffix used for the output similarity index as
-      appended to the label of the input SheetView.""")
+      appended to the label of the input SheetMatrix.""")
 
     def _process(self, overlay, key=None):
 
         if len(overlay) != 2:
-             raise Exception("The similarity index may only be computed using overlays of SheetViews.")
+            raise Exception("The similarity index may only be computed"
+                            "using overlays of SheetMatrix Views.")
 
         if any(el.cyclic_range is None for el in overlay):
-             raise Exception("The SheetViews in each  overlay must have a defined cyclic range.")
+             raise Exception("All SheetMatrix Views in the Overlay "
+                             "must have a defined cyclic range.")
 
         prefA_data = overlay[0].N.data
         prefB_data = overlay[1].N.data
@@ -160,11 +161,11 @@ class cyclic_similarity_index(ViewOperation):
         # Subtracted from 1.0 as low difference => high stability
         # As this is made into a unit metric, uncorrelated has value zero.
         similarity = (2 * (similarity - 0.5)) if self.p.unit_range else similarity
-        return [SheetView(similarity, bounds=overlay.bounds,
-                          value=overlay[0].label + ' ' + self.p.label)]
+        return [SheetMatrix(similarity, bounds=overlay.bounds,
+                            value=overlay[0].label + ' ' + self.p.label)]
 
 
-options.CyclicSimilarity_SheetView    = GrayNearest
-options.AutoCorrelation_SheetView     = GrayNearest
-options.Gradient_SheetView            = GrayNearest
-options.FFTPowerSpectrum_SheetView    = GrayNearest
+options.CyclicSimilarity_SheetMatrix    = GrayNearest
+options.AutoCorrelation_SheetMatrix     = GrayNearest
+options.Gradient_SheetMatrix            = GrayNearest
+options.FFTPowerSpectrum_SheetMatrix    = GrayNearest
