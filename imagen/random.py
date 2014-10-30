@@ -8,7 +8,7 @@ import numpy as np
 import param
 from param.parameterized import ParamOverrides
 
-from dataviews.sheetviews import SheetCoordinateSystem
+from holoviews.core import SheetCoordinateSystem
 
 from .patterngenerator import PatternGenerator
 from imagen import Composite, Gaussian

@@ -8,18 +8,16 @@ arrays, and multiple channels, such as for color images.  See
 more information.
 """
 
-
 import numpy as np
 from numpy import pi
+import collections
 
 import param
 from param.parameterized import ParamOverrides
 
-import collections
-
-from dataviews import SheetView, SheetStack
-from dataviews.sheetviews import BoundingBox, BoundingRegionParameter, SheetCoordinateSystem
-from dataviews.options import options, StyleOpts
+from holoviews import ViewMap, SheetMatrix
+from holoviews.core import BoundingBox, BoundingRegionParameter, SheetCoordinateSystem
+from holoviews.core.options import options, StyleOpts
 
 from .transferfn import TransferFn
 
@@ -166,8 +164,8 @@ class PatternGenerator(param.Parameterized):
     def __getitem__(self, coords):
         arr = (np.dstack(self.channels().values()[1:])
                if self.num_channels() in [3,4] else self())
-        return SheetView(arr, self.bounds,
-                         label=self.__class__.__name__+ ' Pattern')[coords]
+        return SheetMatrix(arr, self.bounds,
+                           label=self.__class__.__name__+ ' Pattern')[coords]
 
 
     def channels(self, use_cached=False, **params_to_override):
@@ -312,7 +310,7 @@ class PatternGenerator(param.Parameterized):
         call to the pattern which may or may not be varying (e.g to
         view the patterns contained within a Selector).
         """
-        stack = SheetStack(dimensions=[dimension])
+        stack = ViewMap(dimensions=[dimension])
         self.state_push()
         with time_fn as t:
             t(offset)

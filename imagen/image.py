@@ -24,8 +24,8 @@ import numpy as np
 
 import param
 from param.parameterized import overridable_property
+from holoviews.core import BoundingBox, SheetCoordinateSystem
 
-from dataviews.sheetviews import BoundingBox, SheetCoordinateSystem
 from .patterngenerator import ChannelGenerator, ChannelTransform
 from .transferfn import DivisiveNormalizeLinf, TransferFn
 

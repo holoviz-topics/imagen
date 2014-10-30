@@ -14,7 +14,7 @@ cwd = os.path.abspath(os.path.split(__file__)[0])
 import param
 import numpy as np
 from numpy.testing import assert_array_equal
-from dataviews.sheetviews.boundingregion import BoundingBox
+from holoviews.core.boundingregion import BoundingBox
 from imagen import Constant,PatternGenerator
 from imagen import Rectangle,Gaussian,Composite,Selector
 import numbergen

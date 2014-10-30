@@ -5,7 +5,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from builder.shared_conf import *  # pyflakes:ignore (API import)
 
-paths = ['../param/', '../dataviews/', '.', '..']
+paths = ['../param/', '../holoviews/', '.', '..']
 add_paths(paths)
 
 # General information about the project.
@@ -73,7 +73,7 @@ texinfo_documents = [
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {'http://docs.python.org/': None,
                        'http://ioam.github.io/param/': None,
-                       'http://ioam.github.io/dataviews/': None,
+                       'http://ioam.github.io/holoviews/': None,
                        'http://ipython.org/ipython-doc/2/' : None}
 
 

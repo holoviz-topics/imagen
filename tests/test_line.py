@@ -1,7 +1,7 @@
 from numpy import pi, where
 
 import imagen
-from dataviews.sheetviews.boundingregion import BoundingBox
+from holoviews.core.boundingregion import BoundingBox
 
 try:
     import unittest2 as unittest
