@@ -13,7 +13,7 @@ examples.
 Installation
 ============
 
-ImaGen requires `NumPy <http://numpy.scipy.org/>`_, `PIL <http://www.pythonware.com/products/pil/>`_, and `Param <http://ioam.github.com/param/>`_.
+ImaGen requires `Holoviews <https://github.com/ioam/holoviews>`_ and `PIL <http://www.pythonware.com/products/pil/>`_ (or alternatively `Pillow <https://github.com/python-pillow/Pillow>`_).
 
 Official releases of ImaGen are available at `PyPI <http://pypi.python.org/pypi/imagen>`_, and can be installed along with
 dependencies via ``pip install --user imagen``.  More recent changes can be obtained by cloning the git repository.
