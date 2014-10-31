@@ -35,7 +35,7 @@ from holoviews.core import Dimension, ViewMap
 from holoviews.view import SheetMatrix
 
 from holoviews.core import SheetCoordinateSystem # pyflakes:ignore (API import)
-from holoviews import boundingregion, sheetcoords # pyflakes:ignore (API import)
+from holoviews.core import boundingregion, sheetcoords # pyflakes:ignore (API import)
 
 from .patternfn import gaussian,exponential,gabor,line,disk,ring,\
     sigmoid,arc_by_radian,arc_by_center,smooth_rectangle,float_error_ignore, \
