@@ -79,7 +79,7 @@
 <span class="c"># Add param submodule to sys.path</span>
 <span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">__file__</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cwd</span><span class="p">,</span> <span class="s">&#39;..&#39;</span><span class="p">,</span> <span class="s">&#39;param&#39;</span><span class="p">))</span>
-<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cwd</span><span class="p">,</span> <span class="s">&#39;..&#39;</span><span class="p">,</span> <span class="s">&#39;dataviews&#39;</span><span class="p">))</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cwd</span><span class="p">,</span> <span class="s">&#39;..&#39;</span><span class="p">,</span> <span class="s">&#39;holoviews&#39;</span><span class="p">))</span>
 
 <span class="kn">import</span> <span class="nn">param</span>
 <span class="kn">from</span> <span class="nn">param.version</span> <span class="kn">import</span> <span class="n">Version</span>
@@ -97,9 +97,11 @@
 <span class="c"># Imported here so that all PatternGenerators will be in the same package</span>
 <span class="kn">from</span> <span class="nn">.patterngenerator</span> <span class="kn">import</span> <span class="n">Constant</span><span class="p">,</span> <span class="n">PatternGenerator</span><span class="p">,</span> <span class="n">ChannelGenerator</span>
 
-<span class="kn">from</span> <span class="nn">dataviews</span> <span class="kn">import</span> <span class="n">SheetStack</span><span class="p">,</span> <span class="n">Dimension</span>
-<span class="kn">from</span> <span class="nn">dataviews.sheetviews</span> <span class="kn">import</span> <span class="n">SheetView</span><span class="p">,</span> <span class="n">SheetCoordinateSystem</span> <span class="c"># pyflakes:ignore (API import)</span>
-<span class="kn">from</span> <span class="nn">dataviews</span> <span class="kn">import</span> <span class="n">boundingregion</span><span class="p">,</span> <span class="n">sheetcoords</span> <span class="c"># pyflakes:ignore (API import)</span>
+<span class="kn">from</span> <span class="nn">holoviews.core</span> <span class="kn">import</span> <span class="n">Dimension</span><span class="p">,</span> <span class="n">ViewMap</span>
+<span class="kn">from</span> <span class="nn">holoviews.view</span> <span class="kn">import</span> <span class="n">SheetMatrix</span>                 <span class="c"># pyflakes:ignore (API import)</span>
+
+<span class="kn">from</span> <span class="nn">holoviews.core</span> <span class="kn">import</span> <span class="n">SheetCoordinateSystem</span>       <span class="c"># pyflakes:ignore (API import)</span>
+<span class="kn">from</span> <span class="nn">holoviews.core</span> <span class="kn">import</span> <span class="n">boundingregion</span><span class="p">,</span> <span class="n">sheetcoords</span> <span class="c"># pyflakes:ignore (API import)</span>
 
 <span class="kn">from</span> <span class="nn">.patternfn</span> <span class="kn">import</span> <span class="n">gaussian</span><span class="p">,</span><span class="n">exponential</span><span class="p">,</span><span class="n">gabor</span><span class="p">,</span><span class="n">line</span><span class="p">,</span><span class="n">disk</span><span class="p">,</span><span class="n">ring</span><span class="p">,</span>\
     <span class="n">sigmoid</span><span class="p">,</span><span class="n">arc_by_radian</span><span class="p">,</span><span class="n">arc_by_center</span><span class="p">,</span><span class="n">smooth_rectangle</span><span class="p">,</span><span class="n">float_error_ignore</span><span class="p">,</span> \
@@ -790,7 +792,7 @@
 
 
 </div>
-<span class="k">class</span> <span class="nc">Animation</span><span class="p">(</span><span class="n">SheetStack</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">Animation</span><span class="p">(</span><span class="n">ViewMap</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An Animation is a collection of SheetLayers associated with</span>
 <span class="sd">    corresponding time values using a fixed timebase. Each individual</span>
