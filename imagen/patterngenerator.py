@@ -310,15 +310,15 @@ class PatternGenerator(param.Parameterized):
         call to the pattern which may or may not be varying (e.g to
         view the patterns contained within a Selector).
         """
-        stack = ViewMap(dimensions=[dimension])
+        vmap = ViewMap(dimensions=[dimension])
         self.state_push()
         with time_fn as t:
             t(offset)
             for i in range(frames):
-                stack[t()] = self[:]
+                vmap[t()] = self[:]
                 t += timestep
         self.state_pop()
-        return stack
+        return vmap
 
 # Override class type; must be set here rather than when mask_shape is declared,
 # to avoid referring to class not yet constructed
