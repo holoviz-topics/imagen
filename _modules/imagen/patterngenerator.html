@@ -376,15 +376,15 @@
 <span class="sd">        call to the pattern which may or may not be varying (e.g to</span>
 <span class="sd">        view the patterns contained within a Selector).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">stack</span> <span class="o">=</span> <span class="n">ViewMap</span><span class="p">(</span><span class="n">dimensions</span><span class="o">=</span><span class="p">[</span><span class="n">dimension</span><span class="p">])</span>
+        <span class="n">vmap</span> <span class="o">=</span> <span class="n">ViewMap</span><span class="p">(</span><span class="n">dimensions</span><span class="o">=</span><span class="p">[</span><span class="n">dimension</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">state_push</span><span class="p">()</span>
         <span class="k">with</span> <span class="n">time_fn</span> <span class="k">as</span> <span class="n">t</span><span class="p">:</span>
             <span class="n">t</span><span class="p">(</span><span class="n">offset</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">frames</span><span class="p">):</span>
-                <span class="n">stack</span><span class="p">[</span><span class="n">t</span><span class="p">()]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[:]</span>
+                <span class="n">vmap</span><span class="p">[</span><span class="n">t</span><span class="p">()]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[:]</span>
                 <span class="n">t</span> <span class="o">+=</span> <span class="n">timestep</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">state_pop</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">stack</span>
+        <span class="k">return</span> <span class="n">vmap</span>
 
 <span class="c"># Override class type; must be set here rather than when mask_shape is declared,</span>
 <span class="c"># to avoid referring to class not yet constructed</span></div></div>
