@@ -18,7 +18,7 @@ import param
 
 from imagen import wrap
 
-from holoviews import SheetMatrix
+from holoviews import Matrix
 from holoviews.core import BoundingBox
 from holoviews.core.operation import ViewOperation
 from holoviews.styles import GrayNearest
@@ -37,7 +37,7 @@ class fft_power_spectrum(ViewOperation):
 
     label = param.String(default='FFT Power Spectrum', doc="""
       The label suffix used for the output power spectrum as appended
-      to the label of the input SheetMatrix.""")
+      to the label of the input Matrix.""")
 
 
     def _process(self, sheetview, key=None):
@@ -53,7 +53,7 @@ class fft_power_spectrum(ViewOperation):
         density = sheetview.xdensity
         bb = BoundingBox(radius=(density/2)/(r-l))
 
-        return [SheetMatrix(normalized_spectrum, bb,
+        return [Matrix(normalized_spectrum, bb,
                             label=sheetview.label + ' ' + self.p.label,
                             value="FFT Power")]
 
@@ -61,10 +61,10 @@ class fft_power_spectrum(ViewOperation):
 
 class gradient(ViewOperation):
     """
-    Compute the gradient plot of the supplied SheetMatrix or ViewMap.
+    Compute the gradient plot of the supplied Matrix or ViewMap.
     Translated from Octave code originally written by Yoonsuck Choe.
 
-    If the SheetMatrix has a cyclic_range, negative differences will be
+    If the Matrix has a cyclic_range, negative differences will be
     wrapped into the range.
 
     Example:: gradient(topo.sim.V1.views.maps.OrientationPreference)
@@ -72,7 +72,7 @@ class gradient(ViewOperation):
 
     label = param.String(default='Gradient', doc="""
       The label suffix used for the output gradient as appended to the
-      label of the input SheetMatrix.""")
+      label of the input Matrix.""")
 
     def _process(self, sheetview, key=None):
         data = sheetview.data
@@ -91,8 +91,8 @@ class gradient(ViewOperation):
             dx = 0.5 * cyclic_range - np.abs(dx - 0.5 * cyclic_range)
             dy = 0.5 * cyclic_range - np.abs(dy - 0.5 * cyclic_range)
 
-        return [SheetMatrix(np.sqrt(dx * dx + dy * dy), sheetview.bounds,
-                            value=sheetview.label + ' ' + self.p.label)]
+        return [Matrix(np.sqrt(dx * dx + dy * dy), sheetview.bounds,
+                       value=sheetview.label + ' ' + self.p.label)]
 
 
 
@@ -107,14 +107,14 @@ class autocorrelation(ViewOperation):
 
     label = param.String(default='AutoCorrelation', doc="""
       The label suffix used for the output autocorrelation as appended
-      to the label of the input SheetMatrix.""")
+      to the label of the input Matrix.""")
 
     def _process(self, sheetview, key=None):
         import scipy.signal
         data = sheetview.data
         autocorr_data = scipy.signal.correlate2d(data, data)
-        return [SheetMatrix(autocorr_data, sheetview.bounds,
-                            value=sheetview.label + ' ' + self.p.label)]
+        return [Matrix(autocorr_data, sheetview.bounds,
+                       value=sheetview.label + ' ' + self.p.label)]
 
 
 
@@ -123,10 +123,10 @@ class autocorrelation(ViewOperation):
 class cyclic_similarity_index(ViewOperation):
     """
     The similarity index between any two cyclic maps. By default, a
-    zero value indicates uncorrelated SheetMatrix data. The similarity
+    zero value indicates uncorrelated Matrix data. The similarity
     index may be useful for quantifying the stability of some cyclic
     quantity over time by comparing each sample in a ViewMap to the
-    final SheetMatrix element.
+    final Matrix element.
     """
 
     unit_range = param.Boolean(default=True, doc="""
@@ -138,16 +138,16 @@ class cyclic_similarity_index(ViewOperation):
 
     label = param.String(default='Cyclic Similarity', doc="""
       The label suffix used for the output similarity index as
-      appended to the label of the input SheetMatrix.""")
+      appended to the label of the input Matrix.""")
 
     def _process(self, overlay, key=None):
 
         if len(overlay) != 2:
             raise Exception("The similarity index may only be computed"
-                            "using overlays of SheetMatrix Views.")
+                            "using overlays of Matrix Views.")
 
         if any(el.cyclic_range is None for el in overlay):
-             raise Exception("All SheetMatrix Views in the Overlay "
+             raise Exception("All Matrix Views in the Overlay "
                              "must have a defined cyclic range.")
 
         prefA_data = overlay[0].N.data
@@ -161,8 +161,8 @@ class cyclic_similarity_index(ViewOperation):
         # Subtracted from 1.0 as low difference => high stability
         # As this is made into a unit metric, uncorrelated has value zero.
         similarity = (2 * (similarity - 0.5)) if self.p.unit_range else similarity
-        return [SheetMatrix(similarity, bounds=overlay.bounds,
-                            value=overlay[0].label + ' ' + self.p.label)]
+        return [Matrix(similarity, bounds=overlay.last.bounds,
+                       value=overlay[0].last.label + ' ' + self.p.label)]
 
 
 options.CyclicSimilarity_SheetMatrix    = GrayNearest
