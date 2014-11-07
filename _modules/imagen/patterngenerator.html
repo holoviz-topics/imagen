@@ -81,7 +81,7 @@
 <span class="kn">import</span> <span class="nn">param</span>
 <span class="kn">from</span> <span class="nn">param.parameterized</span> <span class="kn">import</span> <span class="n">ParamOverrides</span>
 
-<span class="kn">from</span> <span class="nn">holoviews</span> <span class="kn">import</span> <span class="n">ViewMap</span><span class="p">,</span> <span class="n">SheetMatrix</span>
+<span class="kn">from</span> <span class="nn">holoviews</span> <span class="kn">import</span> <span class="n">ViewMap</span><span class="p">,</span> <span class="n">Matrix</span>
 <span class="kn">from</span> <span class="nn">holoviews.core</span> <span class="kn">import</span> <span class="n">BoundingBox</span><span class="p">,</span> <span class="n">BoundingRegionParameter</span><span class="p">,</span> <span class="n">SheetCoordinateSystem</span>
 <span class="kn">from</span> <span class="nn">holoviews.core.options</span> <span class="kn">import</span> <span class="n">options</span><span class="p">,</span> <span class="n">StyleOpts</span>
 
@@ -230,8 +230,8 @@
     <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coords</span><span class="p">):</span>
         <span class="n">arr</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dstack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">channels</span><span class="p">()</span><span class="o">.</span><span class="n">values</span><span class="p">()[</span><span class="mi">1</span><span class="p">:])</span>
                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_channels</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span> <span class="k">else</span> <span class="bp">self</span><span class="p">())</span>
-        <span class="k">return</span> <span class="n">SheetMatrix</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bounds</span><span class="p">,</span>
-                           <span class="n">label</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="o">+</span> <span class="s">&#39; Pattern&#39;</span><span class="p">)[</span><span class="n">coords</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">Matrix</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bounds</span><span class="p">,</span>
+                      <span class="n">label</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="o">+</span> <span class="s">&#39; Pattern&#39;</span><span class="p">)[</span><span class="n">coords</span><span class="p">]</span>
 
 
 <div class="viewcode-block" id="PatternGenerator.channels"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.patterngenerator.PatternGenerator.channels">[docs]</a>    <span class="k">def</span> <span class="nf">channels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">use_cached</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="o">**</span><span class="n">params_to_override</span><span class="p">):</span>

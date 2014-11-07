@@ -1,0 +1,9 @@
+<map id="inheritance75655fcdea" name="inheritance75655fcdea">
+<area shape="rect" id="node1" title="A ViewOperation takes one or more views as inputs and processes" alt="" coords="609,72,859,95"/>
+<area shape="rect" id="node3" href="#imagen.analysis.autocorrelation" title="Compute the 2D autocorrelation of the supplied data. Requires the" alt="" coords="923,4,1128,27"/>
+<area shape="rect" id="node4" href="#imagen.analysis.cyclic_similarity_index" title="The similarity index between any two cyclic maps. By default, a" alt="" coords="904,49,1147,72"/>
+<area shape="rect" id="node5" href="#imagen.analysis.fft_power_spectrum" title="Compute the 2D Fast Fourier Transform (FFT) of the supplied sheet view." alt="" coords="910,94,1141,117"/>
+<area shape="rect" id="node6" href="#imagen.analysis.gradient" title="Compute the gradient plot of the supplied Matrix or ViewMap." alt="" coords="942,138,1108,161"/>
+<area shape="rect" id="node2" title="Acts like a Python function, but with arguments that are Parameters." alt="" coords="283,72,565,95"/>
+<area shape="rect" id="node7" title="Base class for named objects that support Parameters and message" alt="" coords="5,72,239,95"/>
+</map>
