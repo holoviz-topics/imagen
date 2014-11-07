@@ -474,4 +474,4 @@ class ComposeChannels(ChannelGenerator):
 
 
 
-options.Pattern_SheetView = StyleOpts(cmap='gray')
+options.Pattern_Matrix = StyleOpts(cmap='gray')
