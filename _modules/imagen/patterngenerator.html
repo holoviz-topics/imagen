@@ -81,7 +81,7 @@
 <span class="kn">import</span> <span class="nn">param</span>
 <span class="kn">from</span> <span class="nn">param.parameterized</span> <span class="kn">import</span> <span class="n">ParamOverrides</span>
 
-<span class="kn">from</span> <span class="nn">holoviews</span> <span class="kn">import</span> <span class="n">ViewMap</span><span class="p">,</span> <span class="n">Matrix</span>
+<span class="kn">from</span> <span class="nn">holoviews</span> <span class="kn">import</span> <span class="n">ViewMap</span><span class="p">,</span> <span class="n">Matrix</span><span class="p">,</span> <span class="n">Dimension</span>
 <span class="kn">from</span> <span class="nn">holoviews.core</span> <span class="kn">import</span> <span class="n">BoundingBox</span><span class="p">,</span> <span class="n">BoundingRegionParameter</span><span class="p">,</span> <span class="n">SheetCoordinateSystem</span>
 <span class="kn">from</span> <span class="nn">holoviews.core.options</span> <span class="kn">import</span> <span class="n">options</span><span class="p">,</span> <span class="n">StyleOpts</span>
 
@@ -351,32 +351,44 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">PatternGenerator</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">state_pop</span><span class="p">()</span>
 
 </div>
-<div class="viewcode-block" id="PatternGenerator.anim"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.patterngenerator.PatternGenerator.anim">[docs]</a>    <span class="k">def</span> <span class="nf">anim</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frames</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-             <span class="n">dimension</span><span class="o">=</span><span class="s">&#39;Frames&#39;</span><span class="p">,</span> <span class="n">time_fn</span><span class="o">=</span><span class="n">param</span><span class="o">.</span><span class="n">Dynamic</span><span class="o">.</span><span class="n">time_fn</span><span class="p">):</span>
+<div class="viewcode-block" id="PatternGenerator.anim"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.patterngenerator.PatternGenerator.anim">[docs]</a>    <span class="k">def</span> <span class="nf">anim</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+             <span class="n">label</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+             <span class="n">time_fn</span><span class="o">=</span><span class="n">param</span><span class="o">.</span><span class="n">Dynamic</span><span class="o">.</span><span class="n">time_fn</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        frames: The number of frames generated relative to offset.</span>
+<span class="sd">        duration: The temporal duration to animate in the units</span>
+<span class="sd">        defined on the global time function.</span>
 
-<span class="sd">        time_fn: The time object shared across the time-varying</span>
-<span class="sd">        objects that are to be sampled.</span>
+<span class="sd">        offset: The temporal offset from which the animation is</span>
+<span class="sd">        generated given the supplied pattern</span>
 
-<span class="sd">        offset: The time offset from which frames are generated given</span>
-<span class="sd">        the supplied pattern</span>
+<span class="sd">        timestep: The time interval between successive frames. The</span>
+<span class="sd">        duration must be an exact multiple of the timestep.</span>
 
-<span class="sd">        timestep: The time interval between successive layers. Valid</span>
-<span class="sd">        time values must be an integer multiple of this timestep value</span>
-<span class="sd">        (which may be a float or some other numeric type).</span>
+<span class="sd">        label: A label string to override the label of the global time</span>
+<span class="sd">        function (if not None).</span>
 
-<span class="sd">        dimension: Animations are indexed by time. This may be by</span>
-<span class="sd">        integer frame number or some continuous (e.g. floating point</span>
-<span class="sd">        or rational) representation of time.</span>
+<span class="sd">        unit: The unit string to override the unit value of the global</span>
+<span class="sd">        time function (if not None).</span>
 
-<span class="sd">        Note that the offset, timestep, dimensions and time_fn only</span>
-<span class="sd">        affect patterns parameterized by time-dependent number</span>
+<span class="sd">        time_fn: The global time function object that is shared across</span>
+<span class="sd">        the time-varying objects that are being sampled.</span>
+
+<span class="sd">        Note that the offset, timestep and time_fn only affect</span>
+<span class="sd">        patterns parameterized by time-dependent number</span>
 <span class="sd">        generators. Otherwise, the frames are generated by successive</span>
 <span class="sd">        call to the pattern which may or may not be varying (e.g to</span>
 <span class="sd">        view the patterns contained within a Selector).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">vmap</span> <span class="o">=</span> <span class="n">ViewMap</span><span class="p">(</span><span class="n">dimensions</span><span class="o">=</span><span class="p">[</span><span class="n">dimension</span><span class="p">])</span>
+        <span class="n">frames</span> <span class="o">=</span> <span class="p">(</span><span class="n">duration</span> <span class="o">//</span> <span class="n">timestep</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">duration</span> <span class="o">%</span> <span class="n">timestep</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;The duration value must be an exact multiple of the timestep.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">label</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">label</span> <span class="o">=</span> <span class="n">time_fn</span><span class="o">.</span><span class="n">label</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">time_fn</span><span class="p">,</span> <span class="s">&#39;label&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="s">&#39;Time&#39;</span>
+
+        <span class="n">unit</span> <span class="o">=</span> <span class="n">time_fn</span><span class="o">.</span><span class="n">unit</span> <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">unit</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">time_fn</span><span class="p">,</span> <span class="s">&#39;unit&#39;</span><span class="p">))</span> <span class="k">else</span> <span class="n">unit</span>
+        <span class="n">vmap</span> <span class="o">=</span> <span class="n">ViewMap</span><span class="p">(</span><span class="n">dimensions</span><span class="o">=</span><span class="p">[</span><span class="n">Dimension</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="n">time_fn</span><span class="o">.</span><span class="n">unit</span><span class="p">)])</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">state_push</span><span class="p">()</span>
         <span class="k">with</span> <span class="n">time_fn</span> <span class="k">as</span> <span class="n">t</span><span class="p">:</span>
             <span class="n">t</span><span class="p">(</span><span class="n">offset</span><span class="p">)</span>
