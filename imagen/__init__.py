@@ -763,12 +763,12 @@ class Animation(ViewMap):
        representation of time.""")
 
 
-    def __init__(self, pattern, frames, **kwargs):
+    def __init__(self, pattern, frames, **params):
         self.warning("Animation is soon to be deprecated. "
                      "Use the anim() method on pattern generators instead")
         super(Animation, self).__init__(pattern=pattern,
                                         frames=frames,
-                                        **kwargs)
+                                        **params)
         self.pattern.state_push()
         with self.time_fn as t:
             t(self.offset)

@@ -35,8 +35,8 @@ class Convolve(TransferFn):
 
     init_keys = param.List(default=['SCS'], constant=True)
 
-    def __init__(self, **kwargs):
-        super(Convolve,self).__init__(**kwargs)
+    def __init__(self, **params):
+        super(Convolve,self).__init__(**params)
 
 
     def initialize(self,  **kwargs):
