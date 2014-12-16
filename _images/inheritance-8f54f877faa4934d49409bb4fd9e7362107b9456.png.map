@@ -1,0 +1,5 @@
+<map id="inheritance900f2051f2" name="inheritance900f2051f2">
+<area shape="rect" id="node1" href="#imagen.colorspaces.ColorConverter" title="params(analysis_space=ObjectSelector, colorspace=Parameter, image_space=ObjectSelector, working_space=ObjectSelector, name=String)" alt="" coords="312,5,563,30"/>
+<area shape="rect" id="node2" title="params(name=String)" alt="" coords="5,30,264,55"/>
+<area shape="rect" id="node3" href="#imagen.colorspaces.ColorSpace" title="params(dtype=Parameter, input_limits=NumericTuple, output_clip=ObjectSelector, output_limits=NumericTuple, transforms=Dict, whitepoint=String, name=String)" alt="" coords="324,54,551,79"/>
+</map>
