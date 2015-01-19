@@ -88,10 +88,10 @@
 [1;31mParameters changed from their default values are marked in red.[0m
 [1;36mSoft bound values are marked in cyan.[0m
 C/V= Constant/Variable, RO/RW = ReadOnly/ReadWrite, AN=Allow None</p>
-<p>[1;34mName        Value     Type      Bounds   Mode [0m</p>
-<p>init_keys     []      List    (0, None)  C RW 
-norm_value   None  Parameter             V RW 
-threshold    0.25    Number              V RW</p>
+<p>[1;34mName        Value     Type      Bounds     Mode  [0m</p>
+<p>init_keys     []      List    (0, None)    C RW  
+norm_value   None  Parameter             V RW AN 
+threshold    0.25    Number                V RW</p>
 <p>[1;32mParameter docstrings:
 =====================[0m</p>
 <p>[1;34minit_keys:  List of item key labels for metadata that that must be[0m
@@ -103,9 +103,9 @@ threshold    0.25    Number              V RW</p>
 <dt><em>param Number</em> <tt class="docutils literal"><span class="pre">threshold</span></tt> (<em>allow_None=False, bounds=None, constant=False, default=0.25, inclusive_bounds=(True, True), instantiate=False, pickle_default_value=True, precedence=None, readonly=False, time_dependent=False, time_fn=&lt;Time Time00001&gt;</em>)</dt>
 <dd>Decision point for determining binary value.</dd>
 </dl>
-<p><em>param Parameter</em> <tt class="docutils literal"><span class="pre">norm_value</span></tt> (<em>constant=False, default=None, instantiate=False, pickle_default_value=True, precedence=None, readonly=False</em>)</p>
+<p><em>param Parameter</em> <tt class="docutils literal"><span class="pre">norm_value</span></tt> (<em>allow_None=True, constant=False, default=None, instantiate=False, pickle_default_value=True, precedence=None, readonly=False</em>)</p>
 <dl class="docutils">
-<dt><em>param List</em> <tt class="docutils literal"><span class="pre">init_keys</span></tt> (<em>bounds=(0, None), constant=True, default=[], instantiate=True, pickle_default_value=True, precedence=None, readonly=False</em>)</dt>
+<dt><em>param List</em> <tt class="docutils literal"><span class="pre">init_keys</span></tt> (<em>allow_None=False, bounds=(0, None), constant=True, default=[], instantiate=True, pickle_default_value=True, precedence=None, readonly=False</em>)</dt>
 <dd>List of item key labels for metadata that that must be
         supplied to the initialize method before the TransferFn may be
         used.</dd>
@@ -127,7 +127,7 @@ instantiated.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.BinaryThreshold.force_new_dynamic_value">
-<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b5f6843caa0&gt;</em><a class="headerlink" href="#imagen.transferfn.BinaryThreshold.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2aceaf602b50&gt;</em><a class="headerlink" href="#imagen.transferfn.BinaryThreshold.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -141,7 +141,7 @@ equal to the default value.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.BinaryThreshold.get_value_generator">
-<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b5f6843c9f0&gt;</em><a class="headerlink" href="#imagen.transferfn.BinaryThreshold.get_value_generator" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2aceaf602aa0&gt;</em><a class="headerlink" href="#imagen.transferfn.BinaryThreshold.get_value_generator" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -157,7 +157,7 @@ associated with the input data.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.BinaryThreshold.inspect_value">
-<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b5f6843caf8&gt;</em><a class="headerlink" href="#imagen.transferfn.BinaryThreshold.inspect_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2aceaf602ba8&gt;</em><a class="headerlink" href="#imagen.transferfn.BinaryThreshold.inspect_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -202,12 +202,12 @@ superclasses.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.BinaryThreshold.set_dynamic_time_fn">
-<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b5f6843c890&gt;</em><a class="headerlink" href="#imagen.transferfn.BinaryThreshold.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2aceaf602940&gt;</em><a class="headerlink" href="#imagen.transferfn.BinaryThreshold.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.BinaryThreshold.set_param">
-<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b5f6843cc00&gt;</em><a class="headerlink" href="#imagen.transferfn.BinaryThreshold.set_param" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2aceaf602cb0&gt;</em><a class="headerlink" href="#imagen.transferfn.BinaryThreshold.set_param" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -275,7 +275,7 @@ norm_value   1.0  Number             V RW</p>
 [1;31mnorm_value: &lt; No docstring available &gt;[0m</p>
 <p><em>param Number</em> <tt class="docutils literal"><span class="pre">norm_value</span></tt> (<em>allow_None=False, bounds=None, constant=False, default=1.0, inclusive_bounds=(True, True), instantiate=False, pickle_default_value=True, precedence=None, readonly=False, time_dependent=False, time_fn=&lt;Time Time00001&gt;</em>)</p>
 <dl class="docutils">
-<dt><em>param List</em> <tt class="docutils literal"><span class="pre">init_keys</span></tt> (<em>bounds=(0, None), constant=True, default=[], instantiate=True, pickle_default_value=True, precedence=None, readonly=False</em>)</dt>
+<dt><em>param List</em> <tt class="docutils literal"><span class="pre">init_keys</span></tt> (<em>allow_None=False, bounds=(0, None), constant=True, default=[], instantiate=True, pickle_default_value=True, precedence=None, readonly=False</em>)</dt>
 <dd>List of item key labels for metadata that that must be
         supplied to the initialize method before the TransferFn may be
         used.</dd>
@@ -297,7 +297,7 @@ instantiated.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeL1.force_new_dynamic_value">
-<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b5f6843c940&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL1.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2aceaf6029f0&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL1.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -311,7 +311,7 @@ equal to the default value.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeL1.get_value_generator">
-<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b5f6843c8e8&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL1.get_value_generator" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2aceaf602998&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL1.get_value_generator" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -327,7 +327,7 @@ associated with the input data.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeL1.inspect_value">
-<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b5f6843c998&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL1.inspect_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2aceaf602a48&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL1.inspect_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -372,12 +372,12 @@ superclasses.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeL1.set_dynamic_time_fn">
-<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b5f6843c7e0&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL1.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2aceaf602890&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL1.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeL1.set_param">
-<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b5f6843cb50&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL1.set_param" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2aceaf602c00&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL1.set_param" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -441,7 +441,7 @@ norm_value   1.0  Number             V RW</p>
 [1;31mnorm_value: &lt; No docstring available &gt;[0m</p>
 <p><em>param Number</em> <tt class="docutils literal"><span class="pre">norm_value</span></tt> (<em>allow_None=False, bounds=None, constant=False, default=1.0, inclusive_bounds=(True, True), instantiate=False, pickle_default_value=True, precedence=None, readonly=False, time_dependent=False, time_fn=&lt;Time Time00001&gt;</em>)</p>
 <dl class="docutils">
-<dt><em>param List</em> <tt class="docutils literal"><span class="pre">init_keys</span></tt> (<em>bounds=(0, None), constant=True, default=[], instantiate=True, pickle_default_value=True, precedence=None, readonly=False</em>)</dt>
+<dt><em>param List</em> <tt class="docutils literal"><span class="pre">init_keys</span></tt> (<em>allow_None=False, bounds=(0, None), constant=True, default=[], instantiate=True, pickle_default_value=True, precedence=None, readonly=False</em>)</dt>
 <dd>List of item key labels for metadata that that must be
         supplied to the initialize method before the TransferFn may be
         used.</dd>
@@ -463,7 +463,7 @@ instantiated.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeL2.force_new_dynamic_value">
-<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b5f6843c890&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL2.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2aceaf602940&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL2.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -477,7 +477,7 @@ equal to the default value.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeL2.get_value_generator">
-<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b5f6843cba8&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL2.get_value_generator" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2aceaf602c58&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL2.get_value_generator" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -493,7 +493,7 @@ associated with the input data.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeL2.inspect_value">
-<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b5f6843cc00&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL2.inspect_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2aceaf602cb0&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL2.inspect_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -538,12 +538,12 @@ superclasses.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeL2.set_dynamic_time_fn">
-<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b5f6843caf8&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL2.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2aceaf602ba8&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL2.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeL2.set_param">
-<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b5f6843ca48&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL2.set_param" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2aceaf602af8&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL2.set_param" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -611,7 +611,7 @@ norm_value   1.0  Number             V RW</p>
 [1;31mnorm_value: &lt; No docstring available &gt;[0m</p>
 <p><em>param Number</em> <tt class="docutils literal"><span class="pre">norm_value</span></tt> (<em>allow_None=False, bounds=None, constant=False, default=1.0, inclusive_bounds=(True, True), instantiate=False, pickle_default_value=True, precedence=None, readonly=False, time_dependent=False, time_fn=&lt;Time Time00001&gt;</em>)</p>
 <dl class="docutils">
-<dt><em>param List</em> <tt class="docutils literal"><span class="pre">init_keys</span></tt> (<em>bounds=(0, None), constant=True, default=[], instantiate=True, pickle_default_value=True, precedence=None, readonly=False</em>)</dt>
+<dt><em>param List</em> <tt class="docutils literal"><span class="pre">init_keys</span></tt> (<em>allow_None=False, bounds=(0, None), constant=True, default=[], instantiate=True, pickle_default_value=True, precedence=None, readonly=False</em>)</dt>
 <dd>List of item key labels for metadata that that must be
         supplied to the initialize method before the TransferFn may be
         used.</dd>
@@ -633,7 +633,7 @@ instantiated.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeLinf.force_new_dynamic_value">
-<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b5f6843ccb0&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLinf.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2aceaf602d60&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLinf.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -647,7 +647,7 @@ equal to the default value.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeLinf.get_value_generator">
-<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b5f6843cc58&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLinf.get_value_generator" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2aceaf602d08&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLinf.get_value_generator" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -663,7 +663,7 @@ associated with the input data.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeLinf.inspect_value">
-<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b5f6843cdb8&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLinf.inspect_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2aceaf602e68&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLinf.inspect_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -708,12 +708,12 @@ superclasses.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeLinf.set_dynamic_time_fn">
-<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b5f68806100&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLinf.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2aceafded1b0&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLinf.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeLinf.set_param">
-<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b5f68806158&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLinf.set_param" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2aceafded208&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLinf.set_param" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -783,7 +783,7 @@ p             2   Number             V RW</p>
 <p><em>param Number</em> <tt class="docutils literal"><span class="pre">p</span></tt> (<em>allow_None=False, bounds=None, constant=False, default=2, inclusive_bounds=(True, True), instantiate=False, pickle_default_value=True, precedence=None, readonly=False, time_dependent=False, time_fn=&lt;Time Time00001&gt;</em>)</p>
 <p><em>param Number</em> <tt class="docutils literal"><span class="pre">norm_value</span></tt> (<em>allow_None=False, bounds=None, constant=False, default=1.0, inclusive_bounds=(True, True), instantiate=False, pickle_default_value=True, precedence=None, readonly=False, time_dependent=False, time_fn=&lt;Time Time00001&gt;</em>)</p>
 <dl class="docutils">
-<dt><em>param List</em> <tt class="docutils literal"><span class="pre">init_keys</span></tt> (<em>bounds=(0, None), constant=True, default=[], instantiate=True, pickle_default_value=True, precedence=None, readonly=False</em>)</dt>
+<dt><em>param List</em> <tt class="docutils literal"><span class="pre">init_keys</span></tt> (<em>allow_None=False, bounds=(0, None), constant=True, default=[], instantiate=True, pickle_default_value=True, precedence=None, readonly=False</em>)</dt>
 <dd>List of item key labels for metadata that that must be
         supplied to the initialize method before the TransferFn may be
         used.</dd>
@@ -805,7 +805,7 @@ instantiated.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeLp.force_new_dynamic_value">
-<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b5f6843c940&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLp.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2aceaf6029f0&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLp.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -819,7 +819,7 @@ equal to the default value.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeLp.get_value_generator">
-<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b5f6843cd60&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLp.get_value_generator" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2aceaf602e10&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLp.get_value_generator" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -835,7 +835,7 @@ associated with the input data.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeLp.inspect_value">
-<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b5f6843cdb8&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLp.inspect_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2aceaf602e68&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLp.inspect_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -880,12 +880,12 @@ superclasses.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeLp.set_dynamic_time_fn">
-<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b5f6843c998&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLp.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2aceaf602a48&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLp.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeLp.set_param">
-<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b5f6843cf70&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLp.set_param" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2aceaf602fc8&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLp.set_param" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -940,18 +940,18 @@ behavior, add side effects, or anything of that nature.</p>
 [1;31mParameters changed from their default values are marked in red.[0m
 [1;36mSoft bound values are marked in cyan.[0m
 C/V= Constant/Variable, RO/RW = ReadOnly/ReadWrite, AN=Allow None</p>
-<p>[1;34mName        Value     Type      Bounds   Mode [0m</p>
-<p>init_keys     []      List    (0, None)  C RW 
-norm_value   None  Parameter             V RW</p>
+<p>[1;34mName        Value     Type      Bounds     Mode  [0m</p>
+<p>init_keys     []      List    (0, None)    C RW  
+norm_value   None  Parameter             V RW AN</p>
 <p>[1;32mParameter docstrings:
 =====================[0m</p>
 <p>[1;34minit_keys:  List of item key labels for metadata that that must be[0m
 [1;34m            supplied to the initialize method before the TransferFn may be[0m
 [1;34m            used.[0m
 [1;31mnorm_value: &lt; No docstring available &gt;[0m</p>
-<p><em>param Parameter</em> <tt class="docutils literal"><span class="pre">norm_value</span></tt> (<em>constant=False, default=None, instantiate=False, pickle_default_value=True, precedence=None, readonly=False</em>)</p>
+<p><em>param Parameter</em> <tt class="docutils literal"><span class="pre">norm_value</span></tt> (<em>allow_None=True, constant=False, default=None, instantiate=False, pickle_default_value=True, precedence=None, readonly=False</em>)</p>
 <dl class="docutils">
-<dt><em>param List</em> <tt class="docutils literal"><span class="pre">init_keys</span></tt> (<em>bounds=(0, None), constant=True, default=[], instantiate=True, pickle_default_value=True, precedence=None, readonly=False</em>)</dt>
+<dt><em>param List</em> <tt class="docutils literal"><span class="pre">init_keys</span></tt> (<em>allow_None=False, bounds=(0, None), constant=True, default=[], instantiate=True, pickle_default_value=True, precedence=None, readonly=False</em>)</dt>
 <dd>List of item key labels for metadata that that must be
         supplied to the initialize method before the TransferFn may be
         used.</dd>
@@ -973,7 +973,7 @@ instantiated.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.IdentityTF.force_new_dynamic_value">
-<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b5f6843c940&gt;</em><a class="headerlink" href="#imagen.transferfn.IdentityTF.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2aceaf6029f0&gt;</em><a class="headerlink" href="#imagen.transferfn.IdentityTF.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -987,7 +987,7 @@ equal to the default value.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.IdentityTF.get_value_generator">
-<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b5f6843c7e0&gt;</em><a class="headerlink" href="#imagen.transferfn.IdentityTF.get_value_generator" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2aceaf602890&gt;</em><a class="headerlink" href="#imagen.transferfn.IdentityTF.get_value_generator" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1003,7 +1003,7 @@ associated with the input data.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.IdentityTF.inspect_value">
-<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b5f6843cb50&gt;</em><a class="headerlink" href="#imagen.transferfn.IdentityTF.inspect_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2aceaf602c00&gt;</em><a class="headerlink" href="#imagen.transferfn.IdentityTF.inspect_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1048,12 +1048,12 @@ superclasses.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.IdentityTF.set_dynamic_time_fn">
-<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b5f6843cba8&gt;</em><a class="headerlink" href="#imagen.transferfn.IdentityTF.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2aceaf602c58&gt;</em><a class="headerlink" href="#imagen.transferfn.IdentityTF.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.IdentityTF.set_param">
-<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b5f6843ccb0&gt;</em><a class="headerlink" href="#imagen.transferfn.IdentityTF.set_param" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2aceaf602d60&gt;</em><a class="headerlink" href="#imagen.transferfn.IdentityTF.set_param" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1103,10 +1103,10 @@ containing the arguments.</p>
 [1;31mParameters changed from their default values are marked in red.[0m
 [1;36mSoft bound values are marked in cyan.[0m
 C/V= Constant/Variable, RO/RW = ReadOnly/ReadWrite, AN=Allow None</p>
-<p>[1;34mName        Value     Type      Bounds   Mode [0m</p>
-<p>init_keys     []      List    (0, None)  C RW 
-norm_value   None  Parameter             V RW 
-scale        1.0     Number              V RW</p>
+<p>[1;34mName        Value     Type      Bounds     Mode  [0m</p>
+<p>init_keys     []      List    (0, None)    C RW  
+norm_value   None  Parameter             V RW AN 
+scale        1.0     Number                V RW</p>
 <p>[1;32mParameter docstrings:
 =====================[0m</p>
 <p>[1;34minit_keys:  List of item key labels for metadata that that must be[0m
@@ -1114,11 +1114,11 @@ scale        1.0     Number              V RW</p>
 [1;34m            used.[0m
 [1;31mnorm_value: &lt; No docstring available &gt;[0m
 [1;34mscale:      The multiplicative factor that scales the input values.[0m</p>
-<p><em>param Parameter</em> <tt class="docutils literal"><span class="pre">norm_value</span></tt> (<em>constant=False, default=None, instantiate=False, pickle_default_value=True, precedence=None, readonly=False</em>)</p>
+<p><em>param Parameter</em> <tt class="docutils literal"><span class="pre">norm_value</span></tt> (<em>allow_None=True, constant=False, default=None, instantiate=False, pickle_default_value=True, precedence=None, readonly=False</em>)</p>
 <dl class="docutils">
 <dt><em>param Number</em> <tt class="docutils literal"><span class="pre">scale</span></tt> (<em>allow_None=False, bounds=None, constant=False, default=1.0, inclusive_bounds=(True, True), instantiate=False, pickle_default_value=True, precedence=None, readonly=False, time_dependent=False, time_fn=&lt;Time Time00001&gt;</em>)</dt>
 <dd>The multiplicative factor that scales the input values.</dd>
-<dt><em>param List</em> <tt class="docutils literal"><span class="pre">init_keys</span></tt> (<em>bounds=(0, None), constant=True, default=[], instantiate=True, pickle_default_value=True, precedence=None, readonly=False</em>)</dt>
+<dt><em>param List</em> <tt class="docutils literal"><span class="pre">init_keys</span></tt> (<em>allow_None=False, bounds=(0, None), constant=True, default=[], instantiate=True, pickle_default_value=True, precedence=None, readonly=False</em>)</dt>
 <dd>List of item key labels for metadata that that must be
         supplied to the initialize method before the TransferFn may be
         used.</dd>
@@ -1140,7 +1140,7 @@ instantiated.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.Scale.force_new_dynamic_value">
-<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b5f6843cdb8&gt;</em><a class="headerlink" href="#imagen.transferfn.Scale.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2aceaf602e68&gt;</em><a class="headerlink" href="#imagen.transferfn.Scale.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1154,7 +1154,7 @@ equal to the default value.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.Scale.get_value_generator">
-<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b5f6843c7e0&gt;</em><a class="headerlink" href="#imagen.transferfn.Scale.get_value_generator" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2aceaf602890&gt;</em><a class="headerlink" href="#imagen.transferfn.Scale.get_value_generator" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1170,7 +1170,7 @@ associated with the input data.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.Scale.inspect_value">
-<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b5f6843c998&gt;</em><a class="headerlink" href="#imagen.transferfn.Scale.inspect_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2aceaf602a48&gt;</em><a class="headerlink" href="#imagen.transferfn.Scale.inspect_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1215,12 +1215,12 @@ superclasses.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.Scale.set_dynamic_time_fn">
-<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b5f6843cd60&gt;</em><a class="headerlink" href="#imagen.transferfn.Scale.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2aceaf602e10&gt;</em><a class="headerlink" href="#imagen.transferfn.Scale.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.Scale.set_param">
-<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b5f6843cd08&gt;</em><a class="headerlink" href="#imagen.transferfn.Scale.set_param" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2aceaf602db8&gt;</em><a class="headerlink" href="#imagen.transferfn.Scale.set_param" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1270,10 +1270,10 @@ containing the arguments.</p>
 [1;31mParameters changed from their default values are marked in red.[0m
 [1;36mSoft bound values are marked in cyan.[0m
 C/V= Constant/Variable, RO/RW = ReadOnly/ReadWrite, AN=Allow None</p>
-<p>[1;34mName        Value     Type      Bounds   Mode [0m</p>
-<p>init_keys     []      List    (0, None)  C RW 
-norm_value   None  Parameter             V RW 
-threshold    0.25    Number              V RW</p>
+<p>[1;34mName        Value     Type      Bounds     Mode  [0m</p>
+<p>init_keys     []      List    (0, None)    C RW  
+norm_value   None  Parameter             V RW AN 
+threshold    0.25    Number                V RW</p>
 <p>[1;32mParameter docstrings:
 =====================[0m</p>
 <p>[1;34minit_keys:  List of item key labels for metadata that that must be[0m
@@ -1285,9 +1285,9 @@ threshold    0.25    Number              V RW</p>
 <dt><em>param Number</em> <tt class="docutils literal"><span class="pre">threshold</span></tt> (<em>allow_None=False, bounds=None, constant=False, default=0.25, inclusive_bounds=(True, True), instantiate=False, pickle_default_value=True, precedence=None, readonly=False, time_dependent=False, time_fn=&lt;Time Time00001&gt;</em>)</dt>
 <dd>Decision point for determining values to clip.</dd>
 </dl>
-<p><em>param Parameter</em> <tt class="docutils literal"><span class="pre">norm_value</span></tt> (<em>constant=False, default=None, instantiate=False, pickle_default_value=True, precedence=None, readonly=False</em>)</p>
+<p><em>param Parameter</em> <tt class="docutils literal"><span class="pre">norm_value</span></tt> (<em>allow_None=True, constant=False, default=None, instantiate=False, pickle_default_value=True, precedence=None, readonly=False</em>)</p>
 <dl class="docutils">
-<dt><em>param List</em> <tt class="docutils literal"><span class="pre">init_keys</span></tt> (<em>bounds=(0, None), constant=True, default=[], instantiate=True, pickle_default_value=True, precedence=None, readonly=False</em>)</dt>
+<dt><em>param List</em> <tt class="docutils literal"><span class="pre">init_keys</span></tt> (<em>allow_None=False, bounds=(0, None), constant=True, default=[], instantiate=True, pickle_default_value=True, precedence=None, readonly=False</em>)</dt>
 <dd>List of item key labels for metadata that that must be
         supplied to the initialize method before the TransferFn may be
         used.</dd>
@@ -1309,7 +1309,7 @@ instantiated.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.Threshold.force_new_dynamic_value">
-<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b5f6843c940&gt;</em><a class="headerlink" href="#imagen.transferfn.Threshold.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2aceaf6029f0&gt;</em><a class="headerlink" href="#imagen.transferfn.Threshold.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1323,7 +1323,7 @@ equal to the default value.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.Threshold.get_value_generator">
-<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b5f6843cb50&gt;</em><a class="headerlink" href="#imagen.transferfn.Threshold.get_value_generator" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2aceaf602c00&gt;</em><a class="headerlink" href="#imagen.transferfn.Threshold.get_value_generator" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1339,7 +1339,7 @@ associated with the input data.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.Threshold.inspect_value">
-<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b5f6843cc58&gt;</em><a class="headerlink" href="#imagen.transferfn.Threshold.inspect_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2aceaf602d08&gt;</em><a class="headerlink" href="#imagen.transferfn.Threshold.inspect_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1384,12 +1384,12 @@ superclasses.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.Threshold.set_dynamic_time_fn">
-<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b5f6843cdb8&gt;</em><a class="headerlink" href="#imagen.transferfn.Threshold.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2aceaf602e68&gt;</em><a class="headerlink" href="#imagen.transferfn.Threshold.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.Threshold.set_param">
-<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b5f6843cba8&gt;</em><a class="headerlink" href="#imagen.transferfn.Threshold.set_param" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2aceaf602c58&gt;</em><a class="headerlink" href="#imagen.transferfn.Threshold.set_param" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1444,18 +1444,18 @@ one matrix argument, and are expected to change that matrix in place.</p>
 [1;31mParameters changed from their default values are marked in red.[0m
 [1;36mSoft bound values are marked in cyan.[0m
 C/V= Constant/Variable, RO/RW = ReadOnly/ReadWrite, AN=Allow None</p>
-<p>[1;34mName        Value     Type      Bounds   Mode [0m</p>
-<p>init_keys     []      List    (0, None)  C RW 
-norm_value   None  Parameter             V RW</p>
+<p>[1;34mName        Value     Type      Bounds     Mode  [0m</p>
+<p>init_keys     []      List    (0, None)    C RW  
+norm_value   None  Parameter             V RW AN</p>
 <p>[1;32mParameter docstrings:
 =====================[0m</p>
 <p>[1;34minit_keys:  List of item key labels for metadata that that must be[0m
 [1;34m            supplied to the initialize method before the TransferFn may be[0m
 [1;34m            used.[0m
 [1;31mnorm_value: &lt; No docstring available &gt;[0m</p>
-<p><em>param Parameter</em> <tt class="docutils literal"><span class="pre">norm_value</span></tt> (<em>constant=False, default=None, instantiate=False, pickle_default_value=True, precedence=None, readonly=False</em>)</p>
+<p><em>param Parameter</em> <tt class="docutils literal"><span class="pre">norm_value</span></tt> (<em>allow_None=True, constant=False, default=None, instantiate=False, pickle_default_value=True, precedence=None, readonly=False</em>)</p>
 <dl class="docutils">
-<dt><em>param List</em> <tt class="docutils literal"><span class="pre">init_keys</span></tt> (<em>bounds=(0, None), constant=True, default=[], instantiate=True, pickle_default_value=True, precedence=None, readonly=False</em>)</dt>
+<dt><em>param List</em> <tt class="docutils literal"><span class="pre">init_keys</span></tt> (<em>allow_None=False, bounds=(0, None), constant=True, default=[], instantiate=True, pickle_default_value=True, precedence=None, readonly=False</em>)</dt>
 <dd>List of item key labels for metadata that that must be
         supplied to the initialize method before the TransferFn may be
         used.</dd>
@@ -1477,7 +1477,7 @@ instantiated.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.TransferFn.force_new_dynamic_value">
-<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b5f6843c998&gt;</em><a class="headerlink" href="#imagen.transferfn.TransferFn.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2aceaf602a48&gt;</em><a class="headerlink" href="#imagen.transferfn.TransferFn.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1491,7 +1491,7 @@ equal to the default value.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.TransferFn.get_value_generator">
-<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b5f6843c940&gt;</em><a class="headerlink" href="#imagen.transferfn.TransferFn.get_value_generator" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2aceaf6029f0&gt;</em><a class="headerlink" href="#imagen.transferfn.TransferFn.get_value_generator" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1507,7 +1507,7 @@ associated with the input data.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.TransferFn.inspect_value">
-<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b5f6843cd60&gt;</em><a class="headerlink" href="#imagen.transferfn.TransferFn.inspect_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2aceaf602e10&gt;</em><a class="headerlink" href="#imagen.transferfn.TransferFn.inspect_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1552,12 +1552,12 @@ superclasses.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.TransferFn.set_dynamic_time_fn">
-<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b5f6843c7e0&gt;</em><a class="headerlink" href="#imagen.transferfn.TransferFn.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2aceaf602890&gt;</em><a class="headerlink" href="#imagen.transferfn.TransferFn.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.TransferFn.set_param">
-<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b5f6843cf70&gt;</em><a class="headerlink" href="#imagen.transferfn.TransferFn.set_param" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2aceaf602fc8&gt;</em><a class="headerlink" href="#imagen.transferfn.TransferFn.set_param" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1637,10 +1637,10 @@ sheetcoordinates.</p>
 [1;31mParameters changed from their default values are marked in red.[0m
 [1;36mSoft bound values are marked in cyan.[0m
 C/V= Constant/Variable, RO/RW = ReadOnly/ReadWrite, AN=Allow None</p>
-<p>[1;34mName                              Value                         Type        Bounds   Mode [0m</p>
-<p>init_keys                        [&#8216;SCS&#8217;]                        List      (0, None)  C RW 
-kernel_pattern   Gaussian(aspect_ratio=1.0, bounds=Bou...  ClassSelector             V RW 
-norm_value                         None                      Parameter               V RW</p>
+<p>[1;34mName                              Value                         Type        Bounds     Mode  [0m</p>
+<p>init_keys                        [&#8216;SCS&#8217;]                        List      (0, None)    C RW  
+kernel_pattern   Gaussian(aspect_ratio=1.0, bounds=Bou...  ClassSelector               V RW  
+norm_value                         None                      Parameter               V RW AN</p>
 <p>[1;32mParameter docstrings:
 =====================[0m</p>
 <p>[1;34minit_keys:      List of item key labels for metadata that that must be[0m
@@ -1649,12 +1649,12 @@ norm_value                         None                      Parameter          
 [1;31mkernel_pattern: The kernel pattern used in the convolution. The default kernel[0m
 [1;31m                results in an isotropic Gaussian blur.[0m
 [1;34mnorm_value:     &lt; No docstring available &gt;[0m</p>
-<p><em>param Parameter</em> <tt class="docutils literal"><span class="pre">norm_value</span></tt> (<em>constant=False, default=None, instantiate=False, pickle_default_value=True, precedence=None, readonly=False</em>)</p>
+<p><em>param Parameter</em> <tt class="docutils literal"><span class="pre">norm_value</span></tt> (<em>allow_None=True, constant=False, default=None, instantiate=False, pickle_default_value=True, precedence=None, readonly=False</em>)</p>
 <dl class="docutils">
 <dt><em>param ClassSelector</em> <tt class="docutils literal"><span class="pre">kernel_pattern</span></tt> (<em>allow_None=False, constant=False, default=&lt;Gaussian Gaussian00062&gt;, instantiate=True, is_instance=True, pickle_default_value=True, precedence=None, readonly=False</em>)</dt>
 <dd>The kernel pattern used in the convolution. The default kernel
       results in an isotropic Gaussian blur.</dd>
-<dt><em>param List</em> <tt class="docutils literal"><span class="pre">init_keys</span></tt> (<em>bounds=(0, None), constant=True, default=[&#8216;SCS&#8217;], instantiate=True, pickle_default_value=True, precedence=None, readonly=False</em>)</dt>
+<dt><em>param List</em> <tt class="docutils literal"><span class="pre">init_keys</span></tt> (<em>allow_None=False, bounds=(0, None), constant=True, default=[&#8216;SCS&#8217;], instantiate=True, pickle_default_value=True, precedence=None, readonly=False</em>)</dt>
 <dd>List of item key labels for metadata that that must be
         supplied to the initialize method before the TransferFn may be
         used.</dd>
@@ -1676,7 +1676,7 @@ instantiated.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.sheet_tf.Convolve.force_new_dynamic_value">
-<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b5f68677940&gt;</em><a class="headerlink" href="#imagen.transferfn.sheet_tf.Convolve.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2aceafc4c9f0&gt;</em><a class="headerlink" href="#imagen.transferfn.sheet_tf.Convolve.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1690,12 +1690,12 @@ equal to the default value.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.sheet_tf.Convolve.get_value_generator">
-<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b5f68677b50&gt;</em><a class="headerlink" href="#imagen.transferfn.sheet_tf.Convolve.get_value_generator" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2aceafc4cc00&gt;</em><a class="headerlink" href="#imagen.transferfn.sheet_tf.Convolve.get_value_generator" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.sheet_tf.Convolve.inspect_value">
-<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b5f68677ba8&gt;</em><a class="headerlink" href="#imagen.transferfn.sheet_tf.Convolve.inspect_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2aceafc4cc58&gt;</em><a class="headerlink" href="#imagen.transferfn.sheet_tf.Convolve.inspect_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1740,12 +1740,12 @@ superclasses.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.sheet_tf.Convolve.set_dynamic_time_fn">
-<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b5f68677af8&gt;</em><a class="headerlink" href="#imagen.transferfn.sheet_tf.Convolve.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2aceafc4cba8&gt;</em><a class="headerlink" href="#imagen.transferfn.sheet_tf.Convolve.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.sheet_tf.Convolve.set_param">
-<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b5f68677cb0&gt;</em><a class="headerlink" href="#imagen.transferfn.sheet_tf.Convolve.set_param" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2aceafc4cd60&gt;</em><a class="headerlink" href="#imagen.transferfn.sheet_tf.Convolve.set_param" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
