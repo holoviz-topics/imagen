@@ -726,67 +726,6 @@ class SeparatedComposite(Composite):
 
 
 
-class Animation(HoloMap):
-    """
-    An Animation is a collection of SheetLayers associated with
-    corresponding time values using a fixed timebase. Each individual
-    Sheetlayers is given a time value that is a multiple of the
-    timestep parameter and therefore Animations assume regular
-    sampling of data over time.
-    """
-    time_fn = param.ClassSelector(default=param.Dynamic.time_fn,
-                               class_=param.Time, instantiate=False, doc="""
-        The time object shared across the time-varying objects
-        that are to be sampled.""")
-
-    offset = param.Number(default=0, doc="""
-      The time offset from which frames are generated given the
-      supplied pattern.""")
-
-    frames = param.Integer(default=None, allow_None=True, doc="""
-       The number of frames generated relative to offset using the
-       supplied pattern if available. Frames are only generated if not
-       None.""")
-
-    pattern = param.ClassSelector(default=Constant(), class_=PatternGenerator, doc="""
-      The pattern used to generate frames if the frames parameter is
-      not None. Defaults to blank white frames.""")
-
-    timestep = param.Number(default=1, doc="""
-       The time interval between successive layers. Valid time values
-       must be an integer multiple of this timestep value (which may
-       be a float or some other numeric type).""" )
-
-    dimensions = param.List(default=[Dimension('Frames')], constant=True, doc="""
-       Animations are indexed by time. This may be by integer frame
-       number or some continuous (e.g. floating point or rational)
-       representation of time.""")
-
-
-    def __init__(self, pattern, frames, **params):
-        self.warning("Animation is soon to be deprecated. "
-                     "Use the anim() method on pattern generators instead")
-        super(Animation, self).__init__(pattern=pattern,
-                                        frames=frames,
-                                        **params)
-        self.pattern.state_push()
-        with self.time_fn as t:
-            t(self.offset)
-            for i in range(self.frames):
-                self[t()] = self.pattern[:]
-                t += self.timestep
-        self.pattern.state_pop()
-
-    def map(self, map_fn, **kwargs):
-        return super(Animation,self).map(map_fn, **dict(kwargs, frames=None))
-
-    def _item_check(self, dim_vals, data):
-        if (dim_vals[0] % self.time_fn.time_type(self.timestep)) != self.time_fn.time_type(self.offset):
-             raise ValueError("Frame time value not a multiple of timestep.")
-        super(Animation,self)._item_check(dim_vals, data)
-
-
-
 #JABALERT: replace with x%1.0 below
 def wrap(lower, upper, x):
     """
