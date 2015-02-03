@@ -31,8 +31,8 @@ from param import ClassSelector
 # Imported here so that all PatternGenerators will be in the same package
 from .patterngenerator import Constant, PatternGenerator, ChannelGenerator
 
-from holoviews.core import Dimension, ViewMap
-from holoviews.view import Matrix                      # pyflakes:ignore (API import)
+from holoviews.core import Dimension, HoloMap
+from holoviews.element import Matrix                      # pyflakes:ignore (API import)
 
 from holoviews.core import SheetCoordinateSystem       # pyflakes:ignore (API import)
 from holoviews.core import boundingregion, sheetcoords # pyflakes:ignore (API import)
@@ -726,7 +726,7 @@ class SeparatedComposite(Composite):
 
 
 
-class Animation(ViewMap):
+class Animation(HoloMap):
     """
     An Animation is a collection of SheetLayers associated with
     corresponding time values using a fixed timebase. Each individual

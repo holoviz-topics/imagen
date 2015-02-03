@@ -15,9 +15,9 @@ import collections
 import param
 from param.parameterized import ParamOverrides
 
-from holoviews import ViewMap, Matrix, Dimension
+from holoviews import HoloMap, Matrix, Dimension
 from holoviews.core import BoundingBox, BoundingRegionParameter, SheetCoordinateSystem
-from holoviews.core.options import options, StyleOpts
+from holoviews.core.options import Store, Options
 
 from .transferfn import TransferFn
 
@@ -165,7 +165,8 @@ class PatternGenerator(param.Parameterized):
         arr = (np.dstack(self.channels().values()[1:])
                if self.num_channels() in [3,4] else self())
         return Matrix(arr, self.bounds,
-                      label=self.__class__.__name__+ ' Pattern')[coords]
+                      value='Pattern',
+                      label=self.__class__.__name__)[coords]
 
 
     def channels(self, use_cached=False, **params_to_override):
@@ -321,7 +322,7 @@ class PatternGenerator(param.Parameterized):
             label = time_fn.label if hasattr(time_fn, 'label') else 'Time'
 
         unit = time_fn.unit if (not unit and hasattr(time_fn, 'unit')) else unit
-        vmap = ViewMap(index_dimensions=[Dimension(label, unit=time_fn.unit)])
+        vmap = HoloMap(index_dimensions=[Dimension(label, unit=time_fn.unit)])
 
         self.state_push()
         with time_fn as t:
@@ -485,5 +486,4 @@ class ComposeChannels(ChannelGenerator):
         return sum(act for act in self._channel_data)/len(self._channel_data)
 
 
-
-options.Pattern_Matrix = StyleOpts(cmap='gray')
+Store.options.Matrix.Pattern = Options('style', cmap='gray')
