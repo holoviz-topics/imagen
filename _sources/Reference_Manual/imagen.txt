@@ -12,17 +12,6 @@ imagen.imagen Package
     :inherited-members:
     :show-inheritance:
 
-:mod:`analysis` Module
-----------------------
-
-.. inheritance-diagram:: imagen.analysis
-
-
-.. automodule:: imagen.analysis
-    :members:
-    :inherited-members:
-    :show-inheritance:
-
 :mod:`audio` Module
 -------------------
 

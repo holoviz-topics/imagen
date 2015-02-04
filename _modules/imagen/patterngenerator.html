@@ -81,9 +81,9 @@
 <span class="kn">import</span> <span class="nn">param</span>
 <span class="kn">from</span> <span class="nn">param.parameterized</span> <span class="kn">import</span> <span class="n">ParamOverrides</span>
 
-<span class="kn">from</span> <span class="nn">holoviews</span> <span class="kn">import</span> <span class="n">ViewMap</span><span class="p">,</span> <span class="n">Matrix</span><span class="p">,</span> <span class="n">Dimension</span>
+<span class="kn">from</span> <span class="nn">holoviews</span> <span class="kn">import</span> <span class="n">HoloMap</span><span class="p">,</span> <span class="n">Matrix</span><span class="p">,</span> <span class="n">Dimension</span>
 <span class="kn">from</span> <span class="nn">holoviews.core</span> <span class="kn">import</span> <span class="n">BoundingBox</span><span class="p">,</span> <span class="n">BoundingRegionParameter</span><span class="p">,</span> <span class="n">SheetCoordinateSystem</span>
-<span class="kn">from</span> <span class="nn">holoviews.core.options</span> <span class="kn">import</span> <span class="n">options</span><span class="p">,</span> <span class="n">StyleOpts</span>
+<span class="kn">from</span> <span class="nn">holoviews.core.options</span> <span class="kn">import</span> <span class="n">Store</span><span class="p">,</span> <span class="n">Options</span>
 
 <span class="kn">from</span> <span class="nn">.transferfn</span> <span class="kn">import</span> <span class="n">TransferFn</span>
 
@@ -231,7 +231,8 @@
         <span class="n">arr</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dstack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">channels</span><span class="p">()</span><span class="o">.</span><span class="n">values</span><span class="p">()[</span><span class="mi">1</span><span class="p">:])</span>
                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_channels</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span> <span class="k">else</span> <span class="bp">self</span><span class="p">())</span>
         <span class="k">return</span> <span class="n">Matrix</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bounds</span><span class="p">,</span>
-                      <span class="n">label</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="o">+</span> <span class="s">&#39; Pattern&#39;</span><span class="p">)[</span><span class="n">coords</span><span class="p">]</span>
+                      <span class="n">value</span><span class="o">=</span><span class="s">&#39;Pattern&#39;</span><span class="p">,</span>
+                      <span class="n">label</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">)[</span><span class="n">coords</span><span class="p">]</span>
 
 
 <div class="viewcode-block" id="PatternGenerator.channels"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.patterngenerator.PatternGenerator.channels">[docs]</a>    <span class="k">def</span> <span class="nf">channels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">use_cached</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="o">**</span><span class="n">params_to_override</span><span class="p">):</span>
@@ -387,7 +388,7 @@
             <span class="n">label</span> <span class="o">=</span> <span class="n">time_fn</span><span class="o">.</span><span class="n">label</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">time_fn</span><span class="p">,</span> <span class="s">&#39;label&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="s">&#39;Time&#39;</span>
 
         <span class="n">unit</span> <span class="o">=</span> <span class="n">time_fn</span><span class="o">.</span><span class="n">unit</span> <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">unit</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">time_fn</span><span class="p">,</span> <span class="s">&#39;unit&#39;</span><span class="p">))</span> <span class="k">else</span> <span class="n">unit</span>
-        <span class="n">vmap</span> <span class="o">=</span> <span class="n">ViewMap</span><span class="p">(</span><span class="n">index_dimensions</span><span class="o">=</span><span class="p">[</span><span class="n">Dimension</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="n">time_fn</span><span class="o">.</span><span class="n">unit</span><span class="p">)])</span>
+        <span class="n">vmap</span> <span class="o">=</span> <span class="n">HoloMap</span><span class="p">(</span><span class="n">index_dimensions</span><span class="o">=</span><span class="p">[</span><span class="n">Dimension</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="n">time_fn</span><span class="o">.</span><span class="n">unit</span><span class="p">)])</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">state_push</span><span class="p">()</span>
         <span class="k">with</span> <span class="n">time_fn</span> <span class="k">as</span> <span class="n">t</span><span class="p">:</span>
@@ -550,9 +551,8 @@
 
         <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">act</span> <span class="k">for</span> <span class="n">act</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_channel_data</span><span class="p">)</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_channel_data</span><span class="p">)</span>
 
-
 </div>
-<span class="n">options</span><span class="o">.</span><span class="n">Pattern_Matrix</span> <span class="o">=</span> <span class="n">StyleOpts</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="s">&#39;gray&#39;</span><span class="p">)</span>
+<span class="n">Store</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">Matrix</span><span class="o">.</span><span class="n">Pattern</span> <span class="o">=</span> <span class="n">Options</span><span class="p">(</span><span class="s">&#39;style&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s">&#39;gray&#39;</span><span class="p">)</span>
 </pre></div>
 
           </div>

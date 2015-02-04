@@ -97,8 +97,8 @@
 <span class="c"># Imported here so that all PatternGenerators will be in the same package</span>
 <span class="kn">from</span> <span class="nn">.patterngenerator</span> <span class="kn">import</span> <span class="n">Constant</span><span class="p">,</span> <span class="n">PatternGenerator</span><span class="p">,</span> <span class="n">ChannelGenerator</span>
 
-<span class="kn">from</span> <span class="nn">holoviews.core</span> <span class="kn">import</span> <span class="n">Dimension</span><span class="p">,</span> <span class="n">ViewMap</span>
-<span class="kn">from</span> <span class="nn">holoviews.view</span> <span class="kn">import</span> <span class="n">Matrix</span>                      <span class="c"># pyflakes:ignore (API import)</span>
+<span class="kn">from</span> <span class="nn">holoviews.core</span> <span class="kn">import</span> <span class="n">Dimension</span><span class="p">,</span> <span class="n">HoloMap</span>
+<span class="kn">from</span> <span class="nn">holoviews.element</span> <span class="kn">import</span> <span class="n">Matrix</span>                      <span class="c"># pyflakes:ignore (API import)</span>
 
 <span class="kn">from</span> <span class="nn">holoviews.core</span> <span class="kn">import</span> <span class="n">SheetCoordinateSystem</span>       <span class="c"># pyflakes:ignore (API import)</span>
 <span class="kn">from</span> <span class="nn">holoviews.core</span> <span class="kn">import</span> <span class="n">boundingregion</span><span class="p">,</span> <span class="n">sheetcoords</span> <span class="c"># pyflakes:ignore (API import)</span>
@@ -791,69 +791,8 @@
         <span class="k">return</span> <span class="n">valid_generators</span>
 
 
-</div>
-<span class="k">class</span> <span class="nc">Animation</span><span class="p">(</span><span class="n">ViewMap</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    An Animation is a collection of SheetLayers associated with</span>
-<span class="sd">    corresponding time values using a fixed timebase. Each individual</span>
-<span class="sd">    Sheetlayers is given a time value that is a multiple of the</span>
-<span class="sd">    timestep parameter and therefore Animations assume regular</span>
-<span class="sd">    sampling of data over time.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">time_fn</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">ClassSelector</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">param</span><span class="o">.</span><span class="n">Dynamic</span><span class="o">.</span><span class="n">time_fn</span><span class="p">,</span>
-                               <span class="n">class_</span><span class="o">=</span><span class="n">param</span><span class="o">.</span><span class="n">Time</span><span class="p">,</span> <span class="n">instantiate</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
-<span class="s">        The time object shared across the time-varying objects</span>
-<span class="s">        that are to be sampled.&quot;&quot;&quot;</span><span class="p">)</span>
 
-    <span class="n">offset</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
-<span class="s">      The time offset from which frames are generated given the</span>
-<span class="s">      supplied pattern.&quot;&quot;&quot;</span><span class="p">)</span>
-
-    <span class="n">frames</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Integer</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">allow_None</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
-<span class="s">       The number of frames generated relative to offset using the</span>
-<span class="s">       supplied pattern if available. Frames are only generated if not</span>
-<span class="s">       None.&quot;&quot;&quot;</span><span class="p">)</span>
-
-    <span class="n">pattern</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">ClassSelector</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">Constant</span><span class="p">(),</span> <span class="n">class_</span><span class="o">=</span><span class="n">PatternGenerator</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
-<span class="s">      The pattern used to generate frames if the frames parameter is</span>
-<span class="s">      not None. Defaults to blank white frames.&quot;&quot;&quot;</span><span class="p">)</span>
-
-    <span class="n">timestep</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
-<span class="s">       The time interval between successive layers. Valid time values</span>
-<span class="s">       must be an integer multiple of this timestep value (which may</span>
-<span class="s">       be a float or some other numeric type).&quot;&quot;&quot;</span> <span class="p">)</span>
-
-    <span class="n">dimensions</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="p">[</span><span class="n">Dimension</span><span class="p">(</span><span class="s">&#39;Frames&#39;</span><span class="p">)],</span> <span class="n">constant</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
-<span class="s">       Animations are indexed by time. This may be by integer frame</span>
-<span class="s">       number or some continuous (e.g. floating point or rational)</span>
-<span class="s">       representation of time.&quot;&quot;&quot;</span><span class="p">)</span>
-
-
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">frames</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s">&quot;Animation is soon to be deprecated. &quot;</span>
-                     <span class="s">&quot;Use the anim() method on pattern generators instead&quot;</span><span class="p">)</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">Animation</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">pattern</span><span class="o">=</span><span class="n">pattern</span><span class="p">,</span>
-                                        <span class="n">frames</span><span class="o">=</span><span class="n">frames</span><span class="p">,</span>
-                                        <span class="o">**</span><span class="n">params</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pattern</span><span class="o">.</span><span class="n">state_push</span><span class="p">()</span>
-        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_fn</span> <span class="k">as</span> <span class="n">t</span><span class="p">:</span>
-            <span class="n">t</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">frames</span><span class="p">):</span>
-                <span class="bp">self</span><span class="p">[</span><span class="n">t</span><span class="p">()]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pattern</span><span class="p">[:]</span>
-                <span class="n">t</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">timestep</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pattern</span><span class="o">.</span><span class="n">state_pop</span><span class="p">()</span>
-
-    <span class="k">def</span> <span class="nf">map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">map_fn</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">Animation</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">map_fn</span><span class="p">,</span> <span class="o">**</span><span class="nb">dict</span><span class="p">(</span><span class="n">kwargs</span><span class="p">,</span> <span class="n">frames</span><span class="o">=</span><span class="bp">None</span><span class="p">))</span>
-
-    <span class="k">def</span> <span class="nf">_item_check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dim_vals</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">dim_vals</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_fn</span><span class="o">.</span><span class="n">time_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">timestep</span><span class="p">))</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_fn</span><span class="o">.</span><span class="n">time_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">):</span>
-             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Frame time value not a multiple of timestep.&quot;</span><span class="p">)</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">Animation</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_item_check</span><span class="p">(</span><span class="n">dim_vals</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
-
-
-
-<span class="c">#JABALERT: replace with x%1.0 below</span>
+<span class="c">#JABALERT: replace with x%1.0 below</span></div>
 <span class="k">def</span> <span class="nf">wrap</span><span class="p">(</span><span class="n">lower</span><span class="p">,</span> <span class="n">upper</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Circularly alias the numeric value x into the range [lower,upper).</span>
