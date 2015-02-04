@@ -322,7 +322,7 @@ class PatternGenerator(param.Parameterized):
             label = time_fn.label if hasattr(time_fn, 'label') else 'Time'
 
         unit = time_fn.unit if (not unit and hasattr(time_fn, 'unit')) else unit
-        vmap = HoloMap(index_dimensions=[Dimension(label, unit=time_fn.unit)])
+        vmap = HoloMap(key_dimensions=[Dimension(label, unit=unit if unit else '')])
 
         self.state_push()
         with time_fn as t:
