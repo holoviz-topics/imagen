@@ -77,8 +77,9 @@ class RandomGenerator(PatternGenerator, TimeAwareRandomState):
     # coordinate transformations (which would have no effect anyway)
     def __call__(self,**params_to_override):
         p = ParamOverrides(self,params_to_override)
-
         if self.time_dependent:
+            if 'name' in p:
+                self._initialize_random_state(seed=(500,500), shared=True, name=p.name)
             self._hash_and_seed()
 
         shape = SheetCoordinateSystem(p.bounds,p.xdensity,p.ydensity).shape
