@@ -143,8 +143,9 @@
     <span class="c"># coordinate transformations (which would have no effect anyway)</span>
     <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">**</span><span class="n">params_to_override</span><span class="p">):</span>
         <span class="n">p</span> <span class="o">=</span> <span class="n">ParamOverrides</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">params_to_override</span><span class="p">)</span>
-
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_dependent</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s">&#39;name&#39;</span> <span class="ow">in</span> <span class="n">p</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_random_state</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span><span class="mi">500</span><span class="p">),</span> <span class="n">shared</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_hash_and_seed</span><span class="p">()</span>
 
         <span class="n">shape</span> <span class="o">=</span> <span class="n">SheetCoordinateSystem</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">bounds</span><span class="p">,</span><span class="n">p</span><span class="o">.</span><span class="n">xdensity</span><span class="p">,</span><span class="n">p</span><span class="o">.</span><span class="n">ydensity</span><span class="p">)</span><span class="o">.</span><span class="n">shape</span>
