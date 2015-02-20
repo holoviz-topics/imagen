@@ -32,7 +32,7 @@ from param import ClassSelector
 from .patterngenerator import Constant, PatternGenerator, ChannelGenerator
 
 from holoviews.core import Dimension, HoloMap
-from holoviews.element import Matrix                      # pyflakes:ignore (API import)
+from holoviews.element import Image                      # pyflakes:ignore (API import)
 
 from holoviews.core import SheetCoordinateSystem       # pyflakes:ignore (API import)
 from holoviews.core import boundingregion, sheetcoords # pyflakes:ignore (API import)
