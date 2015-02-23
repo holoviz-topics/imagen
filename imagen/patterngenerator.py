@@ -165,7 +165,7 @@ class PatternGenerator(param.Parameterized):
         arr = (np.dstack(self.channels().values()[1:])
                if self.num_channels() in [3,4] else self())
         return Image(arr, self.bounds,
-                     value='Pattern',
+                     group='Pattern',
                      label=self.__class__.__name__)[coords]
 
 
