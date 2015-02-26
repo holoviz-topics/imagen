@@ -48,7 +48,7 @@ setup_args.update(dict(
     platforms=['Windows', 'Mac OS X', 'Linux'],
     license='BSD',
     url='http://ioam.github.com/imagen/',
-    packages = ["imagen", "imagen/transferfn"],
+    packages = ["imagen", "imagen.transferfn"],
     classifiers = [
         "License :: OSI Approved :: BSD License",
         "Development Status :: 5 - Production/Stable",
