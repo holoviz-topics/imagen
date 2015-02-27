@@ -31,7 +31,6 @@ from param import ClassSelector
 # Imported here so that all PatternGenerators will be in the same package
 from .patterngenerator import Constant, PatternGenerator, ChannelGenerator
 
-from holoviews.core import Dimension, HoloMap
 from holoviews.element import Image                      # pyflakes:ignore (API import)
 
 from holoviews.core import SheetCoordinateSystem       # pyflakes:ignore (API import)
