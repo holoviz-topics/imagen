@@ -200,7 +200,7 @@ class PatternGenerator(param.Parameterized):
         density (or rows and cols), and transforms them according to
         x, y, and orientation.
         """
-        self.debug(lambda:"bounds=%s, xdensity=%s, ydensity=%s, x=%s, y=%s, orientation=%s"%(bounds,xdensity,ydensity,x,y,orientation))
+        self.debug("bounds=%s, xdensity=%s, ydensity=%s, x=%s, y=%s, orientation=%s",bounds,xdensity,ydensity,x,y,orientation)
         # Generate vectors representing coordinates at which the pattern
         # will be sampled.
 

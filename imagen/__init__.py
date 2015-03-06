@@ -1263,7 +1263,7 @@ class LogGaussian(PatternGenerator):
         density (or rows and cols), and transforms them according to
         x, y, and orientation.
         """
-        self.debug(lambda:"bounds=%s, xdensity=%s, ydensity=%s, x=%s, y=%s, orientation=%s"%(p.bounds, p.xdensity, p.ydensity, p.x, p.y, p.orientation))
+        self.debug("bounds=%s, xdensity=%s, ydensity=%s, x=%s, y=%s, orientation=%s",p.bounds, p.xdensity, p.ydensity, p.x, p.y, p.orientation)
 
         x_points,y_points = SheetCoordinateSystem(p.bounds, p.xdensity, p.ydensity).sheetcoordinates_of_matrixidx()
 
