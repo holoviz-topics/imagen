@@ -127,7 +127,7 @@ instantiated.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.BinaryThreshold.force_new_dynamic_value">
-<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b6b5a51d838&gt;</em><a class="headerlink" href="#imagen.transferfn.BinaryThreshold.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b5e39a7ed60&gt;</em><a class="headerlink" href="#imagen.transferfn.BinaryThreshold.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -141,7 +141,7 @@ equal to the default value.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.BinaryThreshold.get_value_generator">
-<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b6b5a51d998&gt;</em><a class="headerlink" href="#imagen.transferfn.BinaryThreshold.get_value_generator" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b5e39a7eec0&gt;</em><a class="headerlink" href="#imagen.transferfn.BinaryThreshold.get_value_generator" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -157,7 +157,7 @@ associated with the input data.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.BinaryThreshold.inspect_value">
-<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b6b5a51daa0&gt;</em><a class="headerlink" href="#imagen.transferfn.BinaryThreshold.inspect_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b5e39a7efc8&gt;</em><a class="headerlink" href="#imagen.transferfn.BinaryThreshold.inspect_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -181,8 +181,16 @@ superclasses.</p>
 <dd><p>(Experimental) Pretty printed representation that may be
 evaluated with eval. Similar to repr except introspection of the
 constructor (__init__) ensures a valid and succinct representation
-is generated.</p>
-<p>See pprint() function for more details.</p>
+is generated. Note that only values of parameters are included.</p>
+<p>unknown_value determines what to do where a representation cannot be
+generated for something required to recreate the object. Such things
+include non-parameter positional and keyword arguments, and certain
+values of parameters (e.g. some random state objects).</p>
+<p>Supplying an unknown_value of None causes unrepresentable things to be silently
+ignored. If unknown_value is a string, that string will appear in place of
+any unrepresentable things. If unknown_value is False, an Exception will be
+raised if an unrepresentable value is encountered.</p>
+<p>See the pprint() function for more details.</p>
 <p>NOTE: pprint will replace script_repr in a future version of
 param, but is not yet a complete replacement for script_repr.</p>
 </dd></dl>
@@ -201,7 +209,7 @@ param, but is not yet a complete replacement for script_repr.</p>
 
 <dl class="method">
 <dt id="imagen.transferfn.BinaryThreshold.script_repr">
-<tt class="descname">script_repr</tt><big>(</big><em>imports=['import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews'], prefix='    '</em><big>)</big><a class="headerlink" href="#imagen.transferfn.BinaryThreshold.script_repr" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">script_repr</tt><big>(</big><em>imports=['import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews'], prefix='    '</em><big>)</big><a class="headerlink" href="#imagen.transferfn.BinaryThreshold.script_repr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Variant of __repr__ designed for generating a runnable script.</p>
 </dd></dl>
 
@@ -214,12 +222,12 @@ param, but is not yet a complete replacement for script_repr.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.BinaryThreshold.set_dynamic_time_fn">
-<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b6b5a51da48&gt;</em><a class="headerlink" href="#imagen.transferfn.BinaryThreshold.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b5e39efa050&gt;</em><a class="headerlink" href="#imagen.transferfn.BinaryThreshold.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.BinaryThreshold.set_param">
-<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b6b5a51dba8&gt;</em><a class="headerlink" href="#imagen.transferfn.BinaryThreshold.set_param" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b5e39efa100&gt;</em><a class="headerlink" href="#imagen.transferfn.BinaryThreshold.set_param" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -309,7 +317,7 @@ instantiated.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeL1.force_new_dynamic_value">
-<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b6b5a51d788&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL1.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b5e39a7ee10&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL1.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -323,7 +331,7 @@ equal to the default value.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeL1.get_value_generator">
-<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b6b5a51d890&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL1.get_value_generator" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b5e39a7ee68&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL1.get_value_generator" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -339,7 +347,7 @@ associated with the input data.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeL1.inspect_value">
-<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b6b5a51d940&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL1.inspect_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b5e39a7ef70&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL1.inspect_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -363,8 +371,16 @@ superclasses.</p>
 <dd><p>(Experimental) Pretty printed representation that may be
 evaluated with eval. Similar to repr except introspection of the
 constructor (__init__) ensures a valid and succinct representation
-is generated.</p>
-<p>See pprint() function for more details.</p>
+is generated. Note that only values of parameters are included.</p>
+<p>unknown_value determines what to do where a representation cannot be
+generated for something required to recreate the object. Such things
+include non-parameter positional and keyword arguments, and certain
+values of parameters (e.g. some random state objects).</p>
+<p>Supplying an unknown_value of None causes unrepresentable things to be silently
+ignored. If unknown_value is a string, that string will appear in place of
+any unrepresentable things. If unknown_value is False, an Exception will be
+raised if an unrepresentable value is encountered.</p>
+<p>See the pprint() function for more details.</p>
 <p>NOTE: pprint will replace script_repr in a future version of
 param, but is not yet a complete replacement for script_repr.</p>
 </dd></dl>
@@ -383,7 +399,7 @@ param, but is not yet a complete replacement for script_repr.</p>
 
 <dl class="method">
 <dt id="imagen.transferfn.DivisiveNormalizeL1.script_repr">
-<tt class="descname">script_repr</tt><big>(</big><em>imports=['import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews'], prefix='    '</em><big>)</big><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL1.script_repr" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">script_repr</tt><big>(</big><em>imports=['import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews'], prefix='    '</em><big>)</big><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL1.script_repr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Variant of __repr__ designed for generating a runnable script.</p>
 </dd></dl>
 
@@ -396,12 +412,12 @@ param, but is not yet a complete replacement for script_repr.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeL1.set_dynamic_time_fn">
-<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b6b5a51d8e8&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL1.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b5e39efa050&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL1.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeL1.set_param">
-<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b6b5a51daf8&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL1.set_param" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b5e39efa0a8&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL1.set_param" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -487,7 +503,7 @@ instantiated.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeL2.force_new_dynamic_value">
-<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b6b5a51daa0&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL2.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b5e39a7ecb0&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL2.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -501,7 +517,7 @@ equal to the default value.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeL2.get_value_generator">
-<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b6b5a51db50&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL2.get_value_generator" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b5e39a7edb8&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL2.get_value_generator" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -517,7 +533,7 @@ associated with the input data.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeL2.inspect_value">
-<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b6b5a51dba8&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL2.inspect_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b5e39a7eec0&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL2.inspect_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -541,8 +557,16 @@ superclasses.</p>
 <dd><p>(Experimental) Pretty printed representation that may be
 evaluated with eval. Similar to repr except introspection of the
 constructor (__init__) ensures a valid and succinct representation
-is generated.</p>
-<p>See pprint() function for more details.</p>
+is generated. Note that only values of parameters are included.</p>
+<p>unknown_value determines what to do where a representation cannot be
+generated for something required to recreate the object. Such things
+include non-parameter positional and keyword arguments, and certain
+values of parameters (e.g. some random state objects).</p>
+<p>Supplying an unknown_value of None causes unrepresentable things to be silently
+ignored. If unknown_value is a string, that string will appear in place of
+any unrepresentable things. If unknown_value is False, an Exception will be
+raised if an unrepresentable value is encountered.</p>
+<p>See the pprint() function for more details.</p>
 <p>NOTE: pprint will replace script_repr in a future version of
 param, but is not yet a complete replacement for script_repr.</p>
 </dd></dl>
@@ -561,7 +585,7 @@ param, but is not yet a complete replacement for script_repr.</p>
 
 <dl class="method">
 <dt id="imagen.transferfn.DivisiveNormalizeL2.script_repr">
-<tt class="descname">script_repr</tt><big>(</big><em>imports=['import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews'], prefix='    '</em><big>)</big><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL2.script_repr" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">script_repr</tt><big>(</big><em>imports=['import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews'], prefix='    '</em><big>)</big><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL2.script_repr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Variant of __repr__ designed for generating a runnable script.</p>
 </dd></dl>
 
@@ -574,12 +598,12 @@ param, but is not yet a complete replacement for script_repr.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeL2.set_dynamic_time_fn">
-<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b6b5a51da48&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL2.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b5e39f1b050&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL2.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeL2.set_param">
-<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b6b5a51d9f0&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL2.set_param" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b5e39f1b158&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL2.set_param" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -669,7 +693,7 @@ instantiated.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeLinf.force_new_dynamic_value">
-<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b6b5a51dc58&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLinf.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b5e398250a8&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLinf.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -683,7 +707,7 @@ equal to the default value.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeLinf.get_value_generator">
-<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b6b5a51dc00&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLinf.get_value_generator" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b5e398251b0&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLinf.get_value_generator" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -699,7 +723,7 @@ associated with the input data.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeLinf.inspect_value">
-<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b6b5a51dd60&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLinf.inspect_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b5e398252b8&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLinf.inspect_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -723,8 +747,16 @@ superclasses.</p>
 <dd><p>(Experimental) Pretty printed representation that may be
 evaluated with eval. Similar to repr except introspection of the
 constructor (__init__) ensures a valid and succinct representation
-is generated.</p>
-<p>See pprint() function for more details.</p>
+is generated. Note that only values of parameters are included.</p>
+<p>unknown_value determines what to do where a representation cannot be
+generated for something required to recreate the object. Such things
+include non-parameter positional and keyword arguments, and certain
+values of parameters (e.g. some random state objects).</p>
+<p>Supplying an unknown_value of None causes unrepresentable things to be silently
+ignored. If unknown_value is a string, that string will appear in place of
+any unrepresentable things. If unknown_value is False, an Exception will be
+raised if an unrepresentable value is encountered.</p>
+<p>See the pprint() function for more details.</p>
 <p>NOTE: pprint will replace script_repr in a future version of
 param, but is not yet a complete replacement for script_repr.</p>
 </dd></dl>
@@ -743,7 +775,7 @@ param, but is not yet a complete replacement for script_repr.</p>
 
 <dl class="method">
 <dt id="imagen.transferfn.DivisiveNormalizeLinf.script_repr">
-<tt class="descname">script_repr</tt><big>(</big><em>imports=['import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews'], prefix='    '</em><big>)</big><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLinf.script_repr" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">script_repr</tt><big>(</big><em>imports=['import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews'], prefix='    '</em><big>)</big><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLinf.script_repr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Variant of __repr__ designed for generating a runnable script.</p>
 </dd></dl>
 
@@ -756,12 +788,12 @@ param, but is not yet a complete replacement for script_repr.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeLinf.set_dynamic_time_fn">
-<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b6b5b553100&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLinf.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b5e39825628&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLinf.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeLinf.set_param">
-<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b6b5b553158&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLinf.set_param" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b5e39825680&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLinf.set_param" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -853,7 +885,7 @@ instantiated.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeLp.force_new_dynamic_value">
-<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b6b5a51db50&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLp.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b5e39a7ef18&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLp.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -867,7 +899,7 @@ equal to the default value.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeLp.get_value_generator">
-<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b6b5a51dd08&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLp.get_value_generator" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b5e39a7edb8&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLp.get_value_generator" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -883,7 +915,7 @@ associated with the input data.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeLp.inspect_value">
-<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b6b5a51dd60&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLp.inspect_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b5e397f30a8&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLp.inspect_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -907,8 +939,16 @@ superclasses.</p>
 <dd><p>(Experimental) Pretty printed representation that may be
 evaluated with eval. Similar to repr except introspection of the
 constructor (__init__) ensures a valid and succinct representation
-is generated.</p>
-<p>See pprint() function for more details.</p>
+is generated. Note that only values of parameters are included.</p>
+<p>unknown_value determines what to do where a representation cannot be
+generated for something required to recreate the object. Such things
+include non-parameter positional and keyword arguments, and certain
+values of parameters (e.g. some random state objects).</p>
+<p>Supplying an unknown_value of None causes unrepresentable things to be silently
+ignored. If unknown_value is a string, that string will appear in place of
+any unrepresentable things. If unknown_value is False, an Exception will be
+raised if an unrepresentable value is encountered.</p>
+<p>See the pprint() function for more details.</p>
 <p>NOTE: pprint will replace script_repr in a future version of
 param, but is not yet a complete replacement for script_repr.</p>
 </dd></dl>
@@ -927,7 +967,7 @@ param, but is not yet a complete replacement for script_repr.</p>
 
 <dl class="method">
 <dt id="imagen.transferfn.DivisiveNormalizeLp.script_repr">
-<tt class="descname">script_repr</tt><big>(</big><em>imports=['import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews'], prefix='    '</em><big>)</big><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLp.script_repr" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">script_repr</tt><big>(</big><em>imports=['import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews'], prefix='    '</em><big>)</big><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLp.script_repr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Variant of __repr__ designed for generating a runnable script.</p>
 </dd></dl>
 
@@ -940,12 +980,12 @@ param, but is not yet a complete replacement for script_repr.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeLp.set_dynamic_time_fn">
-<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b6b5a51d788&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLp.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b5e397f3050&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLp.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeLp.set_param">
-<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b6b5a51ddb8&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLp.set_param" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b5e397f31b0&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLp.set_param" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1033,7 +1073,7 @@ instantiated.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.IdentityTF.force_new_dynamic_value">
-<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b6b5a51dc58&gt;</em><a class="headerlink" href="#imagen.transferfn.IdentityTF.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b5e39a7ef70&gt;</em><a class="headerlink" href="#imagen.transferfn.IdentityTF.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1047,7 +1087,7 @@ equal to the default value.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.IdentityTF.get_value_generator">
-<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b6b5a51d8e8&gt;</em><a class="headerlink" href="#imagen.transferfn.IdentityTF.get_value_generator" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b5e39a7ef18&gt;</em><a class="headerlink" href="#imagen.transferfn.IdentityTF.get_value_generator" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1063,7 +1103,7 @@ associated with the input data.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.IdentityTF.inspect_value">
-<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b6b5a51daf8&gt;</em><a class="headerlink" href="#imagen.transferfn.IdentityTF.inspect_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b5e398140a8&gt;</em><a class="headerlink" href="#imagen.transferfn.IdentityTF.inspect_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1087,8 +1127,16 @@ superclasses.</p>
 <dd><p>(Experimental) Pretty printed representation that may be
 evaluated with eval. Similar to repr except introspection of the
 constructor (__init__) ensures a valid and succinct representation
-is generated.</p>
-<p>See pprint() function for more details.</p>
+is generated. Note that only values of parameters are included.</p>
+<p>unknown_value determines what to do where a representation cannot be
+generated for something required to recreate the object. Such things
+include non-parameter positional and keyword arguments, and certain
+values of parameters (e.g. some random state objects).</p>
+<p>Supplying an unknown_value of None causes unrepresentable things to be silently
+ignored. If unknown_value is a string, that string will appear in place of
+any unrepresentable things. If unknown_value is False, an Exception will be
+raised if an unrepresentable value is encountered.</p>
+<p>See the pprint() function for more details.</p>
 <p>NOTE: pprint will replace script_repr in a future version of
 param, but is not yet a complete replacement for script_repr.</p>
 </dd></dl>
@@ -1107,7 +1155,7 @@ param, but is not yet a complete replacement for script_repr.</p>
 
 <dl class="method">
 <dt id="imagen.transferfn.IdentityTF.script_repr">
-<tt class="descname">script_repr</tt><big>(</big><em>imports=['import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews'], prefix='    '</em><big>)</big><a class="headerlink" href="#imagen.transferfn.IdentityTF.script_repr" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">script_repr</tt><big>(</big><em>imports=['import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews'], prefix='    '</em><big>)</big><a class="headerlink" href="#imagen.transferfn.IdentityTF.script_repr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Variant of __repr__ designed for generating a runnable script.</p>
 </dd></dl>
 
@@ -1120,12 +1168,12 @@ param, but is not yet a complete replacement for script_repr.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.IdentityTF.set_dynamic_time_fn">
-<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b6b5a51d940&gt;</em><a class="headerlink" href="#imagen.transferfn.IdentityTF.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b5e39814050&gt;</em><a class="headerlink" href="#imagen.transferfn.IdentityTF.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.IdentityTF.set_param">
-<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b6b5a51db50&gt;</em><a class="headerlink" href="#imagen.transferfn.IdentityTF.set_param" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b5e39814158&gt;</em><a class="headerlink" href="#imagen.transferfn.IdentityTF.set_param" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1212,7 +1260,7 @@ instantiated.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.Scale.force_new_dynamic_value">
-<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b6b5a51dd08&gt;</em><a class="headerlink" href="#imagen.transferfn.Scale.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b5e39a7eec0&gt;</em><a class="headerlink" href="#imagen.transferfn.Scale.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1226,7 +1274,7 @@ equal to the default value.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.Scale.get_value_generator">
-<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b6b5a51d8e8&gt;</em><a class="headerlink" href="#imagen.transferfn.Scale.get_value_generator" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b5e39a7ef18&gt;</em><a class="headerlink" href="#imagen.transferfn.Scale.get_value_generator" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1242,7 +1290,7 @@ associated with the input data.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.Scale.inspect_value">
-<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b6b5a51d788&gt;</em><a class="headerlink" href="#imagen.transferfn.Scale.inspect_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b5e3a9d0050&gt;</em><a class="headerlink" href="#imagen.transferfn.Scale.inspect_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1266,8 +1314,16 @@ superclasses.</p>
 <dd><p>(Experimental) Pretty printed representation that may be
 evaluated with eval. Similar to repr except introspection of the
 constructor (__init__) ensures a valid and succinct representation
-is generated.</p>
-<p>See pprint() function for more details.</p>
+is generated. Note that only values of parameters are included.</p>
+<p>unknown_value determines what to do where a representation cannot be
+generated for something required to recreate the object. Such things
+include non-parameter positional and keyword arguments, and certain
+values of parameters (e.g. some random state objects).</p>
+<p>Supplying an unknown_value of None causes unrepresentable things to be silently
+ignored. If unknown_value is a string, that string will appear in place of
+any unrepresentable things. If unknown_value is False, an Exception will be
+raised if an unrepresentable value is encountered.</p>
+<p>See the pprint() function for more details.</p>
 <p>NOTE: pprint will replace script_repr in a future version of
 param, but is not yet a complete replacement for script_repr.</p>
 </dd></dl>
@@ -1286,7 +1342,7 @@ param, but is not yet a complete replacement for script_repr.</p>
 
 <dl class="method">
 <dt id="imagen.transferfn.Scale.script_repr">
-<tt class="descname">script_repr</tt><big>(</big><em>imports=['import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews'], prefix='    '</em><big>)</big><a class="headerlink" href="#imagen.transferfn.Scale.script_repr" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">script_repr</tt><big>(</big><em>imports=['import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews'], prefix='    '</em><big>)</big><a class="headerlink" href="#imagen.transferfn.Scale.script_repr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Variant of __repr__ designed for generating a runnable script.</p>
 </dd></dl>
 
@@ -1299,12 +1355,12 @@ param, but is not yet a complete replacement for script_repr.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.Scale.set_dynamic_time_fn">
-<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b6b5a51dd60&gt;</em><a class="headerlink" href="#imagen.transferfn.Scale.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b5e3a9d0100&gt;</em><a class="headerlink" href="#imagen.transferfn.Scale.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.Scale.set_param">
-<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b6b5a51dcb0&gt;</em><a class="headerlink" href="#imagen.transferfn.Scale.set_param" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b5e3a9d0158&gt;</em><a class="headerlink" href="#imagen.transferfn.Scale.set_param" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1393,7 +1449,7 @@ instantiated.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.Threshold.force_new_dynamic_value">
-<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b6b5a51dc58&gt;</em><a class="headerlink" href="#imagen.transferfn.Threshold.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b5e39a7ed08&gt;</em><a class="headerlink" href="#imagen.transferfn.Threshold.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1407,7 +1463,7 @@ equal to the default value.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.Threshold.get_value_generator">
-<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b6b5a51daf8&gt;</em><a class="headerlink" href="#imagen.transferfn.Threshold.get_value_generator" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b5e39a7ee10&gt;</em><a class="headerlink" href="#imagen.transferfn.Threshold.get_value_generator" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1423,7 +1479,7 @@ associated with the input data.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.Threshold.inspect_value">
-<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b6b5a51dd08&gt;</em><a class="headerlink" href="#imagen.transferfn.Threshold.inspect_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b5e3a9c3050&gt;</em><a class="headerlink" href="#imagen.transferfn.Threshold.inspect_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1447,8 +1503,16 @@ superclasses.</p>
 <dd><p>(Experimental) Pretty printed representation that may be
 evaluated with eval. Similar to repr except introspection of the
 constructor (__init__) ensures a valid and succinct representation
-is generated.</p>
-<p>See pprint() function for more details.</p>
+is generated. Note that only values of parameters are included.</p>
+<p>unknown_value determines what to do where a representation cannot be
+generated for something required to recreate the object. Such things
+include non-parameter positional and keyword arguments, and certain
+values of parameters (e.g. some random state objects).</p>
+<p>Supplying an unknown_value of None causes unrepresentable things to be silently
+ignored. If unknown_value is a string, that string will appear in place of
+any unrepresentable things. If unknown_value is False, an Exception will be
+raised if an unrepresentable value is encountered.</p>
+<p>See the pprint() function for more details.</p>
 <p>NOTE: pprint will replace script_repr in a future version of
 param, but is not yet a complete replacement for script_repr.</p>
 </dd></dl>
@@ -1467,7 +1531,7 @@ param, but is not yet a complete replacement for script_repr.</p>
 
 <dl class="method">
 <dt id="imagen.transferfn.Threshold.script_repr">
-<tt class="descname">script_repr</tt><big>(</big><em>imports=['import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews'], prefix='    '</em><big>)</big><a class="headerlink" href="#imagen.transferfn.Threshold.script_repr" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">script_repr</tt><big>(</big><em>imports=['import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews'], prefix='    '</em><big>)</big><a class="headerlink" href="#imagen.transferfn.Threshold.script_repr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Variant of __repr__ designed for generating a runnable script.</p>
 </dd></dl>
 
@@ -1480,12 +1544,12 @@ param, but is not yet a complete replacement for script_repr.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.Threshold.set_dynamic_time_fn">
-<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b6b5a51dc00&gt;</em><a class="headerlink" href="#imagen.transferfn.Threshold.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b5e3a9c30a8&gt;</em><a class="headerlink" href="#imagen.transferfn.Threshold.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.Threshold.set_param">
-<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b6b5a51d940&gt;</em><a class="headerlink" href="#imagen.transferfn.Threshold.set_param" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b5e3a9c3100&gt;</em><a class="headerlink" href="#imagen.transferfn.Threshold.set_param" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1573,7 +1637,7 @@ instantiated.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.TransferFn.force_new_dynamic_value">
-<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b6b5a51ddb8&gt;</em><a class="headerlink" href="#imagen.transferfn.TransferFn.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b5e39a7ed08&gt;</em><a class="headerlink" href="#imagen.transferfn.TransferFn.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1587,7 +1651,7 @@ equal to the default value.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.TransferFn.get_value_generator">
-<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b6b5a51dc58&gt;</em><a class="headerlink" href="#imagen.transferfn.TransferFn.get_value_generator" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b5e39a7edb8&gt;</em><a class="headerlink" href="#imagen.transferfn.TransferFn.get_value_generator" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1603,7 +1667,7 @@ associated with the input data.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.TransferFn.inspect_value">
-<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b6b5a51dd60&gt;</em><a class="headerlink" href="#imagen.transferfn.TransferFn.inspect_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b5e3a9e7050&gt;</em><a class="headerlink" href="#imagen.transferfn.TransferFn.inspect_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1627,8 +1691,16 @@ superclasses.</p>
 <dd><p>(Experimental) Pretty printed representation that may be
 evaluated with eval. Similar to repr except introspection of the
 constructor (__init__) ensures a valid and succinct representation
-is generated.</p>
-<p>See pprint() function for more details.</p>
+is generated. Note that only values of parameters are included.</p>
+<p>unknown_value determines what to do where a representation cannot be
+generated for something required to recreate the object. Such things
+include non-parameter positional and keyword arguments, and certain
+values of parameters (e.g. some random state objects).</p>
+<p>Supplying an unknown_value of None causes unrepresentable things to be silently
+ignored. If unknown_value is a string, that string will appear in place of
+any unrepresentable things. If unknown_value is False, an Exception will be
+raised if an unrepresentable value is encountered.</p>
+<p>See the pprint() function for more details.</p>
 <p>NOTE: pprint will replace script_repr in a future version of
 param, but is not yet a complete replacement for script_repr.</p>
 </dd></dl>
@@ -1647,7 +1719,7 @@ param, but is not yet a complete replacement for script_repr.</p>
 
 <dl class="method">
 <dt id="imagen.transferfn.TransferFn.script_repr">
-<tt class="descname">script_repr</tt><big>(</big><em>imports=['import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews'], prefix='    '</em><big>)</big><a class="headerlink" href="#imagen.transferfn.TransferFn.script_repr" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">script_repr</tt><big>(</big><em>imports=['import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews'], prefix='    '</em><big>)</big><a class="headerlink" href="#imagen.transferfn.TransferFn.script_repr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Variant of __repr__ designed for generating a runnable script.</p>
 </dd></dl>
 
@@ -1660,12 +1732,12 @@ param, but is not yet a complete replacement for script_repr.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.TransferFn.set_dynamic_time_fn">
-<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b6b5a51d8e8&gt;</em><a class="headerlink" href="#imagen.transferfn.TransferFn.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b5e3a9e70a8&gt;</em><a class="headerlink" href="#imagen.transferfn.TransferFn.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.TransferFn.set_param">
-<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b6b5a51d788&gt;</em><a class="headerlink" href="#imagen.transferfn.TransferFn.set_param" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b5e3a9e7158&gt;</em><a class="headerlink" href="#imagen.transferfn.TransferFn.set_param" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1759,7 +1831,7 @@ norm_value                         None                      Parameter          
 [1;34mnorm_value:     &lt; No docstring available &gt;[0m</p>
 <p><em>param Parameter</em> <tt class="docutils literal"><span class="pre">norm_value</span></tt> (<em>allow_None=True, constant=False, default=None, instantiate=False, pickle_default_value=True, precedence=None, readonly=False</em>)</p>
 <dl class="docutils">
-<dt><em>param ClassSelector</em> <tt class="docutils literal"><span class="pre">kernel_pattern</span></tt> (<em>allow_None=False, constant=False, default=&lt;Gaussian Gaussian00377&gt;, instantiate=True, is_instance=True, pickle_default_value=True, precedence=None, readonly=False</em>)</dt>
+<dt><em>param ClassSelector</em> <tt class="docutils literal"><span class="pre">kernel_pattern</span></tt> (<em>allow_None=False, constant=False, default=&lt;Gaussian Gaussian00376&gt;, instantiate=True, is_instance=True, pickle_default_value=True, precedence=None, readonly=False</em>)</dt>
 <dd>The kernel pattern used in the convolution. The default kernel
       results in an isotropic Gaussian blur.</dd>
 <dt><em>param List</em> <tt class="docutils literal"><span class="pre">init_keys</span></tt> (<em>allow_None=False, bounds=(0, None), constant=True, default=[&#8216;SCS&#8217;], instantiate=True, pickle_default_value=True, precedence=None, readonly=False</em>)</dt>
@@ -1784,7 +1856,7 @@ instantiated.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.sheet_tf.Convolve.force_new_dynamic_value">
-<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b6b5b6b8c58&gt;</em><a class="headerlink" href="#imagen.transferfn.sheet_tf.Convolve.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b5e3b8941b0&gt;</em><a class="headerlink" href="#imagen.transferfn.sheet_tf.Convolve.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1798,12 +1870,12 @@ equal to the default value.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.sheet_tf.Convolve.get_value_generator">
-<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b6b5b6b8d08&gt;</em><a class="headerlink" href="#imagen.transferfn.sheet_tf.Convolve.get_value_generator" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b5e3b894260&gt;</em><a class="headerlink" href="#imagen.transferfn.sheet_tf.Convolve.get_value_generator" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.sheet_tf.Convolve.inspect_value">
-<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b6b5b6b8d60&gt;</em><a class="headerlink" href="#imagen.transferfn.sheet_tf.Convolve.inspect_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b5e3b8942b8&gt;</em><a class="headerlink" href="#imagen.transferfn.sheet_tf.Convolve.inspect_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1827,8 +1899,16 @@ superclasses.</p>
 <dd><p>(Experimental) Pretty printed representation that may be
 evaluated with eval. Similar to repr except introspection of the
 constructor (__init__) ensures a valid and succinct representation
-is generated.</p>
-<p>See pprint() function for more details.</p>
+is generated. Note that only values of parameters are included.</p>
+<p>unknown_value determines what to do where a representation cannot be
+generated for something required to recreate the object. Such things
+include non-parameter positional and keyword arguments, and certain
+values of parameters (e.g. some random state objects).</p>
+<p>Supplying an unknown_value of None causes unrepresentable things to be silently
+ignored. If unknown_value is a string, that string will appear in place of
+any unrepresentable things. If unknown_value is False, an Exception will be
+raised if an unrepresentable value is encountered.</p>
+<p>See the pprint() function for more details.</p>
 <p>NOTE: pprint will replace script_repr in a future version of
 param, but is not yet a complete replacement for script_repr.</p>
 </dd></dl>
@@ -1847,7 +1927,7 @@ param, but is not yet a complete replacement for script_repr.</p>
 
 <dl class="method">
 <dt id="imagen.transferfn.sheet_tf.Convolve.script_repr">
-<tt class="descname">script_repr</tt><big>(</big><em>imports=['import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews'], prefix='    '</em><big>)</big><a class="headerlink" href="#imagen.transferfn.sheet_tf.Convolve.script_repr" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">script_repr</tt><big>(</big><em>imports=['import holoviews.core.dimension', 'import holoviews', 'import holoviews.core.dimension', 'import holoviews'], prefix='    '</em><big>)</big><a class="headerlink" href="#imagen.transferfn.sheet_tf.Convolve.script_repr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Variant of __repr__ designed for generating a runnable script.</p>
 </dd></dl>
 
@@ -1860,12 +1940,12 @@ param, but is not yet a complete replacement for script_repr.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.sheet_tf.Convolve.set_dynamic_time_fn">
-<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b6b5b6b8cb0&gt;</em><a class="headerlink" href="#imagen.transferfn.sheet_tf.Convolve.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b5e3b894208&gt;</em><a class="headerlink" href="#imagen.transferfn.sheet_tf.Convolve.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.sheet_tf.Convolve.set_param">
-<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b6b5b6b8e68&gt;</em><a class="headerlink" href="#imagen.transferfn.sheet_tf.Convolve.set_param" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b5e3b8943c0&gt;</em><a class="headerlink" href="#imagen.transferfn.sheet_tf.Convolve.set_param" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
