@@ -88,6 +88,9 @@ class PatternGenerator(param.Parameterized):
         the PatternGenerator . If None, uses the default set by
         HoloViews.Image.""")
 
+    group = param.String(default='Pattern', precedence=-1, doc="""
+       The group name assigned to the returned HoloViews object.""")
+
     position = param.Composite(attribs=['x','y'],precedence=-1,doc="""
         Coordinates of location of pattern center.
         Provides a convenient way to set the x and y parameters together
@@ -169,7 +172,7 @@ class PatternGenerator(param.Parameterized):
         arr = (np.dstack(self.channels().values()[1:])
                if self.num_channels() in [3,4] else self())
         return Image(arr, self.bounds,
-                     **dict(group='Pattern',
+                     **dict(group=self.group,
                             label=self.__class__.__name__,
                             **{'value_dimensions':[self.z]} if self.z else {}))[coords]
 
