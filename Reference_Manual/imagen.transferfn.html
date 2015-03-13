@@ -113,7 +113,8 @@ threshold    0.25    Number                V RW</p>
 <dl class="method">
 <dt id="imagen.transferfn.BinaryThreshold.debug">
 <tt class="descname">debug</tt><big>(</big><em>msg</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#imagen.transferfn.BinaryThreshold.debug" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print the arguments as a debugging statement.</p>
+<dd><p>Print msg merged with args as a debugging statement.</p>
+<p>See Python&#8217;s logging module for details of message formatting.</p>
 </dd></dl>
 
 <dl class="method">
@@ -127,7 +128,7 @@ instantiated.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.BinaryThreshold.force_new_dynamic_value">
-<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b3dd36e7af8&gt;</em><a class="headerlink" href="#imagen.transferfn.BinaryThreshold.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b7014d6c680&gt;</em><a class="headerlink" href="#imagen.transferfn.BinaryThreshold.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -141,7 +142,7 @@ equal to the default value.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.BinaryThreshold.get_value_generator">
-<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b3dd36e7c58&gt;</em><a class="headerlink" href="#imagen.transferfn.BinaryThreshold.get_value_generator" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b7014d6c5d0&gt;</em><a class="headerlink" href="#imagen.transferfn.BinaryThreshold.get_value_generator" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -157,13 +158,14 @@ associated with the input data.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.BinaryThreshold.inspect_value">
-<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b3dd36e7d60&gt;</em><a class="headerlink" href="#imagen.transferfn.BinaryThreshold.inspect_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b7014d6c6d8&gt;</em><a class="headerlink" href="#imagen.transferfn.BinaryThreshold.inspect_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="imagen.transferfn.BinaryThreshold.message">
 <tt class="descname">message</tt><big>(</big><em>msg</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#imagen.transferfn.BinaryThreshold.message" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print the arguments as a message.</p>
+<dd><p>Print msg merged with args as a message.</p>
+<p>See Python&#8217;s logging module for details of message formatting.</p>
 </dd></dl>
 
 <dl class="classmethod">
@@ -209,12 +211,12 @@ evaluated with eval. See pprint() function for more details.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.BinaryThreshold.set_dynamic_time_fn">
-<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b3dd36e7d08&gt;</em><a class="headerlink" href="#imagen.transferfn.BinaryThreshold.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b7014d6c470&gt;</em><a class="headerlink" href="#imagen.transferfn.BinaryThreshold.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.BinaryThreshold.set_param">
-<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b3dd36e7e68&gt;</em><a class="headerlink" href="#imagen.transferfn.BinaryThreshold.set_param" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b7014d6c7e0&gt;</em><a class="headerlink" href="#imagen.transferfn.BinaryThreshold.set_param" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -240,15 +242,17 @@ something without permanently altering the objects&#8217; state.</p>
 <dl class="method">
 <dt id="imagen.transferfn.BinaryThreshold.verbose">
 <tt class="descname">verbose</tt><big>(</big><em>msg</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#imagen.transferfn.BinaryThreshold.verbose" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print the arguments as a verbose message.</p>
+<dd><p>Print msg merged with args as a verbose message.</p>
+<p>See Python&#8217;s logging module for details of message formatting.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="imagen.transferfn.BinaryThreshold.warning">
 <tt class="descname">warning</tt><big>(</big><em>msg</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#imagen.transferfn.BinaryThreshold.warning" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print the arguments as a warning, unless module variable
+<dd><p>Print msg merged with args as a warning, unless module variable
 warnings_as_exceptions is True, then raise an Exception
 containing the arguments.</p>
+<p>See Python&#8217;s logging module for details of message formatting.</p>
 </dd></dl>
 
 </dd></dl>
@@ -290,7 +294,8 @@ norm_value   1.0  Number             V RW</p>
 <dl class="method">
 <dt id="imagen.transferfn.DivisiveNormalizeL1.debug">
 <tt class="descname">debug</tt><big>(</big><em>msg</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL1.debug" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print the arguments as a debugging statement.</p>
+<dd><p>Print msg merged with args as a debugging statement.</p>
+<p>See Python&#8217;s logging module for details of message formatting.</p>
 </dd></dl>
 
 <dl class="method">
@@ -304,7 +309,7 @@ instantiated.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeL1.force_new_dynamic_value">
-<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b3dd36e7a48&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL1.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b7014d6c520&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL1.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -318,7 +323,7 @@ equal to the default value.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeL1.get_value_generator">
-<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b3dd36e7b50&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL1.get_value_generator" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b7014d6c4c8&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL1.get_value_generator" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -334,13 +339,14 @@ associated with the input data.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeL1.inspect_value">
-<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b3dd36e7c00&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL1.inspect_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b7014d6c578&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL1.inspect_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="imagen.transferfn.DivisiveNormalizeL1.message">
 <tt class="descname">message</tt><big>(</big><em>msg</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL1.message" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print the arguments as a message.</p>
+<dd><p>Print msg merged with args as a message.</p>
+<p>See Python&#8217;s logging module for details of message formatting.</p>
 </dd></dl>
 
 <dl class="classmethod">
@@ -386,12 +392,12 @@ evaluated with eval. See pprint() function for more details.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeL1.set_dynamic_time_fn">
-<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b3dd36e7ba8&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL1.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b7014d6c3c0&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL1.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeL1.set_param">
-<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b3dd36e7db8&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL1.set_param" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b7014d6c890&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL1.set_param" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -417,15 +423,17 @@ something without permanently altering the objects&#8217; state.</p>
 <dl class="method">
 <dt id="imagen.transferfn.DivisiveNormalizeL1.verbose">
 <tt class="descname">verbose</tt><big>(</big><em>msg</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL1.verbose" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print the arguments as a verbose message.</p>
+<dd><p>Print msg merged with args as a verbose message.</p>
+<p>See Python&#8217;s logging module for details of message formatting.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="imagen.transferfn.DivisiveNormalizeL1.warning">
 <tt class="descname">warning</tt><big>(</big><em>msg</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL1.warning" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print the arguments as a warning, unless module variable
+<dd><p>Print msg merged with args as a warning, unless module variable
 warnings_as_exceptions is True, then raise an Exception
 containing the arguments.</p>
+<p>See Python&#8217;s logging module for details of message formatting.</p>
 </dd></dl>
 
 </dd></dl>
@@ -463,7 +471,8 @@ norm_value   1.0  Number             V RW</p>
 <dl class="method">
 <dt id="imagen.transferfn.DivisiveNormalizeL2.debug">
 <tt class="descname">debug</tt><big>(</big><em>msg</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL2.debug" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print the arguments as a debugging statement.</p>
+<dd><p>Print msg merged with args as a debugging statement.</p>
+<p>See Python&#8217;s logging module for details of message formatting.</p>
 </dd></dl>
 
 <dl class="method">
@@ -477,7 +486,7 @@ instantiated.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeL2.force_new_dynamic_value">
-<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b3dd36e7d60&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL2.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b7014d6c470&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL2.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -491,7 +500,7 @@ equal to the default value.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeL2.get_value_generator">
-<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b3dd36e7e10&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL2.get_value_generator" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b7014d6c788&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL2.get_value_generator" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -507,13 +516,14 @@ associated with the input data.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeL2.inspect_value">
-<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b3dd36e7e68&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL2.inspect_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b7014d6c7e0&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL2.inspect_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="imagen.transferfn.DivisiveNormalizeL2.message">
 <tt class="descname">message</tt><big>(</big><em>msg</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL2.message" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print the arguments as a message.</p>
+<dd><p>Print msg merged with args as a message.</p>
+<p>See Python&#8217;s logging module for details of message formatting.</p>
 </dd></dl>
 
 <dl class="classmethod">
@@ -559,12 +569,12 @@ evaluated with eval. See pprint() function for more details.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeL2.set_dynamic_time_fn">
-<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b3dd36e7d08&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL2.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b7014d6c6d8&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL2.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeL2.set_param">
-<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b3dd36e7cb0&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL2.set_param" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b7014d6c628&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL2.set_param" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -590,15 +600,17 @@ something without permanently altering the objects&#8217; state.</p>
 <dl class="method">
 <dt id="imagen.transferfn.DivisiveNormalizeL2.verbose">
 <tt class="descname">verbose</tt><big>(</big><em>msg</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL2.verbose" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print the arguments as a verbose message.</p>
+<dd><p>Print msg merged with args as a verbose message.</p>
+<p>See Python&#8217;s logging module for details of message formatting.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="imagen.transferfn.DivisiveNormalizeL2.warning">
 <tt class="descname">warning</tt><big>(</big><em>msg</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL2.warning" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print the arguments as a warning, unless module variable
+<dd><p>Print msg merged with args as a warning, unless module variable
 warnings_as_exceptions is True, then raise an Exception
 containing the arguments.</p>
+<p>See Python&#8217;s logging module for details of message formatting.</p>
 </dd></dl>
 
 </dd></dl>
@@ -640,7 +652,8 @@ norm_value   1.0  Number             V RW</p>
 <dl class="method">
 <dt id="imagen.transferfn.DivisiveNormalizeLinf.debug">
 <tt class="descname">debug</tt><big>(</big><em>msg</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLinf.debug" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print the arguments as a debugging statement.</p>
+<dd><p>Print msg merged with args as a debugging statement.</p>
+<p>See Python&#8217;s logging module for details of message formatting.</p>
 </dd></dl>
 
 <dl class="method">
@@ -654,7 +667,7 @@ instantiated.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeLinf.force_new_dynamic_value">
-<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b3dd36e7f18&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLinf.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b7014d6c890&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLinf.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -668,7 +681,7 @@ equal to the default value.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeLinf.get_value_generator">
-<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b3dd36e7ec0&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLinf.get_value_generator" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b7014d6c838&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLinf.get_value_generator" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -684,13 +697,14 @@ associated with the input data.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeLinf.inspect_value">
-<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b3dd4000050&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLinf.inspect_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b7014d6c998&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLinf.inspect_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="imagen.transferfn.DivisiveNormalizeLinf.message">
 <tt class="descname">message</tt><big>(</big><em>msg</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLinf.message" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print the arguments as a message.</p>
+<dd><p>Print msg merged with args as a message.</p>
+<p>See Python&#8217;s logging module for details of message formatting.</p>
 </dd></dl>
 
 <dl class="classmethod">
@@ -736,12 +750,12 @@ evaluated with eval. See pprint() function for more details.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeLinf.set_dynamic_time_fn">
-<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b3dd40003c0&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLinf.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b7014d6cd08&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLinf.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeLinf.set_param">
-<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b3dd4000418&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLinf.set_param" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b7014d6cd60&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLinf.set_param" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -767,15 +781,17 @@ something without permanently altering the objects&#8217; state.</p>
 <dl class="method">
 <dt id="imagen.transferfn.DivisiveNormalizeLinf.verbose">
 <tt class="descname">verbose</tt><big>(</big><em>msg</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLinf.verbose" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print the arguments as a verbose message.</p>
+<dd><p>Print msg merged with args as a verbose message.</p>
+<p>See Python&#8217;s logging module for details of message formatting.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="imagen.transferfn.DivisiveNormalizeLinf.warning">
 <tt class="descname">warning</tt><big>(</big><em>msg</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLinf.warning" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print the arguments as a warning, unless module variable
+<dd><p>Print msg merged with args as a warning, unless module variable
 warnings_as_exceptions is True, then raise an Exception
 containing the arguments.</p>
+<p>See Python&#8217;s logging module for details of message formatting.</p>
 </dd></dl>
 
 </dd></dl>
@@ -819,7 +835,8 @@ p             2   Number             V RW</p>
 <dl class="method">
 <dt id="imagen.transferfn.DivisiveNormalizeLp.debug">
 <tt class="descname">debug</tt><big>(</big><em>msg</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLp.debug" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print the arguments as a debugging statement.</p>
+<dd><p>Print msg merged with args as a debugging statement.</p>
+<p>See Python&#8217;s logging module for details of message formatting.</p>
 </dd></dl>
 
 <dl class="method">
@@ -833,7 +850,7 @@ instantiated.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeLp.force_new_dynamic_value">
-<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b3dd36e7e10&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLp.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b7014d6c838&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLp.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -847,7 +864,7 @@ equal to the default value.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeLp.get_value_generator">
-<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b3dd36e7fc8&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLp.get_value_generator" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b7014d6c520&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLp.get_value_generator" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -863,13 +880,14 @@ associated with the input data.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeLp.inspect_value">
-<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b3dd36e7f70&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLp.inspect_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b7014d6c940&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLp.inspect_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="imagen.transferfn.DivisiveNormalizeLp.message">
 <tt class="descname">message</tt><big>(</big><em>msg</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLp.message" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print the arguments as a message.</p>
+<dd><p>Print msg merged with args as a message.</p>
+<p>See Python&#8217;s logging module for details of message formatting.</p>
 </dd></dl>
 
 <dl class="classmethod">
@@ -915,12 +933,12 @@ evaluated with eval. See pprint() function for more details.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeLp.set_dynamic_time_fn">
-<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b3dd36e7a48&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLp.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b7014d6cec0&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLp.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeLp.set_param">
-<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b3dd36e7d08&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLp.set_param" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b7014d6ca48&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLp.set_param" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -946,15 +964,17 @@ something without permanently altering the objects&#8217; state.</p>
 <dl class="method">
 <dt id="imagen.transferfn.DivisiveNormalizeLp.verbose">
 <tt class="descname">verbose</tt><big>(</big><em>msg</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLp.verbose" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print the arguments as a verbose message.</p>
+<dd><p>Print msg merged with args as a verbose message.</p>
+<p>See Python&#8217;s logging module for details of message formatting.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="imagen.transferfn.DivisiveNormalizeLp.warning">
 <tt class="descname">warning</tt><big>(</big><em>msg</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLp.warning" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print the arguments as a warning, unless module variable
+<dd><p>Print msg merged with args as a warning, unless module variable
 warnings_as_exceptions is True, then raise an Exception
 containing the arguments.</p>
+<p>See Python&#8217;s logging module for details of message formatting.</p>
 </dd></dl>
 
 </dd></dl>
@@ -994,7 +1014,8 @@ norm_value   None  Parameter             V RW AN</p>
 <dl class="method">
 <dt id="imagen.transferfn.IdentityTF.debug">
 <tt class="descname">debug</tt><big>(</big><em>msg</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#imagen.transferfn.IdentityTF.debug" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print the arguments as a debugging statement.</p>
+<dd><p>Print msg merged with args as a debugging statement.</p>
+<p>See Python&#8217;s logging module for details of message formatting.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1008,7 +1029,7 @@ instantiated.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.IdentityTF.force_new_dynamic_value">
-<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b3dd36e7f18&gt;</em><a class="headerlink" href="#imagen.transferfn.IdentityTF.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b7014d6c3c0&gt;</em><a class="headerlink" href="#imagen.transferfn.IdentityTF.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1022,7 +1043,7 @@ equal to the default value.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.IdentityTF.get_value_generator">
-<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b3dd36e7ba8&gt;</em><a class="headerlink" href="#imagen.transferfn.IdentityTF.get_value_generator" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b7014d6c788&gt;</em><a class="headerlink" href="#imagen.transferfn.IdentityTF.get_value_generator" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1038,13 +1059,14 @@ associated with the input data.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.IdentityTF.inspect_value">
-<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b3dd36e7db8&gt;</em><a class="headerlink" href="#imagen.transferfn.IdentityTF.inspect_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b7014d6c890&gt;</em><a class="headerlink" href="#imagen.transferfn.IdentityTF.inspect_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="imagen.transferfn.IdentityTF.message">
 <tt class="descname">message</tt><big>(</big><em>msg</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#imagen.transferfn.IdentityTF.message" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print the arguments as a message.</p>
+<dd><p>Print msg merged with args as a message.</p>
+<p>See Python&#8217;s logging module for details of message formatting.</p>
 </dd></dl>
 
 <dl class="classmethod">
@@ -1090,12 +1112,12 @@ evaluated with eval. See pprint() function for more details.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.IdentityTF.set_dynamic_time_fn">
-<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b3dd36e7c00&gt;</em><a class="headerlink" href="#imagen.transferfn.IdentityTF.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b7014d6c578&gt;</em><a class="headerlink" href="#imagen.transferfn.IdentityTF.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.IdentityTF.set_param">
-<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b3dd36e7e10&gt;</em><a class="headerlink" href="#imagen.transferfn.IdentityTF.set_param" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b7014d6c838&gt;</em><a class="headerlink" href="#imagen.transferfn.IdentityTF.set_param" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1121,15 +1143,17 @@ something without permanently altering the objects&#8217; state.</p>
 <dl class="method">
 <dt id="imagen.transferfn.IdentityTF.verbose">
 <tt class="descname">verbose</tt><big>(</big><em>msg</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#imagen.transferfn.IdentityTF.verbose" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print the arguments as a verbose message.</p>
+<dd><p>Print msg merged with args as a verbose message.</p>
+<p>See Python&#8217;s logging module for details of message formatting.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="imagen.transferfn.IdentityTF.warning">
 <tt class="descname">warning</tt><big>(</big><em>msg</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#imagen.transferfn.IdentityTF.warning" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print the arguments as a warning, unless module variable
+<dd><p>Print msg merged with args as a warning, unless module variable
 warnings_as_exceptions is True, then raise an Exception
 containing the arguments.</p>
+<p>See Python&#8217;s logging module for details of message formatting.</p>
 </dd></dl>
 
 </dd></dl>
@@ -1168,7 +1192,8 @@ scale        1.0     Number                V RW</p>
 <dl class="method">
 <dt id="imagen.transferfn.Scale.debug">
 <tt class="descname">debug</tt><big>(</big><em>msg</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#imagen.transferfn.Scale.debug" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print the arguments as a debugging statement.</p>
+<dd><p>Print msg merged with args as a debugging statement.</p>
+<p>See Python&#8217;s logging module for details of message formatting.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1182,7 +1207,7 @@ instantiated.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.Scale.force_new_dynamic_value">
-<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b3dd36e7fc8&gt;</em><a class="headerlink" href="#imagen.transferfn.Scale.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b7014d6c940&gt;</em><a class="headerlink" href="#imagen.transferfn.Scale.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1196,7 +1221,7 @@ equal to the default value.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.Scale.get_value_generator">
-<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b3dd36e7ba8&gt;</em><a class="headerlink" href="#imagen.transferfn.Scale.get_value_generator" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b7014d6c788&gt;</em><a class="headerlink" href="#imagen.transferfn.Scale.get_value_generator" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1212,13 +1237,14 @@ associated with the input data.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.Scale.inspect_value">
-<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b3dd36e7a48&gt;</em><a class="headerlink" href="#imagen.transferfn.Scale.inspect_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b7014d6cec0&gt;</em><a class="headerlink" href="#imagen.transferfn.Scale.inspect_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="imagen.transferfn.Scale.message">
 <tt class="descname">message</tt><big>(</big><em>msg</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#imagen.transferfn.Scale.message" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print the arguments as a message.</p>
+<dd><p>Print msg merged with args as a message.</p>
+<p>See Python&#8217;s logging module for details of message formatting.</p>
 </dd></dl>
 
 <dl class="classmethod">
@@ -1264,12 +1290,12 @@ evaluated with eval. See pprint() function for more details.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.Scale.set_dynamic_time_fn">
-<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b3dd36e7f70&gt;</em><a class="headerlink" href="#imagen.transferfn.Scale.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b7014d6c520&gt;</em><a class="headerlink" href="#imagen.transferfn.Scale.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.Scale.set_param">
-<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b3dd36e7e68&gt;</em><a class="headerlink" href="#imagen.transferfn.Scale.set_param" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b7014d6caf8&gt;</em><a class="headerlink" href="#imagen.transferfn.Scale.set_param" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1295,15 +1321,17 @@ something without permanently altering the objects&#8217; state.</p>
 <dl class="method">
 <dt id="imagen.transferfn.Scale.verbose">
 <tt class="descname">verbose</tt><big>(</big><em>msg</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#imagen.transferfn.Scale.verbose" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print the arguments as a verbose message.</p>
+<dd><p>Print msg merged with args as a verbose message.</p>
+<p>See Python&#8217;s logging module for details of message formatting.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="imagen.transferfn.Scale.warning">
 <tt class="descname">warning</tt><big>(</big><em>msg</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#imagen.transferfn.Scale.warning" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print the arguments as a warning, unless module variable
+<dd><p>Print msg merged with args as a warning, unless module variable
 warnings_as_exceptions is True, then raise an Exception
 containing the arguments.</p>
+<p>See Python&#8217;s logging module for details of message formatting.</p>
 </dd></dl>
 
 </dd></dl>
@@ -1344,7 +1372,8 @@ threshold    0.25    Number                V RW</p>
 <dl class="method">
 <dt id="imagen.transferfn.Threshold.debug">
 <tt class="descname">debug</tt><big>(</big><em>msg</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#imagen.transferfn.Threshold.debug" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print the arguments as a debugging statement.</p>
+<dd><p>Print msg merged with args as a debugging statement.</p>
+<p>See Python&#8217;s logging module for details of message formatting.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1358,7 +1387,7 @@ instantiated.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.Threshold.force_new_dynamic_value">
-<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b3dd36e7f18&gt;</em><a class="headerlink" href="#imagen.transferfn.Threshold.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b7014d6c940&gt;</em><a class="headerlink" href="#imagen.transferfn.Threshold.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1372,7 +1401,7 @@ equal to the default value.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.Threshold.get_value_generator">
-<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b3dd36e7db8&gt;</em><a class="headerlink" href="#imagen.transferfn.Threshold.get_value_generator" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b7014d6c890&gt;</em><a class="headerlink" href="#imagen.transferfn.Threshold.get_value_generator" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1388,13 +1417,14 @@ associated with the input data.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.Threshold.inspect_value">
-<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b3dd36e7fc8&gt;</em><a class="headerlink" href="#imagen.transferfn.Threshold.inspect_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b7014d6c3c0&gt;</em><a class="headerlink" href="#imagen.transferfn.Threshold.inspect_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="imagen.transferfn.Threshold.message">
 <tt class="descname">message</tt><big>(</big><em>msg</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#imagen.transferfn.Threshold.message" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print the arguments as a message.</p>
+<dd><p>Print msg merged with args as a message.</p>
+<p>See Python&#8217;s logging module for details of message formatting.</p>
 </dd></dl>
 
 <dl class="classmethod">
@@ -1440,12 +1470,12 @@ evaluated with eval. See pprint() function for more details.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.Threshold.set_dynamic_time_fn">
-<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b3dd36e7ec0&gt;</em><a class="headerlink" href="#imagen.transferfn.Threshold.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b7014d6c418&gt;</em><a class="headerlink" href="#imagen.transferfn.Threshold.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.Threshold.set_param">
-<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b3dd36e7c00&gt;</em><a class="headerlink" href="#imagen.transferfn.Threshold.set_param" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b7014d6c578&gt;</em><a class="headerlink" href="#imagen.transferfn.Threshold.set_param" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1471,15 +1501,17 @@ something without permanently altering the objects&#8217; state.</p>
 <dl class="method">
 <dt id="imagen.transferfn.Threshold.verbose">
 <tt class="descname">verbose</tt><big>(</big><em>msg</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#imagen.transferfn.Threshold.verbose" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print the arguments as a verbose message.</p>
+<dd><p>Print msg merged with args as a verbose message.</p>
+<p>See Python&#8217;s logging module for details of message formatting.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="imagen.transferfn.Threshold.warning">
 <tt class="descname">warning</tt><big>(</big><em>msg</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#imagen.transferfn.Threshold.warning" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print the arguments as a warning, unless module variable
+<dd><p>Print msg merged with args as a warning, unless module variable
 warnings_as_exceptions is True, then raise an Exception
 containing the arguments.</p>
+<p>See Python&#8217;s logging module for details of message formatting.</p>
 </dd></dl>
 
 </dd></dl>
@@ -1519,7 +1551,8 @@ norm_value   None  Parameter             V RW AN</p>
 <dl class="method">
 <dt id="imagen.transferfn.TransferFn.debug">
 <tt class="descname">debug</tt><big>(</big><em>msg</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#imagen.transferfn.TransferFn.debug" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print the arguments as a debugging statement.</p>
+<dd><p>Print msg merged with args as a debugging statement.</p>
+<p>See Python&#8217;s logging module for details of message formatting.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1533,7 +1566,7 @@ instantiated.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.TransferFn.force_new_dynamic_value">
-<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b3dd36e7d08&gt;</em><a class="headerlink" href="#imagen.transferfn.TransferFn.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b7014d6c788&gt;</em><a class="headerlink" href="#imagen.transferfn.TransferFn.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1547,7 +1580,7 @@ equal to the default value.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.TransferFn.get_value_generator">
-<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b3dd36e7f18&gt;</em><a class="headerlink" href="#imagen.transferfn.TransferFn.get_value_generator" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b7014d6c940&gt;</em><a class="headerlink" href="#imagen.transferfn.TransferFn.get_value_generator" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1563,13 +1596,14 @@ associated with the input data.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.TransferFn.inspect_value">
-<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b3dd36e7f70&gt;</em><a class="headerlink" href="#imagen.transferfn.TransferFn.inspect_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b7014d6c520&gt;</em><a class="headerlink" href="#imagen.transferfn.TransferFn.inspect_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="imagen.transferfn.TransferFn.message">
 <tt class="descname">message</tt><big>(</big><em>msg</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#imagen.transferfn.TransferFn.message" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print the arguments as a message.</p>
+<dd><p>Print msg merged with args as a message.</p>
+<p>See Python&#8217;s logging module for details of message formatting.</p>
 </dd></dl>
 
 <dl class="classmethod">
@@ -1615,12 +1649,12 @@ evaluated with eval. See pprint() function for more details.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.TransferFn.set_dynamic_time_fn">
-<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b3dd36e7ba8&gt;</em><a class="headerlink" href="#imagen.transferfn.TransferFn.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b7014d6ca48&gt;</em><a class="headerlink" href="#imagen.transferfn.TransferFn.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.TransferFn.set_param">
-<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b3dd36e7a48&gt;</em><a class="headerlink" href="#imagen.transferfn.TransferFn.set_param" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b7014d6cec0&gt;</em><a class="headerlink" href="#imagen.transferfn.TransferFn.set_param" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1646,15 +1680,17 @@ something without permanently altering the objects&#8217; state.</p>
 <dl class="method">
 <dt id="imagen.transferfn.TransferFn.verbose">
 <tt class="descname">verbose</tt><big>(</big><em>msg</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#imagen.transferfn.TransferFn.verbose" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print the arguments as a verbose message.</p>
+<dd><p>Print msg merged with args as a verbose message.</p>
+<p>See Python&#8217;s logging module for details of message formatting.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="imagen.transferfn.TransferFn.warning">
 <tt class="descname">warning</tt><big>(</big><em>msg</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#imagen.transferfn.TransferFn.warning" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print the arguments as a warning, unless module variable
+<dd><p>Print msg merged with args as a warning, unless module variable
 warnings_as_exceptions is True, then raise an Exception
 containing the arguments.</p>
+<p>See Python&#8217;s logging module for details of message formatting.</p>
 </dd></dl>
 
 </dd></dl>
@@ -1714,7 +1750,7 @@ norm_value                         None                      Parameter          
 [1;34mnorm_value:     &lt; No docstring available &gt;[0m</p>
 <p><em>param Parameter</em> <tt class="docutils literal"><span class="pre">norm_value</span></tt> (<em>allow_None=True, constant=False, default=None, instantiate=False, pickle_default_value=True, precedence=None, readonly=False</em>)</p>
 <dl class="docutils">
-<dt><em>param ClassSelector</em> <tt class="docutils literal"><span class="pre">kernel_pattern</span></tt> (<em>allow_None=False, constant=False, default=&lt;Gaussian Gaussian00376&gt;, instantiate=True, is_instance=True, pickle_default_value=True, precedence=None, readonly=False</em>)</dt>
+<dt><em>param ClassSelector</em> <tt class="docutils literal"><span class="pre">kernel_pattern</span></tt> (<em>allow_None=False, constant=False, default=&lt;Gaussian Gaussian00378&gt;, instantiate=True, is_instance=True, pickle_default_value=True, precedence=None, readonly=False</em>)</dt>
 <dd>The kernel pattern used in the convolution. The default kernel
       results in an isotropic Gaussian blur.</dd>
 <dt><em>param List</em> <tt class="docutils literal"><span class="pre">init_keys</span></tt> (<em>allow_None=False, bounds=(0, None), constant=True, default=[&#8216;SCS&#8217;], instantiate=True, pickle_default_value=True, precedence=None, readonly=False</em>)</dt>
@@ -1725,7 +1761,8 @@ norm_value                         None                      Parameter          
 <dl class="method">
 <dt id="imagen.transferfn.sheet_tf.Convolve.debug">
 <tt class="descname">debug</tt><big>(</big><em>msg</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#imagen.transferfn.sheet_tf.Convolve.debug" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print the arguments as a debugging statement.</p>
+<dd><p>Print msg merged with args as a debugging statement.</p>
+<p>See Python&#8217;s logging module for details of message formatting.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1739,7 +1776,7 @@ instantiated.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.sheet_tf.Convolve.force_new_dynamic_value">
-<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b3dd41c4f18&gt;</em><a class="headerlink" href="#imagen.transferfn.sheet_tf.Convolve.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b70169818e8&gt;</em><a class="headerlink" href="#imagen.transferfn.sheet_tf.Convolve.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1753,18 +1790,19 @@ equal to the default value.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.sheet_tf.Convolve.get_value_generator">
-<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b3dd41c4fc8&gt;</em><a class="headerlink" href="#imagen.transferfn.sheet_tf.Convolve.get_value_generator" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b7016981940&gt;</em><a class="headerlink" href="#imagen.transferfn.sheet_tf.Convolve.get_value_generator" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.sheet_tf.Convolve.inspect_value">
-<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b3dd41c4f70&gt;</em><a class="headerlink" href="#imagen.transferfn.sheet_tf.Convolve.inspect_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b7016981998&gt;</em><a class="headerlink" href="#imagen.transferfn.sheet_tf.Convolve.inspect_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="imagen.transferfn.sheet_tf.Convolve.message">
 <tt class="descname">message</tt><big>(</big><em>msg</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#imagen.transferfn.sheet_tf.Convolve.message" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print the arguments as a message.</p>
+<dd><p>Print msg merged with args as a message.</p>
+<p>See Python&#8217;s logging module for details of message formatting.</p>
 </dd></dl>
 
 <dl class="classmethod">
@@ -1810,12 +1848,12 @@ evaluated with eval. See pprint() function for more details.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.sheet_tf.Convolve.set_dynamic_time_fn">
-<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b3dd3e67050&gt;</em><a class="headerlink" href="#imagen.transferfn.sheet_tf.Convolve.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b7016981890&gt;</em><a class="headerlink" href="#imagen.transferfn.sheet_tf.Convolve.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.sheet_tf.Convolve.set_param">
-<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b3dd3e67158&gt;</em><a class="headerlink" href="#imagen.transferfn.sheet_tf.Convolve.set_param" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b7016981aa0&gt;</em><a class="headerlink" href="#imagen.transferfn.sheet_tf.Convolve.set_param" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1841,15 +1879,17 @@ something without permanently altering the objects&#8217; state.</p>
 <dl class="method">
 <dt id="imagen.transferfn.sheet_tf.Convolve.verbose">
 <tt class="descname">verbose</tt><big>(</big><em>msg</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#imagen.transferfn.sheet_tf.Convolve.verbose" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print the arguments as a verbose message.</p>
+<dd><p>Print msg merged with args as a verbose message.</p>
+<p>See Python&#8217;s logging module for details of message formatting.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="imagen.transferfn.sheet_tf.Convolve.warning">
 <tt class="descname">warning</tt><big>(</big><em>msg</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#imagen.transferfn.sheet_tf.Convolve.warning" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print the arguments as a warning, unless module variable
+<dd><p>Print msg merged with args as a warning, unless module variable
 warnings_as_exceptions is True, then raise an Exception
 containing the arguments.</p>
+<p>See Python&#8217;s logging module for details of message formatting.</p>
 </dd></dl>
 
 </dd></dl>
