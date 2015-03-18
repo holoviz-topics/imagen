@@ -30,8 +30,10 @@ from param import ClassSelector
 
 # Imported here so that all PatternGenerators will be in the same package
 from .patterngenerator import Constant, PatternGenerator, ChannelGenerator
+from .patterngenerator import CompositeBase, Composite
 
-from holoviews.element import Image                      # pyflakes:ignore (API import)
+
+from holoviews.element import Image                    # pyflakes:ignore (API import)
 
 from holoviews.core import SheetCoordinateSystem       # pyflakes:ignore (API import)
 from holoviews.core import boundingregion, sheetcoords # pyflakes:ignore (API import)
@@ -532,118 +534,6 @@ class SquareGrating(PatternGenerator):
             0.5 +
             0.5*np.sin(pi*(p.duty_cycle-0.5)) +
             0.5*np.sin(p.frequency*2*pi*self.pattern_y + p.phase))
-
-
-
-class CompositeBase(PatternGenerator):
-    """
-    PatternGenerator that combines or selects from a list of other
-    PatternGenerators.
-    """
-
-    __abstract=True
-
-    generators = param.List(class_=PatternGenerator,default=[Constant(scale=0.0)],
-                            bounds=(1,None),precedence=0.97, doc="""
-        List of patterns to combine or select from. The default pattern is a blank pattern,
-        and thus should be overridden for any useful work.""")
-
-    size = param.Number(default=1.0,doc="""Scaling factor applied to all sub-patterns.""")
-
-
-
-class Composite(CompositeBase):
-    """
-    PatternGenerator that accepts a list of other PatternGenerators.
-    To create a new pattern, asks each of the PatternGenerators in the
-    list to create a pattern, then it combines the patterns to create
-    a single pattern that it returns.
-    """
-
-    # The Accum_Replace operator from LISSOM is not yet supported,
-    # but it should be added once PatternGenerator bounding boxes
-    # are respected and/or GenericImage patterns support transparency.
-    operator = param.Parameter(np.maximum,precedence=0.98,doc="""
-        Binary Numpy function used to combine the individual patterns.
-
-        Any binary Numpy array "ufunc" returning the same
-        type of array as the operands and supporting the reduce
-        operator is allowed here.  Supported ufuncs include::
-
-          add
-          subtract
-          multiply
-          divide
-          maximum
-          minimum
-          remainder
-          power
-          logical_and
-          logical_or
-          logical_xor
-
-        The most useful ones are probably add and maximum, but there
-        are uses for at least some of the others as well (e.g. to
-        remove pieces of other patterns).
-
-        You can also write your own operators, by making a class that
-        has a static method named "reduce" that returns an array of the
-        same size and type as the arrays in the list.  For example::
-
-          class return_first(object):
-              @staticmethod
-              def reduce(x):
-                  return x[0]
-
-        """)
-
-
-    def _advance_pattern_generators(self,p):
-        """
-        Subclasses can override this method to provide constraints on
-        the values of generators' parameters and/or eliminate
-        generators from this list if necessary.
-        """
-        return p.generators
-
-    def state_push(self):
-        """
-        Push the state of all generators
-        """
-        super(Composite,self).state_push()
-        for gen in self.generators:
-            gen.state_push()
-
-    def state_pop(self):
-        """
-        Pop the state of all generators
-        """
-        super(Composite,self).state_pop()
-        for gen in self.generators:
-            gen.state_pop()
-
-    # JABALERT: To support large numbers of patterns on a large input region,
-    # should be changed to evaluate each pattern in a small box, and then
-    # combine them at the full Composite Bounding box size.
-    def function(self,p):
-        """Constructs combined pattern out of the individual ones."""
-        generators = self._advance_pattern_generators(p)
-
-        assert hasattr(p.operator,'reduce'),repr(p.operator)+" does not support 'reduce'."
-
-        # CEBALERT: mask gets applied by all PGs including the Composite itself
-        # (leads to redundant calculations in current lissom_oo_or usage, but
-        # will lead to problems/limitations in the future).
-        patterns = [pg(xdensity=p.xdensity,ydensity=p.ydensity,
-                       bounds=p.bounds,mask=p.mask,
-                       x=p.x+p.size*(pg.x*np.cos(p.orientation)- pg.y*np.sin(p.orientation)),
-                       y=p.y+p.size*(pg.x*np.sin(p.orientation)+ pg.y*np.cos(p.orientation)),
-                       orientation=pg.orientation+p.orientation,
-                       size=pg.size*p.size)
-                    for pg in generators]
-        image_array = p.operator.reduce(patterns)
-        return image_array
-
 
 
 class SeparatedComposite(Composite):
