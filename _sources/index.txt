@@ -1,5 +1,3 @@
-.. image:: _static/patterntypes_small.png
-
 ******
 ImaGen
 ******
@@ -16,14 +14,6 @@ other patterns. These patterns can be used in any Python program that needs
 configurable patterns or a series of patterns, with only a small amount of
 user-level code to specify or use each pattern.
 
-Example usage
-_____________
-
-Running the following code in an IPython Notebook session generates two
-Gaussian patterns:
-
-.. notebook:: imagen index.ipynb
-
 Installation
 ============
 
@@ -36,6 +26,8 @@ and can be installed along with dependencies via `pip install imagen` or
 Alternatively, after separately installing the dependencies, ImaGen can be
 installed via `python setup.py install` (Windows users can download and run
 an exe from the preceding link).
+
+.. notebook:: imagen index.ipynb
 
 Support
 =======
