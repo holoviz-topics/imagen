@@ -81,7 +81,7 @@
 <span class="kn">import</span> <span class="nn">param</span>
 <span class="kn">from</span> <span class="nn">param.parameterized</span> <span class="kn">import</span> <span class="n">ParamOverrides</span>
 
-<span class="kn">from</span> <span class="nn">holoviews</span> <span class="kn">import</span> <span class="n">HoloMap</span><span class="p">,</span> <span class="n">Image</span><span class="p">,</span> <span class="n">Dimension</span>
+<span class="kn">from</span> <span class="nn">holoviews</span> <span class="kn">import</span> <span class="n">HoloMap</span><span class="p">,</span> <span class="n">Image</span><span class="p">,</span> <span class="n">RGB</span><span class="p">,</span> <span class="n">Dimension</span>
 <span class="kn">from</span> <span class="nn">holoviews.core</span> <span class="kn">import</span> <span class="n">BoundingBox</span><span class="p">,</span> <span class="n">BoundingRegionParameter</span><span class="p">,</span> <span class="n">SheetCoordinateSystem</span>
 <span class="kn">from</span> <span class="nn">holoviews.core.options</span> <span class="kn">import</span> <span class="n">Store</span><span class="p">,</span> <span class="n">Options</span>
 
@@ -235,12 +235,21 @@
 
 
     <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coords</span><span class="p">):</span>
-        <span class="n">arr</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dstack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">channels</span><span class="p">()</span><span class="o">.</span><span class="n">values</span><span class="p">()[</span><span class="mi">1</span><span class="p">:])</span>
-               <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_channels</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span> <span class="k">else</span> <span class="bp">self</span><span class="p">())</span>
-        <span class="k">return</span> <span class="n">Image</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bounds</span><span class="p">,</span>
-                     <span class="o">**</span><span class="nb">dict</span><span class="p">(</span><span class="n">group</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">group</span><span class="p">,</span>
-                            <span class="n">label</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
-                            <span class="o">**</span><span class="p">{</span><span class="s">&#39;value_dimensions&#39;</span><span class="p">:[</span><span class="bp">self</span><span class="o">.</span><span class="n">z</span><span class="p">]}</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="k">else</span> <span class="p">{}))[</span><span class="n">coords</span><span class="p">]</span>
+        <span class="n">value_dims</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_channels</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">raster</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">Image</span><span class="p">,</span> <span class="bp">self</span><span class="p">()</span>
+            <span class="n">value_dims</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;value_dimensions&#39;</span><span class="p">:[</span><span class="bp">self</span><span class="o">.</span><span class="n">z</span><span class="p">]}</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="k">else</span> <span class="n">value_dims</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_channels</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]:</span>
+            <span class="n">raster</span> <span class="o">=</span> <span class="n">RGB</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dstack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">channels</span><span class="p">()</span><span class="o">.</span><span class="n">values</span><span class="p">()[</span><span class="mi">1</span><span class="p">:])</span>
+
+        <span class="n">image</span> <span class="o">=</span> <span class="n">raster</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bounds</span><span class="p">,</span>
+                       <span class="o">**</span><span class="nb">dict</span><span class="p">(</span><span class="n">group</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">group</span><span class="p">,</span>
+                              <span class="n">label</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="o">**</span><span class="n">value_dims</span><span class="p">))</span>
+        <span class="c"># Works round a bug fixed shortly after HoloViews 1.0.0 release</span>
+        <span class="k">return</span> <span class="n">image</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="nb">slice</span><span class="p">)</span> <span class="k">else</span> <span class="n">image</span><span class="o">.</span><span class="n">__getitem__</span><span class="p">(</span><span class="n">coords</span><span class="p">)</span>
+
+
 
 
 <div class="viewcode-block" id="PatternGenerator.channels"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.patterngenerator.PatternGenerator.channels">[docs]</a>    <span class="k">def</span> <span class="nf">channels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">use_cached</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="o">**</span><span class="n">params_to_override</span><span class="p">):</span>
