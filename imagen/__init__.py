@@ -1472,7 +1472,7 @@ class PowerSpectrum(PatternGenerator):
             if normalisation_factor == 0:
                 amplitudes[index] = amplitudes[start_frequency]
             else:
-                amplitudes[index] = np.sum(amplitudes[start_frequency:end_frequency]) / normalisation_factor
+                amplitudes[index] = np.sum(amplitudes[int(start_frequency):int(end_frequency)]) / normalisation_factor
 
         return np.flipud(amplitudes[0:self._sheet_dimensions[0]].reshape(-1,1))
 
@@ -1525,7 +1525,7 @@ class Spectrogram(PowerSpectrum):
 
     def _shape_response(self, new_column):
 
-        millisecs_per_iteration = self.signal.seconds_per_iteration * 1000
+        millisecs_per_iteration = int(self.signal.seconds_per_iteration * 1000)
 
         if millisecs_per_iteration > self.max_latency:
             self._spectrogram[0:,0:] = new_column
@@ -1537,8 +1537,8 @@ class Spectrogram(PowerSpectrum):
         sheet_representation = np.zeros(self._sheet_dimensions)
 
         for column in range(0,self._sheet_dimensions[1]):
-            start_latency = self._latency_spacing[column]
-            end_latency = self._latency_spacing[column+1]
+            start_latency = int(self._latency_spacing[column])
+            end_latency = int(self._latency_spacing[column+1])
 
             normalisation_factor = end_latency - start_latency
             if normalisation_factor > 1:
