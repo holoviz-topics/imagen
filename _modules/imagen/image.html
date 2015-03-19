@@ -446,9 +446,11 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    2D Image generator that reads the image from a file.</span>
 
-<span class="sd">    The image at the supplied filename is converted to grayscale if it</span>
-<span class="sd">    is not already a grayscale image. See Image&#39;s Image class for</span>
-<span class="sd">    details of supported image file formats.</span>
+<span class="sd">    Grayscale versions of the image are always available, converted</span>
+<span class="sd">    from the color version if necessary.  For color images,</span>
+<span class="sd">    three-channel color values are available through the channels()</span>
+<span class="sd">    method. See Image&#39;s Image class for details of supported image</span>
+<span class="sd">    file formats.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">filename</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Filename</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s">&#39;images/ellen_arthur.pgm&#39;</span><span class="p">,</span> <span class="n">precedence</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>

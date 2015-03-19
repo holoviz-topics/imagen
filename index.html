@@ -79,12 +79,64 @@ Gaussian patterns:</p>
 Notebook conversion failed with the following traceback: 
 Cell raised uncaught exception: 
 [1;31m---------------------------------------------------------------------------[0m
-[1;31mNameError[0m                                 Traceback (most recent call last)
-[1;32m<ipython-input-1-87535b52bb97>[0m in [0;36m<module>[1;34m()[0m
-[1;32m----> 1[1;33m [0mgaussian[0m[1;33m=[0m[0mimagen[0m[1;33m.[0m[0mGaussian[0m[1;33m([0m[0mxdensity[0m[1;33m=[0m[1;36m60[0m[1;33m,[0m[0mydensity[0m[1;33m=[0m[1;36m60[0m[1;33m,[0m[0msize[0m[1;33m=[0m[1;36m0.3[0m[1;33m,[0m[0maspect_ratio[0m[1;33m=[0m[1;36m1.0[0m[1;33m)[0m[1;33m[[0m[1;33m:[0m[1;33m][0m[1;33m[0m[0m
-[0m[0;32m      2[0m [0mgaussian[0m[1;33m[0m[0m
+[1;31mIOError[0m                                   Traceback (most recent call last)
+[1;32m<ipython-input-11-2b70506eb629>[0m in [0;36m<module>[1;34m()[0m
+[0;32m      1[0m [1;32mfrom[0m [0mimagen[0m[1;33m.[0m[0mimage[0m [1;32mimport[0m [0mFileImage[0m[1;33m[0m[0m
+[1;32m----> 2[1;33m [0mimage[0m [1;33m=[0m [0mFileImage[0m[1;33m([0m[0msize[0m[1;33m=[0m[1;36m0.5[0m[1;33m,[0m [0morientation[0m[1;33m=[0m[0mng[0m[1;33m.[0m[0mScaledTime[0m[1;33m([0m[1;33m)[0m[1;33m*[0m[0mnp[0m[1;33m.[0m[0mpi[0m[1;33m/[0m[1;36m20[0m[1;33m)[0m[1;33m[0m[0m
+[0m[0;32m      3[0m [1;33m[0m[0m
+[0;32m      4[0m [0mline[0m [1;33m=[0m [0mig[0m[1;33m.[0m[0mLine[0m[1;33m([0m[0my[0m[1;33m=[0m[1;36m0.5[0m[1;33m-[0m[0mng[0m[1;33m.[0m[0mScaledTime[0m[1;33m([0m[1;33m)[0m[1;33m*[0m[1;36m0.05[0m[1;33m)[0m[1;33m[0m[0m
+[0;32m      5[0m [0mdisk[0m [1;33m=[0m [0mig[0m[1;33m.[0m[0mDisk[0m[1;33m([0m[0msmoothing[0m[1;33m=[0m[1;36m0.01[0m[1;33m,[0m [0msize[0m[1;33m=[0m[1;36m0.8[0m[1;33m)[0m[1;33m[0m[0m
 
-[1;31mNameError[0m: name 'imagen' is not defined<div class="section" id="installation">
+[1;32m/var/lib/buildbot/slaves/imagen_docs/build/imagen/image.pyc[0m in [0;36m__init__[1;34m(self, **params)[0m
+[0;32m    399[0m         [0mself[0m[1;33m.[0m[0mlast_filename[0m [1;33m=[0m [0mNone[0m  [1;31m# Cached to avoid unnecessary reloading for each channel[0m[1;33m[0m[0m
+[0;32m    400[0m         [0mself[0m[1;33m.[0m[0m_cached_average[0m [1;33m=[0m [0mNone[0m[1;33m[0m[0m
+[1;32m--> 401[1;33m         [0msuper[0m[1;33m([0m[0mFileImage[0m[1;33m,[0m[0mself[0m[1;33m)[0m[1;33m.[0m[0m__init__[0m[1;33m([0m[1;33m**[0m[0mparams[0m[1;33m)[0m [1;31m## must be called after setting the class-attributes[0m[1;33m[0m[0m
+[0m[0;32m    402[0m         [0mself[0m[1;33m.[0m[0m_image[0m [1;33m=[0m [0mNone[0m [1;31m# necessary to ensure reloading of data (due to cache mechanisms[0m[1;33m[0m[0m
+[0;32m    403[0m                            [1;31m# call after super.__init__, which calls _get_image()[0m[1;33m[0m[1;33m[0m[0m
+
+[1;32m/var/lib/buildbot/slaves/imagen_docs/build/imagen/image.pyc[0m in [0;36m__init__[1;34m(self, **params)[0m
+[0;32m    296[0m         [0mself[0m[1;33m.[0m[0m_image[0m [1;33m=[0m [0mNone[0m[1;33m[0m[0m
+[0;32m    297[0m         [0msuper[0m[1;33m([0m[0mGenericImage[0m[1;33m,[0m [0mself[0m[1;33m)[0m[1;33m.[0m[0m__init__[0m[1;33m([0m[1;33m**[0m[0mparams[0m[1;33m)[0m[1;33m[0m[0m
+[1;32m--> 298[1;33m         [0mself[0m[1;33m.[0m[0m_get_image[0m[1;33m([0m[0mself[0m[1;33m)[0m[1;33m[0m[0m
+[0m[0;32m    299[0m [1;33m[0m[0m
+[0;32m    300[0m [1;33m[0m[0m
+
+[1;32m/var/lib/buildbot/slaves/imagen_docs/build/imagen/image.pyc[0m in [0;36m_get_image[1;34m(self, p)[0m
+[0;32m    433[0m [1;33m[0m[0m
+[0;32m    434[0m     [1;32mdef[0m [0m_get_image[0m[1;33m([0m[0mself[0m[1;33m,[0m[0mp[0m[1;33m)[0m[1;33m:[0m[1;33m[0m[0m
+[1;32m--> 435[1;33m         [0mfile_[0m[1;33m,[0m [0mext[0m [1;33m=[0m [0msplitext[0m[1;33m([0m[0mp[0m[1;33m.[0m[0mfilename[0m[1;33m)[0m[1;33m[0m[0m
+[0m[0;32m    436[0m         [0mnpy[0m [1;33m=[0m [1;33m([0m[0mext[0m[1;33m.[0m[0mlower[0m[1;33m([0m[1;33m)[0m [1;33m==[0m [1;34m".npy"[0m[1;33m)[0m[1;33m[0m[0m
+[0;32m    437[0m         [0mreload_image[0m [1;33m=[0m [1;33m([0m[0mp[0m[1;33m.[0m[0mfilename[0m[1;33m!=[0m[0mself[0m[1;33m.[0m[0mlast_filename[0m [1;32mor[0m [0mself[0m[1;33m.[0m[0m_image[0m [1;32mis[0m [0mNone[0m[1;33m)[0m[1;33m[0m[0m
+
+[1;32m/var/lib/buildbot/slaves/imagen_docs/build/param/param/__init__.pyc[0m in [0;36m__get__[1;34m(self, obj, objtype)[0m
+[0;32m   1289[0m         """
+[0;32m   1290[0m         [0mraw_path[0m [1;33m=[0m [0msuper[0m[1;33m([0m[0mPath[0m[1;33m,[0m[0mself[0m[1;33m)[0m[1;33m.[0m[0m__get__[0m[1;33m([0m[0mobj[0m[1;33m,[0m[0mobjtype[0m[1;33m)[0m[1;33m[0m[0m
+[1;32m-> 1291[1;33m         [1;32mreturn[0m [0mNone[0m [1;32mif[0m [0mraw_path[0m [1;32mis[0m [0mNone[0m [1;32melse[0m [0mself[0m[1;33m.[0m[0m_resolve[0m[1;33m([0m[0mraw_path[0m[1;33m)[0m[1;33m[0m[0m
+[0m[0;32m   1292[0m [1;33m[0m[0m
+[0;32m   1293[0m     [1;32mdef[0m [0m__getstate__[0m[1;33m([0m[0mself[0m[1;33m)[0m[1;33m:[0m[1;33m[0m[0m
+
+[1;32m/var/lib/buildbot/slaves/imagen_docs/build/param/param/__init__.pyc[0m in [0;36m_resolve[1;34m(self, path)[0m
+[0;32m   1323[0m             [1;32mreturn[0m [0mresolve_path[0m[1;33m([0m[0mpath[0m[1;33m,[0m [0mpath_to_file[0m[1;33m=[0m[0mTrue[0m[1;33m,[0m [0msearch_paths[0m[1;33m=[0m[0mself[0m[1;33m.[0m[0msearch_paths[0m[1;33m)[0m[1;33m[0m[0m
+[0;32m   1324[0m         [1;32melse[0m[1;33m:[0m[1;33m[0m[0m
+[1;32m-> 1325[1;33m             [1;32mreturn[0m [0mresolve_path[0m[1;33m([0m[0mpath[0m[1;33m,[0m [0mpath_to_file[0m[1;33m=[0m[0mTrue[0m[1;33m)[0m[1;33m[0m[0m
+[0m[0;32m   1326[0m [1;33m[0m[0m
+[0;32m   1327[0m [1;33m[0m[0m
+
+[1;32m/var/lib/buildbot/slaves/imagen_docs/build/param/param/parameterized.pyc[0m in [0;36m__new__[1;34m(class_, *args, **params)[0m
+[0;32m   1844[0m         [0minst[0m [1;33m=[0m [0mclass_[0m[1;33m.[0m[0minstance[0m[1;33m([0m[1;33m)[0m[1;33m[0m[0m
+[0;32m   1845[0m         [0minst[0m[1;33m.[0m[0m_set_name[0m[1;33m([0m[0mclass_[0m[1;33m.[0m[0m__name__[0m[1;33m)[0m[1;33m[0m[0m
+[1;32m-> 1846[1;33m         [1;32mreturn[0m [0minst[0m[1;33m.[0m[0m__call__[0m[1;33m([0m[1;33m*[0m[0margs[0m[1;33m,[0m[1;33m**[0m[0mparams[0m[1;33m)[0m[1;33m[0m[0m
+[0m[0;32m   1847[0m [1;33m[0m[0m
+[0;32m   1848[0m     [1;32mdef[0m [0m__call__[0m[1;33m([0m[0mself[0m[1;33m,[0m[1;33m*[0m[0margs[0m[1;33m,[0m[1;33m**[0m[0mkw[0m[1;33m)[0m[1;33m:[0m[1;33m[0m[0m
+
+[1;32m/var/lib/buildbot/slaves/imagen_docs/build/param/param/__init__.pyc[0m in [0;36m__call__[1;34m(self, path, **params)[0m
+[0;32m   1206[0m                 [0mpaths_tried[0m[1;33m.[0m[0mappend[0m[1;33m([0m[0mtry_path[0m[1;33m)[0m[1;33m[0m[0m
+[0;32m   1207[0m [1;33m[0m[0m
+[1;32m-> 1208[1;33m             [1;32mraise[0m [0mIOError[0m[1;33m([0m[0mos[0m[1;33m.[0m[0mpath[0m[1;33m.[0m[0msplit[0m[1;33m([0m[0mpath[0m[1;33m)[0m[1;33m[[0m[1;36m1[0m[1;33m][0m [1;33m+[0m [1;34m" was not found in the following place(s): "[0m [1;33m+[0m [0mstr[0m[1;33m([0m[0mpaths_tried[0m[1;33m)[0m [1;33m+[0m [1;34m"."[0m[1;33m)[0m[1;33m[0m[0m
+[0m[0;32m   1209[0m [1;33m[0m[0m
+[0;32m   1210[0m [1;33m[0m[0m
+
+[1;31mIOError[0m: ellen_arthur.pgm was not found in the following place(s): ['/var/lib/buildbot/slaves/imagen_docs/build/doc/images/ellen_arthur.pgm'].<div class="section" id="installation">
 <h3>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h3>
 <p>ImaGen requires NumPy (<a class="reference external" href="http://numpy.scipy.org/">http://numpy.scipy.org/</a>) and Param (<a class="reference external" href="http://ioam.github.com/param/">http://ioam.github.com/param/</a>).</p>
 <p>Official releases of ImaGen are available at <a class="reference external" href="http://pypi.python.org/pypi/imagen">http://pypi.python.org/pypi/imagen</a>,
