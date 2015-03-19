@@ -170,7 +170,7 @@ class PatternGenerator(param.Parameterized):
 
     def __getitem__(self, coords):
         value_dims = {}
-        if self.num_channels() == 1:
+        if self.num_channels() in [0, 1]:
             raster, data = Image, self()
             value_dims = {'value_dimensions':[self.z]} if self.z else value_dims
         elif self.num_channels() in [3,4]:
