@@ -1,0 +1,5 @@
+<map id="inheritance900f2051f2" name="inheritance900f2051f2">
+<area shape="rect" id="node1" href="#imagen.colorspaces.ColorConverter" title="High&#45;level color conversion class designed to support color space" alt="" coords="312,5,563,30"/>
+<area shape="rect" id="node2" title="params(name=String)" alt="" coords="5,30,264,55"/>
+<area shape="rect" id="node3" href="#imagen.colorspaces.ColorSpace" title="Low&#45;level color conversion. The &#39;convert&#39; method handles color" alt="" coords="324,54,551,79"/>
+</map>

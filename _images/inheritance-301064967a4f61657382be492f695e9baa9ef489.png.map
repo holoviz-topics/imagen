@@ -1,0 +1,17 @@
+<map id="inheritanceb299c4dd19" name="inheritanceb299c4dd19">
+<area shape="rect" id="node1" href="#imagen.patterngenerator.Composite" title="PatternGenerator that accepts a list of other PatternGenerators." alt="" coords="727,164,914,183"/>
+<area shape="rect" id="node8" href="#imagen.random.GaussianCloud" title="Uniform random noise masked by a circular Gaussian." alt="" coords="967,220,1130,238"/>
+<area shape="rect" id="node2" href="#imagen.patterngenerator.CompositeBase" title="PatternGenerator that combines or selects from a list of other" alt="" coords="481,147,692,165"/>
+<area shape="rect" id="node3" href="#imagen.patterngenerator.PatternGenerator" title="A class hierarchy for callable objects that can generate 2D patterns." alt="" coords="228,128,446,147"/>
+<area shape="rect" id="node6" href="#imagen.random.RandomGenerator" title="2D random noise pattern generator abstract class." alt="" coords="730,111,911,129"/>
+<area shape="rect" id="node11" href="#imagen.random.RandomDotStereogram" title="Random dot stereogram using rectangular black and white patches." alt="" coords="484,73,690,91"/>
+<area shape="rect" id="node4" title="params(name=String)" alt="" coords="4,165,193,184"/>
+<area shape="rect" id="node9" title="Class of objects that have access to a global time function" alt="" coords="275,183,399,201"/>
+<area shape="rect" id="node5" href="#imagen.random.BinaryUniformRandom" title="2D binary uniform random noise pattern generator." alt="" coords="949,39,1148,58"/>
+<area shape="rect" id="node7" href="#imagen.random.DenseNoise" title="2D Dense noise pattern generator, constrained to a grid." alt="" coords="974,76,1124,94"/>
+<area shape="rect" id="node10" href="#imagen.random.GaussianRandom" title="2D Gaussian random noise pattern generator." alt="" coords="961,112,1136,130"/>
+<area shape="rect" id="node13" href="#imagen.random.SparseNoise" title="2D sparse noise pattern generator, with optional constraining to a grid." alt="" coords="972,148,1125,166"/>
+<area shape="rect" id="node14" href="#imagen.random.UniformRandom" title="2D uniform random noise pattern generator." alt="" coords="964,184,1133,202"/>
+<area shape="rect" id="node15" href="#imagen.random.UniformRandomInt" title="2D distribution of integer values from low to high in the in the" alt="" coords="958,3,1139,22"/>
+<area shape="rect" id="node12" title="Generic base class to enable time&#45;dependent random" alt="" coords="493,183,681,201"/>
+</map>

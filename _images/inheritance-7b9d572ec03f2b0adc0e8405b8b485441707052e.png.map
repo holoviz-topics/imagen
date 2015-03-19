@@ -1,0 +1,14 @@
+<map id="inheritanced74a500e8c" name="inheritanced74a500e8c">
+<area shape="rect" id="node1" href="#imagen.image.FastImageSampler" title="A fast&#45;n&#45;dirty image sampler using Python Imaging Library" alt="" coords="475,3,638,20"/>
+<area shape="rect" id="node2" href="#imagen.image.ImageSampler" title="A class of objects that, when called, sample an image." alt="" coords="244,37,389,54"/>
+<area shape="rect" id="node8" href="#imagen.image.PatternSampler" title="When called, resamples &#45; according to the size_normalization" alt="" coords="482,37,632,54"/>
+<area shape="rect" id="node3" href="#imagen.image.FileImage" title="2D Image generator that reads the image from a file." alt="" coords="868,138,990,155"/>
+<area shape="rect" id="node7" href="#imagen.image.NumpyFile" title="For backwards compatibility." alt="" coords="1023,138,1148,155"/>
+<area shape="rect" id="node4" href="#imagen.image.GenericImage" title="Generic 2D image generator with support for multiple channels." alt="" coords="694,138,835,155"/>
+<area shape="rect" id="node5" href="#imagen.patterngenerator.ChannelGenerator" title="Abstract base class for patterns supporting multiple channels natively." alt="" coords="453,138,661,155"/>
+<area shape="rect" id="node6" title="params(name=String)" alt="" coords="4,80,180,97"/>
+<area shape="rect" id="node10" href="#imagen.patterngenerator.ChannelTransform" title="A ChannelTransform is a callable object that takes channels as" alt="" coords="213,80,420,97"/>
+<area shape="rect" id="node12" href="#imagen.patterngenerator.PatternGenerator" title="A class hierarchy for callable objects that can generate 2D patterns." alt="" coords="215,130,419,147"/>
+<area shape="rect" id="node9" href="#imagen.image.RotateHue" title="Rotate the hue of an Image PatternGenerator." alt="" coords="494,71,620,88"/>
+<area shape="rect" id="node11" href="#imagen.image.ScaleChannels" title="Scale each channel of an Image PatternGenerator by a different" alt="" coords="485,104,629,121"/>
+</map>

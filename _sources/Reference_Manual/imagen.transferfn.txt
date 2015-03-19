@@ -1,6 +1,9 @@
 imagen.transferfn Package
 =========================
 
+
+---------
+
 :mod:`transferfn` Package
 -------------------------
 
@@ -12,6 +15,8 @@ imagen.transferfn Package
     :inherited-members:
     :show-inheritance:
 
+-------
+
 :mod:`sheet_tf` Module
 ----------------------
 
@@ -22,4 +27,6 @@ imagen.transferfn Package
     :members:
     :inherited-members:
     :show-inheritance:
+
+-------
 

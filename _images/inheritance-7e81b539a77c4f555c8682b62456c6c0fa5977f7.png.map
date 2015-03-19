@@ -1,0 +1,12 @@
+<map id="inheritancea9586fb404" name="inheritancea9586fb404">
+<area shape="rect" id="node1" href="#imagen.transferfn.BinaryThreshold" title="Forces all values below a threshold to zero, and above it to 1.0." alt="" coords="581,5,824,30"/>
+<area shape="rect" id="node2" href="#imagen.transferfn.TransferFn" title="Function object to modify a matrix in place, e.g. for normalization." alt="" coords="312,178,517,203"/>
+<area shape="rect" id="node3" href="#imagen.transferfn.DivisiveNormalizeL1" title="TransferFn that divides an array by its L1 norm." alt="" coords="569,54,837,79"/>
+<area shape="rect" id="node4" href="#imagen.transferfn.DivisiveNormalizeL2" title="TransferFn to divide an array by its Euclidean length (aka its L2 norm)." alt="" coords="569,103,837,129"/>
+<area shape="rect" id="node5" href="#imagen.transferfn.DivisiveNormalizeLinf" title="TransferFn to divide an array by its L&#45;infinity norm" alt="" coords="565,153,840,178"/>
+<area shape="rect" id="node6" href="#imagen.transferfn.DivisiveNormalizeLp" title="TransferFn to divide an array by its Lp&#45;Norm, where p is specified." alt="" coords="569,202,837,227"/>
+<area shape="rect" id="node7" href="#imagen.transferfn.IdentityTF" title="Identity function, returning its argument as&#45;is." alt="" coords="602,251,803,277"/>
+<area shape="rect" id="node8" href="#imagen.transferfn.Scale" title="Multiply the input array by some constant factor." alt="" coords="615,301,790,326"/>
+<area shape="rect" id="node9" href="#imagen.transferfn.Threshold" title="Forces all values below a threshold to zero, and leaves others unchanged." alt="" coords="601,350,804,375"/>
+<area shape="rect" id="node10" title="params(name=String)" alt="" coords="5,178,264,203"/>
+</map>

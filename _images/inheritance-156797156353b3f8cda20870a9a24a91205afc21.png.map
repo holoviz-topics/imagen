@@ -1,0 +1,5 @@
+<map id="inheritanced7d49f6d9a" name="inheritanced7d49f6d9a">
+<area shape="rect" id="node1" href="#imagen.transferfn.TransferFn" title="Function object to modify a matrix in place, e.g. for normalization." alt="" coords="312,5,517,30"/>
+<area shape="rect" id="node3" href="#imagen.transferfn.sheet_tf.Convolve" title="Transfer function that convolves the array data with the supplied" alt="" coords="565,5,819,30"/>
+<area shape="rect" id="node2" title="params(name=String)" alt="" coords="5,5,264,30"/>
+</map>

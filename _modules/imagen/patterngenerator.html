@@ -412,6 +412,7 @@
 <span class="n">PatternGenerator</span><span class="o">.</span><span class="n">params</span><span class="p">(</span><span class="s">&#39;mask_shape&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">class_</span><span class="o">=</span><span class="n">PatternGenerator</span>
 
 
+
 <span class="c"># Trivial example of a PatternGenerator, provided for when a default is</span>
 <span class="c"># needed.  The other concrete PatternGenerator classes are stored</span>
 <span class="c"># elsewhere, to be imported as needed.</span>
@@ -440,6 +441,117 @@
 
 
 </div>
+<div class="viewcode-block" id="CompositeBase"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.patterngenerator.CompositeBase">[docs]</a><span class="k">class</span> <span class="nc">CompositeBase</span><span class="p">(</span><span class="n">PatternGenerator</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    PatternGenerator that combines or selects from a list of other</span>
+<span class="sd">    PatternGenerators.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">__abstract</span><span class="o">=</span><span class="bp">True</span>
+
+    <span class="n">generators</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">class_</span><span class="o">=</span><span class="n">PatternGenerator</span><span class="p">,</span><span class="n">default</span><span class="o">=</span><span class="p">[</span><span class="n">Constant</span><span class="p">(</span><span class="n">scale</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)],</span>
+                            <span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span><span class="n">precedence</span><span class="o">=</span><span class="mf">0.97</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">        List of patterns to combine or select from. The default pattern is a blank pattern,</span>
+<span class="s">        and thus should be overridden for any useful work.&quot;&quot;&quot;</span><span class="p">)</span>
+
+    <span class="n">size</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;Scaling factor applied to all sub-patterns.&quot;&quot;&quot;</span><span class="p">)</span>
+
+
+</div>
+<div class="viewcode-block" id="Composite"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.patterngenerator.Composite">[docs]</a><span class="k">class</span> <span class="nc">Composite</span><span class="p">(</span><span class="n">CompositeBase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    PatternGenerator that accepts a list of other PatternGenerators.</span>
+<span class="sd">    To create a new pattern, asks each of the PatternGenerators in the</span>
+<span class="sd">    list to create a pattern, then it combines the patterns to create</span>
+<span class="sd">    a single pattern that it returns.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c"># The Accum_Replace operator from LISSOM is not yet supported,</span>
+    <span class="c"># but it should be added once PatternGenerator bounding boxes</span>
+    <span class="c"># are respected and/or GenericImage patterns support transparency.</span>
+    <span class="n">operator</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">,</span><span class="n">precedence</span><span class="o">=</span><span class="mf">0.98</span><span class="p">,</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">        Binary Numpy function used to combine the individual patterns.</span>
+
+<span class="s">        Any binary Numpy array &quot;ufunc&quot; returning the same</span>
+<span class="s">        type of array as the operands and supporting the reduce</span>
+<span class="s">        operator is allowed here.  Supported ufuncs include::</span>
+
+<span class="s">          add</span>
+<span class="s">          subtract</span>
+<span class="s">          multiply</span>
+<span class="s">          divide</span>
+<span class="s">          maximum</span>
+<span class="s">          minimum</span>
+<span class="s">          remainder</span>
+<span class="s">          power</span>
+<span class="s">          logical_and</span>
+<span class="s">          logical_or</span>
+<span class="s">          logical_xor</span>
+
+<span class="s">        The most useful ones are probably add and maximum, but there</span>
+<span class="s">        are uses for at least some of the others as well (e.g. to</span>
+<span class="s">        remove pieces of other patterns).</span>
+
+<span class="s">        You can also write your own operators, by making a class that</span>
+<span class="s">        has a static method named &quot;reduce&quot; that returns an array of the</span>
+<span class="s">        same size and type as the arrays in the list.  For example::</span>
+
+<span class="s">          class return_first(object):</span>
+<span class="s">              @staticmethod</span>
+<span class="s">              def reduce(x):</span>
+<span class="s">                  return x[0]</span>
+
+<span class="s">        &quot;&quot;&quot;</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">_advance_pattern_generators</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Subclasses can override this method to provide constraints on</span>
+<span class="sd">        the values of generators&#39; parameters and/or eliminate</span>
+<span class="sd">        generators from this list if necessary.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">p</span><span class="o">.</span><span class="n">generators</span>
+
+<div class="viewcode-block" id="Composite.state_push"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.patterngenerator.Composite.state_push">[docs]</a>    <span class="k">def</span> <span class="nf">state_push</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Push the state of all generators</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Composite</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">state_push</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">gen</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">generators</span><span class="p">:</span>
+            <span class="n">gen</span><span class="o">.</span><span class="n">state_push</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="Composite.state_pop"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.patterngenerator.Composite.state_pop">[docs]</a>    <span class="k">def</span> <span class="nf">state_pop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Pop the state of all generators</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Composite</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">state_pop</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">gen</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">generators</span><span class="p">:</span>
+            <span class="n">gen</span><span class="o">.</span><span class="n">state_pop</span><span class="p">()</span>
+
+    <span class="c"># JABALERT: To support large numbers of patterns on a large input region,</span>
+    <span class="c"># should be changed to evaluate each pattern in a small box, and then</span>
+    <span class="c"># combine them at the full Composite Bounding box size.</span></div>
+<div class="viewcode-block" id="Composite.function"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.patterngenerator.Composite.function">[docs]</a>    <span class="k">def</span> <span class="nf">function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Constructs combined pattern out of the individual ones.&quot;&quot;&quot;</span>
+        <span class="n">generators</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_advance_pattern_generators</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+
+        <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">operator</span><span class="p">,</span><span class="s">&#39;reduce&#39;</span><span class="p">),</span><span class="nb">repr</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">operator</span><span class="p">)</span><span class="o">+</span><span class="s">&quot; does not support &#39;reduce&#39;.&quot;</span>
+
+        <span class="c"># CEBALERT: mask gets applied by all PGs including the Composite itself</span>
+        <span class="c"># (leads to redundant calculations in current lissom_oo_or usage, but</span>
+        <span class="c"># will lead to problems/limitations in the future).</span>
+        <span class="n">patterns</span> <span class="o">=</span> <span class="p">[</span><span class="n">pg</span><span class="p">(</span><span class="n">xdensity</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">xdensity</span><span class="p">,</span><span class="n">ydensity</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">ydensity</span><span class="p">,</span>
+                       <span class="n">bounds</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">bounds</span><span class="p">,</span><span class="n">mask</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">mask</span><span class="p">,</span>
+                       <span class="n">x</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">x</span><span class="o">+</span><span class="n">p</span><span class="o">.</span><span class="n">size</span><span class="o">*</span><span class="p">(</span><span class="n">pg</span><span class="o">.</span><span class="n">x</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">orientation</span><span class="p">)</span><span class="o">-</span> <span class="n">pg</span><span class="o">.</span><span class="n">y</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">orientation</span><span class="p">)),</span>
+                       <span class="n">y</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">y</span><span class="o">+</span><span class="n">p</span><span class="o">.</span><span class="n">size</span><span class="o">*</span><span class="p">(</span><span class="n">pg</span><span class="o">.</span><span class="n">x</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">orientation</span><span class="p">)</span><span class="o">+</span> <span class="n">pg</span><span class="o">.</span><span class="n">y</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">orientation</span><span class="p">)),</span>
+                       <span class="n">orientation</span><span class="o">=</span><span class="n">pg</span><span class="o">.</span><span class="n">orientation</span><span class="o">+</span><span class="n">p</span><span class="o">.</span><span class="n">orientation</span><span class="p">,</span>
+                       <span class="n">size</span><span class="o">=</span><span class="n">pg</span><span class="o">.</span><span class="n">size</span><span class="o">*</span><span class="n">p</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">pg</span> <span class="ow">in</span> <span class="n">generators</span><span class="p">]</span>
+        <span class="n">image_array</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">operator</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="n">patterns</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">image_array</span>
+
+
+</div></div>
 <div class="viewcode-block" id="ChannelTransform"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.patterngenerator.ChannelTransform">[docs]</a><span class="k">class</span> <span class="nc">ChannelTransform</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">Parameterized</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A ChannelTransform is a callable object that takes channels as</span>
