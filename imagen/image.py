@@ -380,9 +380,11 @@ class FileImage(GenericImage):
     """
     2D Image generator that reads the image from a file.
 
-    The image at the supplied filename is converted to grayscale if it
-    is not already a grayscale image. See Image's Image class for
-    details of supported image file formats.
+    Grayscale versions of the image are always available, converted
+    from the color version if necessary.  For color images,
+    three-channel color values are available through the channels()
+    method. See Image's Image class for details of supported image
+    file formats.
     """
 
     filename = param.Filename(default='images/ellen_arthur.pgm', precedence=0.9,doc="""
