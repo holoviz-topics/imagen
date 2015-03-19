@@ -643,6 +643,3 @@ class ComposeChannels(ChannelGenerator):
             self._channel_data = c(self._channel_data)
 
         return sum(act for act in self._channel_data)/len(self._channel_data)
-
-
-Store.options.Image.Pattern = Options('style', cmap='gray')
