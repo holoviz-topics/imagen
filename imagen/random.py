@@ -254,13 +254,13 @@ class RandomDotStereogram(PatternGenerator):
         # Choose random colors and locations of square dots
         random_seed = p.random_seed
 
-        np.random.seed(random_seed*12,random_seed*99)
+        np.random.seed(random_seed*12+random_seed*99)
         col=np.where(np.random.random((ndots))>=0.5, 1.0, -1.0)
 
-        np.random.seed(random_seed*122,random_seed*799)
+        np.random.seed(random_seed*122+random_seed*799)
         xpos=np.floor(np.random.random((ndots))*(bigxsize+2*dotsize)) - halfdot
 
-        np.random.seed(random_seed*1243,random_seed*9349)
+        np.random.seed(random_seed*1243+random_seed*9349)
         ypos=np.floor(np.random.random((ndots))*(bigysize+2*dotsize)) - halfdot
 
         # Construct arrays of points specifying the boundaries of each
