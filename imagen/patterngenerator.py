@@ -15,7 +15,7 @@ import collections
 import param
 from param.parameterized import ParamOverrides
 
-from holoviews import HoloMap, Image, Dimension
+from holoviews import HoloMap, Image, RGB, Dimension
 from holoviews.core import BoundingBox, BoundingRegionParameter, SheetCoordinateSystem
 from holoviews.core.options import Store, Options
 
@@ -169,12 +169,21 @@ class PatternGenerator(param.Parameterized):
 
 
     def __getitem__(self, coords):
-        arr = (np.dstack(self.channels().values()[1:])
-               if self.num_channels() in [3,4] else self())
-        return Image(arr, self.bounds,
-                     **dict(group=self.group,
-                            label=self.__class__.__name__,
-                            **{'value_dimensions':[self.z]} if self.z else {}))[coords]
+        value_dims = {}
+        if self.num_channels() == 1:
+            raster, data = Image, self()
+            value_dims = {'value_dimensions':[self.z]} if self.z else value_dims
+        elif self.num_channels() in [3,4]:
+            raster = RGB
+            data = np.dstack(self.channels().values()[1:])
+
+        image = raster(data, bounds=self.bounds,
+                       **dict(group=self.group,
+                              label=self.__class__.__name__, **value_dims))
+        # Works round a bug fixed shortly after HoloViews 1.0.0 release
+        return image if isinstance(coords, slice) else image.__getitem__(coords)
+
+
 
 
     def channels(self, use_cached=False, **params_to_override):
