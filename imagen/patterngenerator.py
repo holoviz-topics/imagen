@@ -341,6 +341,48 @@ class PatternGenerator(param.Parameterized):
         self.state_pop()
         return vmap
 
+    ## Support for compositional expressions of PatternGenerator objects
+    def _promote(self,other):
+        if not isinstance(other,PatternGenerator):
+            other = Constant(scale=other,offset=0)
+        return [self,other]
+
+    def _rpromote(self,other):
+        if not isinstance(other,PatternGenerator):
+            other = Constant(scale=other,offset=0)
+        return [other,self]
+
+    # Could define any of Python's operators here, esp. if they have operator or ufunc equivalents
+    def __add__  (self,other): return Composite(generators=self._promote(other),operator=np.add)
+    def __sub__  (self,other): return Composite(generators=self._promote(other),operator=np.subtract)
+    def __mul__  (self,other): return Composite(generators=self._promote(other),operator=np.multiply)
+    def __mod__  (self,other): return Composite(generators=self._promote(other),operator=np.mod)
+    def __pow__  (self,other): return Composite(generators=self._promote(other),operator=np.power)
+    def __div__  (self,other): return Composite(generators=self._promote(other),operator=np.divide)
+    def __and__  (self,other): return Composite(generators=self._promote(other),operator=np.minimum)
+    def __or__   (self,other): return Composite(generators=self._promote(other),operator=np.maximum)
+
+
+    def __radd__ (self,other): return Composite(generators=self._rpromote(other),operator=np.add)
+    def __rsub__ (self,other): return Composite(generators=self._rpromote(other),operator=np.subtract)
+    def __rmul__ (self,other): return Composite(generators=self._rpromote(other),operator=np.multiply)
+    def __rmod__ (self,other): return Composite(generators=self._rpromote(other),operator=np.mod)
+    def __rpow__ (self,other): return Composite(generators=self._rpromote(other),operator=np.power)
+    def __rdiv__ (self,other): return Composite(generators=self._rpromote(other),operator=np.divide)
+    def __rand__ (self,other): return Composite(generators=self._rpromote(other),operator=np.minimum)
+    def __ror__  (self,other): return Composite(generators=self._rpromote(other),operator=np.maximum)
+
+
+    def __neg__ (self): return Composite(generators=[Constant(scale=0),self],operator=np.subtract)
+
+    class abs_first(object):
+        @staticmethod
+        def reduce(x): return np.abs(x[0])
+
+    def __abs__ (self): return Composite(generators=[self],operator=self.abs_first)
+
+
+
 # Override class type; must be set here rather than when mask_shape is declared,
 # to avoid referring to class not yet constructed
 PatternGenerator.params('mask_shape').class_=PatternGenerator
@@ -418,9 +460,6 @@ class Composite(CompositeBase):
           minimum
           remainder
           power
-          logical_and
-          logical_or
-          logical_xor
 
         The most useful ones are probably add and maximum, but there
         are uses for at least some of the others as well (e.g. to
