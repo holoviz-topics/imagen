@@ -5,29 +5,24 @@ ImaGen
 .. toctree::
    :maxdepth: 2
 
-The ImaGen package provides comprehensive support for creating
-resolution-independent one and two-dimensional spatial pattern
-distributions. ImaGen consists of a large library of primarily
-two-dimensional patterns, including mathematical functions, geometric
-primitives, images read from files, and many ways to combine or select from any
-other patterns. These patterns can be used in any Python program that needs
-configurable patterns or a series of patterns, with only a small amount of
-user-level code to specify or use each pattern.
+.. notebook:: imagen index.ipynb
 
 Installation
 ============
 
-ImaGen requires NumPy (http://numpy.scipy.org/) and Param (http://ioam.github.com/param/).
+ImaGen requires NumPy (http://numpy.scipy.org/), Param
+(http://ioam.github.com/param/), and HoloViews
+(http://ioam.github.com/holoviews/), none of which have any required
+external dependencies.
 
-Official releases of ImaGen are available at http://pypi.python.org/pypi/imagen,
-and can be installed along with dependencies via `pip install imagen` or
-`easy_install imagen`.
+Official releases of ImaGen are available at
+http://pypi.python.org/pypi/imagen, and can be installed using ``pip``.  
+If you don't have ``pip`` already, we recommend installing a
+scientific Python distribution like 
+`Anaconda <http://continuum.io/downloads>`_ first.  Then installation
+of ImaGen and dependencies is simply::
 
-Alternatively, after separately installing the dependencies, ImaGen can be
-installed via `python setup.py install` (Windows users can download and run
-an exe from the preceding link).
-
-.. notebook:: imagen index.ipynb
+  pip install imagen
 
 Support
 =======
