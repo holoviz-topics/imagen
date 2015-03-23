@@ -677,15 +677,8 @@
 </div>
 <div class="viewcode-block" id="ComposeChannels"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.patterngenerator.ComposeChannels">[docs]</a><span class="k">class</span> <span class="nc">ComposeChannels</span><span class="p">(</span><span class="n">ChannelGenerator</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Create a multi-channel PatternGenerator from another</span>
-<span class="sd">    PatternGenerator.</span>
-
-<span class="sd">    If the specified generator itself already posseses more than one</span>
-<span class="sd">    channel, will use its channels&#39; data; otherwise, will synthesize</span>
-<span class="sd">    the channels from the single channel of the generator.</span>
-
-<span class="sd">    After finding or synthesizing the channels, they are scaled</span>
-<span class="sd">    according to the corresponding channel_factors.</span>
+<span class="sd">    Create a multi-channel PatternGenerator from a list of </span>
+<span class="sd">    PatternGenerators, with the specified channel_transforms applied.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">generators</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">class_</span><span class="o">=</span><span class="n">PatternGenerator</span><span class="p">,</span><span class="n">default</span><span class="o">=</span><span class="p">[</span><span class="n">Constant</span><span class="p">(</span><span class="n">scale</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)],</span>
