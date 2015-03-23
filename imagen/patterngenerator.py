@@ -610,15 +610,8 @@ class ChannelGenerator(PatternGenerator):
 
 class ComposeChannels(ChannelGenerator):
     """
-    Create a multi-channel PatternGenerator from another
-    PatternGenerator.
-
-    If the specified generator itself already posseses more than one
-    channel, will use its channels' data; otherwise, will synthesize
-    the channels from the single channel of the generator.
-
-    After finding or synthesizing the channels, they are scaled
-    according to the corresponding channel_factors.
+    Create a multi-channel PatternGenerator from a list of 
+    PatternGenerators, with the specified channel_transforms applied.
     """
 
     generators = param.List(class_=PatternGenerator,default=[Constant(scale=0.0)],

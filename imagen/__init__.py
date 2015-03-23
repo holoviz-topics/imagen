@@ -29,8 +29,10 @@ from param.parameterized import ParamOverrides
 from param import ClassSelector
 
 # Imported here so that all PatternGenerators will be in the same package
-from .patterngenerator import Constant, PatternGenerator, ChannelGenerator
+from .patterngenerator import Constant, PatternGenerator
 from .patterngenerator import CompositeBase, Composite
+from .patterngenerator import ChannelTransform, ChannelGenerator # pyflakes:ignore (API import)
+from .patterngenerator import CorrelateChannels, ComposeChannels # pyflakes:ignore (API import)
 
 
 from holoviews.element import Image                    # pyflakes:ignore (API import)
