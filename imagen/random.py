@@ -354,7 +354,7 @@ class DenseNoise(RandomGenerator):
        grid_density, e.g. 5 for the above example.
     """
 
-    grid_density = param.Number(default=1, bounds=(1,None), softbounds=(1,50), doc="""
+    grid_density = param.Number(default=10, bounds=(1,None), softbounds=(1,50), doc="""
         Grid elements per 1.0 distance in Sheet coordinates.""")
 
     # Hide unused parameters
@@ -523,7 +523,7 @@ class SparseNoise(RandomGenerator):
        grid_density, e.g. 5 for the above example.
     """
 
-    grid_density = param.Number(default=1, bounds=(1,None), softbounds=(1,50), doc="""
+    grid_density = param.Number(default=10, bounds=(1,None), softbounds=(1,50), doc="""
         Grid elements per 1.0 distance in Sheet coordinates.""")
 
     grid = param.Boolean(default=True, doc="""
