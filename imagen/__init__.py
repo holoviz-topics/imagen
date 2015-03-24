@@ -678,7 +678,7 @@ class Sweeper(ChannelGenerator):
 
 class Spiral(PatternGenerator):
     """
-    Archimedean spiral. 
+    Archimedean spiral.
     Successive turnings of the spiral have a constant separation distance.
 
     Spiral is defined by polar equation r=size*angle plotted in Gaussian plane.
@@ -686,13 +686,13 @@ class Spiral(PatternGenerator):
 
     aspect_ratio = param.Number(default=1.0,bounds=(0.0,None),softbounds=(0.0,2.0),
         precedence=0.31,doc="Ratio of width to height.")
-    
+
     thickness = param.Number(default=0.02,bounds=(0.0,None),softbounds=(0.0,0.5),
         precedence=0.60,doc="Thickness (line width) of the spiral.")
-    
+
     smoothing = param.Number(default=0.05,bounds=(0.0,None),softbounds=(0.0,0.5),
         precedence=0.61,doc="Width of the Gaussian fall-off inside and outside the spiral.")
-    
+
     turning = param.Number(default=0.05,bounds=(0.01,None),softbounds=(0.01,2.0),
         precedence=0.62,doc="Density of turnings; turning*angle gives the actual radius.")
 
@@ -730,13 +730,13 @@ class SpiralGrating(Composite):
 
     parts = param.Integer(default=2,bounds=(1,None),softbounds=(0.0,2.0),
         precedence=0.31,doc="Number of parts in the grating.")
-    
+
     thickness = param.Number(default=0.00,bounds=(0.0,None),softbounds=(0.0,0.5),
         precedence=0.60,doc="Thickness (line width) of the spiral.")
-    
+
     smoothing = param.Number(default=0.05,bounds=(0.0,None),softbounds=(0.0,0.5),
         precedence=0.61,doc="Width of the Gaussian fall-off inside and outside the spiral.")
-    
+
     turning = param.Number(default=0.05,bounds=(0.01,None),softbounds=(0.01,2.0),
         precedence=0.62,doc="Density of turnings; turning*angle gives the actual radius.")
 
@@ -759,13 +759,13 @@ class HyperbolicGrating(PatternGenerator):
 
     aspect_ratio = param.Number(default=1.0,bounds=(0.0,None),softbounds=(0.0,2.0),
         precedence=0.31,doc="Ratio of width to height.")
-    
+
     thickness = param.Number(default=0.05,bounds=(0.0,None),softbounds=(0.0,0.5),
         precedence=0.60,doc="Thickness of the hyperbolas.")
-    
+
     smoothing = param.Number(default=0.05,bounds=(0.0,None),softbounds=(0.0,0.5),
         precedence=0.61,doc="Width of the Gaussian fall-off inside and outside the hyperbolas.")
-    
+
     size = param.Number(default=0.5,bounds=(0.0,None),softbounds=(0.0,2.0),
         precedence=0.62,doc="Size as distance of inner hyperbola vertices from the centre.")
 
@@ -800,19 +800,19 @@ class Wedge(PatternGenerator):
 
     aspect_ratio = param.Number(default=1.0,bounds=(0.0,None),softbounds=(0.0,2.0),
         precedence=0.31,doc="Ratio of width to height.")
-    
+
     size = param.Number(default=pi/4,bounds=(0.0,None),softbounds=(0.0,2.0*pi),
         precedence=0.60,doc="Angular length of the sector, in radians.")
-    
+
     smoothing = param.Number(default=0.4,bounds=(0.0,None),softbounds=(0.0,0.5),
         precedence=0.61,doc="Width of the Gaussian fall-off outside the sector.")
-    
+
     def function(self,p):
         aspect_ratio = p.aspect_ratio
         x = self.pattern_x/aspect_ratio
         y = self.pattern_y
         gaussian_width = p.smoothing
-        
+
         angle = np.absolute(np.arctan2(y,x))
         half_length = p.size/2
 
@@ -835,7 +835,7 @@ class RadialGrating(Composite):
 
     parts = param.Integer(default=4,bounds=(1,None),softbounds=(0.0,2.0),
         precedence=0.31,doc="Number of parts in the grating.")
-    
+
     smoothing = param.Number(default=0.8,bounds=(0.0,None),softbounds=(0.0,0.5),
         precedence=0.61,doc="""
         Width of the Gaussian fall-off outside the sector, scaled by parts.""")
@@ -853,17 +853,17 @@ class Asterisk(Composite):
     """
     Asterisk-like object composed of radial rectangular lines.
     Also makes crosses and tripods.
-    """    
+    """
 
     parts = param.Integer(default=3,bounds=(1,None),softbounds=(0.0,2.0),
         precedence=0.31,doc="Number of parts in the asterisk.")
-    
+
     thickness = param.Number(default=0.05,bounds=(0.0,None),softbounds=(0.0,0.5),
         precedence=0.60,doc="Thickness of the rectangle.")
-    
+
     smoothing = param.Number(default=0.015,bounds=(0.0,None),softbounds=(0.0,0.5),
         precedence=0.61,doc="Width of the Gaussian fall-off around the rectangles.")
-    
+
     size = param.Number(default=0.5,bounds=(0.01,None),softbounds=(0.1,2.0),
         precedence=0.62,doc="Overall diameter of the pattern.")
 
@@ -884,14 +884,14 @@ class Asterisk(Composite):
 class Angle(Composite):
     """
     Angle composed of two line segments.
-    """    
+    """
 
     thickness = param.Number(default=0.05,bounds=(0.0,None),softbounds=(0.0,0.5),
         precedence=0.60,doc="Thickness of the rectangle.")
-    
+
     smoothing = param.Number(default=0.015,bounds=(0.0,None),softbounds=(0.0,0.5),
         precedence=0.61,doc="Width of the Gaussian fall-off around the rectangles.")
-    
+
     size = param.Number(default=0.5,bounds=(0.01,None),softbounds=(0.1,2.0),
         precedence=0.62,doc="Overall diameter of the pattern, if angle=pi.")
 
@@ -911,19 +911,19 @@ class Angle(Composite):
 
 class ConcentricRings(PatternGenerator):
     """
-    Concentric rings with linearly increasing radius. 
+    Concentric rings with linearly increasing radius.
     Gaussian fall-off at the edges.
-    """    
+    """
 
     aspect_ratio = param.Number(default=1.0,bounds=(0.0,None),softbounds=(0.0,2.0),
         precedence=0.31,doc="Ratio of width to height.")
-    
+
     thickness = param.Number(default=0.04,bounds=(0.0,None),softbounds=(0.0,0.5),
         precedence=0.60,doc="Thickness (line width) of the ring.")
-    
+
     smoothing = param.Number(default=0.05,bounds=(0.0,None),softbounds=(0.0,0.5),
         precedence=0.61,doc="Width of the Gaussian fall-off inside and outside the rings.")
-    
+
     size = param.Number(default=0.4,bounds=(0.01,None),softbounds=(0.1,2.0),
         precedence=0.62,doc="Radius difference of neighbouring rings.")
 
@@ -956,19 +956,19 @@ class ConcentricRings(PatternGenerator):
 class ArcCentered(Arc):
     """
     2D arc pattern generator (centered at the middle of the arc).
-    
+
     Draws an arc (partial ring) of the specified size (radius*2),
     with middle at radian 0.0 and starting at arc_length/2 and ending
     at -arc_length/2. The pattern is centered at the middle of the arc.
 
     See the Disk class for a note about the Gaussian fall-off.
-    """    
+    """
 
     def function(self,p):
         if p.aspect_ratio==0.0:
             return self.pattern_x*0.0
         self.pattern_x -= (1+np.cos(pi-p.arc_length/2))*p.size/4
-       
+
         return arc_by_radian((self.pattern_x+p.size/2)/p.aspect_ratio, self.pattern_y, p.size,
                              (2*pi-p.arc_length/2, p.arc_length/2), p.thickness, p.smoothing)
 
