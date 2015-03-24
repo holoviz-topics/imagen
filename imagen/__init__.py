@@ -23,7 +23,7 @@ __version__ = Version(release=(1,0,0), fpath=__file__,
 
 
 import numpy as np
-from numpy import pi  # Don't pollute the namespace!
+from numpy import pi
 
 from param.parameterized import ParamOverrides
 from param import ClassSelector
@@ -999,9 +999,204 @@ class OldSweeper(PatternGenerator):
 
 
 
+class SpiralGrating(PatternGenerator):
+    """
+    Archimedean spiral grating. 
+    Successive turnings of the spiral have a constant separation distance.
+
+    Spiral is defined by polar equation r=size*angle plotted in Gaussian
+    plane. Spiral starts at radian 0.0; this can be changed by orientation.
+    """
+
+    aspect_ratio = param.Number(default=1.0,bounds=(0.0,None),softbounds=(0.0,2.0),
+        precedence=0.31,doc="Ratio of width to height.")
+    
+    thickness = param.Number(default=0.02,bounds=(0.0,None),softbounds=(0.0,0.5),
+        precedence=0.60,doc="Thickness (line width) of the spiral.")
+    
+    smoothing = param.Number(default=0.05,bounds=(0.0,None),softbounds=(0.0,0.5),
+        precedence=0.61,doc="Width of the Gaussian fall-off inside and outside the spiral.")
+    
+    size = param.Number(default=0.05,bounds=(0.01,None),softbounds=(0.01,2.0),
+        precedence=0.62,doc="Size as density of turnings; size*angle gives the actual radius.")
+
+    def function(self,params):
+        aspect_ratio = params['aspect_ratio']
+        x = self.pattern_x/aspect_ratio
+        y = self.pattern_y
+        thickness = params['thickness']
+        gaussian_width = params['smoothing']
+        size = params['size']
+
+        half_thickness = thickness/2.0
+        spacing = size*2*pi
+
+        distance_from_origin = np.sqrt(x**2+y**2)
+        distance_from_spiral_middle = np.fmod(spacing + distance_from_origin - size*np.arctan2(y,x),spacing)
+
+        distance_from_spiral_middle = np.minimum(distance_from_spiral_middle,spacing - distance_from_spiral_middle)
+        distance_from_spiral = distance_from_spiral_middle - half_thickness
+
+        spiral = 1.0 - np.greater_equal(distance_from_spiral,0.0)
+
+        sigmasq = gaussian_width*gaussian_width
+
+        with float_error_ignore():
+            falloff = np.exp(np.divide(-distance_from_spiral*distance_from_spiral, 2.0*sigmasq))
+
+        return np.maximum(falloff, spiral)
+
+
+
+class HyperbolicGrating(PatternGenerator):
+    """
+    Concentric rectangular hyperbolas with Gaussian fall-off which share the same asymptotes.
+    abs(x^2/a^2 - y^2/a^2) = 1, where a mod size = 0
+    """
+
+    aspect_ratio = param.Number(default=1.0,bounds=(0.0,None),softbounds=(0.0,2.0),
+        precedence=0.31,doc="Ratio of width to height.")
+    
+    thickness = param.Number(default=0.05,bounds=(0.0,None),softbounds=(0.0,0.5),
+        precedence=0.60,doc="Thickness of the hyperbolas.")
+    
+    smoothing = param.Number(default=0.1,bounds=(0.0,None),softbounds=(0.0,0.5),
+        precedence=0.61,doc="Width of the Gaussian fall-off inside and outside the hyperbolas.")
+    
+    size = param.Number(default=0.5,bounds=(0.0,None),softbounds=(0.0,2.0),
+        precedence=0.62,doc="Size as distance of inner hyperbola vertices from the centre.")
+
+    def function(self,params):
+        aspect_ratio = params['aspect_ratio']
+        x = self.pattern_x/aspect_ratio
+        y = self.pattern_y
+        thickness = params['thickness']
+        gaussian_width = params['smoothing']
+        size = params['size']
+
+        half_thickness = thickness / 2.0
+
+        distance_from_vertex_middle = np.fmod(np.sqrt(np.absolute(x**2 - y**2)),size)
+        distance_from_vertex_middle = np.minimum(distance_from_vertex_middle,size - distance_from_vertex_middle)
+
+        distance_from_vertex = distance_from_vertex_middle - half_thickness
+
+        hyperbola = 1.0 - np.greater_equal(distance_from_vertex,0.0)
+
+        sigmasq = gaussian_width*gaussian_width
+
+        with float_error_ignore():
+            falloff = np.exp(np.divide(-distance_from_vertex*distance_from_vertex, 2.0*sigmasq))
+
+        return np.maximum(falloff, hyperbola)
+
+
+
+class RadialGrating(PatternGenerator):
+    """
+    One sector of a circle with Gaussian fall-off centered along radian 0.0 with size defined in radians. 
+    The orientation can be changed to choose other locations.
+    """
+
+    aspect_ratio = param.Number(default=1.0,bounds=(0.0,None),softbounds=(0.0,2.0),
+        precedence=0.31,doc="Ratio of width to height.")
+    
+    arc_length = param.Number(default=pi/4,bounds=(0.0,None),softbounds=(0.0,2.0*pi),
+        precedence=0.60,doc="Length of the sector in radians.")
+    
+    smoothing = param.Number(default=0.4,bounds=(0.0,None),softbounds=(0.0,0.5),
+        precedence=0.61,doc="Width of the Gaussian fall-off outside the sector.")
+    
+    def function(self,params):
+        aspect_ratio = params['aspect_ratio']
+        x = self.pattern_x/aspect_ratio
+        y = self.pattern_y
+        gaussian_width = params['smoothing']
+        
+        angle = np.absolute(np.arctan2(y,x))
+        half_length = params['arc_length']/2
+
+        radius = 1.0 - np.greater_equal(angle,half_length)
+        distance = angle - half_length
+
+        sigmasq = gaussian_width*gaussian_width
+
+        with float_error_ignore():
+            falloff = np.exp(np.divide(-distance*distance, 2.0*sigmasq))
+
+        return np.maximum(radius, falloff)
+
+
+
+class ConcentricRings(PatternGenerator):
+    """
+    Concentric rings with linearly increasing radius. 
+    Gaussian fall-off at the edges.
+    """    
+
+    aspect_ratio = param.Number(default=1.0,bounds=(0.0,None),softbounds=(0.0,2.0),
+        precedence=0.31,doc="Ratio of width to height.")
+    
+    thickness = param.Number(default=0.04,bounds=(0.0,None),softbounds=(0.0,0.5),
+        precedence=0.60,doc="Thickness (line width) of the ring.")
+    
+    smoothing = param.Number(default=0.05,bounds=(0.0,None),softbounds=(0.0,0.5),
+        precedence=0.61,doc="Width of the Gaussian fall-off inside and outside the rings.")
+    
+    size = param.Number(default=0.4,bounds=(0.01,None),softbounds=(0.1,2.0),
+        precedence=0.62,doc="Radius difference of neighbouring rings.")
+
+    def function(self,params):
+        aspect_ratio = params['aspect_ratio']
+        x = self.pattern_x/aspect_ratio
+        y = self.pattern_y
+        thickness = params['thickness']
+        gaussian_width = params['smoothing']
+        size = params['size']
+
+        half_thickness = thickness / 2.0
+
+        distance_from_origin = np.sqrt(x**2+y**2)
+
+        distance_from_ring_middle = np.fmod(distance_from_origin,size)
+        distance_from_ring_middle = np.minimum(distance_from_ring_middle,size - distance_from_ring_middle)
+
+        distance_from_ring = distance_from_ring_middle - half_thickness
+
+        ring = 1.0 - np.greater_equal(distance_from_ring,0.0)
+
+        sigmasq = gaussian_width*gaussian_width
+
+        with float_error_ignore():
+            falloff = np.exp(np.divide(-distance_from_ring*distance_from_ring, 2.0*sigmasq))
+
+        return np.maximum(falloff, ring)
+
+
+
+class ArcCentered(Arc):
+    """
+    2D arc pattern generator (centered at the middle of the arc).
+    
+    Draws an arc (partial ring) of the specified size (radius*2),
+    with middle at radian 0.0 and starting at arc_length/2 and ending
+    at -arc_length/2. The pattern is centered at the middle of the arc.
+
+    See the Disk class for a note about the Gaussian fall-off.
+    """    
+
+    def function(self,p):
+        if p.aspect_ratio==0.0:
+            return self.pattern_x*0.0
+        self.pattern_x -= (1+np.cos(pi-p.arc_length/2))*p.size/4
+       
+        return arc_by_radian((self.pattern_x+p.size/2)/p.aspect_ratio, self.pattern_y, p.size,
+                             (2*pi-p.arc_length/2, p.arc_length/2), p.thickness, p.smoothing)
+
+
 class DifferenceOfGaussians(PatternGenerator):
     """
-    Two-dimensional difference of gaussians pattern.
+    Two-dimensional difference of Gaussians pattern.
     """
 
     positive_size = param.Number(default=0.1, bounds=(0.0,None), softbounds=(0.0,5.0), precedence=(1),
@@ -1571,6 +1766,9 @@ class Spectrogram(PowerSpectrum):
             self._create_latency_indices()
 
         return super(Spectrogram, self).__call__()
+
+
+
 
 _public = list(set([_k for _k,_v in locals().items() if isinstance(_v,type) and issubclass(_v,PatternGenerator)]))
 __all__ = _public + ["image", "random", "patterncoordinator", "boundingregion", "sheetcoords"]
