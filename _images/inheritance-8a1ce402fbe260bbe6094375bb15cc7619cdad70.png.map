@@ -1,0 +1,11 @@
+<map id="inheritance3a1aae55ef" name="inheritance3a1aae55ef">
+<area shape="rect" id="node1" href="#imagen.deprecated.GaussiansCorner" title="Two Gaussian pattern generators with a variable intersection point," alt="" coords="487,3,675,22"/>
+<area shape="rect" id="node2" href="#imagen.patterngenerator.PatternGenerator" title="A class hierarchy for callable objects that can generate 2D patterns." alt="" coords="226,75,442,93"/>
+<area shape="rect" id="node3" href="#imagen.deprecated.OldSweeper" title="PatternGenerator that sweeps a supplied PatternGenerator in a" alt="" coords="499,39,663,57"/>
+<area shape="rect" id="node6" href="#imagen.deprecated.Translator" title="PatternGenerator that translates another PatternGenerator over" alt="" coords="504,75,658,93"/>
+<area shape="rect" id="node7" href="#imagen.deprecated.TwoRectangles" title="Two 2D rectangle pattern generator." alt="" coords="493,110,669,129"/>
+<area shape="rect" id="node8" href="#imagen.patterngenerator.CompositeBase" title="PatternGenerator that combines or selects from a list of other" alt="" coords="477,146,685,165"/>
+<area shape="rect" id="node4" href="#imagen.deprecated.SeparatedComposite" title="Generalized version of the Composite PatternGenerator that" alt="" coords="940,146,1148,165"/>
+<area shape="rect" id="node5" href="#imagen.patterngenerator.Composite" title="PatternGenerator that accepts a list of other PatternGenerators." alt="" coords="720,146,905,165"/>
+<area shape="rect" id="node9" title="params(name=String)" alt="" coords="4,75,191,93"/>
+</map>

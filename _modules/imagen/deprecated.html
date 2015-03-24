@@ -78,11 +78,90 @@
 <span class="kn">from</span> <span class="nn">param.parameterized</span> <span class="kn">import</span> <span class="n">ParamOverrides</span>
 <span class="kn">from</span> <span class="nn">param</span> <span class="kn">import</span> <span class="n">ClassSelector</span>
 
-<span class="kn">from</span> <span class="nn">.patterngenerator</span> <span class="kn">import</span> <span class="n">Constant</span><span class="p">,</span> <span class="n">PatternGenerator</span>
+<span class="kn">from</span> <span class="nn">.patterngenerator</span> <span class="kn">import</span> <span class="n">Constant</span><span class="p">,</span> <span class="n">PatternGenerator</span><span class="p">,</span> <span class="n">Composite</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">Gaussian</span>
 
 
-<span class="c">#JABALERT: Can&#39;t this be replaced with a Composite?</span>
+<div class="viewcode-block" id="SeparatedComposite"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.deprecated.SeparatedComposite">[docs]</a><span class="k">class</span> <span class="nc">SeparatedComposite</span><span class="p">(</span><span class="n">Composite</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generalized version of the Composite PatternGenerator that</span>
+<span class="sd">    enforces spacing constraints between pattern centers.</span>
+
+<span class="sd">    Currently supports minimum spacing, but can be generalized to</span>
+<span class="sd">    support maximum spacing also (and both at once).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">min_separation</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">bounds</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span>
+                            <span class="n">softbounds</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">        Minimum distance to enforce between all pairs of pattern centers.</span>
+
+<span class="s">        Useful for ensuring that multiple randomly generated patterns</span>
+<span class="s">        do not overlap spatially.  Note that as this this value is</span>
+<span class="s">        increased relative to the area in which locations are chosen,</span>
+<span class="s">        the likelihood of a pattern appearing near the center of the</span>
+<span class="s">        area will decrease.  As this value approaches the available</span>
+<span class="s">        area, the corners become far more likely to be chosen, due to</span>
+<span class="s">        the distances being greater along the diagonals.</span>
+<span class="s">        &quot;&quot;&quot;</span><span class="p">)</span>
+        <span class="c">### JABNOTE: Should provide a mechanism for collecting and</span>
+        <span class="c">### plotting the training pattern center distribution, so that</span>
+        <span class="c">### such issues can be checked.</span>
+
+    <span class="n">max_trials</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Integer</span><span class="p">(</span><span class="n">default</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span> <span class="n">bounds</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span>
+                         <span class="n">softbounds</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">100</span><span class="p">),</span> <span class="n">precedence</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">        Number of times to try for a new pattern location that meets</span>
+<span class="s">        the criteria.</span>
+
+<span class="s">        This is an essentially arbitrary timeout value that helps</span>
+<span class="s">        prevent an endless loop in case the requirements cannot be</span>
+<span class="s">        met.&quot;&quot;&quot;</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">__distance_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">g0</span><span class="p">,</span> <span class="n">g1</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns true if the distance between the (x,y) locations of</span>
+<span class="sd">        two generators g0 and g1 is greater than a minimum separation.</span>
+
+<span class="sd">        Can be extended easily to support other criteria.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">g1</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">g0</span><span class="o">.</span><span class="n">x</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span>
+                    <span class="p">(</span><span class="n">g1</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">g0</span><span class="o">.</span><span class="n">y</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">dist</span> <span class="o">&gt;=</span> <span class="n">p</span><span class="o">.</span><span class="n">min_separation</span>
+
+
+    <span class="k">def</span> <span class="nf">_advance_pattern_generators</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Advance the parameters for each generator for this</span>
+<span class="sd">        presentation.</span>
+
+<span class="sd">        Picks a position for each generator that is accepted by</span>
+<span class="sd">        __distance_valid for all combinations.  Returns a new list of</span>
+<span class="sd">        the generators, with some potentially omitted due to failure</span>
+<span class="sd">        to meet the constraints.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">valid_generators</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">p</span><span class="o">.</span><span class="n">generators</span><span class="p">:</span>
+
+            <span class="k">for</span> <span class="n">trial</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_trials</span><span class="p">):</span>
+                <span class="c"># Generate a new position and add generator if it&#39;s ok</span>
+
+                <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">alltrue</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">__distance_valid</span><span class="p">(</span><span class="n">g</span><span class="p">,</span><span class="n">v</span><span class="p">,</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">valid_generators</span><span class="p">]):</span>
+                    <span class="n">valid_generators</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+                    <span class="k">break</span>
+
+                <span class="n">g</span><span class="o">.</span><span class="n">force_new_dynamic_value</span><span class="p">(</span><span class="s">&#39;x&#39;</span><span class="p">)</span>
+                <span class="n">g</span><span class="o">.</span><span class="n">force_new_dynamic_value</span><span class="p">(</span><span class="s">&#39;y&#39;</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s">&quot;Unable to place pattern </span><span class="si">%s</span><span class="s"> subject to given constraints&quot;</span> <span class="o">%</span>
+                             <span class="n">g</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">valid_generators</span>
+
+
+
+<span class="c">#JABALERT: Can&#39;t this be replaced with a Composite?</span></div>
 <div class="viewcode-block" id="TwoRectangles"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.deprecated.TwoRectangles">[docs]</a><span class="k">class</span> <span class="nc">TwoRectangles</span><span class="p">(</span><span class="n">PatternGenerator</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Two 2D rectangle pattern generator.&quot;&quot;&quot;</span>
 

@@ -1,0 +1,45 @@
+<map id="inheritanceec09290b18" name="inheritanceec09290b18">
+<area shape="rect" id="node1" href="#imagen.__init__.Angle" title="Angle composed of two line segments." alt="" coords="1008,580,1129,599"/>
+<area shape="rect" id="node2" href="#imagen.patterngenerator.Composite" title="PatternGenerator that accepts a list of other PatternGenerators." alt="" coords="761,635,953,654"/>
+<area shape="rect" id="node6" href="#imagen.__init__.Asterisk" title="Asterisk&#45;like object composed of radial rectangular lines." alt="" coords="1002,617,1135,636"/>
+<area shape="rect" id="node23" href="#imagen.__init__.RadialGrating" title="Grating pattern made from alternating smooth circular segments (pie&#45;shapes)." alt="" coords="989,654,1148,673"/>
+<area shape="rect" id="node34" href="#imagen.__init__.SpiralGrating" title="Grating pattern made from overlaid spirals." alt="" coords="990,691,1147,710"/>
+<area shape="rect" id="node3" href="#imagen.__init__.Arc" title="2D arc pattern generator." alt="" coords="555,59,665,78"/>
+<area shape="rect" id="node5" href="#imagen.__init__.ArcCentered" title="2D arc pattern generator (centered at the middle of the arc)." alt="" coords="780,41,934,60"/>
+<area shape="rect" id="node8" href="#imagen.__init__.Curve" title="2D curve pattern generator." alt="" coords="796,78,918,97"/>
+<area shape="rect" id="node4" href="#imagen.patterngenerator.PatternGenerator" title="A class hierarchy for callable objects that can generate 2D patterns." alt="" coords="235,486,460,505"/>
+<area shape="rect" id="node7" href="#imagen.__init__.ConcentricRings" title="Concentric rings with linearly increasing radius." alt="" coords="525,96,695,115"/>
+<area shape="rect" id="node9" href="#imagen.__init__.DifferenceOfGaussians" title="Two&#45;dimensional difference of Gaussians pattern." alt="" coords="508,133,712,152"/>
+<area shape="rect" id="node10" href="#imagen.__init__.Disk" title="2D disk pattern generator." alt="" coords="553,170,667,189"/>
+<area shape="rect" id="node11" href="#imagen.__init__.ExponentialDecay" title="2D Exponential pattern generator." alt="" coords="520,207,700,226"/>
+<area shape="rect" id="node12" href="#imagen.__init__.Gabor" title="2D Gabor pattern generator." alt="" coords="548,244,672,263"/>
+<area shape="rect" id="node13" href="#imagen.__init__.Gaussian" title="2D Gaussian pattern generator." alt="" coords="541,281,679,301"/>
+<area shape="rect" id="node14" href="#imagen.__init__.HalfPlane" title="Constant pattern on in half of the plane, and off in the rest," alt="" coords="540,319,680,338"/>
+<area shape="rect" id="node15" href="#imagen.__init__.HyperbolicGrating" title="Concentric rectangular hyperbolas with Gaussian fall&#45;off which share the same asymptotes." alt="" coords="520,356,700,375"/>
+<area shape="rect" id="node16" href="#imagen.__init__.Line" title="2D line pattern generator." alt="" coords="553,393,667,412"/>
+<area shape="rect" id="node17" href="#imagen.__init__.LogGaussian" title="2D Log Gaussian pattern generator allowing standard gaussian" alt="" coords="532,430,688,449"/>
+<area shape="rect" id="node21" href="#imagen.__init__.SineGrating" title="2D sine grating pattern generator." alt="" coords="535,467,685,486"/>
+<area shape="rect" id="node22" href="#imagen.__init__.PowerSpectrum" title="Outputs the spectral density of a rolling interval of the input" alt="" coords="525,504,695,523"/>
+<area shape="rect" id="node24" href="#imagen.__init__.RawRectangle" title="2D rectangle pattern generator with no smoothing, for use when" alt="" coords="530,541,690,560"/>
+<area shape="rect" id="node25" href="#imagen.__init__.Rectangle" title="2D rectangle pattern, with Gaussian smoothing around the" alt="" coords="540,579,680,598"/>
+<area shape="rect" id="node26" href="#imagen.__init__.Ring" title="2D ring pattern generator." alt="" coords="553,616,667,635"/>
+<area shape="rect" id="node28" href="#imagen.patterngenerator.CompositeBase" title="PatternGenerator that combines or selects from a list of other" alt="" coords="502,653,718,672"/>
+<area shape="rect" id="node29" href="#imagen.__init__.Sigmoid" title="Two&#45;dimensional sigmoid pattern, dividing the plane into positive" alt="" coords="543,690,677,709"/>
+<area shape="rect" id="node30" href="#imagen.__init__.SigmoidedDoG" title="Sigmoid multiplicatively combined with a difference of Gaussians," alt="" coords="527,727,693,746"/>
+<area shape="rect" id="node31" href="#imagen.__init__.SigmoidedDoLG" title="Sigmoid multiplicatively combined with a difference of Log" alt="" coords="524,764,696,783"/>
+<area shape="rect" id="node33" href="#imagen.__init__.Spiral" title="Archimedean spiral." alt="" coords="549,801,671,820"/>
+<area shape="rect" id="node35" href="#imagen.__init__.SquareGrating" title="2D squarewave (symmetric or asymmetric) grating pattern generator." alt="" coords="528,838,692,857"/>
+<area shape="rect" id="node37" href="#imagen.patterngenerator.ChannelGenerator" title="Abstract base class for patterns supporting multiple channels natively." alt="" coords="496,876,725,895"/>
+<area shape="rect" id="node41" href="#imagen.__init__.Wedge" title="A sector of a circle with Gaussian fall&#45;off, with size determining the arc length." alt="" coords="547,913,673,932"/>
+<area shape="rect" id="node18" title="A picklable version of the global time function with a custom offset" alt="" coords="268,523,426,542"/>
+<area shape="rect" id="node19" title="params(name=String)" alt="" coords="4,523,199,542"/>
+<area shape="rect" id="node38" title="Generic class to return intervals of a discretized time series." alt="" coords="273,560,421,580"/>
+<area shape="rect" id="node20" href="#imagen.__init__.OrientationContrast" title="Circular pattern for testing responses to differences in contrast." alt="" coords="763,467,951,486"/>
+<area shape="rect" id="node32" href="#imagen.__init__.Spectrogram" title="Extends PowerSpectrum to provide a temporal buffer, yielding a 2D" alt="" coords="778,504,936,523"/>
+<area shape="rect" id="node27" href="#imagen.__init__.Selector" title="PatternGenerator that selects from a list of other PatternGenerators." alt="" coords="790,672,924,691"/>
+<area shape="rect" id="node36" href="#imagen.__init__.Sweeper" title="PatternGenerator that sweeps a supplied PatternGenerator in a" alt="" coords="789,876,925,895"/>
+<area shape="rect" id="node39" title="Parameter whose value is a TimeSeries object." alt="" coords="768,4,946,23"/>
+<area shape="rect" id="node40" title="Parameter whose value is a specified class or an instance of that class." alt="" coords="552,4,668,23"/>
+<area shape="rect" id="node42" title="Parameter whose value must be chosen from a list of possibilities." alt="" coords="302,4,393,23"/>
+<area shape="rect" id="node43" title="An attribute descriptor for declaring parameters." alt="" coords="14,4,189,23"/>
+</map>

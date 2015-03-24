@@ -566,87 +566,8 @@
             <span class="mf">0.5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">pi</span><span class="o">*</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">duty_cycle</span><span class="o">-</span><span class="mf">0.5</span><span class="p">))</span> <span class="o">+</span>
             <span class="mf">0.5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">frequency</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">pi</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">pattern_y</span> <span class="o">+</span> <span class="n">p</span><span class="o">.</span><span class="n">phase</span><span class="p">))</span>
 
-</div></div>
-<div class="viewcode-block" id="SeparatedComposite"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.__init__.SeparatedComposite">[docs]</a><span class="k">class</span> <span class="nc">SeparatedComposite</span><span class="p">(</span><span class="n">Composite</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Generalized version of the Composite PatternGenerator that</span>
-<span class="sd">    enforces spacing constraints between pattern centers.</span>
 
-<span class="sd">    Currently supports minimum spacing, but can be generalized to</span>
-<span class="sd">    support maximum spacing also (and both at once).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">min_separation</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">bounds</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span>
-                            <span class="n">softbounds</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
-<span class="s">        Minimum distance to enforce between all pairs of pattern centers.</span>
-
-<span class="s">        Useful for ensuring that multiple randomly generated patterns</span>
-<span class="s">        do not overlap spatially.  Note that as this this value is</span>
-<span class="s">        increased relative to the area in which locations are chosen,</span>
-<span class="s">        the likelihood of a pattern appearing near the center of the</span>
-<span class="s">        area will decrease.  As this value approaches the available</span>
-<span class="s">        area, the corners become far more likely to be chosen, due to</span>
-<span class="s">        the distances being greater along the diagonals.</span>
-<span class="s">        &quot;&quot;&quot;</span><span class="p">)</span>
-        <span class="c">### JABNOTE: Should provide a mechanism for collecting and</span>
-        <span class="c">### plotting the training pattern center distribution, so that</span>
-        <span class="c">### such issues can be checked.</span>
-
-    <span class="n">max_trials</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Integer</span><span class="p">(</span><span class="n">default</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span> <span class="n">bounds</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span>
-                         <span class="n">softbounds</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">100</span><span class="p">),</span> <span class="n">precedence</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
-<span class="s">        Number of times to try for a new pattern location that meets</span>
-<span class="s">        the criteria.</span>
-
-<span class="s">        This is an essentially arbitrary timeout value that helps</span>
-<span class="s">        prevent an endless loop in case the requirements cannot be</span>
-<span class="s">        met.&quot;&quot;&quot;</span><span class="p">)</span>
-
-
-    <span class="k">def</span> <span class="nf">__distance_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">g0</span><span class="p">,</span> <span class="n">g1</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns true if the distance between the (x,y) locations of</span>
-<span class="sd">        two generators g0 and g1 is greater than a minimum separation.</span>
-
-<span class="sd">        Can be extended easily to support other criteria.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">g1</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">g0</span><span class="o">.</span><span class="n">x</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span>
-                    <span class="p">(</span><span class="n">g1</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">g0</span><span class="o">.</span><span class="n">y</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">dist</span> <span class="o">&gt;=</span> <span class="n">p</span><span class="o">.</span><span class="n">min_separation</span>
-
-
-    <span class="k">def</span> <span class="nf">_advance_pattern_generators</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Advance the parameters for each generator for this</span>
-<span class="sd">        presentation.</span>
-
-<span class="sd">        Picks a position for each generator that is accepted by</span>
-<span class="sd">        __distance_valid for all combinations.  Returns a new list of</span>
-<span class="sd">        the generators, with some potentially omitted due to failure</span>
-<span class="sd">        to meet the constraints.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="n">valid_generators</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">p</span><span class="o">.</span><span class="n">generators</span><span class="p">:</span>
-
-            <span class="k">for</span> <span class="n">trial</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_trials</span><span class="p">):</span>
-                <span class="c"># Generate a new position and add generator if it&#39;s ok</span>
-
-                <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">alltrue</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">__distance_valid</span><span class="p">(</span><span class="n">g</span><span class="p">,</span><span class="n">v</span><span class="p">,</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">valid_generators</span><span class="p">]):</span>
-                    <span class="n">valid_generators</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
-                    <span class="k">break</span>
-
-                <span class="n">g</span><span class="o">.</span><span class="n">force_new_dynamic_value</span><span class="p">(</span><span class="s">&#39;x&#39;</span><span class="p">)</span>
-                <span class="n">g</span><span class="o">.</span><span class="n">force_new_dynamic_value</span><span class="p">(</span><span class="s">&#39;y&#39;</span><span class="p">)</span>
-
-            <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s">&quot;Unable to place pattern </span><span class="si">%s</span><span class="s"> subject to given constraints&quot;</span> <span class="o">%</span>
-                             <span class="n">g</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">valid_generators</span>
-
-
-
-<span class="c">#JABALERT: replace with x%1.0 below</span></div>
+<span class="c">#JABALERT: replace with x%1.0 below</span></div></div>
 <span class="k">def</span> <span class="nf">wrap</span><span class="p">(</span><span class="n">lower</span><span class="p">,</span> <span class="n">upper</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Circularly alias the numeric value x into the range [lower,upper).</span>
@@ -824,7 +745,7 @@
 </div>
 <div class="viewcode-block" id="Spiral"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.__init__.Spiral">[docs]</a><span class="k">class</span> <span class="nc">Spiral</span><span class="p">(</span><span class="n">PatternGenerator</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Archimedean spiral. </span>
+<span class="sd">    Archimedean spiral.</span>
 <span class="sd">    Successive turnings of the spiral have a constant separation distance.</span>
 
 <span class="sd">    Spiral is defined by polar equation r=size*angle plotted in Gaussian plane.</span>
@@ -832,13 +753,13 @@
 
     <span class="n">aspect_ratio</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span><span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span><span class="n">softbounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">2.0</span><span class="p">),</span>
         <span class="n">precedence</span><span class="o">=</span><span class="mf">0.31</span><span class="p">,</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;Ratio of width to height.&quot;</span><span class="p">)</span>
-    
+
     <span class="n">thickness</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span><span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span><span class="n">softbounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.5</span><span class="p">),</span>
         <span class="n">precedence</span><span class="o">=</span><span class="mf">0.60</span><span class="p">,</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;Thickness (line width) of the spiral.&quot;</span><span class="p">)</span>
-    
+
     <span class="n">smoothing</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span><span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span><span class="n">softbounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.5</span><span class="p">),</span>
         <span class="n">precedence</span><span class="o">=</span><span class="mf">0.61</span><span class="p">,</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;Width of the Gaussian fall-off inside and outside the spiral.&quot;</span><span class="p">)</span>
-    
+
     <span class="n">turning</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span><span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span><span class="n">softbounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span><span class="mf">2.0</span><span class="p">),</span>
         <span class="n">precedence</span><span class="o">=</span><span class="mf">0.62</span><span class="p">,</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;Density of turnings; turning*angle gives the actual radius.&quot;</span><span class="p">)</span>
 
@@ -876,13 +797,13 @@
 
     <span class="n">parts</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Integer</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span><span class="n">softbounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">2.0</span><span class="p">),</span>
         <span class="n">precedence</span><span class="o">=</span><span class="mf">0.31</span><span class="p">,</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;Number of parts in the grating.&quot;</span><span class="p">)</span>
-    
+
     <span class="n">thickness</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.00</span><span class="p">,</span><span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span><span class="n">softbounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.5</span><span class="p">),</span>
         <span class="n">precedence</span><span class="o">=</span><span class="mf">0.60</span><span class="p">,</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;Thickness (line width) of the spiral.&quot;</span><span class="p">)</span>
-    
+
     <span class="n">smoothing</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span><span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span><span class="n">softbounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.5</span><span class="p">),</span>
         <span class="n">precedence</span><span class="o">=</span><span class="mf">0.61</span><span class="p">,</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;Width of the Gaussian fall-off inside and outside the spiral.&quot;</span><span class="p">)</span>
-    
+
     <span class="n">turning</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span><span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span><span class="n">softbounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span><span class="mf">2.0</span><span class="p">),</span>
         <span class="n">precedence</span><span class="o">=</span><span class="mf">0.62</span><span class="p">,</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;Density of turnings; turning*angle gives the actual radius.&quot;</span><span class="p">)</span>
 
@@ -905,13 +826,13 @@
 
     <span class="n">aspect_ratio</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span><span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span><span class="n">softbounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">2.0</span><span class="p">),</span>
         <span class="n">precedence</span><span class="o">=</span><span class="mf">0.31</span><span class="p">,</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;Ratio of width to height.&quot;</span><span class="p">)</span>
-    
+
     <span class="n">thickness</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span><span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span><span class="n">softbounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.5</span><span class="p">),</span>
         <span class="n">precedence</span><span class="o">=</span><span class="mf">0.60</span><span class="p">,</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;Thickness of the hyperbolas.&quot;</span><span class="p">)</span>
-    
+
     <span class="n">smoothing</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span><span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span><span class="n">softbounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.5</span><span class="p">),</span>
         <span class="n">precedence</span><span class="o">=</span><span class="mf">0.61</span><span class="p">,</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;Width of the Gaussian fall-off inside and outside the hyperbolas.&quot;</span><span class="p">)</span>
-    
+
     <span class="n">size</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span><span class="n">softbounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">2.0</span><span class="p">),</span>
         <span class="n">precedence</span><span class="o">=</span><span class="mf">0.62</span><span class="p">,</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;Size as distance of inner hyperbola vertices from the centre.&quot;</span><span class="p">)</span>
 
@@ -946,19 +867,19 @@
 
     <span class="n">aspect_ratio</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span><span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span><span class="n">softbounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">2.0</span><span class="p">),</span>
         <span class="n">precedence</span><span class="o">=</span><span class="mf">0.31</span><span class="p">,</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;Ratio of width to height.&quot;</span><span class="p">)</span>
-    
+
     <span class="n">size</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">pi</span><span class="o">/</span><span class="mi">4</span><span class="p">,</span><span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span><span class="n">softbounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">2.0</span><span class="o">*</span><span class="n">pi</span><span class="p">),</span>
         <span class="n">precedence</span><span class="o">=</span><span class="mf">0.60</span><span class="p">,</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;Angular length of the sector, in radians.&quot;</span><span class="p">)</span>
-    
+
     <span class="n">smoothing</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span><span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span><span class="n">softbounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.5</span><span class="p">),</span>
         <span class="n">precedence</span><span class="o">=</span><span class="mf">0.61</span><span class="p">,</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;Width of the Gaussian fall-off outside the sector.&quot;</span><span class="p">)</span>
-    
+
     <span class="k">def</span> <span class="nf">function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span><span class="p">):</span>
         <span class="n">aspect_ratio</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">aspect_ratio</span>
         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pattern_x</span><span class="o">/</span><span class="n">aspect_ratio</span>
         <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pattern_y</span>
         <span class="n">gaussian_width</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">smoothing</span>
-        
+
         <span class="n">angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">absolute</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="n">x</span><span class="p">))</span>
         <span class="n">half_length</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">size</span><span class="o">/</span><span class="mi">2</span>
 
@@ -981,7 +902,7 @@
 
     <span class="n">parts</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Integer</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span><span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span><span class="n">softbounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">2.0</span><span class="p">),</span>
         <span class="n">precedence</span><span class="o">=</span><span class="mf">0.31</span><span class="p">,</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;Number of parts in the grating.&quot;</span><span class="p">)</span>
-    
+
     <span class="n">smoothing</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span><span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span><span class="n">softbounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.5</span><span class="p">),</span>
         <span class="n">precedence</span><span class="o">=</span><span class="mf">0.61</span><span class="p">,</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
 <span class="s">        Width of the Gaussian fall-off outside the sector, scaled by parts.&quot;&quot;&quot;</span><span class="p">)</span>
@@ -999,17 +920,17 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Asterisk-like object composed of radial rectangular lines.</span>
 <span class="sd">    Also makes crosses and tripods.</span>
-<span class="sd">    &quot;&quot;&quot;</span>    
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">parts</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Integer</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span><span class="n">softbounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">2.0</span><span class="p">),</span>
         <span class="n">precedence</span><span class="o">=</span><span class="mf">0.31</span><span class="p">,</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;Number of parts in the asterisk.&quot;</span><span class="p">)</span>
-    
+
     <span class="n">thickness</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span><span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span><span class="n">softbounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.5</span><span class="p">),</span>
         <span class="n">precedence</span><span class="o">=</span><span class="mf">0.60</span><span class="p">,</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;Thickness of the rectangle.&quot;</span><span class="p">)</span>
-    
+
     <span class="n">smoothing</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.015</span><span class="p">,</span><span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span><span class="n">softbounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.5</span><span class="p">),</span>
         <span class="n">precedence</span><span class="o">=</span><span class="mf">0.61</span><span class="p">,</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;Width of the Gaussian fall-off around the rectangles.&quot;</span><span class="p">)</span>
-    
+
     <span class="n">size</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span><span class="n">softbounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">2.0</span><span class="p">),</span>
         <span class="n">precedence</span><span class="o">=</span><span class="mf">0.62</span><span class="p">,</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;Overall diameter of the pattern.&quot;</span><span class="p">)</span>
 
@@ -1030,14 +951,14 @@
 <div class="viewcode-block" id="Angle"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.__init__.Angle">[docs]</a><span class="k">class</span> <span class="nc">Angle</span><span class="p">(</span><span class="n">Composite</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Angle composed of two line segments.</span>
-<span class="sd">    &quot;&quot;&quot;</span>    
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">thickness</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span><span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span><span class="n">softbounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.5</span><span class="p">),</span>
         <span class="n">precedence</span><span class="o">=</span><span class="mf">0.60</span><span class="p">,</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;Thickness of the rectangle.&quot;</span><span class="p">)</span>
-    
+
     <span class="n">smoothing</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.015</span><span class="p">,</span><span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span><span class="n">softbounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.5</span><span class="p">),</span>
         <span class="n">precedence</span><span class="o">=</span><span class="mf">0.61</span><span class="p">,</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;Width of the Gaussian fall-off around the rectangles.&quot;</span><span class="p">)</span>
-    
+
     <span class="n">size</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span><span class="n">softbounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">2.0</span><span class="p">),</span>
         <span class="n">precedence</span><span class="o">=</span><span class="mf">0.62</span><span class="p">,</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;Overall diameter of the pattern, if angle=pi.&quot;</span><span class="p">)</span>
 
@@ -1057,19 +978,19 @@
 </div>
 <div class="viewcode-block" id="ConcentricRings"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.__init__.ConcentricRings">[docs]</a><span class="k">class</span> <span class="nc">ConcentricRings</span><span class="p">(</span><span class="n">PatternGenerator</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Concentric rings with linearly increasing radius. </span>
+<span class="sd">    Concentric rings with linearly increasing radius.</span>
 <span class="sd">    Gaussian fall-off at the edges.</span>
-<span class="sd">    &quot;&quot;&quot;</span>    
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">aspect_ratio</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span><span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span><span class="n">softbounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">2.0</span><span class="p">),</span>
         <span class="n">precedence</span><span class="o">=</span><span class="mf">0.31</span><span class="p">,</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;Ratio of width to height.&quot;</span><span class="p">)</span>
-    
+
     <span class="n">thickness</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.04</span><span class="p">,</span><span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span><span class="n">softbounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.5</span><span class="p">),</span>
         <span class="n">precedence</span><span class="o">=</span><span class="mf">0.60</span><span class="p">,</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;Thickness (line width) of the ring.&quot;</span><span class="p">)</span>
-    
+
     <span class="n">smoothing</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span><span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span><span class="n">softbounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.5</span><span class="p">),</span>
         <span class="n">precedence</span><span class="o">=</span><span class="mf">0.61</span><span class="p">,</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;Width of the Gaussian fall-off inside and outside the rings.&quot;</span><span class="p">)</span>
-    
+
     <span class="n">size</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span><span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span><span class="n">softbounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">2.0</span><span class="p">),</span>
         <span class="n">precedence</span><span class="o">=</span><span class="mf">0.62</span><span class="p">,</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;Radius difference of neighbouring rings.&quot;</span><span class="p">)</span>
 
@@ -1102,19 +1023,19 @@
 <div class="viewcode-block" id="ArcCentered"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.__init__.ArcCentered">[docs]</a><span class="k">class</span> <span class="nc">ArcCentered</span><span class="p">(</span><span class="n">Arc</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    2D arc pattern generator (centered at the middle of the arc).</span>
-<span class="sd">    </span>
+
 <span class="sd">    Draws an arc (partial ring) of the specified size (radius*2),</span>
 <span class="sd">    with middle at radian 0.0 and starting at arc_length/2 and ending</span>
 <span class="sd">    at -arc_length/2. The pattern is centered at the middle of the arc.</span>
 
 <span class="sd">    See the Disk class for a note about the Gaussian fall-off.</span>
-<span class="sd">    &quot;&quot;&quot;</span>    
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">aspect_ratio</span><span class="o">==</span><span class="mf">0.0</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pattern_x</span><span class="o">*</span><span class="mf">0.0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pattern_x</span> <span class="o">-=</span> <span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">pi</span><span class="o">-</span><span class="n">p</span><span class="o">.</span><span class="n">arc_length</span><span class="o">/</span><span class="mi">2</span><span class="p">))</span><span class="o">*</span><span class="n">p</span><span class="o">.</span><span class="n">size</span><span class="o">/</span><span class="mi">4</span>
-       
+
         <span class="k">return</span> <span class="n">arc_by_radian</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">pattern_x</span><span class="o">+</span><span class="n">p</span><span class="o">.</span><span class="n">size</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="n">p</span><span class="o">.</span><span class="n">aspect_ratio</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pattern_y</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">size</span><span class="p">,</span>
                              <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">pi</span><span class="o">-</span><span class="n">p</span><span class="o">.</span><span class="n">arc_length</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">arc_length</span><span class="o">/</span><span class="mi">2</span><span class="p">),</span> <span class="n">p</span><span class="o">.</span><span class="n">thickness</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">smoothing</span><span class="p">)</span>
 
