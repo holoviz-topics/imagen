@@ -1,0 +1,8 @@
+<map id="inheritance3a1aae55ef" name="inheritance3a1aae55ef">
+<area shape="rect" id="node1" href="#imagen.deprecated.GaussiansCorner" title="Two Gaussian pattern generators with a variable intersection point," alt="" coords="659,5,919,30"/>
+<area shape="rect" id="node2" href="#imagen.patterngenerator.PatternGenerator" title="A class hierarchy for callable objects that can generate 2D patterns." alt="" coords="312,79,611,105"/>
+<area shape="rect" id="node3" href="#imagen.deprecated.OldSweeper" title="PatternGenerator that sweeps a supplied PatternGenerator in a" alt="" coords="676,54,903,79"/>
+<area shape="rect" id="node4" href="#imagen.deprecated.Translator" title="PatternGenerator that translates another PatternGenerator over" alt="" coords="683,103,896,129"/>
+<area shape="rect" id="node5" href="#imagen.deprecated.TwoRectangles" title="Two 2D rectangle pattern generator." alt="" coords="668,153,911,178"/>
+<area shape="rect" id="node6" title="params(name=String)" alt="" coords="5,79,264,105"/>
+</map>

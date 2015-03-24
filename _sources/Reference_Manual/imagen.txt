@@ -43,6 +43,19 @@ imagen.imagen Package
 
 -------
 
+:mod:`deprecated` Module
+------------------------
+
+.. inheritance-diagram:: imagen.deprecated
+
+
+.. automodule:: imagen.deprecated
+    :members:
+    :inherited-members:
+    :show-inheritance:
+
+-------
+
 :mod:`image` Module
 -------------------
 
