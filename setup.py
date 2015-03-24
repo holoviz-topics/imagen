@@ -9,11 +9,12 @@ setup_args = {}
 ##### CEBALERT: copied from topographica; should be simplified
 
 required = {'param':">=0.0.1",
-            'numpy':">=1.0"} 
+            'numpy':">=1.0",
+            'holoviews':">=1.0.1"}
 
 # could add tkinter, paramtk
 # optional = {}
-            
+
 packages_to_install = [required]
 packages_to_state = [required]
 
