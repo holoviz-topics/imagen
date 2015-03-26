@@ -18,7 +18,7 @@ sys.path.insert(0, os.path.join(cwd, '..', 'holoviews'))
 import param
 from param.version import Version
 
-__version__ = Version(release=(1,0,0), fpath=__file__,
+__version__ = Version(release=(2,0,0), fpath=__file__,
                       commit="$Format:%h$", reponame='imagen')
 
 
