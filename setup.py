@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import sys
+import os, sys
 from distutils.core import setup
 
 setup_args = {}
@@ -8,7 +8,7 @@ setup_args = {}
 #############################################################################################
 ##### CEBALERT: copied from topographica; should be simplified
 
-required = {'param':">=0.0.1",
+required = {'param':">=1.3.1",
             'numpy':">=1.0",
             'holoviews':">=1.0.1"}
 
@@ -41,7 +41,7 @@ setup_args.update(dict(
     name='imagen',
     version="2.0.0",
     description='Generic Python library for 0D, 1D, and 2D pattern distributions.',
-    long_description=open('README.rst').read(),
+    long_description=open('README.rst').read() if os.path.isfile('README.rst') else 'Consult README.rst',
     author= "IOAM",
     author_email= "developers@topographica.org",
     maintainer= "IOAM",
@@ -49,7 +49,9 @@ setup_args.update(dict(
     platforms=['Windows', 'Mac OS X', 'Linux'],
     license='BSD',
     url='http://ioam.github.com/imagen/',
-    packages = ["imagen", "imagen.transferfn"],
+    packages = ["imagen",
+                "imagen.transferfn"],
+    package_data={},
     classifiers = [
         "License :: OSI Approved :: BSD License",
         "Development Status :: 5 - Production/Stable",
@@ -65,9 +67,30 @@ setup_args.update(dict(
 ))
 
 
+def check_pseudo_package(path):
+    """
+    Verifies that a fake subpackage path for assets (notebooks, svgs,
+    pngs etc) both exists and is populated with files.
+    """
+    if not os.path.isdir(path):
+        raise Exception("Please make sure pseudo-package %s exists." % path)
+    else:
+        assets = os.listdir(path)
+        if len(assets) == 0:
+            raise Exception("Please make sure pseudo-package %s is populated." % path)
+
+
 if __name__=="__main__":
 
-    if 'upload' in sys.argv:
+    # Make sure to create these directories and populate them before upload
+    setup_args['packages'] += ["imagen.tests", "imagen.notebooks", "imagen.notebooks.images"]
+    setup_args['package_data']['imagen.notebooks'] = ['*.ipynb']
+    setup_args['package_data']['imagen.notebooks.images'] = ['*.pgm']
+
+    if ('upload' in sys.argv) or ('sdist' in sys.argv):
+        check_pseudo_package(os.path.join('.', 'imagen', 'tests'))
+        check_pseudo_package(os.path.join('.', 'imagen', 'notebooks'))
+
         import imagen
         imagen.__version__.verify(setup_args['version'])
 
