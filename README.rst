@@ -1,4 +1,4 @@
-|BuildStatus|_ |PyPIVersion|_ |ImagenDocs|_
+|BuildStatus|_ |PyVersion|_ |License|_ |Release|_ 
 
 ImaGen
 ======
@@ -30,11 +30,11 @@ changes can be obtained by cloning the git repository.
 .. |BuildStatus| image:: https://travis-ci.org/ioam/imagen.svg?branch=master
 .. _BuildStatus: https://travis-ci.org/ioam/imagen
 
-.. |PyPI| image:: https://pypip.in/version/imagen/badge.svg?style=flat
-.. _PyPI: https://pypi.python.org/pypi/imagen/2.0.0
+.. |Release| image:: https://pypip.in/version/imagen/badge.svg?style=flat
+.. _Release: https://pypi.python.org/pypi/imagen/2.0.0
 
-.. |PyVersions| image:: https://pypip.in/py_versions/imagen/badge.svg?style=flat
-.. _PyVersions: https://pypi.python.org/pypi/imagen/2.0.0
+.. |PyVersion| image:: https://pypip.in/py_versions/imagen/badge.svg?style=flat
+.. _PyVersion: https://pypi.python.org/pypi/imagen/2.0.0
 
 .. |License| image:: https://pypip.in/license/imagen/badge.svg?style=flat
 .. _License: https://github.com/ioam/imagen/blob/master/LICENSE.txt
