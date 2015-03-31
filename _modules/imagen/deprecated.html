@@ -81,6 +81,7 @@
 <span class="kn">from</span> <span class="nn">.patterngenerator</span> <span class="kn">import</span> <span class="n">Constant</span><span class="p">,</span> <span class="n">PatternGenerator</span><span class="p">,</span> <span class="n">Composite</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">Gaussian</span>
 
+<span class="kn">from</span> <span class="nn">image</span> <span class="kn">import</span> <span class="n">FileImage</span><span class="p">,</span> <span class="n">PatternSampler</span><span class="p">,</span> <span class="n">ImageSampler</span><span class="p">,</span> <span class="n">edge_average</span>
 
 <div class="viewcode-block" id="SeparatedComposite"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.deprecated.SeparatedComposite">[docs]</a><span class="k">class</span> <span class="nc">SeparatedComposite</span><span class="p">(</span><span class="n">Composite</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -410,8 +411,20 @@
 
         <span class="k">return</span> <span class="n">image_array</span>
 
-
 </div></div>
+<div class="viewcode-block" id="NumpyFile"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.deprecated.NumpyFile">[docs]</a><span class="k">class</span> <span class="nc">NumpyFile</span><span class="p">(</span><span class="n">FileImage</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    For backwards compatibility.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">pattern_sampler</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">ClassSelector</span><span class="p">(</span><span class="n">class_</span><span class="o">=</span><span class="n">ImageSampler</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">PatternSampler</span><span class="p">(</span><span class="n">background_value_fn</span><span class="o">=</span><span class="n">edge_average</span><span class="p">,</span>
+                               <span class="n">size_normalization</span><span class="o">=</span><span class="s">&#39;original&#39;</span><span class="p">,</span>
+                               <span class="n">whole_pattern_output_fns</span><span class="o">=</span><span class="p">[]),</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">        The PatternSampler to use to resample/resize the image.&quot;&quot;&quot;</span><span class="p">)</span>
+
+
+</div>
 <span class="n">_public</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">([</span><span class="n">_k</span> <span class="k">for</span> <span class="n">_k</span><span class="p">,</span><span class="n">_v</span> <span class="ow">in</span> <span class="nb">locals</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">_v</span><span class="p">,</span><span class="nb">type</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">_v</span><span class="p">,</span><span class="n">PatternGenerator</span><span class="p">)]))</span>
 <span class="n">__all__</span> <span class="o">=</span> <span class="n">_public</span>
 </pre></div>

@@ -1,0 +1,15 @@
+<map id="inheritance3a1aae55ef" name="inheritance3a1aae55ef">
+<area shape="rect" id="node1" href="#imagen.deprecated.GaussiansCorner" title="Two Gaussian pattern generators with a variable intersection point," alt="" coords="418,3,578,18"/>
+<area shape="rect" id="node2" href="#imagen.patterngenerator.PatternGenerator" title="A class hierarchy for callable objects that can generate 2D patterns." alt="" coords="192,79,375,95"/>
+<area shape="rect" id="node5" href="#imagen.deprecated.OldSweeper" title="PatternGenerator that sweeps a supplied PatternGenerator in a" alt="" coords="429,33,568,49"/>
+<area shape="rect" id="node8" href="#imagen.deprecated.Translator" title="PatternGenerator that translates another PatternGenerator over" alt="" coords="433,63,564,79"/>
+<area shape="rect" id="node9" href="#imagen.deprecated.TwoRectangles" title="Two 2D rectangle pattern generator." alt="" coords="424,94,573,109"/>
+<area shape="rect" id="node11" href="#imagen.patterngenerator.ChannelGenerator" title="Abstract base class for patterns supporting multiple channels natively." alt="" coords="405,124,592,140"/>
+<area shape="rect" id="node12" href="#imagen.patterngenerator.CompositeBase" title="PatternGenerator that combines or selects from a list of other" alt="" coords="410,154,587,170"/>
+<area shape="rect" id="node3" href="#imagen.deprecated.NumpyFile" title="For backwards compatibility." alt="" coords="1015,124,1148,140"/>
+<area shape="rect" id="node4" href="#imagen.image.FileImage" title="2D Image generator that reads the image from a file." alt="" coords="841,124,951,140"/>
+<area shape="rect" id="node6" href="#imagen.deprecated.SeparatedComposite" title="Generalized version of the Composite PatternGenerator that" alt="" coords="808,154,984,170"/>
+<area shape="rect" id="node7" href="#imagen.patterngenerator.Composite" title="PatternGenerator that accepts a list of other PatternGenerators." alt="" coords="621,154,778,170"/>
+<area shape="rect" id="node10" href="#imagen.image.GenericImage" title="Generic 2D image generator with support for multiple channels." alt="" coords="636,124,763,140"/>
+<area shape="rect" id="node13" title="params(name=String)" alt="" coords="3,79,162,95"/>
+</map>
