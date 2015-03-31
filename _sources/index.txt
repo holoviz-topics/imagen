@@ -10,6 +10,8 @@ ImaGen
 Installation
 ============
 
+|PyPI|_ |License|_ |PyVersions|_
+
 ImaGen requires NumPy (http://numpy.scipy.org/), Param
 (http://ioam.github.com/param/), and HoloViews
 (http://ioam.github.com/holoviews/), none of which have any required
@@ -20,7 +22,7 @@ http://pypi.python.org/pypi/imagen, and can be installed using ``pip``.
 If you don't have ``pip`` already, we recommend installing a
 scientific Python distribution like 
 `Anaconda <http://continuum.io/downloads>`_ first.  Then installation
-of ImaGen and dependencies is simply::
+of ImaGen and required dependencies is simply::
 
   pip install imagen
 
@@ -35,10 +37,12 @@ Notebook can find them, and then open the index.ipynb tutorial in the
 Notebook.  Then try out any of the patterns you like, using
 ``help(``*obj-or-class*``)`` to find out its parameters and their
 options, or repeatedly press ``<Shift+TAB>`` in IPython after opening
-an object constructor.  Note that IPython notebook is not in any way
-required for ImaGen, but it does provide a very handy way to visualize
-and explore the patterns interactively even if you will eventually use
-them separately from IPython.
+an object constructor.  Just add ``[:]`` after your pattern object to
+plot it using matplotlib and HoloViews. Note that IPython Notebook and
+matplotlib are not in any way required for ImaGen, but when used with
+HoloViews they do provide a very handy way to visualize and explore
+the patterns interactively even if you will eventually use them
+separately from IPython and matplotlib.
 
 
 Support
@@ -46,6 +50,14 @@ Support
 
 Questions and comments are welcome at https://github.com/ioam/imagen/issues.
 
+.. |PyPI| image:: https://pypip.in/version/imagen/badge.svg?style=flat
+.. _PyPI: https://pypi.python.org/pypi/imagen/1.0.0
+
+.. |PyVersions| image:: https://pypip.in/py_versions/imagen/badge.svg?style=flat
+.. _PyVersions: https://pypi.python.org/pypi/imagen/1.0.0
+
+.. |License| image:: https://pypip.in/license/imagen/badge.svg?style=flat
+.. _License: https://github.com/ioam/imagen/blob/master/LICENSE.txt
 
 Indices and tables
 ==================
