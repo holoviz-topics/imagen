@@ -39,7 +39,7 @@ for package_list in packages_to_state:
 
 setup_args.update(dict(
     name='imagen',
-    version="2.0.0",
+    version="2.0.1",
     description='Generic Python library for 0D, 1D, and 2D pattern distributions.',
     long_description=open('README.rst').read() if os.path.isfile('README.rst') else 'Consult README.rst',
     author= "IOAM",
