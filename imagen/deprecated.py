@@ -13,8 +13,7 @@ from param import ClassSelector
 
 from .patterngenerator import Constant, PatternGenerator, Composite
 from . import Gaussian
-
-from image import FileImage, PatternSampler, ImageSampler, edge_average
+from .image import FileImage, PatternSampler, ImageSampler, edge_average
 
 class SeparatedComposite(Composite):
     """
