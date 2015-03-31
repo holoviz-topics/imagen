@@ -30,9 +30,11 @@ changes can be obtained by cloning the git repository.
 .. |BuildStatus| image:: https://travis-ci.org/ioam/imagen.svg?branch=master
 .. _BuildStatus: https://travis-ci.org/ioam/imagen
 
-.. |PyPIVersion| image:: http://img.shields.io/pypi/v/imagen.svg
-.. _PyPIVersion: https://pypi.python.org/pypi/imagen
+.. |PyPI| image:: https://pypip.in/version/imagen/badge.svg?style=flat
+.. _PyPI: https://pypi.python.org/pypi/imagen/2.0.0
 
+.. |PyVersions| image:: https://pypip.in/py_versions/imagen/badge.svg?style=flat
+.. _PyVersions: https://pypi.python.org/pypi/imagen/2.0.0
 
-.. |ImagenDocs| image:: http://doozy.inf.ed.ac.uk:8010/png?builder=imagen_docs
-.. _ImagenDocs: http://doozy.inf.ed.ac.uk:8010/waterfall
+.. |License| image:: https://pypip.in/license/imagen/badge.svg?style=flat
+.. _License: https://github.com/ioam/imagen/blob/master/LICENSE.txt
