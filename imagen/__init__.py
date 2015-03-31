@@ -1551,5 +1551,5 @@ class Spectrogram(PowerSpectrum):
 
 _public = list(set([_k for _k,_v in locals().items() if isinstance(_v,type) and issubclass(_v,PatternGenerator)]))
 __all__ = _public + ["image", "random", "patterncoordinator", "boundingregion", "sheetcoords"]
-# Avoids loading the audio and opencvcamera modules, which rely on external
+# Should avoid loading audio.py and other modules that rely on external
 # libraries that might not be present on this system.

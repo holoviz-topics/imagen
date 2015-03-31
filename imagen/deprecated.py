@@ -14,6 +14,7 @@ from param import ClassSelector
 from .patterngenerator import Constant, PatternGenerator, Composite
 from . import Gaussian
 
+from image import FileImage, PatternSampler, ImageSampler, edge_average
 
 class SeparatedComposite(Composite):
     """
@@ -342,6 +343,18 @@ class OldSweeper(PatternGenerator):
                          scale=pg.scale*p.scale,offset=pg.offset+p.offset)
 
         return image_array
+
+
+class NumpyFile(FileImage):
+    """
+    For backwards compatibility.
+    """
+
+    pattern_sampler = param.ClassSelector(class_=ImageSampler,
+        default=PatternSampler(background_value_fn=edge_average,
+                               size_normalization='original',
+                               whole_pattern_output_fns=[]),doc="""
+        The PatternSampler to use to resample/resize the image.""")
 
 
 

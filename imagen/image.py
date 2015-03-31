@@ -563,16 +563,3 @@ class ScaleChannels(ChannelTransform):
             channel_data[i][channel_data[i]>1]=1.0
 
         return channel_data
-
-
-
-class NumpyFile(FileImage):
-    """
-    For backwards compatibility.
-    """
-
-    pattern_sampler = param.ClassSelector(class_=ImageSampler,
-        default=PatternSampler(background_value_fn=edge_average,
-                               size_normalization='original',
-                               whole_pattern_output_fns=[]),doc="""
-        The PatternSampler to use to resample/resize the image.""")
