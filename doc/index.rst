@@ -10,7 +10,7 @@ ImaGen
 Installation
 ============
 
-|PyPI|_ |License|_ |PyVersions|_
+|Package|_ |License|_ |PyVersions|_
 
 ImaGen requires `NumPy <http://numpy.scipy.org/>`_, 
 `Param <http://ioam.github.com/param/>`_, and 
@@ -50,8 +50,8 @@ Support
 
 Questions and comments are welcome at https://github.com/ioam/imagen/issues.
 
-.. |PyPI| image:: https://pypip.in/version/imagen/badge.svg?style=flat
-.. _PyPI: https://pypi.python.org/pypi/imagen
+.. |Package| image:: https://pypip.in/version/imagen/badge.svg?style=flat
+.. _Package: https://pypi.python.org/pypi/imagen
 
 .. |PyVersions| image:: https://pypip.in/py_versions/imagen/badge.svg?style=flat
 .. _PyVersions: https://pypi.python.org/pypi/imagen
