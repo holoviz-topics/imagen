@@ -51,10 +51,10 @@ Support
 Questions and comments are welcome at https://github.com/ioam/imagen/issues.
 
 .. |PyPI| image:: https://pypip.in/version/imagen/badge.svg?style=flat
-.. _PyPI: https://pypi.python.org/pypi/imagen/2.0.0
+.. _PyPI: https://pypi.python.org/pypi/imagen
 
 .. |PyVersions| image:: https://pypip.in/py_versions/imagen/badge.svg?style=flat
-.. _PyVersions: https://pypi.python.org/pypi/imagen/2.0.0
+.. _PyVersions: https://pypi.python.org/pypi/imagen
 
 .. |License| image:: https://pypip.in/license/imagen/badge.svg?style=flat
 .. _License: https://github.com/ioam/imagen/blob/master/LICENSE.txt

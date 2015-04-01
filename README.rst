@@ -31,10 +31,10 @@ changes can be obtained by cloning the git repository.
 .. _BuildStatus: https://travis-ci.org/ioam/imagen
 
 .. |Release| image:: https://pypip.in/version/imagen/badge.svg?style=flat
-.. _Release: https://pypi.python.org/pypi/imagen/2.0.0
+.. _Release: https://pypi.python.org/pypi/imagen
 
 .. |PyVersion| image:: https://pypip.in/py_versions/imagen/badge.svg?style=flat
-.. _PyVersion: https://pypi.python.org/pypi/imagen/2.0.0
+.. _PyVersion: https://pypi.python.org/pypi/imagen
 
 .. |License| image:: https://pypip.in/license/imagen/badge.svg?style=flat
 .. _License: https://github.com/ioam/imagen/blob/master/LICENSE.txt
