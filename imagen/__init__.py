@@ -29,9 +29,8 @@ from param.parameterized import ParamOverrides
 from param import ClassSelector
 
 # Imported here so that all PatternGenerators will be in the same package
-from .patterngenerator import Constant, PatternGenerator
-from .patterngenerator import CompositeBase, Composite
-from .patterngenerator import ChannelTransform, ChannelGenerator # pyflakes:ignore (API import)
+from .patterngenerator import PatternGenerator, CompositeBase, Composite
+from .patterngenerator import Constant, ChannelTransform, ChannelGenerator # pyflakes:ignore (API import)
 from .patterngenerator import CorrelateChannels, ComposeChannels # pyflakes:ignore (API import)
 
 
@@ -742,7 +741,6 @@ class SpiralGrating(Composite):
 
 
     def function(self, p):
-        o=2*np.pi/p.parts
         gens = [Spiral(turning=p.turning,smoothing=p.smoothing,thickness=p.thickness,
                        orientation=i*2*np.pi/p.parts) for i in range(p.parts)]
 
@@ -841,7 +839,6 @@ class RadialGrating(Composite):
         Width of the Gaussian fall-off outside the sector, scaled by parts.""")
 
     def function(self, p):
-        o=2*np.pi/p.parts
         gens = [Wedge(size=1.0/p.parts,smoothing=p.smoothing/p.parts,
                       orientation=i*2*np.pi/p.parts) for i in range(p.parts)]
 

@@ -9,7 +9,6 @@ import numpy as np
 from numpy import pi
 
 from param.parameterized import ParamOverrides
-from param import ClassSelector
 
 from .patterngenerator import Constant, PatternGenerator, Composite
 from . import Gaussian

@@ -17,7 +17,6 @@ from param.parameterized import ParamOverrides
 
 from holoviews import HoloMap, Image, RGB, Dimension
 from holoviews.core import BoundingBox, BoundingRegionParameter, SheetCoordinateSystem
-from holoviews.core.options import Store, Options
 
 from .transferfn import TransferFn
 
