@@ -96,9 +96,8 @@
 <span class="kn">from</span> <span class="nn">param</span> <span class="kn">import</span> <span class="n">ClassSelector</span>
 
 <span class="c"># Imported here so that all PatternGenerators will be in the same package</span>
-<span class="kn">from</span> <span class="nn">.patterngenerator</span> <span class="kn">import</span> <span class="n">Constant</span><span class="p">,</span> <span class="n">PatternGenerator</span>
-<span class="kn">from</span> <span class="nn">.patterngenerator</span> <span class="kn">import</span> <span class="n">CompositeBase</span><span class="p">,</span> <span class="n">Composite</span>
-<span class="kn">from</span> <span class="nn">.patterngenerator</span> <span class="kn">import</span> <span class="n">ChannelTransform</span><span class="p">,</span> <span class="n">ChannelGenerator</span> <span class="c"># pyflakes:ignore (API import)</span>
+<span class="kn">from</span> <span class="nn">.patterngenerator</span> <span class="kn">import</span> <span class="n">PatternGenerator</span><span class="p">,</span> <span class="n">CompositeBase</span><span class="p">,</span> <span class="n">Composite</span>
+<span class="kn">from</span> <span class="nn">.patterngenerator</span> <span class="kn">import</span> <span class="n">Constant</span><span class="p">,</span> <span class="n">ChannelTransform</span><span class="p">,</span> <span class="n">ChannelGenerator</span> <span class="c"># pyflakes:ignore (API import)</span>
 <span class="kn">from</span> <span class="nn">.patterngenerator</span> <span class="kn">import</span> <span class="n">CorrelateChannels</span><span class="p">,</span> <span class="n">ComposeChannels</span> <span class="c"># pyflakes:ignore (API import)</span>
 
 
@@ -809,7 +808,6 @@
 
 
     <span class="k">def</span> <span class="nf">function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
-        <span class="n">o</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="n">p</span><span class="o">.</span><span class="n">parts</span>
         <span class="n">gens</span> <span class="o">=</span> <span class="p">[</span><span class="n">Spiral</span><span class="p">(</span><span class="n">turning</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">turning</span><span class="p">,</span><span class="n">smoothing</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">smoothing</span><span class="p">,</span><span class="n">thickness</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">thickness</span><span class="p">,</span>
                        <span class="n">orientation</span><span class="o">=</span><span class="n">i</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="n">p</span><span class="o">.</span><span class="n">parts</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">parts</span><span class="p">)]</span>
 
@@ -908,7 +906,6 @@
 <span class="s">        Width of the Gaussian fall-off outside the sector, scaled by parts.&quot;&quot;&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
-        <span class="n">o</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="n">p</span><span class="o">.</span><span class="n">parts</span>
         <span class="n">gens</span> <span class="o">=</span> <span class="p">[</span><span class="n">Wedge</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mf">1.0</span><span class="o">/</span><span class="n">p</span><span class="o">.</span><span class="n">parts</span><span class="p">,</span><span class="n">smoothing</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">smoothing</span><span class="o">/</span><span class="n">p</span><span class="o">.</span><span class="n">parts</span><span class="p">,</span>
                       <span class="n">orientation</span><span class="o">=</span><span class="n">i</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="n">p</span><span class="o">.</span><span class="n">parts</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">parts</span><span class="p">)]</span>
 
