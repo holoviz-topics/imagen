@@ -43,7 +43,7 @@ from math import pi, fmod, floor
 import param
 import copy
 import colorsys
-import np
+import numpy as np
 
 
 def _threeDdot_simple(M,a):
