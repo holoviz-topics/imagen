@@ -40,23 +40,21 @@ classes, and will rarely need to be used directly.
 
 from math import pi, fmod, floor
 
+import param
 import copy
 import colorsys
-
-import numpy
-
-import param
+import np
 
 
 def _threeDdot_simple(M,a):
-    """Return Ma, where M is a 3x3 transformation matrix, for each pixel"""
+    "Return Ma, where M is a 3x3 transformation matrix, for each pixel"
 
-    result = numpy.empty(a.shape,dtype=a.dtype)
+    result = np.empty(a.shape,dtype=a.dtype)
 
     for i in range(a.shape[0]):
         for j in range(a.shape[1]):
-            A = numpy.array([a[i,j,0],a[i,j,1],a[i,j,2]]).reshape((3,1))
-            L = numpy.dot(M,A)
+            A = np.array([a[i,j,0],a[i,j,1],a[i,j,2]]).reshape((3,1))
+            L = np.dot(M,A)
             result[i,j,0] = L[0]
             result[i,j,1] = L[1]
             result[i,j,2] = L[2]
@@ -67,12 +65,15 @@ def _threeDdot_simple(M,a):
 def _threeDdot_opt(M,a):
     swapped = a.swapaxes(0,2)
     shape = swapped.shape
-    result = numpy.dot(M,swapped.reshape((3,-1)))
+    result = np.dot(M,swapped.reshape((3,-1)))
     result.shape = shape
     b = result.swapaxes(2,0)
     # need to do asarray to ensure dtype?
-    return numpy.asarray(b,dtype=a.dtype)
-# CB: probably could make a faster version if do aM instead,  e.g. something like (untested):
+    return np.asarray(b,dtype=a.dtype)
+
+# CB: probably could make a faster version if do aM instead,
+# e.g. something like (untested):
+
 #def _threeDdot(M,a):
 #    shape = a.shape
 #    result = np.dot(a.reshape((-1,3)),M)
@@ -86,7 +87,7 @@ def _abc_to_def_array(ABC,fn):
     shape = ABC[:,:,0].shape
     dtype = ABC.dtype
 
-    DEF = numpy.zeros(ABC.shape,dtype=dtype)
+    DEF = np.zeros(ABC.shape,dtype=dtype)
 
     for i in range(shape[0]):
         for j in range(shape[1]):
@@ -118,14 +119,14 @@ EPS = 216/24389.0
 
 def xyz_to_lab(XYZ,wp):
 
-    X,Y,Z = numpy.dsplit(XYZ,3)
+    X,Y,Z = np.dsplit(XYZ,3)
     xn,yn,zn = X/wp[0], Y/wp[1], Z/wp[2]
 
     def f(t):
         t = t.copy() # probably unnecessary!
         t_eps = t>EPS
         t_not_eps = t<=EPS
-        t[t_eps] = numpy.power(t[t_eps], 1.0/3)
+        t[t_eps] = np.power(t[t_eps], 1.0/3)
         t[t_not_eps] = (KAP*t[t_not_eps]+16.0)/116.
         return t
 
@@ -134,12 +135,12 @@ def xyz_to_lab(XYZ,wp):
     a = 500*(fx - fy)
     b = 200*(fy - fz)
 
-    return numpy.dstack((L,a,b))
+    return np.dstack((L,a,b))
 
 
 def lab_to_xyz(LAB,wp):
 
-    L,a,b = numpy.dsplit(LAB,3)
+    L,a,b = np.dsplit(LAB,3)
     fy = (L+16)/116.0
     fz = fy - b / 200.0
     fx = a/500.0 + fy
@@ -147,24 +148,24 @@ def lab_to_xyz(LAB,wp):
     def finv(y):
         y =copy.copy(y) # CEBALERT: why copy?
         eps3 = EPS**3
-        return numpy.where(y > eps3,
-                           numpy.power(y,3),
+        return np.where(y > eps3,
+                           np.power(y,3),
                            (116*y-16)/KAP)
 
     xr, yr, zr = finv(fx), finv(fy), finv(fz)
-    return numpy.dstack((xr*wp[0],yr*wp[1],zr*wp[2]))
+    return np.dstack((xr*wp[0],yr*wp[1],zr*wp[2]))
 
 
 def lch_to_lab(LCH):
-    L,C,H = numpy.dsplit(LCH,3)
-    return numpy.dstack( (L,C*numpy.cos(H),C*numpy.sin(H)) )
+    L,C,H = np.dsplit(LCH,3)
+    return np.dstack( (L,C*np.cos(H),C*np.sin(H)) )
 
 
 def lab_to_lch(LAB):
-    L,A,B = numpy.dsplit(LAB,3)
+    L,A,B = np.dsplit(LAB,3)
     range_ = 2*pi
-    x = numpy.arctan2(B,A)
-    return numpy.dstack( (L, numpy.hypot(A,B), fmod(x + 2*range_*(1-floor(x/(2*range_))), range_) ) )
+    x = np.arctan2(B,A)
+    return np.dstack( (L, np.hypot(A,B), fmod(x + 2*range_*(1-floor(x/(2*range_))), range_) ) )
 
 
 def xyz_to_lch(XYZ,whitepoint):
@@ -211,23 +212,23 @@ transforms = {}
 transforms = {}
 transforms['D65'] = sD65 = {}
 
-sD65['rgb_from_xyz'] = numpy.array([[3.2410,-1.5374,-0.4986],
-                                       [-0.9692,1.8760,0.0416],
-                                       [0.0556,-0.204,1.0570]])
-sD65['xyz_from_rgb'] = numpy.array([[ 0.41238088,  0.35757284,  0.1804523 ],
-                                       [ 0.21261986,  0.71513879,  0.07214994],
-                                       [ 0.0193435 ,  0.11921217,  0.95050657]])
+sD65['rgb_from_xyz'] = np.array([[3.2410,-1.5374,-0.4986],
+                                 [-0.9692,1.8760,0.0416],
+                                 [0.0556,-0.204,1.0570]])
+
+sD65['xyz_from_rgb'] = np.array([[ 0.41238088,  0.35757284,  0.1804523 ],
+                                 [ 0.21261986,  0.71513879,  0.07214994],
+                                 [ 0.0193435 ,  0.11921217,  0.95050657]])
 
 
 # Guth (1980) - SP; L, M, and S normalized to one)
-sD65['lms_from_xyz'] = numpy.array([[0.2435, 0.8524, -0.0516],
-                                        [-0.3954, 1.1642, 0.0837],
-                                        [0, 0, 0.6225]])
+sD65['lms_from_xyz'] = np.array([[0.2435, 0.8524, -0.0516],
+                                 [-0.3954, 1.1642, 0.0837],
+                                 [0, 0, 0.6225]])
 
-sD65['xyz_from_lms'] = numpy.array([[  1.87616336e+00,  -1.37368291e+00,   3.40220544e-01],
-                                        [  6.37205799e-01,   3.92411765e-01,   5.61517442e-05],
-                                        [  0.00000000e+00,   0.00000000e+00,   1.60642570e+00]])
-
+sD65['xyz_from_lms'] = np.array([[1.87616336e+00, -1.37368291e+00, 3.40220544e-01],
+                                 [6.37205799e-01, 3.92411765e-01,  5.61517442e-05],
+                                 [0.00000000e+00, 0.00000000e+00,  1.60642570e+00]])
 
 
 ### Make LCH like other spaces (0,1)
@@ -237,18 +238,18 @@ Cmax = 360.0 # ? CEBALERT: A,B typically -127 to 128 (wikipedia...), so 360 or s
 Hmax = 2*pi
 
 def xyz_to_lch01(XYZ, whitepoint):
-    L,C,H = numpy.dsplit(xyz_to_lch(XYZ,whitepoint),3)
+    L,C,H = np.dsplit(xyz_to_lch(XYZ,whitepoint),3)
     L/=Lmax
     C/=Cmax
     H/=Hmax
-    return numpy.dstack((L,C,H))
+    return np.dstack((L,C,H))
 
 def lch01_to_xyz(LCH, whitepoint):
-    L,C,H = numpy.dsplit(LCH,3)
+    L,C,H = np.dsplit(LCH,3)
     L*=Lmax
     C*=Cmax
     H*=Hmax
-    return lch_to_xyz(numpy.dstack((L,C,H)),whitepoint)
+    return lch_to_xyz(np.dstack((L,C,H)),whitepoint)
 
 
 
@@ -259,31 +260,38 @@ class ColorSpace(param.Parameterized):
     LMS and HSV.
     """
 
-    whitepoint = param.String(default='D65', doc="String name of whitepoint from lookup table.")
+    whitepoint = param.String(default='D65', doc="""
+        Name of whitepoint in lookup table.""")
 
-    transforms = param.Dict(default=transforms,doc="""Structure containing the transformation matrices used
-                                                      by this Class. See ``transforms`` in this file.""")
+    transforms = param.Dict(default=transforms,doc="""
+        Structure containing the transformation matrices used by this
+        Class. See ``transforms`` in this file.""")
 
-    input_limits = param.NumericTuple((0.0,1.0),doc="Upper and lower bounds to verify on input values.")
+    input_limits = param.NumericTuple((0.0,1.0),doc="""
+        Upper and lower bounds to verify on input values.""")
 
-    output_limits = param.NumericTuple((0.0,1.0),doc="Upper and lower bounds to enforce on output values.")
+    output_limits = param.NumericTuple((0.0,1.0),doc="""
+        Upper and lower bounds to enforce on output values.""")
 
-    output_clip = param.ObjectSelector(default='silent',objects=['silent','warn','error','none'],doc="""
+    output_clip = param.ObjectSelector(default='silent',
+                                       objects=['silent','warn','error','none'],doc="""
         Action to take when the output value will be clipped.""")
 
-    dtype = param.Parameter(default=numpy.float32,doc="Datatype to use for result.")
+    dtype = param.Parameter(default=np.float32, doc="Datatype to use for result.")
 
 
     def convert(self, from_, to, what):
         """
-        Convert image or color "what" from "from_" colorpace to "to" colorspace.
-        E.g.: ``convert("rgb", "hsv", X)``, where X is a numpy dstack or a color tuple.
+        Convert image or color "what" from "from_" colorpace to "to"
+        colorspace.  E.g.: ``convert("rgb", "hsv", X)``, where X is a
+        numpy dstack or a color tuple.
         """
 
         if(from_.lower()==to.lower()):
             return what
 
-        # Check if there exist an optimized function that performs from_to_to conversion
+        # Check if there exist an optimized function that performs
+        # from_to_to conversion
         direct_conversion = '%s_to_%s'%(from_.lower(),to.lower())
         if( hasattr(self, direct_conversion ) ):
             fn = getattr(self, direct_conversion)
@@ -300,16 +308,15 @@ class ColorSpace(param.Parameterized):
 
 
     def _get_shape(self,a):
-        if hasattr(a,'shape') and a.ndim>0: # i.e. really an array
+        # The shape of the array if it isn't a scalar
+        if isinstance(a, np.ndarray) and a.ndim>0:
             return a.shape
-        else:
-            # also support e.g. tuples
-            try:
-                length = len(a)
-                return (length,)
-            except TypeError:
-                return None
-
+        # Tuple support
+        try:
+            length = len(a)
+            return (length,)
+        except TypeError:
+            return None
 
     def _put_shape(self,a,shape):
         if shape is None:
@@ -320,11 +327,10 @@ class ColorSpace(param.Parameterized):
 
     def _prepare_input(self,a,min_,max_):
         in_shape = self._get_shape(a)
-        a = numpy.array(a,copy=False,ndmin=3,dtype=self.dtype)
+        a = np.array(a,copy=False,ndmin=3,dtype=self.dtype)
         if a.min()<min_ or a.max()>max_:
             raise ValueError('Input out of limits')
         return a, in_shape
-
 
     def _clip(self,a,min_limit,max_limit,action='silent'):
         if action=='none':
@@ -332,11 +338,12 @@ class ColorSpace(param.Parameterized):
 
         if action=='error':
             if a.min()<min_limit or a.max()>max_limit:
-                raise ValueError('(%s,%s) outside limits (%s,%s)'%(a.min(),a.max(),min_limit,max_limit))
+                raise ValueError('(%s,%s) outside limits (%s,%s)'
+                                 % (a.min(),a.max(),min_limit,max_limit))
         elif action=='warn':
             if a.min()<min_limit or a.max()>max_limit:
-                self.warning('(%s,%s) outside limits (%s,%s)'%(a.min(),a.max(),min_limit,max_limit))
-
+                self.warning('(%s,%s) outside limits (%s,%s)' %
+                             (a.min(),a.max(),min_limit,max_limit))
         a.clip(min_limit,max_limit,out=a)
 
 
@@ -348,14 +355,12 @@ class ColorSpace(param.Parameterized):
         self._put_shape(b,in_shape)
         return b
 
-
     def _ABC_to_DEF_by_fn(self,ABC,fn,*fnargs):
         ABC, in_shape = self._prepare_input(ABC,*self.input_limits)
         DEF = fn(ABC,*fnargs)
         self._clip(DEF,*self.output_limits,action=self.output_clip)
         self._put_shape(DEF, in_shape)
         return DEF
-
 
     ##  TO XYZ:     RGB, LCH, LMS, HSV(passing through RGB)
     def rgb_to_xyz(self,RGB):
@@ -375,9 +380,7 @@ class ColorSpace(param.Parameterized):
     def hsv_to_xyz(self,HSV):
         return self.rgb_to_xyz(self.hsv_to_rgb(HSV))
 
-
-
-    ##  XYZ TO:     RGB, LCH, LMS, HSV(passing through RGB)
+    ##  XYZ TO:RGB, LCH, LMS, HSV(passing through RGB)
 
     def xyz_to_rgb(self,XYZ):
         return self._threeDdot(
@@ -396,40 +399,33 @@ class ColorSpace(param.Parameterized):
     def xyz_to_hsv(self, XYZ):
         return self.rgb_to_hsv( self.xyz_to_rgb(XYZ) )
 
-
-
-    ## Optimized
+    # Optimized
     @staticmethod
     def _gamma_rgb(RGB):
-        return 12.92*RGB*(RGB<=0.0031308) + ((1+0.055)*RGB**(1/2.4) - 0.055) * (RGB>0.0031308)
-
+        return (12.92*RGB*(RGB<=0.0031308)
+                + ((1+0.055)*RGB**(1/2.4) - 0.055) * (RGB>0.0031308))
 
     @staticmethod
     def _ungamma_rgb(RGB):
-        return RGB/12.92*(RGB<=0.04045) + (((RGB+0.055)/1.055)**2.4) * (RGB>0.04045)
+        return (RGB/12.92*(RGB<=0.04045)
+                + (((RGB+0.055)/1.055)**2.4) * (RGB>0.04045))
 
-
-    # linear rgb to hsv
     def rgb_to_hsv(self,RGB):
+        "linear rgb to hsv"
         gammaRGB = self._gamma_rgb(RGB)
         return self._ABC_to_DEF_by_fn(gammaRGB,rgb_to_hsv)
 
-
-    # hsv to linear rgb
     def hsv_to_rgb(self,HSV):
+        "hsv to linear rgb"
         gammaRGB = self._ABC_to_DEF_by_fn(HSV,hsv_to_rgb)
         return self._ungamma_rgb(gammaRGB)
 
-
-    ### for display
     def hsv_to_gammargb(self,HSV):
-        # hsv is already specifying gamma corrected rgb
+        "hsv is already specifying gamma corrected rgb"
         return self._ABC_to_DEF_by_fn(HSV,hsv_to_rgb)
-
 
     def lch_to_gammargb(self,LCH):
         return self._gamma_rgb(self.lch_to_rgb(LCH))
-
 
     def lms_to_lch(self,LCH):
         lch_to_xyz
@@ -437,11 +433,10 @@ class ColorSpace(param.Parameterized):
 
 
 def _swaplch(LCH):
-    """Reverse the order of an LCH numpy dstack or tuple for analysis."""
-
+    "Reverse the order of an LCH numpy dstack or tuple for analysis."
     try: # Numpy array
-        L,C,H = numpy.dsplit(LCH,3)
-        return numpy.dstack((H,C,L))
+        L,C,H = np.dsplit(LCH,3)
+        return np.dstack((H,C,L))
     except: # Tuple
         L,C,H = LCH
         return H,C,L
@@ -452,11 +447,14 @@ class ColorConverter(param.Parameterized):
     """
     High-level color conversion class designed to support color space
     transformations along a pipeline common in color vision modelling:
-    image (dataset colorspace) -> working (working colorspace) -> [higher stages] -> analysis
+    image (dataset colorspace) -> working (working colorspace) ->
+    [higher stages] -> analysis
     """
 
     # CEBALERT: should be ClassSelector
-    # SPG: it shouldn't be necessary to support selection of the ColorSpace, as the new object supports any color conversion.
+
+    # SPG: it shouldn't be necessary to support selection of the
+    # ColorSpace, as the new object supports any color conversion.
     colorspace = param.Parameter(default=ColorSpace(),doc="""
         Object to use for converting between color spaces.""")
 
@@ -464,10 +462,11 @@ class ColorConverter(param.Parameterized):
         Color space in which images are encoded.""") # CEBALERT: possibly add sRGB?
 
     working_space = param.ObjectSelector(default='RGB', objects=['RGB','LMS'], doc="""
-        Color space to which images will be transformed to provide working space
-        to later stages of processing.""")
+        Color space to which images will be transformed to provide
+        working space to later stages of processing.""")
 
-    analysis_space = param.ObjectSelector(default='HSV', objects=['HSV','LCH'], doc="""
+    analysis_space = param.ObjectSelector(default='HSV',
+                                          objects=['HSV','LCH'], doc="""
         Color space in which analysis is performed.""")
 
     swap_polar_HSVorder = {
@@ -476,21 +475,20 @@ class ColorConverter(param.Parameterized):
 
 
     def image2working(self,i):
-        """Transform images i provided into the specified working color space."""
-        return self.colorspace.convert(self.image_space, self.working_space, i)
-
+        """Transform images i provided into the specified working
+        color space."""
+        return self.colorspace.convert(self.image_space,
+                                       self.working_space, i)
 
     def working2analysis(self,r):
-        """Transform working space inputs to the analysis color space."""
+        "Transform working space inputs to the analysis color space."
         a = self.colorspace.convert(self.working_space, self.analysis_space, r)
         return self.swap_polar_HSVorder[self.analysis_space](a)
 
-
     def analysis2working(self,a):
-        """Convert back from the analysis color space to the working space."""
+        "Convert back from the analysis color space to the working space."
         a = self.swap_polar_HSVorder[self.analysis_space](a)
         return self.colorspace.convert(self.analysis_space, self.working_space, a)
-
 
     def analysis2display(self,a):
         """
@@ -503,13 +501,12 @@ class ColorConverter(param.Parameterized):
 
 
     def jitter_hue(self,a,amount):
-        """Rotate the hue component of a by the given amount."""
+        "Rotate the hue component of a by the given amount."
         a[:,:,0] += amount
         a[:,:,0] %= 1.0
 
-
     def multiply_sat(self,a,factor):
-        """Scale the saturation of a by the given amount."""
+        "Scale the saturation of a by the given amount."
         a[:,:,1] *= factor
 
 
