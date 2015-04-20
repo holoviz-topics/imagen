@@ -503,7 +503,8 @@ class RotateHue(ChannelTransform):
     saturation = param.Number(default=1.0,doc="""
         Scale the saturation by the specified value.""")
 
-    rotation = param.Number(default=numbergen.UniformRandom(name='hue_jitter',lbound=0,ubound=1,seed=1048921),
+    rotation = param.Number(default=numbergen.UniformRandom(
+        name='hue_jitter', lbound=0,ubound=1, seed=1048921),
                             softbounds=(0.0,1.0),doc="""
         Amount by which to rotate the hue.  The default setting
         chooses a random value of hue rotation between zero and 100%.
