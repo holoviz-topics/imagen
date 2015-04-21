@@ -107,23 +107,21 @@
 
 <span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">pi</span><span class="p">,</span> <span class="n">fmod</span><span class="p">,</span> <span class="n">floor</span>
 
+<span class="kn">import</span> <span class="nn">param</span>
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">colorsys</span>
-
-<span class="kn">import</span> <span class="nn">numpy</span>
-
-<span class="kn">import</span> <span class="nn">param</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 
 
 <span class="k">def</span> <span class="nf">_threeDdot_simple</span><span class="p">(</span><span class="n">M</span><span class="p">,</span><span class="n">a</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return Ma, where M is a 3x3 transformation matrix, for each pixel&quot;&quot;&quot;</span>
+    <span class="s">&quot;Return Ma, where M is a 3x3 transformation matrix, for each pixel&quot;</span>
 
-    <span class="n">result</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="n">a</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="n">a</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
         <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
-            <span class="n">A</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="mi">2</span><span class="p">]])</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
-            <span class="n">L</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">M</span><span class="p">,</span><span class="n">A</span><span class="p">)</span>
+            <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="mi">2</span><span class="p">]])</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+            <span class="n">L</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">M</span><span class="p">,</span><span class="n">A</span><span class="p">)</span>
             <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">L</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">L</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
             <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">L</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
@@ -134,12 +132,15 @@
 <span class="k">def</span> <span class="nf">_threeDdot_opt</span><span class="p">(</span><span class="n">M</span><span class="p">,</span><span class="n">a</span><span class="p">):</span>
     <span class="n">swapped</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
     <span class="n">shape</span> <span class="o">=</span> <span class="n">swapped</span><span class="o">.</span><span class="n">shape</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">M</span><span class="p">,</span><span class="n">swapped</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)))</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">M</span><span class="p">,</span><span class="n">swapped</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)))</span>
     <span class="n">result</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="n">shape</span>
     <span class="n">b</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
     <span class="c"># need to do asarray to ensure dtype?</span>
-    <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="n">a</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
-<span class="c"># CB: probably could make a faster version if do aM instead,  e.g. something like (untested):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="n">a</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+
+<span class="c"># CB: probably could make a faster version if do aM instead,</span>
+<span class="c"># e.g. something like (untested):</span>
+
 <span class="c">#def _threeDdot(M,a):</span>
 <span class="c">#    shape = a.shape</span>
 <span class="c">#    result = np.dot(a.reshape((-1,3)),M)</span>
@@ -153,7 +154,7 @@
     <span class="n">shape</span> <span class="o">=</span> <span class="n">ABC</span><span class="p">[:,:,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
     <span class="n">dtype</span> <span class="o">=</span> <span class="n">ABC</span><span class="o">.</span><span class="n">dtype</span>
 
-    <span class="n">DEF</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">ABC</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="n">DEF</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">ABC</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
         <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
@@ -185,14 +186,14 @@
 
 <span class="k">def</span> <span class="nf">xyz_to_lab</span><span class="p">(</span><span class="n">XYZ</span><span class="p">,</span><span class="n">wp</span><span class="p">):</span>
 
-    <span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">,</span><span class="n">Z</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dsplit</span><span class="p">(</span><span class="n">XYZ</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">,</span><span class="n">Z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dsplit</span><span class="p">(</span><span class="n">XYZ</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
     <span class="n">xn</span><span class="p">,</span><span class="n">yn</span><span class="p">,</span><span class="n">zn</span> <span class="o">=</span> <span class="n">X</span><span class="o">/</span><span class="n">wp</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">Y</span><span class="o">/</span><span class="n">wp</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">Z</span><span class="o">/</span><span class="n">wp</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
         <span class="n">t</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="c"># probably unnecessary!</span>
         <span class="n">t_eps</span> <span class="o">=</span> <span class="n">t</span><span class="o">&gt;</span><span class="n">EPS</span>
         <span class="n">t_not_eps</span> <span class="o">=</span> <span class="n">t</span><span class="o">&lt;=</span><span class="n">EPS</span>
-        <span class="n">t</span><span class="p">[</span><span class="n">t_eps</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="n">t_eps</span><span class="p">],</span> <span class="mf">1.0</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span>
+        <span class="n">t</span><span class="p">[</span><span class="n">t_eps</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="n">t_eps</span><span class="p">],</span> <span class="mf">1.0</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span>
         <span class="n">t</span><span class="p">[</span><span class="n">t_not_eps</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">KAP</span><span class="o">*</span><span class="n">t</span><span class="p">[</span><span class="n">t_not_eps</span><span class="p">]</span><span class="o">+</span><span class="mf">16.0</span><span class="p">)</span><span class="o">/</span><span class="mf">116.</span>
         <span class="k">return</span> <span class="n">t</span>
 
@@ -201,12 +202,12 @@
     <span class="n">a</span> <span class="o">=</span> <span class="mi">500</span><span class="o">*</span><span class="p">(</span><span class="n">fx</span> <span class="o">-</span> <span class="n">fy</span><span class="p">)</span>
     <span class="n">b</span> <span class="o">=</span> <span class="mi">200</span><span class="o">*</span><span class="p">(</span><span class="n">fy</span> <span class="o">-</span> <span class="n">fz</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dstack</span><span class="p">((</span><span class="n">L</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">dstack</span><span class="p">((</span><span class="n">L</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">))</span>
 
 
 <span class="k">def</span> <span class="nf">lab_to_xyz</span><span class="p">(</span><span class="n">LAB</span><span class="p">,</span><span class="n">wp</span><span class="p">):</span>
 
-    <span class="n">L</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dsplit</span><span class="p">(</span><span class="n">LAB</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">L</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dsplit</span><span class="p">(</span><span class="n">LAB</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
     <span class="n">fy</span> <span class="o">=</span> <span class="p">(</span><span class="n">L</span><span class="o">+</span><span class="mi">16</span><span class="p">)</span><span class="o">/</span><span class="mf">116.0</span>
     <span class="n">fz</span> <span class="o">=</span> <span class="n">fy</span> <span class="o">-</span> <span class="n">b</span> <span class="o">/</span> <span class="mf">200.0</span>
     <span class="n">fx</span> <span class="o">=</span> <span class="n">a</span><span class="o">/</span><span class="mf">500.0</span> <span class="o">+</span> <span class="n">fy</span>
@@ -214,24 +215,24 @@
     <span class="k">def</span> <span class="nf">finv</span><span class="p">(</span><span class="n">y</span><span class="p">):</span>
         <span class="n">y</span> <span class="o">=</span><span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="c"># CEBALERT: why copy?</span>
         <span class="n">eps3</span> <span class="o">=</span> <span class="n">EPS</span><span class="o">**</span><span class="mi">3</span>
-        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">y</span> <span class="o">&gt;</span> <span class="n">eps3</span><span class="p">,</span>
-                           <span class="n">numpy</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">y</span> <span class="o">&gt;</span> <span class="n">eps3</span><span class="p">,</span>
+                           <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span>
                            <span class="p">(</span><span class="mi">116</span><span class="o">*</span><span class="n">y</span><span class="o">-</span><span class="mi">16</span><span class="p">)</span><span class="o">/</span><span class="n">KAP</span><span class="p">)</span>
 
     <span class="n">xr</span><span class="p">,</span> <span class="n">yr</span><span class="p">,</span> <span class="n">zr</span> <span class="o">=</span> <span class="n">finv</span><span class="p">(</span><span class="n">fx</span><span class="p">),</span> <span class="n">finv</span><span class="p">(</span><span class="n">fy</span><span class="p">),</span> <span class="n">finv</span><span class="p">(</span><span class="n">fz</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dstack</span><span class="p">((</span><span class="n">xr</span><span class="o">*</span><span class="n">wp</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">yr</span><span class="o">*</span><span class="n">wp</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">zr</span><span class="o">*</span><span class="n">wp</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">dstack</span><span class="p">((</span><span class="n">xr</span><span class="o">*</span><span class="n">wp</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">yr</span><span class="o">*</span><span class="n">wp</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">zr</span><span class="o">*</span><span class="n">wp</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
 
 
 <span class="k">def</span> <span class="nf">lch_to_lab</span><span class="p">(</span><span class="n">LCH</span><span class="p">):</span>
-    <span class="n">L</span><span class="p">,</span><span class="n">C</span><span class="p">,</span><span class="n">H</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dsplit</span><span class="p">(</span><span class="n">LCH</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dstack</span><span class="p">(</span> <span class="p">(</span><span class="n">L</span><span class="p">,</span><span class="n">C</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">H</span><span class="p">),</span><span class="n">C</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">H</span><span class="p">))</span> <span class="p">)</span>
+    <span class="n">L</span><span class="p">,</span><span class="n">C</span><span class="p">,</span><span class="n">H</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dsplit</span><span class="p">(</span><span class="n">LCH</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">dstack</span><span class="p">(</span> <span class="p">(</span><span class="n">L</span><span class="p">,</span><span class="n">C</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">H</span><span class="p">),</span><span class="n">C</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">H</span><span class="p">))</span> <span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">lab_to_lch</span><span class="p">(</span><span class="n">LAB</span><span class="p">):</span>
-    <span class="n">L</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">B</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dsplit</span><span class="p">(</span><span class="n">LAB</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">L</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dsplit</span><span class="p">(</span><span class="n">LAB</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
     <span class="n">range_</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">pi</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="n">A</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dstack</span><span class="p">(</span> <span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">hypot</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">B</span><span class="p">),</span> <span class="n">fmod</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">range_</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">floor</span><span class="p">(</span><span class="n">x</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">range_</span><span class="p">))),</span> <span class="n">range_</span><span class="p">)</span> <span class="p">)</span> <span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="n">A</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">dstack</span><span class="p">(</span> <span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">hypot</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">B</span><span class="p">),</span> <span class="n">fmod</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">range_</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">floor</span><span class="p">(</span><span class="n">x</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">range_</span><span class="p">))),</span> <span class="n">range_</span><span class="p">)</span> <span class="p">)</span> <span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">xyz_to_lch</span><span class="p">(</span><span class="n">XYZ</span><span class="p">,</span><span class="n">whitepoint</span><span class="p">):</span>
@@ -278,23 +279,23 @@
 <span class="n">transforms</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="n">transforms</span><span class="p">[</span><span class="s">&#39;D65&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sD65</span> <span class="o">=</span> <span class="p">{}</span>
 
-<span class="n">sD65</span><span class="p">[</span><span class="s">&#39;rgb_from_xyz&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">3.2410</span><span class="p">,</span><span class="o">-</span><span class="mf">1.5374</span><span class="p">,</span><span class="o">-</span><span class="mf">0.4986</span><span class="p">],</span>
-                                       <span class="p">[</span><span class="o">-</span><span class="mf">0.9692</span><span class="p">,</span><span class="mf">1.8760</span><span class="p">,</span><span class="mf">0.0416</span><span class="p">],</span>
-                                       <span class="p">[</span><span class="mf">0.0556</span><span class="p">,</span><span class="o">-</span><span class="mf">0.204</span><span class="p">,</span><span class="mf">1.0570</span><span class="p">]])</span>
-<span class="n">sD65</span><span class="p">[</span><span class="s">&#39;xyz_from_rgb&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span> <span class="mf">0.41238088</span><span class="p">,</span>  <span class="mf">0.35757284</span><span class="p">,</span>  <span class="mf">0.1804523</span> <span class="p">],</span>
-                                       <span class="p">[</span> <span class="mf">0.21261986</span><span class="p">,</span>  <span class="mf">0.71513879</span><span class="p">,</span>  <span class="mf">0.07214994</span><span class="p">],</span>
-                                       <span class="p">[</span> <span class="mf">0.0193435</span> <span class="p">,</span>  <span class="mf">0.11921217</span><span class="p">,</span>  <span class="mf">0.95050657</span><span class="p">]])</span>
+<span class="n">sD65</span><span class="p">[</span><span class="s">&#39;rgb_from_xyz&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">3.2410</span><span class="p">,</span><span class="o">-</span><span class="mf">1.5374</span><span class="p">,</span><span class="o">-</span><span class="mf">0.4986</span><span class="p">],</span>
+                                 <span class="p">[</span><span class="o">-</span><span class="mf">0.9692</span><span class="p">,</span><span class="mf">1.8760</span><span class="p">,</span><span class="mf">0.0416</span><span class="p">],</span>
+                                 <span class="p">[</span><span class="mf">0.0556</span><span class="p">,</span><span class="o">-</span><span class="mf">0.204</span><span class="p">,</span><span class="mf">1.0570</span><span class="p">]])</span>
+
+<span class="n">sD65</span><span class="p">[</span><span class="s">&#39;xyz_from_rgb&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span> <span class="mf">0.41238088</span><span class="p">,</span>  <span class="mf">0.35757284</span><span class="p">,</span>  <span class="mf">0.1804523</span> <span class="p">],</span>
+                                 <span class="p">[</span> <span class="mf">0.21261986</span><span class="p">,</span>  <span class="mf">0.71513879</span><span class="p">,</span>  <span class="mf">0.07214994</span><span class="p">],</span>
+                                 <span class="p">[</span> <span class="mf">0.0193435</span> <span class="p">,</span>  <span class="mf">0.11921217</span><span class="p">,</span>  <span class="mf">0.95050657</span><span class="p">]])</span>
 
 
 <span class="c"># Guth (1980) - SP; L, M, and S normalized to one)</span>
-<span class="n">sD65</span><span class="p">[</span><span class="s">&#39;lms_from_xyz&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">0.2435</span><span class="p">,</span> <span class="mf">0.8524</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.0516</span><span class="p">],</span>
-                                        <span class="p">[</span><span class="o">-</span><span class="mf">0.3954</span><span class="p">,</span> <span class="mf">1.1642</span><span class="p">,</span> <span class="mf">0.0837</span><span class="p">],</span>
-                                        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.6225</span><span class="p">]])</span>
+<span class="n">sD65</span><span class="p">[</span><span class="s">&#39;lms_from_xyz&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">0.2435</span><span class="p">,</span> <span class="mf">0.8524</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.0516</span><span class="p">],</span>
+                                 <span class="p">[</span><span class="o">-</span><span class="mf">0.3954</span><span class="p">,</span> <span class="mf">1.1642</span><span class="p">,</span> <span class="mf">0.0837</span><span class="p">],</span>
+                                 <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.6225</span><span class="p">]])</span>
 
-<span class="n">sD65</span><span class="p">[</span><span class="s">&#39;xyz_from_lms&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span>  <span class="mf">1.87616336e+00</span><span class="p">,</span>  <span class="o">-</span><span class="mf">1.37368291e+00</span><span class="p">,</span>   <span class="mf">3.40220544e-01</span><span class="p">],</span>
-                                        <span class="p">[</span>  <span class="mf">6.37205799e-01</span><span class="p">,</span>   <span class="mf">3.92411765e-01</span><span class="p">,</span>   <span class="mf">5.61517442e-05</span><span class="p">],</span>
-                                        <span class="p">[</span>  <span class="mf">0.00000000e+00</span><span class="p">,</span>   <span class="mf">0.00000000e+00</span><span class="p">,</span>   <span class="mf">1.60642570e+00</span><span class="p">]])</span>
-
+<span class="n">sD65</span><span class="p">[</span><span class="s">&#39;xyz_from_lms&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">1.87616336e+00</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.37368291e+00</span><span class="p">,</span> <span class="mf">3.40220544e-01</span><span class="p">],</span>
+                                 <span class="p">[</span><span class="mf">6.37205799e-01</span><span class="p">,</span> <span class="mf">3.92411765e-01</span><span class="p">,</span>  <span class="mf">5.61517442e-05</span><span class="p">],</span>
+                                 <span class="p">[</span><span class="mf">0.00000000e+00</span><span class="p">,</span> <span class="mf">0.00000000e+00</span><span class="p">,</span>  <span class="mf">1.60642570e+00</span><span class="p">]])</span>
 
 
 <span class="c">### Make LCH like other spaces (0,1)</span>
@@ -304,18 +305,18 @@
 <span class="n">Hmax</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">pi</span>
 
 <span class="k">def</span> <span class="nf">xyz_to_lch01</span><span class="p">(</span><span class="n">XYZ</span><span class="p">,</span> <span class="n">whitepoint</span><span class="p">):</span>
-    <span class="n">L</span><span class="p">,</span><span class="n">C</span><span class="p">,</span><span class="n">H</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dsplit</span><span class="p">(</span><span class="n">xyz_to_lch</span><span class="p">(</span><span class="n">XYZ</span><span class="p">,</span><span class="n">whitepoint</span><span class="p">),</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">L</span><span class="p">,</span><span class="n">C</span><span class="p">,</span><span class="n">H</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dsplit</span><span class="p">(</span><span class="n">xyz_to_lch</span><span class="p">(</span><span class="n">XYZ</span><span class="p">,</span><span class="n">whitepoint</span><span class="p">),</span><span class="mi">3</span><span class="p">)</span>
     <span class="n">L</span><span class="o">/=</span><span class="n">Lmax</span>
     <span class="n">C</span><span class="o">/=</span><span class="n">Cmax</span>
     <span class="n">H</span><span class="o">/=</span><span class="n">Hmax</span>
-    <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dstack</span><span class="p">((</span><span class="n">L</span><span class="p">,</span><span class="n">C</span><span class="p">,</span><span class="n">H</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">dstack</span><span class="p">((</span><span class="n">L</span><span class="p">,</span><span class="n">C</span><span class="p">,</span><span class="n">H</span><span class="p">))</span>
 
 <span class="k">def</span> <span class="nf">lch01_to_xyz</span><span class="p">(</span><span class="n">LCH</span><span class="p">,</span> <span class="n">whitepoint</span><span class="p">):</span>
-    <span class="n">L</span><span class="p">,</span><span class="n">C</span><span class="p">,</span><span class="n">H</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dsplit</span><span class="p">(</span><span class="n">LCH</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">L</span><span class="p">,</span><span class="n">C</span><span class="p">,</span><span class="n">H</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dsplit</span><span class="p">(</span><span class="n">LCH</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
     <span class="n">L</span><span class="o">*=</span><span class="n">Lmax</span>
     <span class="n">C</span><span class="o">*=</span><span class="n">Cmax</span>
     <span class="n">H</span><span class="o">*=</span><span class="n">Hmax</span>
-    <span class="k">return</span> <span class="n">lch_to_xyz</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">dstack</span><span class="p">((</span><span class="n">L</span><span class="p">,</span><span class="n">C</span><span class="p">,</span><span class="n">H</span><span class="p">)),</span><span class="n">whitepoint</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">lch_to_xyz</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dstack</span><span class="p">((</span><span class="n">L</span><span class="p">,</span><span class="n">C</span><span class="p">,</span><span class="n">H</span><span class="p">)),</span><span class="n">whitepoint</span><span class="p">)</span>
 
 
 
@@ -326,31 +327,38 @@
 <span class="sd">    LMS and HSV.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">whitepoint</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s">&#39;D65&#39;</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="s">&quot;String name of whitepoint from lookup table.&quot;</span><span class="p">)</span>
+    <span class="n">whitepoint</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s">&#39;D65&#39;</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">        Name of whitepoint in lookup table.&quot;&quot;&quot;</span><span class="p">)</span>
 
-    <span class="n">transforms</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Dict</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">transforms</span><span class="p">,</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;Structure containing the transformation matrices used</span>
-<span class="s">                                                      by this Class. See ``transforms`` in this file.&quot;&quot;&quot;</span><span class="p">)</span>
+    <span class="n">transforms</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Dict</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">transforms</span><span class="p">,</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">        Structure containing the transformation matrices used by this</span>
+<span class="s">        Class. See ``transforms`` in this file.&quot;&quot;&quot;</span><span class="p">)</span>
 
-    <span class="n">input_limits</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">NumericTuple</span><span class="p">((</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">),</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;Upper and lower bounds to verify on input values.&quot;</span><span class="p">)</span>
+    <span class="n">input_limits</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">NumericTuple</span><span class="p">((</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">),</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">        Upper and lower bounds to verify on input values.&quot;&quot;&quot;</span><span class="p">)</span>
 
-    <span class="n">output_limits</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">NumericTuple</span><span class="p">((</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">),</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;Upper and lower bounds to enforce on output values.&quot;</span><span class="p">)</span>
+    <span class="n">output_limits</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">NumericTuple</span><span class="p">((</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">),</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">        Upper and lower bounds to enforce on output values.&quot;&quot;&quot;</span><span class="p">)</span>
 
-    <span class="n">output_clip</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">ObjectSelector</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s">&#39;silent&#39;</span><span class="p">,</span><span class="n">objects</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;silent&#39;</span><span class="p">,</span><span class="s">&#39;warn&#39;</span><span class="p">,</span><span class="s">&#39;error&#39;</span><span class="p">,</span><span class="s">&#39;none&#39;</span><span class="p">],</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
+    <span class="n">output_clip</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">ObjectSelector</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s">&#39;silent&#39;</span><span class="p">,</span>
+                                       <span class="n">objects</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;silent&#39;</span><span class="p">,</span><span class="s">&#39;warn&#39;</span><span class="p">,</span><span class="s">&#39;error&#39;</span><span class="p">,</span><span class="s">&#39;none&#39;</span><span class="p">],</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
 <span class="s">        Action to take when the output value will be clipped.&quot;&quot;&quot;</span><span class="p">)</span>
 
-    <span class="n">dtype</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;Datatype to use for result.&quot;</span><span class="p">)</span>
+    <span class="n">dtype</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="s">&quot;Datatype to use for result.&quot;</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="ColorSpace.convert"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.colorspaces.ColorSpace.convert">[docs]</a>    <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">from_</span><span class="p">,</span> <span class="n">to</span><span class="p">,</span> <span class="n">what</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Convert image or color &quot;what&quot; from &quot;from_&quot; colorpace to &quot;to&quot; colorspace.</span>
-<span class="sd">        E.g.: ``convert(&quot;rgb&quot;, &quot;hsv&quot;, X)``, where X is a numpy dstack or a color tuple.</span>
+<span class="sd">        Convert image or color &quot;what&quot; from &quot;from_&quot; colorpace to &quot;to&quot;</span>
+<span class="sd">        colorspace.  E.g.: ``convert(&quot;rgb&quot;, &quot;hsv&quot;, X)``, where X is a</span>
+<span class="sd">        numpy dstack or a color tuple.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span><span class="p">(</span><span class="n">from_</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">==</span><span class="n">to</span><span class="o">.</span><span class="n">lower</span><span class="p">()):</span>
             <span class="k">return</span> <span class="n">what</span>
 
-        <span class="c"># Check if there exist an optimized function that performs from_to_to conversion</span>
+        <span class="c"># Check if there exist an optimized function that performs</span>
+        <span class="c"># from_to_to conversion</span>
         <span class="n">direct_conversion</span> <span class="o">=</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">_to_</span><span class="si">%s</span><span class="s">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">from_</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span><span class="n">to</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
         <span class="k">if</span><span class="p">(</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">direct_conversion</span> <span class="p">)</span> <span class="p">):</span>
             <span class="n">fn</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">direct_conversion</span><span class="p">)</span>
@@ -367,16 +375,15 @@
 
 
     <span class="k">def</span> <span class="nf">_get_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">a</span><span class="p">):</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="s">&#39;shape&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">a</span><span class="o">.</span><span class="n">ndim</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span> <span class="c"># i.e. really an array</span>
+        <span class="c"># The shape of the array if it isn&#39;t a scalar</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="ow">and</span> <span class="n">a</span><span class="o">.</span><span class="n">ndim</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">a</span><span class="o">.</span><span class="n">shape</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="c"># also support e.g. tuples</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
-                <span class="k">return</span> <span class="p">(</span><span class="n">length</span><span class="p">,)</span>
-            <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
-                <span class="k">return</span> <span class="bp">None</span>
-
+        <span class="c"># Tuple support</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">length</span><span class="p">,)</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
 
     <span class="k">def</span> <span class="nf">_put_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">shape</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">shape</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
@@ -387,11 +394,10 @@
 
     <span class="k">def</span> <span class="nf">_prepare_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">min_</span><span class="p">,</span><span class="n">max_</span><span class="p">):</span>
         <span class="n">in_shape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_shape</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
-        <span class="n">a</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">copy</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">ndmin</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">copy</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">ndmin</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="o">&lt;</span><span class="n">min_</span> <span class="ow">or</span> <span class="n">a</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">&gt;</span><span class="n">max_</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;Input out of limits&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">a</span><span class="p">,</span> <span class="n">in_shape</span>
-
 
     <span class="k">def</span> <span class="nf">_clip</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">min_limit</span><span class="p">,</span><span class="n">max_limit</span><span class="p">,</span><span class="n">action</span><span class="o">=</span><span class="s">&#39;silent&#39;</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">action</span><span class="o">==</span><span class="s">&#39;none&#39;</span><span class="p">:</span>
@@ -399,11 +405,12 @@
 
         <span class="k">if</span> <span class="n">action</span><span class="o">==</span><span class="s">&#39;error&#39;</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="o">&lt;</span><span class="n">min_limit</span> <span class="ow">or</span> <span class="n">a</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">&gt;</span><span class="n">max_limit</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;(</span><span class="si">%s</span><span class="s">,</span><span class="si">%s</span><span class="s">) outside limits (</span><span class="si">%s</span><span class="s">,</span><span class="si">%s</span><span class="s">)&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span><span class="n">a</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span><span class="n">min_limit</span><span class="p">,</span><span class="n">max_limit</span><span class="p">))</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;(</span><span class="si">%s</span><span class="s">,</span><span class="si">%s</span><span class="s">) outside limits (</span><span class="si">%s</span><span class="s">,</span><span class="si">%s</span><span class="s">)&#39;</span>
+                                 <span class="o">%</span> <span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span><span class="n">a</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span><span class="n">min_limit</span><span class="p">,</span><span class="n">max_limit</span><span class="p">))</span>
         <span class="k">elif</span> <span class="n">action</span><span class="o">==</span><span class="s">&#39;warn&#39;</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="o">&lt;</span><span class="n">min_limit</span> <span class="ow">or</span> <span class="n">a</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">&gt;</span><span class="n">max_limit</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s">&#39;(</span><span class="si">%s</span><span class="s">,</span><span class="si">%s</span><span class="s">) outside limits (</span><span class="si">%s</span><span class="s">,</span><span class="si">%s</span><span class="s">)&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span><span class="n">a</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span><span class="n">min_limit</span><span class="p">,</span><span class="n">max_limit</span><span class="p">))</span>
-
+                <span class="bp">self</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s">&#39;(</span><span class="si">%s</span><span class="s">,</span><span class="si">%s</span><span class="s">) outside limits (</span><span class="si">%s</span><span class="s">,</span><span class="si">%s</span><span class="s">)&#39;</span> <span class="o">%</span>
+                             <span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span><span class="n">a</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span><span class="n">min_limit</span><span class="p">,</span><span class="n">max_limit</span><span class="p">))</span>
         <span class="n">a</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">min_limit</span><span class="p">,</span><span class="n">max_limit</span><span class="p">,</span><span class="n">out</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
 
 
@@ -415,14 +422,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_put_shape</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="n">in_shape</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">b</span>
 
-
     <span class="k">def</span> <span class="nf">_ABC_to_DEF_by_fn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ABC</span><span class="p">,</span><span class="n">fn</span><span class="p">,</span><span class="o">*</span><span class="n">fnargs</span><span class="p">):</span>
         <span class="n">ABC</span><span class="p">,</span> <span class="n">in_shape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_input</span><span class="p">(</span><span class="n">ABC</span><span class="p">,</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">input_limits</span><span class="p">)</span>
         <span class="n">DEF</span> <span class="o">=</span> <span class="n">fn</span><span class="p">(</span><span class="n">ABC</span><span class="p">,</span><span class="o">*</span><span class="n">fnargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_clip</span><span class="p">(</span><span class="n">DEF</span><span class="p">,</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">output_limits</span><span class="p">,</span><span class="n">action</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">output_clip</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_put_shape</span><span class="p">(</span><span class="n">DEF</span><span class="p">,</span> <span class="n">in_shape</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">DEF</span>
-
 
     <span class="c">##  TO XYZ:     RGB, LCH, LMS, HSV(passing through RGB)</span>
     <span class="k">def</span> <span class="nf">rgb_to_xyz</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">RGB</span><span class="p">):</span>
@@ -442,9 +447,7 @@
     <span class="k">def</span> <span class="nf">hsv_to_xyz</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">HSV</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rgb_to_xyz</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hsv_to_rgb</span><span class="p">(</span><span class="n">HSV</span><span class="p">))</span>
 
-
-
-    <span class="c">##  XYZ TO:     RGB, LCH, LMS, HSV(passing through RGB)</span>
+    <span class="c">##  XYZ TO:RGB, LCH, LMS, HSV(passing through RGB)</span>
 
     <span class="k">def</span> <span class="nf">xyz_to_rgb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">XYZ</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_threeDdot</span><span class="p">(</span>
@@ -463,40 +466,33 @@
     <span class="k">def</span> <span class="nf">xyz_to_hsv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">XYZ</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rgb_to_hsv</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">xyz_to_rgb</span><span class="p">(</span><span class="n">XYZ</span><span class="p">)</span> <span class="p">)</span>
 
-
-
-    <span class="c">## Optimized</span>
+    <span class="c"># Optimized</span>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_gamma_rgb</span><span class="p">(</span><span class="n">RGB</span><span class="p">):</span>
-        <span class="k">return</span> <span class="mf">12.92</span><span class="o">*</span><span class="n">RGB</span><span class="o">*</span><span class="p">(</span><span class="n">RGB</span><span class="o">&lt;=</span><span class="mf">0.0031308</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="mi">1</span><span class="o">+</span><span class="mf">0.055</span><span class="p">)</span><span class="o">*</span><span class="n">RGB</span><span class="o">**</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mf">2.4</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.055</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">RGB</span><span class="o">&gt;</span><span class="mf">0.0031308</span><span class="p">)</span>
-
+        <span class="k">return</span> <span class="p">(</span><span class="mf">12.92</span><span class="o">*</span><span class="n">RGB</span><span class="o">*</span><span class="p">(</span><span class="n">RGB</span><span class="o">&lt;=</span><span class="mf">0.0031308</span><span class="p">)</span>
+                <span class="o">+</span> <span class="p">((</span><span class="mi">1</span><span class="o">+</span><span class="mf">0.055</span><span class="p">)</span><span class="o">*</span><span class="n">RGB</span><span class="o">**</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mf">2.4</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.055</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">RGB</span><span class="o">&gt;</span><span class="mf">0.0031308</span><span class="p">))</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_ungamma_rgb</span><span class="p">(</span><span class="n">RGB</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">RGB</span><span class="o">/</span><span class="mf">12.92</span><span class="o">*</span><span class="p">(</span><span class="n">RGB</span><span class="o">&lt;=</span><span class="mf">0.04045</span><span class="p">)</span> <span class="o">+</span> <span class="p">(((</span><span class="n">RGB</span><span class="o">+</span><span class="mf">0.055</span><span class="p">)</span><span class="o">/</span><span class="mf">1.055</span><span class="p">)</span><span class="o">**</span><span class="mf">2.4</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">RGB</span><span class="o">&gt;</span><span class="mf">0.04045</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">RGB</span><span class="o">/</span><span class="mf">12.92</span><span class="o">*</span><span class="p">(</span><span class="n">RGB</span><span class="o">&lt;=</span><span class="mf">0.04045</span><span class="p">)</span>
+                <span class="o">+</span> <span class="p">(((</span><span class="n">RGB</span><span class="o">+</span><span class="mf">0.055</span><span class="p">)</span><span class="o">/</span><span class="mf">1.055</span><span class="p">)</span><span class="o">**</span><span class="mf">2.4</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">RGB</span><span class="o">&gt;</span><span class="mf">0.04045</span><span class="p">))</span>
 
-
-    <span class="c"># linear rgb to hsv</span>
-    <span class="k">def</span> <span class="nf">rgb_to_hsv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">RGB</span><span class="p">):</span>
+<div class="viewcode-block" id="ColorSpace.rgb_to_hsv"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.colorspaces.ColorSpace.rgb_to_hsv">[docs]</a>    <span class="k">def</span> <span class="nf">rgb_to_hsv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">RGB</span><span class="p">):</span>
+        <span class="s">&quot;linear rgb to hsv&quot;</span>
         <span class="n">gammaRGB</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gamma_rgb</span><span class="p">(</span><span class="n">RGB</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ABC_to_DEF_by_fn</span><span class="p">(</span><span class="n">gammaRGB</span><span class="p">,</span><span class="n">rgb_to_hsv</span><span class="p">)</span>
-
-
-    <span class="c"># hsv to linear rgb</span>
-    <span class="k">def</span> <span class="nf">hsv_to_rgb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">HSV</span><span class="p">):</span>
+</div>
+<div class="viewcode-block" id="ColorSpace.hsv_to_rgb"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.colorspaces.ColorSpace.hsv_to_rgb">[docs]</a>    <span class="k">def</span> <span class="nf">hsv_to_rgb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">HSV</span><span class="p">):</span>
+        <span class="s">&quot;hsv to linear rgb&quot;</span>
         <span class="n">gammaRGB</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ABC_to_DEF_by_fn</span><span class="p">(</span><span class="n">HSV</span><span class="p">,</span><span class="n">hsv_to_rgb</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ungamma_rgb</span><span class="p">(</span><span class="n">gammaRGB</span><span class="p">)</span>
-
-
-    <span class="c">### for display</span>
-    <span class="k">def</span> <span class="nf">hsv_to_gammargb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">HSV</span><span class="p">):</span>
-        <span class="c"># hsv is already specifying gamma corrected rgb</span>
+</div>
+<div class="viewcode-block" id="ColorSpace.hsv_to_gammargb"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.colorspaces.ColorSpace.hsv_to_gammargb">[docs]</a>    <span class="k">def</span> <span class="nf">hsv_to_gammargb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">HSV</span><span class="p">):</span>
+        <span class="s">&quot;hsv is already specifying gamma corrected rgb&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ABC_to_DEF_by_fn</span><span class="p">(</span><span class="n">HSV</span><span class="p">,</span><span class="n">hsv_to_rgb</span><span class="p">)</span>
-
-
+</div>
     <span class="k">def</span> <span class="nf">lch_to_gammargb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">LCH</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gamma_rgb</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lch_to_rgb</span><span class="p">(</span><span class="n">LCH</span><span class="p">))</span>
-
 
     <span class="k">def</span> <span class="nf">lms_to_lch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">LCH</span><span class="p">):</span>
         <span class="n">lch_to_xyz</span>
@@ -504,11 +500,10 @@
 
 </div>
 <span class="k">def</span> <span class="nf">_swaplch</span><span class="p">(</span><span class="n">LCH</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Reverse the order of an LCH numpy dstack or tuple for analysis.&quot;&quot;&quot;</span>
-
+    <span class="s">&quot;Reverse the order of an LCH numpy dstack or tuple for analysis.&quot;</span>
     <span class="k">try</span><span class="p">:</span> <span class="c"># Numpy array</span>
-        <span class="n">L</span><span class="p">,</span><span class="n">C</span><span class="p">,</span><span class="n">H</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dsplit</span><span class="p">(</span><span class="n">LCH</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dstack</span><span class="p">((</span><span class="n">H</span><span class="p">,</span><span class="n">C</span><span class="p">,</span><span class="n">L</span><span class="p">))</span>
+        <span class="n">L</span><span class="p">,</span><span class="n">C</span><span class="p">,</span><span class="n">H</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dsplit</span><span class="p">(</span><span class="n">LCH</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">dstack</span><span class="p">((</span><span class="n">H</span><span class="p">,</span><span class="n">C</span><span class="p">,</span><span class="n">L</span><span class="p">))</span>
     <span class="k">except</span><span class="p">:</span> <span class="c"># Tuple</span>
         <span class="n">L</span><span class="p">,</span><span class="n">C</span><span class="p">,</span><span class="n">H</span> <span class="o">=</span> <span class="n">LCH</span>
         <span class="k">return</span> <span class="n">H</span><span class="p">,</span><span class="n">C</span><span class="p">,</span><span class="n">L</span>
@@ -519,11 +514,14 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    High-level color conversion class designed to support color space</span>
 <span class="sd">    transformations along a pipeline common in color vision modelling:</span>
-<span class="sd">    image (dataset colorspace) -&gt; working (working colorspace) -&gt; [higher stages] -&gt; analysis</span>
+<span class="sd">    image (dataset colorspace) -&gt; working (working colorspace) -&gt;</span>
+<span class="sd">    [higher stages] -&gt; analysis</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c"># CEBALERT: should be ClassSelector</span>
-    <span class="c"># SPG: it shouldn&#39;t be necessary to support selection of the ColorSpace, as the new object supports any color conversion.</span>
+
+    <span class="c"># SPG: it shouldn&#39;t be necessary to support selection of the</span>
+    <span class="c"># ColorSpace, as the new object supports any color conversion.</span>
     <span class="n">colorspace</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">ColorSpace</span><span class="p">(),</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
 <span class="s">        Object to use for converting between color spaces.&quot;&quot;&quot;</span><span class="p">)</span>
 
@@ -531,10 +529,11 @@
 <span class="s">        Color space in which images are encoded.&quot;&quot;&quot;</span><span class="p">)</span> <span class="c"># CEBALERT: possibly add sRGB?</span>
 
     <span class="n">working_space</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">ObjectSelector</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s">&#39;RGB&#39;</span><span class="p">,</span> <span class="n">objects</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;RGB&#39;</span><span class="p">,</span><span class="s">&#39;LMS&#39;</span><span class="p">],</span> <span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
-<span class="s">        Color space to which images will be transformed to provide working space</span>
-<span class="s">        to later stages of processing.&quot;&quot;&quot;</span><span class="p">)</span>
+<span class="s">        Color space to which images will be transformed to provide</span>
+<span class="s">        working space to later stages of processing.&quot;&quot;&quot;</span><span class="p">)</span>
 
-    <span class="n">analysis_space</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">ObjectSelector</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s">&#39;HSV&#39;</span><span class="p">,</span> <span class="n">objects</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;HSV&#39;</span><span class="p">,</span><span class="s">&#39;LCH&#39;</span><span class="p">],</span> <span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
+    <span class="n">analysis_space</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">ObjectSelector</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s">&#39;HSV&#39;</span><span class="p">,</span>
+                                          <span class="n">objects</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;HSV&#39;</span><span class="p">,</span><span class="s">&#39;LCH&#39;</span><span class="p">],</span> <span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
 <span class="s">        Color space in which analysis is performed.&quot;&quot;&quot;</span><span class="p">)</span>
 
     <span class="n">swap_polar_HSVorder</span> <span class="o">=</span> <span class="p">{</span>
@@ -543,21 +542,20 @@
 
 
 <div class="viewcode-block" id="ColorConverter.image2working"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.colorspaces.ColorConverter.image2working">[docs]</a>    <span class="k">def</span> <span class="nf">image2working</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">i</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Transform images i provided into the specified working color space.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">colorspace</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image_space</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">working_space</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
-
+        <span class="sd">&quot;&quot;&quot;Transform images i provided into the specified working</span>
+<span class="sd">        color space.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">colorspace</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image_space</span><span class="p">,</span>
+                                       <span class="bp">self</span><span class="o">.</span><span class="n">working_space</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="ColorConverter.working2analysis"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.colorspaces.ColorConverter.working2analysis">[docs]</a>    <span class="k">def</span> <span class="nf">working2analysis</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">r</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Transform working space inputs to the analysis color space.&quot;&quot;&quot;</span>
+        <span class="s">&quot;Transform working space inputs to the analysis color space.&quot;</span>
         <span class="n">a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">colorspace</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">working_space</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis_space</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">swap_polar_HSVorder</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">analysis_space</span><span class="p">](</span><span class="n">a</span><span class="p">)</span>
-
 </div>
 <div class="viewcode-block" id="ColorConverter.analysis2working"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.colorspaces.ColorConverter.analysis2working">[docs]</a>    <span class="k">def</span> <span class="nf">analysis2working</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">a</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Convert back from the analysis color space to the working space.&quot;&quot;&quot;</span>
+        <span class="s">&quot;Convert back from the analysis color space to the working space.&quot;</span>
         <span class="n">a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">swap_polar_HSVorder</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">analysis_space</span><span class="p">](</span><span class="n">a</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">colorspace</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">analysis_space</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">working_space</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
-
 </div>
 <div class="viewcode-block" id="ColorConverter.analysis2display"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.colorspaces.ColorConverter.analysis2display">[docs]</a>    <span class="k">def</span> <span class="nf">analysis2display</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">a</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -570,13 +568,12 @@
 
 </div>
 <div class="viewcode-block" id="ColorConverter.jitter_hue"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.colorspaces.ColorConverter.jitter_hue">[docs]</a>    <span class="k">def</span> <span class="nf">jitter_hue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">amount</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Rotate the hue component of a by the given amount.&quot;&quot;&quot;</span>
+        <span class="s">&quot;Rotate the hue component of a by the given amount.&quot;</span>
         <span class="n">a</span><span class="p">[:,:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">amount</span>
         <span class="n">a</span><span class="p">[:,:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">%=</span> <span class="mf">1.0</span>
-
 </div>
 <div class="viewcode-block" id="ColorConverter.multiply_sat"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.colorspaces.ColorConverter.multiply_sat">[docs]</a>    <span class="k">def</span> <span class="nf">multiply_sat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">factor</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Scale the saturation of a by the given amount.&quot;&quot;&quot;</span>
+        <span class="s">&quot;Scale the saturation of a by the given amount.&quot;</span>
         <span class="n">a</span><span class="p">[:,:,</span><span class="mi">1</span><span class="p">]</span> <span class="o">*=</span> <span class="n">factor</span>
 
 
