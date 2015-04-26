@@ -3,7 +3,7 @@ TransferFns: accept and modify a 2d array
 """
 
 import numpy
-
+import copy
 import param
 
 
@@ -263,3 +263,41 @@ class DivisiveNormalizeLp(TransferFn):
         if tot != 0:
             factor = (self.norm_value/tot)
             x *=factor
+
+
+class Hysteresis(TransferFnWithState):
+    """
+    Smoothly interpolates a matrix between simulation time steps, with
+    exponential falloff.
+    """
+
+    time_constant  = param.Number(default=0.3,doc="""
+        Controls the time scale of the interpolation.""")
+
+    def __init__(self,**params):
+        super(Hysteresis,self).__init__(**params)
+        self.first_call = True
+        self.__current_state_stack=[]
+        self.old_a = 0
+
+    def __call__(self,x):
+        if self.first_call is True:
+           self.old_a = x.copy() * 0.0
+           self.first_call = False
+
+        new_a = x.copy()
+        self.old_a = self.old_a + (new_a - self.old_a)*self.time_constant
+        x*=0
+        x += self.old_a
+
+    def reset(self):
+        self.old_a *= 0
+
+    def state_push(self):
+        self.__current_state_stack.append((copy.copy(self.old_a),
+                                           copy.copy(self.first_call)))
+        super(Hysteresis,self).state_push()
+
+    def state_pop(self):
+        self.old_a,self.first_call =  self.__current_state_stack.pop()
+        super(Hysteresis,self).state_pop()
