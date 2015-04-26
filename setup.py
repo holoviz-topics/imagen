@@ -82,16 +82,17 @@ def check_pseudo_package(path):
 
 if __name__=="__main__":
 
-    # Make sure to create these directories and populate them before upload
-    setup_args['packages'] += ["imagen.tests", "imagen.notebooks", "imagen.notebooks.images"]
-    setup_args['package_data']['imagen.notebooks'] = ['*.ipynb']
-    setup_args['package_data']['imagen.notebooks.images'] = ['*.pgm']
+    if 'IMAGEN_RELEASE' in os.environ:
+        # Make sure to create these directories and populate them before upload
+        setup_args['packages'] += ["imagen.tests", "imagen.notebooks", "imagen.notebooks.images"]
+        setup_args['package_data']['imagen.notebooks'] = ['*.ipynb']
+        setup_args['package_data']['imagen.notebooks.images'] = ['*.pgm']
 
-    if ('upload' in sys.argv) or ('sdist' in sys.argv):
-        check_pseudo_package(os.path.join('.', 'imagen', 'tests'))
-        check_pseudo_package(os.path.join('.', 'imagen', 'notebooks'))
+        if ('upload' in sys.argv) or ('sdist' in sys.argv):
+            check_pseudo_package(os.path.join('.', 'imagen', 'tests'))
+            check_pseudo_package(os.path.join('.', 'imagen', 'notebooks'))
 
-        import imagen
-        imagen.__version__.verify(setup_args['version'])
+            import imagen
+            imagen.__version__.verify(setup_args['version'])
 
     setup(**setup_args)
