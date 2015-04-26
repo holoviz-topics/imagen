@@ -45,9 +45,7 @@ class TransferFn(param.Parameterized):
         raise NotImplementedError
 
 
-# Trivial example of a TransferFn, provided for when a default
-# is needed.  The other concrete OutputFunction classes are stored
-# in transferfn/, to be imported as needed.
+
 class IdentityTF(TransferFn):
     """
     Identity function, returning its argument as-is.
