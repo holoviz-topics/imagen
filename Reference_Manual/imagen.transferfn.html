@@ -64,18 +64,20 @@
 <div class="section" id="transferfn-package">
 <h2><tt class="xref py py-mod docutils literal"><span class="pre">transferfn</span></tt> Package<a class="headerlink" href="#transferfn-package" title="Permalink to this headline">¶</a></h2>
 <p class="graphviz">
-<img src="../_images/inheritance-7e81b539a77c4f555c8682b62456c6c0fa5977f7.png" alt="Inheritance diagram of imagen.transferfn" usemap="#inheritancea9586fb404" class="inheritance"/>
+<img src="../_images/inheritance-4fdfe5f7a6caadf517ba65a3ccc97aa9abdc02dc.png" alt="Inheritance diagram of imagen.transferfn" usemap="#inheritancea9586fb404" class="inheritance"/>
 <map id="inheritancea9586fb404" name="inheritancea9586fb404">
 <area shape="rect" id="node1" href="#imagen.transferfn.BinaryThreshold" title="Forces all values below a threshold to zero, and above it to 1.0." alt="" coords="581,5,824,30"/>
-<area shape="rect" id="node2" href="#imagen.transferfn.TransferFn" title="Function object to modify a matrix in place, e.g. for normalization." alt="" coords="312,178,517,203"/>
+<area shape="rect" id="node2" href="#imagen.transferfn.TransferFn" title="Function object to modify a matrix in place, e.g. for normalization." alt="" coords="312,202,517,227"/>
 <area shape="rect" id="node3" href="#imagen.transferfn.DivisiveNormalizeL1" title="TransferFn that divides an array by its L1 norm." alt="" coords="569,54,837,79"/>
 <area shape="rect" id="node4" href="#imagen.transferfn.DivisiveNormalizeL2" title="TransferFn to divide an array by its Euclidean length (aka its L2 norm)." alt="" coords="569,103,837,129"/>
 <area shape="rect" id="node5" href="#imagen.transferfn.DivisiveNormalizeLinf" title="TransferFn to divide an array by its L&#45;infinity norm" alt="" coords="565,153,840,178"/>
 <area shape="rect" id="node6" href="#imagen.transferfn.DivisiveNormalizeLp" title="TransferFn to divide an array by its Lp&#45;Norm, where p is specified." alt="" coords="569,202,837,227"/>
-<area shape="rect" id="node7" href="#imagen.transferfn.IdentityTF" title="Identity function, returning its argument as&#45;is." alt="" coords="602,251,803,277"/>
-<area shape="rect" id="node8" href="#imagen.transferfn.Scale" title="Multiply the input array by some constant factor." alt="" coords="615,301,790,326"/>
-<area shape="rect" id="node9" href="#imagen.transferfn.Threshold" title="Forces all values below a threshold to zero, and leaves others unchanged." alt="" coords="601,350,804,375"/>
-<area shape="rect" id="node10" title="params(name=String)" alt="" coords="5,178,264,203"/>
+<area shape="rect" id="node8" href="#imagen.transferfn.TransferFnWithState" title="Abstract base class for TransferFns that need to maintain a" alt="" coords="569,251,836,277"/>
+<area shape="rect" id="node9" href="#imagen.transferfn.IdentityTF" title="Identity function, returning its argument as&#45;is." alt="" coords="602,301,803,326"/>
+<area shape="rect" id="node10" href="#imagen.transferfn.Scale" title="Multiply the input array by some constant factor." alt="" coords="615,350,790,375"/>
+<area shape="rect" id="node11" href="#imagen.transferfn.Threshold" title="Forces all values below a threshold to zero, and leaves others unchanged." alt="" coords="601,399,804,425"/>
+<area shape="rect" id="node7" href="#imagen.transferfn.Hysteresis" title="Smoothly interpolates a matrix between simulation time steps, with" alt="" coords="889,251,1095,277"/>
+<area shape="rect" id="node12" title="params(name=String)" alt="" coords="5,202,264,227"/>
 </map>
 </p>
 <span class="target" id="module-imagen.transferfn"></span><p>TransferFns: accept and modify a 2d array</p>
@@ -113,7 +115,7 @@ instantiated.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.BinaryThreshold.force_new_dynamic_value">
-<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b324ac795d0&gt;</em><a class="headerlink" href="#imagen.transferfn.BinaryThreshold.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b12769dfb50&gt;</em><a class="headerlink" href="#imagen.transferfn.BinaryThreshold.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -127,7 +129,7 @@ equal to the default value.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.BinaryThreshold.get_value_generator">
-<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b324ac79520&gt;</em><a class="headerlink" href="#imagen.transferfn.BinaryThreshold.get_value_generator" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b12769dfaa0&gt;</em><a class="headerlink" href="#imagen.transferfn.BinaryThreshold.get_value_generator" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -143,7 +145,7 @@ associated with the input data.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.BinaryThreshold.inspect_value">
-<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b324ac79628&gt;</em><a class="headerlink" href="#imagen.transferfn.BinaryThreshold.inspect_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b12769dfba8&gt;</em><a class="headerlink" href="#imagen.transferfn.BinaryThreshold.inspect_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -196,12 +198,12 @@ evaluated with eval. See pprint() function for more details.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.BinaryThreshold.set_dynamic_time_fn">
-<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b324ac79578&gt;</em><a class="headerlink" href="#imagen.transferfn.BinaryThreshold.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b12769dfaf8&gt;</em><a class="headerlink" href="#imagen.transferfn.BinaryThreshold.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.BinaryThreshold.set_param">
-<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b324ac79730&gt;</em><a class="headerlink" href="#imagen.transferfn.BinaryThreshold.set_param" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b12769dfcb0&gt;</em><a class="headerlink" href="#imagen.transferfn.BinaryThreshold.set_param" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -278,7 +280,7 @@ instantiated.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeL1.force_new_dynamic_value">
-<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b324ac79418&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL1.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b12769df998&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL1.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -292,7 +294,7 @@ equal to the default value.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeL1.get_value_generator">
-<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b324ac79368&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL1.get_value_generator" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b12769df940&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL1.get_value_generator" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -308,7 +310,7 @@ associated with the input data.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeL1.inspect_value">
-<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b324ac79470&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL1.inspect_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b12769df9f0&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL1.inspect_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -361,12 +363,12 @@ evaluated with eval. See pprint() function for more details.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeL1.set_dynamic_time_fn">
-<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b324ac79310&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL1.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b12769df890&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL1.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeL1.set_param">
-<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b324ac79680&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL1.set_param" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b12769dfc00&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL1.set_param" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -439,7 +441,7 @@ instantiated.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeL2.force_new_dynamic_value">
-<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b324ac796d8&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL2.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b12769dfc58&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL2.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -453,7 +455,7 @@ equal to the default value.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeL2.get_value_generator">
-<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b324ac79520&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL2.get_value_generator" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b12769dfaa0&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL2.get_value_generator" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -469,7 +471,7 @@ associated with the input data.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeL2.inspect_value">
-<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b324ac79578&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL2.inspect_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b12769dfaf8&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL2.inspect_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -522,12 +524,12 @@ evaluated with eval. See pprint() function for more details.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeL2.set_dynamic_time_fn">
-<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b324ac79628&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL2.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b12769dfba8&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL2.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeL2.set_param">
-<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b324ac794c8&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL2.set_param" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b12769dfa48&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeL2.set_param" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -604,7 +606,7 @@ instantiated.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeLinf.force_new_dynamic_value">
-<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b324ac79680&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLinf.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b12769dfc00&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLinf.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -618,7 +620,7 @@ equal to the default value.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeLinf.get_value_generator">
-<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b324ac797e0&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLinf.get_value_generator" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b12769dfd60&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLinf.get_value_generator" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -634,7 +636,7 @@ associated with the input data.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeLinf.inspect_value">
-<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b324ac79890&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLinf.inspect_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b12769dfe10&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLinf.inspect_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -687,12 +689,12 @@ evaluated with eval. See pprint() function for more details.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeLinf.set_dynamic_time_fn">
-<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b324ac79ba8&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLinf.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b12768391b0&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLinf.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeLinf.set_param">
-<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b324ac79c58&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLinf.set_param" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b1276839208&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLinf.set_param" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -769,7 +771,7 @@ instantiated.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeLp.force_new_dynamic_value">
-<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b324ac797e0&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLp.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b12769df998&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLp.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -783,7 +785,7 @@ equal to the default value.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeLp.get_value_generator">
-<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b324ac79418&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLp.get_value_generator" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b12769dfdb8&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLp.get_value_generator" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -799,7 +801,7 @@ associated with the input data.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeLp.inspect_value">
-<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b324ac79838&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLp.inspect_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b12769dfe10&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLp.inspect_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -852,12 +854,12 @@ evaluated with eval. See pprint() function for more details.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeLp.set_dynamic_time_fn">
-<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b324ac79730&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLp.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b12769dfd60&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLp.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.DivisiveNormalizeLp.set_param">
-<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b324ac79940&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLp.set_param" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b12769dfe68&gt;</em><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLp.set_param" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -890,6 +892,179 @@ something without permanently altering the objects&#8217; state.</p>
 <dl class="method">
 <dt id="imagen.transferfn.DivisiveNormalizeLp.warning">
 <tt class="descname">warning</tt><big>(</big><em>msg</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#imagen.transferfn.DivisiveNormalizeLp.warning" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print msg merged with args as a warning, unless module variable
+warnings_as_exceptions is True, then raise an Exception
+containing the arguments.</p>
+<p>See Python&#8217;s logging module for details of message formatting.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="imagen.transferfn.Hysteresis">
+<em class="property">class </em><tt class="descclassname">imagen.transferfn.</tt><tt class="descname">Hysteresis</tt><big>(</big><em>**params</em><big>)</big><a class="reference internal" href="../_modules/imagen/transferfn.html#Hysteresis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagen.transferfn.Hysteresis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#imagen.transferfn.TransferFnWithState" title="imagen.transferfn.TransferFnWithState"><tt class="xref py py-class docutils literal"><span class="pre">imagen.transferfn.TransferFnWithState</span></tt></a></p>
+<p>Smoothly interpolates a matrix between simulation time steps, with
+exponential falloff.</p>
+<p><em>param Parameter</em> <tt class="docutils literal"><span class="pre">norm_value</span></tt> (<em>allow_None=True, constant=False, default=None, instantiate=False, pickle_default_value=True, precedence=None, readonly=False</em>)</p>
+<dl class="docutils">
+<dt><em>param Number</em> <tt class="docutils literal"><span class="pre">time_constant</span></tt> (<em>allow_None=False, bounds=None, constant=False, default=0.3, inclusive_bounds=(True, True), instantiate=False, pickle_default_value=True, precedence=None, readonly=False, time_dependent=False, time_fn=&lt;Time Time00001&gt;</em>)</dt>
+<dd>Controls the time scale of the interpolation.</dd>
+<dt><em>param List</em> <tt class="docutils literal"><span class="pre">init_keys</span></tt> (<em>allow_None=False, bounds=(0, None), constant=True, default=[], instantiate=True, pickle_default_value=True, precedence=None, readonly=False</em>)</dt>
+<dd>List of item key labels for metadata that that must be
+        supplied to the initialize method before the TransferFn may be
+        used.</dd>
+<dt><em>param Boolean</em> <tt class="docutils literal"><span class="pre">plastic</span></tt> (<em>allow_None=False, bounds=(0, 1), constant=False, default=True, instantiate=False, pickle_default_value=True, precedence=None, readonly=False</em>)</dt>
+<dd>Whether or not to update the internal state on each call.
+        Allows plasticity to be temporarily turned off (e.g for
+        analysis purpose).</dd>
+</dl>
+<dl class="method">
+<dt id="imagen.transferfn.Hysteresis.debug">
+<tt class="descname">debug</tt><big>(</big><em>msg</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#imagen.transferfn.Hysteresis.debug" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print msg merged with args as a debugging statement.</p>
+<p>See Python&#8217;s logging module for details of message formatting.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagen.transferfn.Hysteresis.defaults">
+<tt class="descname">defaults</tt><big>(</big><big>)</big><a class="headerlink" href="#imagen.transferfn.Hysteresis.defaults" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return {parameter_name:parameter.default} for all non-constant
+Parameters.</p>
+<p>Note that a Parameter for which instantiate==True has its default
+instantiated.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="imagen.transferfn.Hysteresis.force_new_dynamic_value">
+<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b12769df890&gt;</em><a class="headerlink" href="#imagen.transferfn.Hysteresis.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="imagen.transferfn.Hysteresis.get_param_values">
+<tt class="descname">get_param_values</tt><big>(</big><em>onlychanged=False</em><big>)</big><a class="headerlink" href="#imagen.transferfn.Hysteresis.get_param_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of name,value pairs for all Parameters of this
+object.</p>
+<p>If onlychanged is True, will only return values that are not
+equal to the default value.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="imagen.transferfn.Hysteresis.get_value_generator">
+<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b12769df8e8&gt;</em><a class="headerlink" href="#imagen.transferfn.Hysteresis.get_value_generator" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="imagen.transferfn.Hysteresis.initialize">
+<tt class="descname">initialize</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#imagen.transferfn.Hysteresis.initialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transfer functions may need additional information before the
+supplied numpy array can be modified in place. For instance,
+transfer functions may have state which needs to be allocated
+in memory with a certain size. In other cases, the transfer
+function may need to know about the coordinate system
+associated with the input data.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="imagen.transferfn.Hysteresis.inspect_value">
+<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b12769dfc00&gt;</em><a class="headerlink" href="#imagen.transferfn.Hysteresis.inspect_value" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="imagen.transferfn.Hysteresis.message">
+<tt class="descname">message</tt><big>(</big><em>msg</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#imagen.transferfn.Hysteresis.message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print msg merged with args as a message.</p>
+<p>See Python&#8217;s logging module for details of message formatting.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagen.transferfn.Hysteresis.override_plasticity_state">
+<tt class="descname">override_plasticity_state</tt><big>(</big><em>new_plasticity_state</em><big>)</big><a class="headerlink" href="#imagen.transferfn.Hysteresis.override_plasticity_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Temporarily disable plasticity of internal state.</p>
+<p>This function should be implemented by all subclasses so that
+after a call, the output should always be the same for any
+given input pattern and no call should have any effect that
+persists after restore_plasticity_state() is called.</p>
+<p>By default, simply saves a copy of the &#8216;plastic&#8217; parameter to
+an internal stack (so that it can be restored by
+restore_plasticity_state()), and then sets the plastic
+parameter to the given value (True or False).</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="imagen.transferfn.Hysteresis.params">
+<em class="property">classmethod </em><tt class="descname">params</tt><big>(</big><em>parameter_name=None</em><big>)</big><a class="headerlink" href="#imagen.transferfn.Hysteresis.params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the Parameters of this class as the
+dictionary {name: parameter_object}</p>
+<p>Includes Parameters from this class and its
+superclasses.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagen.transferfn.Hysteresis.pprint">
+<tt class="descname">pprint</tt><big>(</big><em>imports=None</em>, <em>prefix=' '</em>, <em>unknown_value='&lt;?&gt;'</em>, <em>qualify=False</em>, <em>separator=''</em><big>)</big><a class="headerlink" href="#imagen.transferfn.Hysteresis.pprint" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Experimental) Pretty printed representation that may be
+evaluated with eval. See pprint() function for more details.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="imagen.transferfn.Hysteresis.print_param_defaults">
+<em class="property">classmethod </em><tt class="descname">print_param_defaults</tt><big>(</big><big>)</big><a class="headerlink" href="#imagen.transferfn.Hysteresis.print_param_defaults" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print the default values of all cls&#8217;s Parameters.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagen.transferfn.Hysteresis.print_param_values">
+<tt class="descname">print_param_values</tt><big>(</big><big>)</big><a class="headerlink" href="#imagen.transferfn.Hysteresis.print_param_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print the values of all this object&#8217;s Parameters.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagen.transferfn.Hysteresis.restore_plasticity_state">
+<tt class="descname">restore_plasticity_state</tt><big>(</big><big>)</big><a class="headerlink" href="#imagen.transferfn.Hysteresis.restore_plasticity_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Re-enable plasticity of internal state after an
+override_plasticity_state call.</p>
+<p>This function should be implemented by all subclasses to
+remove the effect of the most recent override_plasticity_state call,
+i.e. to reenable changes to the internal state, without any
+lasting effect from the time during which plasticity was disabled.</p>
+<p>By default, simply restores the last saved value of the
+&#8216;plastic&#8217; parameter.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagen.transferfn.Hysteresis.script_repr">
+<tt class="descname">script_repr</tt><big>(</big><em>imports=</em>, <span class="optional">[</span><span class="optional">]</span><em>prefix='    '</em><big>)</big><a class="headerlink" href="#imagen.transferfn.Hysteresis.script_repr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Variant of __repr__ designed for generating a runnable script.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="imagen.transferfn.Hysteresis.set_default">
+<em class="property">classmethod </em><tt class="descname">set_default</tt><big>(</big><em>param_name</em>, <em>value</em><big>)</big><a class="headerlink" href="#imagen.transferfn.Hysteresis.set_default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the default value of param_name.</p>
+<p>Equivalent to setting param_name on the class.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="imagen.transferfn.Hysteresis.set_dynamic_time_fn">
+<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b12769df9f0&gt;</em><a class="headerlink" href="#imagen.transferfn.Hysteresis.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="imagen.transferfn.Hysteresis.set_param">
+<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b12769dfcb0&gt;</em><a class="headerlink" href="#imagen.transferfn.Hysteresis.set_param" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="imagen.transferfn.Hysteresis.verbose">
+<tt class="descname">verbose</tt><big>(</big><em>msg</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#imagen.transferfn.Hysteresis.verbose" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print msg merged with args as a verbose message.</p>
+<p>See Python&#8217;s logging module for details of message formatting.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagen.transferfn.Hysteresis.warning">
+<tt class="descname">warning</tt><big>(</big><em>msg</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#imagen.transferfn.Hysteresis.warning" title="Permalink to this definition">¶</a></dt>
 <dd><p>Print msg merged with args as a warning, unless module variable
 warnings_as_exceptions is True, then raise an Exception
 containing the arguments.</p>
@@ -932,7 +1107,7 @@ instantiated.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.IdentityTF.force_new_dynamic_value">
-<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b324ac793c0&gt;</em><a class="headerlink" href="#imagen.transferfn.IdentityTF.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b12769dfe10&gt;</em><a class="headerlink" href="#imagen.transferfn.IdentityTF.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -946,7 +1121,7 @@ equal to the default value.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.IdentityTF.get_value_generator">
-<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b324ac797e0&gt;</em><a class="headerlink" href="#imagen.transferfn.IdentityTF.get_value_generator" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b12769df890&gt;</em><a class="headerlink" href="#imagen.transferfn.IdentityTF.get_value_generator" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -962,7 +1137,7 @@ associated with the input data.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.IdentityTF.inspect_value">
-<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b324ac79680&gt;</em><a class="headerlink" href="#imagen.transferfn.IdentityTF.inspect_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b12769dfec0&gt;</em><a class="headerlink" href="#imagen.transferfn.IdentityTF.inspect_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1015,12 +1190,12 @@ evaluated with eval. See pprint() function for more details.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.IdentityTF.set_dynamic_time_fn">
-<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b324ac79520&gt;</em><a class="headerlink" href="#imagen.transferfn.IdentityTF.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b12769df998&gt;</em><a class="headerlink" href="#imagen.transferfn.IdentityTF.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.IdentityTF.set_param">
-<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b324ac79310&gt;</em><a class="headerlink" href="#imagen.transferfn.IdentityTF.set_param" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b12769dfcb0&gt;</em><a class="headerlink" href="#imagen.transferfn.IdentityTF.set_param" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1093,7 +1268,7 @@ instantiated.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.Scale.force_new_dynamic_value">
-<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b324ac79838&gt;</em><a class="headerlink" href="#imagen.transferfn.Scale.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b12769dfc00&gt;</em><a class="headerlink" href="#imagen.transferfn.Scale.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1107,7 +1282,7 @@ equal to the default value.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.Scale.get_value_generator">
-<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b324ac79418&gt;</em><a class="headerlink" href="#imagen.transferfn.Scale.get_value_generator" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b12769df8e8&gt;</em><a class="headerlink" href="#imagen.transferfn.Scale.get_value_generator" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1123,7 +1298,7 @@ associated with the input data.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.Scale.inspect_value">
-<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b324ac79730&gt;</em><a class="headerlink" href="#imagen.transferfn.Scale.inspect_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b12769dfdb8&gt;</em><a class="headerlink" href="#imagen.transferfn.Scale.inspect_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1176,12 +1351,12 @@ evaluated with eval. See pprint() function for more details.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.Scale.set_dynamic_time_fn">
-<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b324ac793c0&gt;</em><a class="headerlink" href="#imagen.transferfn.Scale.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b12769dfe10&gt;</em><a class="headerlink" href="#imagen.transferfn.Scale.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.Scale.set_param">
-<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b324ac799f0&gt;</em><a class="headerlink" href="#imagen.transferfn.Scale.set_param" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b12769dff70&gt;</em><a class="headerlink" href="#imagen.transferfn.Scale.set_param" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1256,7 +1431,7 @@ instantiated.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.Threshold.force_new_dynamic_value">
-<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b324ac797e0&gt;</em><a class="headerlink" href="#imagen.transferfn.Threshold.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b12769df890&gt;</em><a class="headerlink" href="#imagen.transferfn.Threshold.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1270,7 +1445,7 @@ equal to the default value.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.Threshold.get_value_generator">
-<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b324ac79838&gt;</em><a class="headerlink" href="#imagen.transferfn.Threshold.get_value_generator" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b12769dfc00&gt;</em><a class="headerlink" href="#imagen.transferfn.Threshold.get_value_generator" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1286,7 +1461,7 @@ associated with the input data.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.Threshold.inspect_value">
-<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b324ac79680&gt;</em><a class="headerlink" href="#imagen.transferfn.Threshold.inspect_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b12769dfec0&gt;</em><a class="headerlink" href="#imagen.transferfn.Threshold.inspect_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1339,12 +1514,12 @@ evaluated with eval. See pprint() function for more details.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.Threshold.set_dynamic_time_fn">
-<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b324ac79db8&gt;</em><a class="headerlink" href="#imagen.transferfn.Threshold.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b12769dfe68&gt;</em><a class="headerlink" href="#imagen.transferfn.Threshold.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.Threshold.set_param">
-<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b324ac79520&gt;</em><a class="headerlink" href="#imagen.transferfn.Threshold.set_param" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b12769df998&gt;</em><a class="headerlink" href="#imagen.transferfn.Threshold.set_param" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1419,7 +1594,7 @@ instantiated.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.TransferFn.force_new_dynamic_value">
-<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b324ac79418&gt;</em><a class="headerlink" href="#imagen.transferfn.TransferFn.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b12769df8e8&gt;</em><a class="headerlink" href="#imagen.transferfn.TransferFn.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1433,7 +1608,7 @@ equal to the default value.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.TransferFn.get_value_generator">
-<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b324ac797e0&gt;</em><a class="headerlink" href="#imagen.transferfn.TransferFn.get_value_generator" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b12769df890&gt;</em><a class="headerlink" href="#imagen.transferfn.TransferFn.get_value_generator" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1449,7 +1624,7 @@ associated with the input data.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.TransferFn.inspect_value">
-<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b324ac793c0&gt;</em><a class="headerlink" href="#imagen.transferfn.TransferFn.inspect_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b12769dfe10&gt;</em><a class="headerlink" href="#imagen.transferfn.TransferFn.inspect_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1502,12 +1677,12 @@ evaluated with eval. See pprint() function for more details.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.TransferFn.set_dynamic_time_fn">
-<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b324ac79940&gt;</em><a class="headerlink" href="#imagen.transferfn.TransferFn.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b12769df9f0&gt;</em><a class="headerlink" href="#imagen.transferfn.TransferFn.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.TransferFn.set_param">
-<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b324ac79730&gt;</em><a class="headerlink" href="#imagen.transferfn.TransferFn.set_param" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b12769dfdb8&gt;</em><a class="headerlink" href="#imagen.transferfn.TransferFn.set_param" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1540,6 +1715,197 @@ something without permanently altering the objects&#8217; state.</p>
 <dl class="method">
 <dt id="imagen.transferfn.TransferFn.warning">
 <tt class="descname">warning</tt><big>(</big><em>msg</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#imagen.transferfn.TransferFn.warning" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print msg merged with args as a warning, unless module variable
+warnings_as_exceptions is True, then raise an Exception
+containing the arguments.</p>
+<p>See Python&#8217;s logging module for details of message formatting.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="imagen.transferfn.TransferFnWithState">
+<em class="property">class </em><tt class="descclassname">imagen.transferfn.</tt><tt class="descname">TransferFnWithState</tt><big>(</big><em>**params</em><big>)</big><a class="reference internal" href="../_modules/imagen/transferfn.html#TransferFnWithState"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagen.transferfn.TransferFnWithState" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#imagen.transferfn.TransferFn" title="imagen.transferfn.TransferFn"><tt class="xref py py-class docutils literal"><span class="pre">imagen.transferfn.TransferFn</span></tt></a></p>
+<p>Abstract base class for TransferFns that need to maintain a
+self.plastic parameter.</p>
+<p>These TransferFns typically maintain some form of internal history
+or other state from previous calls, which can be disabled by
+override_plasticity_state().</p>
+<p><em>param Parameter</em> <tt class="docutils literal"><span class="pre">norm_value</span></tt> (<em>allow_None=True, constant=False, default=None, instantiate=False, pickle_default_value=True, precedence=None, readonly=False</em>)</p>
+<dl class="docutils">
+<dt><em>param List</em> <tt class="docutils literal"><span class="pre">init_keys</span></tt> (<em>allow_None=False, bounds=(0, None), constant=True, default=[], instantiate=True, pickle_default_value=True, precedence=None, readonly=False</em>)</dt>
+<dd>List of item key labels for metadata that that must be
+        supplied to the initialize method before the TransferFn may be
+        used.</dd>
+<dt><em>param Boolean</em> <tt class="docutils literal"><span class="pre">plastic</span></tt> (<em>allow_None=False, bounds=(0, 1), constant=False, default=True, instantiate=False, pickle_default_value=True, precedence=None, readonly=False</em>)</dt>
+<dd>Whether or not to update the internal state on each call.
+        Allows plasticity to be temporarily turned off (e.g for
+        analysis purpose).</dd>
+</dl>
+<dl class="method">
+<dt id="imagen.transferfn.TransferFnWithState.debug">
+<tt class="descname">debug</tt><big>(</big><em>msg</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#imagen.transferfn.TransferFnWithState.debug" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print msg merged with args as a debugging statement.</p>
+<p>See Python&#8217;s logging module for details of message formatting.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagen.transferfn.TransferFnWithState.defaults">
+<tt class="descname">defaults</tt><big>(</big><big>)</big><a class="headerlink" href="#imagen.transferfn.TransferFnWithState.defaults" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return {parameter_name:parameter.default} for all non-constant
+Parameters.</p>
+<p>Note that a Parameter for which instantiate==True has its default
+instantiated.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="imagen.transferfn.TransferFnWithState.force_new_dynamic_value">
+<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b12769dfc00&gt;</em><a class="headerlink" href="#imagen.transferfn.TransferFnWithState.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="imagen.transferfn.TransferFnWithState.get_param_values">
+<tt class="descname">get_param_values</tt><big>(</big><em>onlychanged=False</em><big>)</big><a class="headerlink" href="#imagen.transferfn.TransferFnWithState.get_param_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of name,value pairs for all Parameters of this
+object.</p>
+<p>If onlychanged is True, will only return values that are not
+equal to the default value.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="imagen.transferfn.TransferFnWithState.get_value_generator">
+<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b12769dfec0&gt;</em><a class="headerlink" href="#imagen.transferfn.TransferFnWithState.get_value_generator" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="imagen.transferfn.TransferFnWithState.initialize">
+<tt class="descname">initialize</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#imagen.transferfn.TransferFnWithState.initialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transfer functions may need additional information before the
+supplied numpy array can be modified in place. For instance,
+transfer functions may have state which needs to be allocated
+in memory with a certain size. In other cases, the transfer
+function may need to know about the coordinate system
+associated with the input data.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="imagen.transferfn.TransferFnWithState.inspect_value">
+<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b12769dfe68&gt;</em><a class="headerlink" href="#imagen.transferfn.TransferFnWithState.inspect_value" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="imagen.transferfn.TransferFnWithState.message">
+<tt class="descname">message</tt><big>(</big><em>msg</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#imagen.transferfn.TransferFnWithState.message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print msg merged with args as a message.</p>
+<p>See Python&#8217;s logging module for details of message formatting.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagen.transferfn.TransferFnWithState.override_plasticity_state">
+<tt class="descname">override_plasticity_state</tt><big>(</big><em>new_plasticity_state</em><big>)</big><a class="reference internal" href="../_modules/imagen/transferfn.html#TransferFnWithState.override_plasticity_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagen.transferfn.TransferFnWithState.override_plasticity_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Temporarily disable plasticity of internal state.</p>
+<p>This function should be implemented by all subclasses so that
+after a call, the output should always be the same for any
+given input pattern and no call should have any effect that
+persists after restore_plasticity_state() is called.</p>
+<p>By default, simply saves a copy of the &#8216;plastic&#8217; parameter to
+an internal stack (so that it can be restored by
+restore_plasticity_state()), and then sets the plastic
+parameter to the given value (True or False).</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="imagen.transferfn.TransferFnWithState.params">
+<em class="property">classmethod </em><tt class="descname">params</tt><big>(</big><em>parameter_name=None</em><big>)</big><a class="headerlink" href="#imagen.transferfn.TransferFnWithState.params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the Parameters of this class as the
+dictionary {name: parameter_object}</p>
+<p>Includes Parameters from this class and its
+superclasses.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagen.transferfn.TransferFnWithState.pprint">
+<tt class="descname">pprint</tt><big>(</big><em>imports=None</em>, <em>prefix=' '</em>, <em>unknown_value='&lt;?&gt;'</em>, <em>qualify=False</em>, <em>separator=''</em><big>)</big><a class="headerlink" href="#imagen.transferfn.TransferFnWithState.pprint" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Experimental) Pretty printed representation that may be
+evaluated with eval. See pprint() function for more details.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="imagen.transferfn.TransferFnWithState.print_param_defaults">
+<em class="property">classmethod </em><tt class="descname">print_param_defaults</tt><big>(</big><big>)</big><a class="headerlink" href="#imagen.transferfn.TransferFnWithState.print_param_defaults" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print the default values of all cls&#8217;s Parameters.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagen.transferfn.TransferFnWithState.print_param_values">
+<tt class="descname">print_param_values</tt><big>(</big><big>)</big><a class="headerlink" href="#imagen.transferfn.TransferFnWithState.print_param_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print the values of all this object&#8217;s Parameters.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagen.transferfn.TransferFnWithState.restore_plasticity_state">
+<tt class="descname">restore_plasticity_state</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/imagen/transferfn.html#TransferFnWithState.restore_plasticity_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagen.transferfn.TransferFnWithState.restore_plasticity_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Re-enable plasticity of internal state after an
+override_plasticity_state call.</p>
+<p>This function should be implemented by all subclasses to
+remove the effect of the most recent override_plasticity_state call,
+i.e. to reenable changes to the internal state, without any
+lasting effect from the time during which plasticity was disabled.</p>
+<p>By default, simply restores the last saved value of the
+&#8216;plastic&#8217; parameter.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagen.transferfn.TransferFnWithState.script_repr">
+<tt class="descname">script_repr</tt><big>(</big><em>imports=</em>, <span class="optional">[</span><span class="optional">]</span><em>prefix='    '</em><big>)</big><a class="headerlink" href="#imagen.transferfn.TransferFnWithState.script_repr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Variant of __repr__ designed for generating a runnable script.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="imagen.transferfn.TransferFnWithState.set_default">
+<em class="property">classmethod </em><tt class="descname">set_default</tt><big>(</big><em>param_name</em>, <em>value</em><big>)</big><a class="headerlink" href="#imagen.transferfn.TransferFnWithState.set_default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the default value of param_name.</p>
+<p>Equivalent to setting param_name on the class.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="imagen.transferfn.TransferFnWithState.set_dynamic_time_fn">
+<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b12769dfaa0&gt;</em><a class="headerlink" href="#imagen.transferfn.TransferFnWithState.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="imagen.transferfn.TransferFnWithState.set_param">
+<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b12769dff70&gt;</em><a class="headerlink" href="#imagen.transferfn.TransferFnWithState.set_param" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="imagen.transferfn.TransferFnWithState.state_pop">
+<tt class="descname">state_pop</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/imagen/transferfn.html#TransferFnWithState.state_pop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagen.transferfn.TransferFnWithState.state_pop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Restore the state saved by the most recent state_push call.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagen.transferfn.TransferFnWithState.state_push">
+<tt class="descname">state_push</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/imagen/transferfn.html#TransferFnWithState.state_push"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagen.transferfn.TransferFnWithState.state_push" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the current state onto a stack, to be restored with
+state_pop.</p>
+<p>Subclasses must implement state_push and state_pop so store
+state across invocations. The behaviour should be such that
+after state_pop the state is restored at the time when
+state_push was called.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagen.transferfn.TransferFnWithState.verbose">
+<tt class="descname">verbose</tt><big>(</big><em>msg</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#imagen.transferfn.TransferFnWithState.verbose" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print msg merged with args as a verbose message.</p>
+<p>See Python&#8217;s logging module for details of message formatting.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagen.transferfn.TransferFnWithState.warning">
+<tt class="descname">warning</tt><big>(</big><em>msg</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#imagen.transferfn.TransferFnWithState.warning" title="Permalink to this definition">¶</a></dt>
 <dd><p>Print msg merged with args as a warning, unless module variable
 warnings_as_exceptions is True, then raise an Exception
 containing the arguments.</p>
@@ -1611,7 +1977,7 @@ instantiated.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.sheet_tf.Convolve.force_new_dynamic_value">
-<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b324abce730&gt;</em><a class="headerlink" href="#imagen.transferfn.sheet_tf.Convolve.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">force_new_dynamic_value</tt><em class="property"> = &lt;functools.partial object at 0x2b12762920a8&gt;</em><a class="headerlink" href="#imagen.transferfn.sheet_tf.Convolve.force_new_dynamic_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1625,12 +1991,12 @@ equal to the default value.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.sheet_tf.Convolve.get_value_generator">
-<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b324abce788&gt;</em><a class="headerlink" href="#imagen.transferfn.sheet_tf.Convolve.get_value_generator" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_value_generator</tt><em class="property"> = &lt;functools.partial object at 0x2b1276292100&gt;</em><a class="headerlink" href="#imagen.transferfn.sheet_tf.Convolve.get_value_generator" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.sheet_tf.Convolve.inspect_value">
-<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b324abce7e0&gt;</em><a class="headerlink" href="#imagen.transferfn.sheet_tf.Convolve.inspect_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">inspect_value</tt><em class="property"> = &lt;functools.partial object at 0x2b1276292158&gt;</em><a class="headerlink" href="#imagen.transferfn.sheet_tf.Convolve.inspect_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1683,12 +2049,12 @@ evaluated with eval. See pprint() function for more details.</p>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.sheet_tf.Convolve.set_dynamic_time_fn">
-<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b324abce6d8&gt;</em><a class="headerlink" href="#imagen.transferfn.sheet_tf.Convolve.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_dynamic_time_fn</tt><em class="property"> = &lt;functools.partial object at 0x2b1276292050&gt;</em><a class="headerlink" href="#imagen.transferfn.sheet_tf.Convolve.set_dynamic_time_fn" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="imagen.transferfn.sheet_tf.Convolve.set_param">
-<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b324abce8e8&gt;</em><a class="headerlink" href="#imagen.transferfn.sheet_tf.Convolve.set_param" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_param</tt><em class="property"> = &lt;functools.partial object at 0x2b1276292260&gt;</em><a class="headerlink" href="#imagen.transferfn.sheet_tf.Convolve.set_param" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
