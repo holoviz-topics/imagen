@@ -58,7 +58,7 @@ class TransferFnWithState(TransferFn):
     plastic = param.Boolean(default=True, doc="""
         Whether or not to update the internal state on each call.
         Allows plasticity to be temporarily turned off (e.g for
-        analysis purpose).""")
+        analysis purposes).""")
 
     __abstract = True
 
@@ -73,7 +73,7 @@ class TransferFnWithState(TransferFn):
 
         This function should be implemented by all subclasses so that
         after a call, the output should always be the same for any
-        given input pattern and no call should have any effect that
+        given input pattern, and no call should have any effect that
         persists after restore_plasticity_state() is called.
 
         By default, simply saves a copy of the 'plastic' parameter to
@@ -105,10 +105,10 @@ class TransferFnWithState(TransferFn):
         Save the current state onto a stack, to be restored with
         state_pop.
 
-        Subclasses must implement state_push and state_pop so store
+        Subclasses must implement state_push and state_pop to store
         state across invocations. The behaviour should be such that
-        after state_pop the state is restored at the time when
-        state_push was called.
+        after state_pop, the state is restored to what it was at 
+        the time when state_push was called.
         """
         pass
 
