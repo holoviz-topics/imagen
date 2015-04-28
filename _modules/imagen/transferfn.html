@@ -125,7 +125,7 @@
     <span class="n">plastic</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Boolean</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
 <span class="s">        Whether or not to update the internal state on each call.</span>
 <span class="s">        Allows plasticity to be temporarily turned off (e.g for</span>
-<span class="s">        analysis purpose).&quot;&quot;&quot;</span><span class="p">)</span>
+<span class="s">        analysis purposes).&quot;&quot;&quot;</span><span class="p">)</span>
 
     <span class="n">__abstract</span> <span class="o">=</span> <span class="bp">True</span>
 
@@ -140,7 +140,7 @@
 
 <span class="sd">        This function should be implemented by all subclasses so that</span>
 <span class="sd">        after a call, the output should always be the same for any</span>
-<span class="sd">        given input pattern and no call should have any effect that</span>
+<span class="sd">        given input pattern, and no call should have any effect that</span>
 <span class="sd">        persists after restore_plasticity_state() is called.</span>
 
 <span class="sd">        By default, simply saves a copy of the &#39;plastic&#39; parameter to</span>
@@ -172,10 +172,10 @@
 <span class="sd">        Save the current state onto a stack, to be restored with</span>
 <span class="sd">        state_pop.</span>
 
-<span class="sd">        Subclasses must implement state_push and state_pop so store</span>
+<span class="sd">        Subclasses must implement state_push and state_pop to store</span>
 <span class="sd">        state across invocations. The behaviour should be such that</span>
-<span class="sd">        after state_pop the state is restored at the time when</span>
-<span class="sd">        state_push was called.</span>
+<span class="sd">        after state_pop, the state is restored to what it was at </span>
+<span class="sd">        the time when state_push was called.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span>
 </div>
