@@ -1,4 +1,4 @@
-|BuildStatus|_ |imagenDocs|_ |PyPI|_ |License|_ |Downloads|_
+|BuildStatus|_ |imagenDocs|_ |Package|_ |License|_ |Downloads|_
 
 ImaGen
 ======
@@ -28,8 +28,8 @@ with dependencies via ``pip install --user imagen``.  More recent
 changes can be obtained by cloning the git repository.
 
 
-.. |PyPI| image:: https://img.shields.io/pypi/v/imagen.svg
-.. _PyPI: https://pypi.python.org/pypi/imagen
+.. |Package| image:: https://img.shields.io/pypi/v/imagen.svg
+.. _Package: https://pypi.python.org/pypi/imagen
 
 .. |License| image:: https://img.shields.io/pypi/l/imagen.svg
 .. _License: https://github.com/ioam/imagen/blob/master/LICENSE.txt
