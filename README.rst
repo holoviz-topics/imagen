@@ -1,4 +1,4 @@
-|BuildStatus|_ |PyVersion|_ |License|_ |Release|_ 
+|BuildStatus|_ |imagenDocs|_ |PyPI|_ |License|_ |Downloads|_
 
 ImaGen
 ======
@@ -27,14 +27,18 @@ Official releases of ImaGen are available at `PyPI
 with dependencies via ``pip install --user imagen``.  More recent
 changes can be obtained by cloning the git repository.
 
+
+.. |PyPI| image:: https://img.shields.io/pypi/v/imagen.svg
+.. _PyPI: https://pypi.python.org/pypi/imagen
+
+.. |License| image:: https://img.shields.io/pypi/l/imagen.svg
+.. _License: https://github.com/ioam/imagen/blob/master/LICENSE.txt
+
 .. |BuildStatus| image:: https://travis-ci.org/ioam/imagen.svg?branch=master
 .. _BuildStatus: https://travis-ci.org/ioam/imagen
 
-.. |Release| image:: https://pypip.in/version/imagen/badge.svg?style=flat
-.. _Release: https://pypi.python.org/pypi/imagen
+.. |imagenDocs| image:: http://doozy.inf.ed.ac.uk:8010/png?builder=imagen_docs
+.. _imagenDocs: http://doozy.inf.ed.ac.uk:8010/waterfall
 
-.. |PyVersion| image:: https://pypip.in/py_versions/imagen/badge.svg?style=flat
-.. _PyVersion: https://pypi.python.org/pypi/imagen
-
-.. |License| image:: https://pypip.in/license/imagen/badge.svg?style=flat
-.. _License: https://github.com/ioam/imagen/blob/master/LICENSE.txt
+.. |Downloads| image:: https://img.shields.io/pypi/dm/imagen.svg
+.. _Downloads: https://pypi.python.org/pypi/imagen
