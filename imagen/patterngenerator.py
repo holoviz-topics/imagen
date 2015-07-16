@@ -119,7 +119,7 @@ class PatternGenerator(param.Parameterized):
         Optional PatternGenerator used to construct a mask to be applied to
         the pattern.""")
 
-    output_fns = param.HookList(default=[],class_=TransferFn,precedence=0.08,doc="""
+    output_fns = param.HookList(default=[], precedence=0.08,doc="""
         Optional function(s) to apply to the pattern array after it has been created.
         Can be used for normalization, thresholding, etc.""")
 
@@ -284,7 +284,8 @@ class PatternGenerator(param.Parameterized):
         self.ydensity = ydensity
         scs = SheetCoordinateSystem(bounds, xdensity, ydensity)
         for of in self.output_fns:
-            of.initialize(SCS=scs, shape=scs.shape)
+            if isinstance(of, TransferFn):
+                of.initialize(SCS=scs, shape=scs.shape)
 
     def state_push(self):
         "Save the state of the output functions, to be restored with state_pop."
