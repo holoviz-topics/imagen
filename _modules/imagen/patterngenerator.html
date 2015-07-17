@@ -186,7 +186,7 @@
 <span class="s">        Optional PatternGenerator used to construct a mask to be applied to</span>
 <span class="s">        the pattern.&quot;&quot;&quot;</span><span class="p">)</span>
 
-    <span class="n">output_fns</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">HookList</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="p">[],</span><span class="n">class_</span><span class="o">=</span><span class="n">TransferFn</span><span class="p">,</span><span class="n">precedence</span><span class="o">=</span><span class="mf">0.08</span><span class="p">,</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
+    <span class="n">output_fns</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">HookList</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="p">[],</span> <span class="n">precedence</span><span class="o">=</span><span class="mf">0.08</span><span class="p">,</span><span class="n">doc</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
 <span class="s">        Optional function(s) to apply to the pattern array after it has been created.</span>
 <span class="s">        Can be used for normalization, thresholding, etc.&quot;&quot;&quot;</span><span class="p">)</span>
 
@@ -351,7 +351,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">ydensity</span> <span class="o">=</span> <span class="n">ydensity</span>
         <span class="n">scs</span> <span class="o">=</span> <span class="n">SheetCoordinateSystem</span><span class="p">(</span><span class="n">bounds</span><span class="p">,</span> <span class="n">xdensity</span><span class="p">,</span> <span class="n">ydensity</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">of</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_fns</span><span class="p">:</span>
-            <span class="n">of</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">SCS</span><span class="o">=</span><span class="n">scs</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">scs</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">of</span><span class="p">,</span> <span class="n">TransferFn</span><span class="p">):</span>
+                <span class="n">of</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">SCS</span><span class="o">=</span><span class="n">scs</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">scs</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="PatternGenerator.state_push"><a class="viewcode-back" href="../../Reference_Manual/imagen.html#imagen.patterngenerator.PatternGenerator.state_push">[docs]</a>    <span class="k">def</span> <span class="nf">state_push</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="s">&quot;Save the state of the output functions, to be restored with state_pop.&quot;</span>
