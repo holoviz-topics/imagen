@@ -394,6 +394,7 @@ class PatternCoordinatorImages(PatternCoordinator):
         except IOError:
             pass
 
+        params['patterns_per_label'] = self.patterns_per_label
         super(PatternCoordinatorImages, self).__init__(inherent_features,**params)
 
 
