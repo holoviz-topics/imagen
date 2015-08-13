@@ -371,10 +371,10 @@ class PatternCoordinatorImages(PatternCoordinator):
         filepath=param.resolve_path(dataset_name,path_to_file=False)
         self.dataset_name=filepath
         self.filename_template=filepath+"/*.*"
-        self.patterns_per_label = len(glob.glob(self.filename_template))
         self.description=""
         self.source=self.dataset_name
         self.placeholder_mapping={}
+        patterns_per_label = len(glob.glob(self.filename_template))
         inherent_features=['sf','cr']
         try:
             filename=param.resolve_path(dataset_name+'/MANIFEST_json')
@@ -382,10 +382,10 @@ class PatternCoordinatorImages(PatternCoordinator):
             dataset=json.loads(open(filename).read())
 
             self.dataset_name=dataset.get('dataset_name', self.dataset_name)
-            self.patterns_per_label=dataset.get('length',
-                                                len(glob.glob(self.filename_template)))
             self.description=dataset.get('description', self.description)
             self.filename_template=dataset.get('filename_template', self.filename_template)
+            patterns_per_label=dataset.get('length',
+                                                len(glob.glob(self.filename_template)))
             self.source=dataset.get('source', self.source)
             self.placeholder_mapping=(eval(dataset['placeholder_mapping'])
                                       if 'placeholder_mapping' in dataset
@@ -394,7 +394,8 @@ class PatternCoordinatorImages(PatternCoordinator):
         except IOError:
             pass
 
-        params['patterns_per_label'] = self.patterns_per_label
+        if 'patterns_per_label' not in params:
+            params['patterns_per_label'] = self.patterns_per_label
         super(PatternCoordinatorImages, self).__init__(inherent_features,**params)
 
 
