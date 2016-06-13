@@ -64,10 +64,14 @@ class RandomGenerator(PatternGenerator, TimeAwareRandomState):
         distributions. See RandomState's help for more information.
         """)
 
+    seed = param.Parameter(default=(500,500), doc="""
+        Random seed used to set the random number generator. Set to
+        (500,500) by default for backwards compatibility."""  )
+
 
     def __init__(self, **params):
         super(RandomGenerator, self).__init__(**params)
-        self._initialize_random_state(seed=(500,500), shared=True)
+        self._initialize_random_state(seed=self.seed, shared=True)
 
     def _distrib(self,shape,p):
         """Method for subclasses to override with a particular random distribution."""
@@ -79,7 +83,7 @@ class RandomGenerator(PatternGenerator, TimeAwareRandomState):
         p = ParamOverrides(self,params_to_override)
         if self.time_dependent:
             if 'name' in p:
-                self._initialize_random_state(seed=(500,500), shared=True, name=p.name)
+                self._initialize_random_state(seed=self.seed, shared=True, name=p.name)
             self._hash_and_seed()
 
         shape = SheetCoordinateSystem(p.bounds,p.xdensity,p.ydensity).shape
