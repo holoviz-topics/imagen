@@ -391,7 +391,26 @@ class PatternGenerator(param.Parameterized):
     def __abs__ (self): return Composite(generators=[self],operator=self.abs_first)
 
 
+    def pil(self, **params_to_override):
+        """Returns a PIL image for this pattern, overriding parameters if provided."""
+        from PIL.Image import fromarray
+        nchans = self.num_channels()
 
+        if nchans in [0, 1]:
+            mode, arr = None, self(**params_to_override)
+            arr = (255.0 / arr.max() * (arr - arr.min())).astype(np.uint8)
+
+        elif nchans in [3,4]:
+            mode = 'RGB' if nchans==3 else 'RGBA'
+            arr = np.dstack(self.channels(**params_to_override).values()[1:])
+            arr = (255.0*arr).astype(np.uint8)
+
+        else:
+            raise ValueError("Unsupported number of channels")
+            
+        return fromarray(arr, mode)
+
+            
 # Override class type; must be set here rather than when mask_shape is declared,
 # to avoid referring to class not yet constructed
 PatternGenerator.params('mask_shape').class_=PatternGenerator
