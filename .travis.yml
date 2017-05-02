@@ -1,8 +1,9 @@
 language: python
 python:
   - "2.7"
-  - "3.3"
   - "3.4"
+  - "3.5"
+  - "3.6"
 
 notifications:
   email:
@@ -12,8 +13,8 @@ install:
   - pip install param
   - pip install holoviews
   - pip install jinja2 tornado pyzmq matplotlib pillow
-  - if [[ $TRAVIS_PYTHON_VERSION == 2* ]]; then pip install ipython==1.0; fi
-  - if [[ $TRAVIS_PYTHON_VERSION == 3* ]]; then pip install ipython; fi
+  - if [[ $TRAVIS_PYTHON_VERSION == 2* ]]; then pip install ipython==5 ipykernel; fi
+  - if [[ $TRAVIS_PYTHON_VERSION == 3* ]]; then pip install ipython ipykernel; fi
 
 before-script:
   - "echo 'backend : Agg' > $HOME/.matplotlib/matplotlibrc"
