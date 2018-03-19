@@ -407,10 +407,10 @@ class PatternGenerator(param.Parameterized):
 
         else:
             raise ValueError("Unsupported number of channels")
-            
+
         return fromarray(arr, mode)
 
-            
+
 # Override class type; must be set here rather than when mask_shape is declared,
 # to avoid referring to class not yet constructed
 PatternGenerator.params('mask_shape').class_=PatternGenerator
@@ -629,7 +629,7 @@ class ChannelGenerator(PatternGenerator):
 
 class ComposeChannels(ChannelGenerator):
     """
-    Create a multi-channel PatternGenerator from a list of 
+    Create a multi-channel PatternGenerator from a list of
     PatternGenerators, with the specified channel_transforms applied.
     """
 

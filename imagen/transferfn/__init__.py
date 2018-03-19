@@ -107,7 +107,7 @@ class TransferFnWithState(TransferFn):
 
         Subclasses must implement state_push and state_pop to store
         state across invocations. The behaviour should be such that
-        after state_pop, the state is restored to what it was at 
+        after state_pop, the state is restored to what it was at
         the time when state_push was called.
         """
         pass
