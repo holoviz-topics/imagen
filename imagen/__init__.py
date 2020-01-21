@@ -1318,7 +1318,7 @@ class TimeSeries(param.Parameterized):
 
 
 def generate_sine_wave(duration, frequency, sample_rate):
-    time_axis = np.linspace(0.0, duration, duration*sample_rate)
+    time_axis = np.linspace(0.0, duration, int(duration*sample_rate))
     return np.sin(2.0*pi*frequency * time_axis)
 
 
