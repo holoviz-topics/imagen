@@ -174,7 +174,7 @@ class PatternGenerator(param.Parameterized):
             value_dims = {'value_dimensions':[self.z]} if self.z else value_dims
         elif self.num_channels() in [3,4]:
             raster = RGB
-            data = np.dstack(self.channels().values()[1:])
+            data = np.dstack(list(self.channels().values())[1:])
 
         image = raster(data, bounds=self.bounds,
                        **dict(group=self.group,
@@ -402,7 +402,7 @@ class PatternGenerator(param.Parameterized):
 
         elif nchans in [3,4]:
             mode = 'RGB' if nchans==3 else 'RGBA'
-            arr = np.dstack(self.channels(**params_to_override).values()[1:])
+            arr = np.dstack(list(self.channels(**params_to_override).values())[1:])
             arr = (255.0*arr).astype(np.uint8)
 
         else:
