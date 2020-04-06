@@ -1387,7 +1387,7 @@ class PowerSpectrum(PatternGenerator):
 
         # calculate the discrete frequencies possible for the given sample rate.
         sample_rate = self.signal.sample_rate
-        available_frequency_range = np.fft.fftfreq(sample_rate, d=1.0/sample_rate)[0:sample_rate/2]
+        available_frequency_range = np.fft.fftfreq(sample_rate, d=1.0/sample_rate)[0:sample_rate//2]
 
         if not available_frequency_range.min() <= self.min_frequency or not available_frequency_range.max() >= self.max_frequency:
             raise ValueError("Specified frequency interval [%s:%s] is unavailable, available range is [%s:%s]. Adjust to these frequencies or modify the sample rate of the TimeSeries object." %(self.min_frequency, self.max_frequency, available_frequency_range.min(), available_frequency_range.max()))
@@ -1435,7 +1435,7 @@ class PowerSpectrum(PatternGenerator):
         else:
             smoothed_window = signal_window[0:sample_rate]
 
-        amplitudes = (np.abs(np.fft.rfft(smoothed_window))[0:sample_rate/2] + self.offset) * self.scale
+        amplitudes = (np.abs(np.fft.rfft(smoothed_window))[0:sample_rate//2] + self.offset) * self.scale
 
         for index in range(0, self._sheet_dimensions[0]-2):
             start_frequency = self.frequency_spacing[index]
