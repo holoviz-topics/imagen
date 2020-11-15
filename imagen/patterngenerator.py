@@ -216,7 +216,7 @@ class PatternGenerator(param.Parameterized):
         density (or rows and cols), and transforms them according to
         x, y, and orientation.
         """
-        self.debug("bounds=%s, xdensity=%s, ydensity=%s, x=%s, y=%s, orientation=%s",bounds,xdensity,ydensity,x,y,orientation)
+        self.param.debug("bounds=%s, xdensity=%s, ydensity=%s, x=%s, y=%s, orientation=%s",bounds,xdensity,ydensity,x,y,orientation)
         # Generate vectors representing coordinates at which the pattern
         # will be sampled.
 
@@ -413,7 +413,7 @@ class PatternGenerator(param.Parameterized):
 
 # Override class type; must be set here rather than when mask_shape is declared,
 # to avoid referring to class not yet constructed
-PatternGenerator.params('mask_shape').class_=PatternGenerator
+PatternGenerator.param.params('mask_shape').class_=PatternGenerator
 
 
 
