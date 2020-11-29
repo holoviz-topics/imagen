@@ -230,7 +230,7 @@ class TestSelector(unittest.TestCase):
         self.g1 = Gaussian(x=numbergen.UniformRandom())
         self.g2 = Gaussian(x=numbergen.UniformRandom())
         self.s = Selector(generators=[self.g1,self.g2])
-        self.s.set_dynamic_time_fn(None,'generators')
+        self.s.param.set_dynamic_time_fn(None,'generators')
 
     def test_dynamic_index(self):
         """index should always vary"""

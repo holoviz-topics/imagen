@@ -279,8 +279,8 @@ class RandomDotStereogram(PatternGenerator):
         for i in range(ndots):
             bigimage[y1[i]:y2[i]+1,x1[i]:x2[i]+1] = col[i]
 
-        result = p.offset + p.scale*bigimage[ (ysize/2)+ydisparity:(3*ysize/2)+ydisparity ,
-                                              (xsize/2)+xdisparity:(3*xsize/2)+xdisparity ]
+        result = p.offset + p.scale*bigimage[ (ysize//2)+ydisparity:(3*ysize//2)+ydisparity ,
+                                              (xsize//2)+xdisparity:(3*xsize//2)+xdisparity ]
 
         for of in p.output_fns:
             of(result)
